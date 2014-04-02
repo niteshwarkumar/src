@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<hibernate-mapping>
+   <class name="app.qms.QMSAction" table="qmsaction">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+  <property name="mrm" type="string"/>
+  <property name="department" type="string"/>
+  <property name="area" type="string"/>
+  <property name="actionItem" type="string"/>
+  <property name="responsible" type="string"/>
+  <property name="target" type="date"/>
+  <property name="actual" type="date"/>
+  <property name="disposition" type="string"/>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : INReport.hbm.xml
+    Created on : 11 July, 2011, 3:28 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INReport" table="in_report">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+<!--        <property name="normal1" type="boolean"/>
+        <property name="someUrgent1" type="boolean"/>
+        <property name="inProgress1" type="boolean"/>
+        <property name="done1" type="boolean"/>
+        <property name="cross1" type="boolean"/>-->
+        <property name="projectId" type="int"/>
+        <property name="dtpNotes" type="string"/>
+        <property name="dtpRequirements" type="string"/>
+        <property name="enggNotes" type="string"/>
+        <property name="enggRequirements" type="string"/>
+
+
+        <property name="lingReq1" type="boolean"/>
+        <property name="lingReq2" type="boolean"/>
+        <property name="lingReq3" type="boolean"/>
+        <property name="lingReq4" type="boolean"/>
+        <property name="lingReq5" type="boolean"/>
+        <property name="lingReq6" type="boolean"/>
+
+        <property name="lingReqText5" type="string"/>
+        <property name="lingReqText6" type="string"/>
+        <property name="otherInfo" type="string"/>
+        <property name="verified" type="boolean"/>
+        <property name="verifiedBy" type="string"/>
+        <property name="verifiedDate" type="date"/>
+        <property name="verifiedText" type="string"/>
+
+        <property name="pre_dtp" type="double"/>
+        <property name="post_dtp" type="double"/>
+        <property name="pre_engg" type="double"/>
+        <property name="post_engg" type="double"/>
+
+    </class>
+</hibernate-mapping>

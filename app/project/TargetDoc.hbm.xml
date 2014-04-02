@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+    <class name="app.project.TargetDoc" table="TargetDoc">
+      <id name="targetDocId" type="int" column="ID_TargetDoc">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="name" type="string"/>     
+      <property name="language" type="string"/> 
+       <property name="changeNo" type="int"/>
+      <many-to-one name="SourceDoc" class="app.project.SourceDoc" column="ID_SourceDoc"/>
+      
+      <set name="LinTasks" inverse="true" order-by="orderNum">
+      	<key column="ID_TargetDoc"/>
+      	<one-to-many class="app.project.LinTask"/>
+      </set>
+      
+      <set name="EngTasks" inverse="true" order-by="orderNum">
+      	<key column="ID_TargetDoc"/>
+      	<one-to-many class="app.project.EngTask"/>
+      </set>
+      
+      <set name="DtpTasks" inverse="true" order-by="orderNum">
+      	<key column="ID_TargetDoc"/>
+      	<one-to-many class="app.project.DtpTask"/>
+      </set>
+      
+      <set name="OthTasks" inverse="true" order-by="taskName">
+      	<key column="ID_TargetDoc"/>
+      	<one-to-many class="app.project.OthTask"/>
+      </set>
+      
+     </class>
+       
+</hibernate-mapping>

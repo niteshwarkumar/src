@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : TrainingNotify.hbm.xml
+    Created on : September 16, 2012, 10:32 AM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping>
+   <class name="app.qms.TrainingNotify" table="trainingnotify">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+  <property name="departmentId" type="int"/>
+  <property name="userId" type="int"/>
+  <property name="trainingId" type="int"/>
+  <property name="trainingNeeded" type="int"/>
+  
+ </class>
+</hibernate-mapping>
+

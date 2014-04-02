@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : DefaultValue.hbm.xml
+    Created on : January 3, 2012, 12:38 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.extjs.vo.DefaultValue" table="default_value">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+      <property name="defaultName" type="string"/>
+      <property name="defaultValue" type="string"/>
+
+   </class>
+</hibernate-mapping>

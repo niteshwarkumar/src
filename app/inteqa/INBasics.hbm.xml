@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : INBasics.hbm.xml
+    Created on : 11 July, 2011, 12:42 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INBasics" table="in_basics">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="projectId" type="int"/>
+        <property name="server" type="string"/>
+        <property name="ftp" type="string"/>
+        <property name="other" type="string"/>
+        <property name="dtpReq1" type="boolean"/>
+        <property name="dtpReq2" type="boolean"/>
+        <property name="genGra1" type="boolean"/>
+        <property name="genGra2" type="boolean"/>
+        <property name="genGra3" type="boolean"/>
+        <property name="genGra4" type="boolean"/>
+        <property name="screen1" type="boolean"/>
+        <property name="screen2" type="boolean"/>
+        <property name="screen3" type="boolean"/>
+        <property name="screen4" type="boolean"/>
+        <property name="deliveryFormat1" type="boolean"/>
+        <property name="deliveryFormatOth" type="boolean"/>
+        <property name="deliveryFormatOthText" type="string"/>
+        <property name="DeliveryFiles1" type="boolean"/>
+        <property name="DeliveryFiles2" type="boolean"/>
+        <property name="DeliveryFilesOth" type="boolean"/>
+        <property name="DeliveryFilesOthText" type="string"/>
+        <property name="OtherInstruction" type="string"/>
+
+        <property name="verified" type="boolean"/>
+        <property name="verifiedBy" type="string"/>
+        <property name="verifiedDate" type="date"/>
+        <property name="verifiedText" type="string"/>
+
+        <property name="textBox1" type="string"/>
+        <property name="textBox2" type="string"/>
+        <property name="textBox3" type="string"/>
+
+    </class>
+</hibernate-mapping>
+

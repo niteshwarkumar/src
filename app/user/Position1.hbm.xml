@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.Position1" table="Position1">
+      <id name="position1Id" type="int" column="ID_Position1">
+         <generator class="identity"/>
+      </id>
+      <property name="position" type="string" not-null="true"/>
+      <property name="department" type="string"/>
+      <property name="reportto" type="string"/>
+      <property name="positiondesc" type="string"/>
+      <property name="duties" type="string"/>
+      <property name="supervisoryduties" type="string"/>
+      <property name="jobqualification" type="string"/>
+      <property name="experience" type="string"/>
+      <property name="skills" type="string"/>
+      <property name="note" type="string"/>
+
+      <set name="Users" inverse="true">
+      	<key column="ID_Position1"/>
+      	<one-to-many class="app.user.User"/>
+      </set>
+      
+   </class>
+</hibernate-mapping>

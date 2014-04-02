@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.MADtpEng" table="engdtpma">
+      <id name="id_ma" type="int" column="id_ma">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="id_resource" type="java.lang.Integer"/> 
+      <property name="sizeFullTime" type="java.lang.Integer"/>               
+      <property name="yearFounded" type="java.lang.Integer"/>    
+      
+      <property name="totalScore" type="java.lang.Double"/>  
+      <property name="size1Score" type="java.lang.Double"/> 
+      <property name="size2Score" type="java.lang.Double"/>         
+      <property name="toolsScore" type="java.lang.Double"/>         
+      <property name="accreditationScore" type="java.lang.Double"/>         
+      <property name="contentExpertScore" type="java.lang.Double"/>         
+               
+      <property name="contentExpert1" type="string"/>
+      <property name="contentExpert2" type="string"/>
+        <property name="contentExpert3" type="string"/>
+        <property name="contentExpert4" type="string"/>
+        <property name="contentExpert5" type="string"/>
+        <property name="contentExpert6" type="string"/>
+        <property name="iso1" type="string"/>
+        <property name="iso2" type="string"/>
+        <property name="iso3" type="string"/>
+        <property name="iso4" type="string"/>
+        <property name="industry1" type="string"/>
+        <property name="industry2" type="string"/>
+        <property name="industry3" type="string"/>
+        <property name="countryCert1" type="string"/>
+        <property name="countryCert2" type="string"/>
+        <property name="countryCert3" type="string"/>
+        
+        <property name="tools1" type="string"/>
+        <property name="tools2" type="string"/>
+        <property name="tools3" type="string"/>
+        <property name="tools4" type="string"/>
+        <property name="tools5" type="string"/>
+        <property name="tools6" type="string"/>
+
+   </class>
+</hibernate-mapping>

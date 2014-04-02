@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.RateScoreLanguage" table="RateScoreLanguage">
+      <id name="RateScoreLanguageId" type="int" column="ID_RateScoreLanguage">
+         <generator class="identity"/>
+      </id>
+      <property name="specialty" type="string"/>
+      <property name="source" type="string"/>
+      <property name="target" type="string"/> 
+      <property name="score" type="java.lang.Double"/>
+      <property name="currency" type="string"/>
+      <property name="min" type="java.lang.Double"/>
+      <property name="t" type="java.lang.Double"/>
+      <property name="tunit" type="string"/>
+      <property name="e" type="java.lang.Double"/>
+      <property name="eunit" type="string"/>
+      <property name="te" type="java.lang.Double"/>
+      <property name="teunit" type="string"/>
+      <property name="p" type="java.lang.Double"/>
+      <property name="punit" type="string"/>
+      <property name="evaluatedBy" type="string"/>
+      <property name="evaluatedDate" type="string"/>
+      <property name="icr" type="java.lang.Double"/>
+      <property name="icrunit" type="string"/>
+      
+      <property name="scoreNotes" type="string"/>
+      <property name="assesmentSent" type="string"/>
+      <property name="assesmentReceived" type="string"/>
+      <property name="evaluationSent" type="string"/>
+      
+      <many-to-one name="LanguagePair" class="app.resource.LanguagePair" column="ID_LanguagePair"/>
+      
+      
+   </class>
+</hibernate-mapping>

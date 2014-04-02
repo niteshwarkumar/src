@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!--
+    Document   : Ma.hbm.xml
+    Created on : June 24, 2010, 1:04 PM
+    Author     : Neil
+    Description:
+        Purpose of the document follows.
+-->
+
+<hibernate-mapping>
+   <class name="app.resource.Mechanical" table="mechanical">
+      <id name="id_ma" type="int" >
+         <generator class="identity"/>
+      </id>
+  <property name="nativeSpeaker" type="java.lang.Integer"/>
+  <property name="ft" type="java.lang.Integer"/>
+  <property name="pt" type="java.lang.Integer"/>
+  <property name="nativeLocation" type="java.lang.Integer"/>
+  <property name="profession" type="java.lang.Integer"/>
+  <property name="medicalExpirience" type="java.lang.Integer"/>
+  <property name="softwareExpirience" type="java.lang.Integer"/>
+  <property name="techExpirience" type="java.lang.Integer"/>
+  <property name="legalExpirience" type="java.lang.Integer"/>
+  <property name="marketingExpirience" type="java.lang.Integer"/>
+  <property name="iso9001" type="java.lang.Integer"/>
+  <property name="iso13485" type="java.lang.Integer"/>
+  <property name="iso14971" type="java.lang.Integer"/>
+  <property name="otherIso" type="java.lang.Integer"/>
+  <property name="industry1" type="java.lang.Integer"/>
+  <property name="industry2" type="java.lang.Integer"/>
+  <property name="industry3" type="java.lang.Integer"/>
+  <property name="countryCert1" type="java.lang.Integer"/>
+  <property name="countryCert2" type="java.lang.Integer"/>
+  <property name="countryCert3" type="java.lang.Integer"/>
+  <property name="reference" type="java.lang.Integer"/>
+  <property name="sizeFullTimeEmp" type="java.lang.Integer"/>
+  <property name="size1Score" type="java.lang.Integer"/>
+  <property name="sizeVolume" type="java.lang.Integer"/>
+  <property name="size2Score" type="java.lang.Integer"/>
+  <property name="location1" type="java.lang.Integer"/>
+  <property name="location2" type="java.lang.Integer"/>
+  <property name="location3" type="java.lang.Integer"/>
+  <property name="nicheLangs" type="java.lang.Integer"/>
+  <property name="nicheSpecialization" type="java.lang.Integer"/>
+  <property name="trados" type="java.lang.Integer"/>
+  <property name="sdlx" type="java.lang.Integer"/>
+  <property name="dejavu" type="java.lang.Integer"/>
+  <property name="transit" type="java.lang.Integer"/>
+  <property name="catalyst" type="java.lang.Integer"/>
+  <property name="otherTool" type="java.lang.Integer"/>
+  <property name="dtpFullTime" type="java.lang.Integer"/>
+  <property name="dtpYearFounded" type="java.lang.Integer"/>
+  <property name="dtpContentExpert1" type="java.lang.Integer"/>
+  <property name="dtpContentExpert2" type="java.lang.Integer"/>
+  <property name="dtpContentExpert3" type="java.lang.Integer"/>
+  <property name="dtpMAtools1" type="java.lang.Integer"/>
+  <property name="dtpMAtools2" type="java.lang.Integer"/>
+  <property name="dtpMAtools3" type="java.lang.Integer"/>
+  <property name="dtpMAiso1" type="java.lang.Integer"/>
+  <property name="dtpMAiso2" type="java.lang.Integer"/>
+  <property name="dtpMAiso3" type="java.lang.Integer"/>
+  <property name="dtpMAiso4" type="java.lang.Integer"/>
+  <property name="dtpMAindustry1" type="java.lang.Integer"/>
+  <property name="dtpMAindustry2" type="java.lang.Integer"/>
+  <property name="dtpMAindustry3" type="java.lang.Integer"/>
+  <property name="dtpMAcountryCert1" type="java.lang.Integer"/>
+  <property name="dtpMAcountryCert2" type="java.lang.Integer"/>
+  <property name="dtpMAcountryCert3" type="java.lang.Integer"/>
+
+
+
+
+   </class>
+</hibernate-mapping>

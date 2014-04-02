@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.admin.Excelnetissue" table="Excelnetissue">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>  
+        <property name="status" type="int"/>  
+        <property name="itemNo" type="int"/>  
+		
+        <property name="priority" type="string"/>   
+        <property name="item" type="string"/> 
+        <property name="reference" type="string"/>  
+        <property name="tested" type="string"/>  
+        <property name="testedBy" type="string"/>  
+        <property name="result" type="string"/>  
+        <property name="uploaded" type="string"/>  
+        <property name="approval1" type="string"/>  
+        <property name="approval2" type="string"/>
+        <property name="approval3" type="string"/>  
+        <property name="approval4" type="string"/>  
+        <property name="ffinal" type="string"/>  
+        <property name="issue" type="string"/> 
+        <property name="notes" type="string"/>
+  
+        <property name="dateStart" type="date"/>   
+        <property name="dateDue" type="date"/>   
+        <property name="dateFinal" type="date"/>   
+        <property name="date1" type="date"/>   
+        <property name="date2" type="date"/>   
+        <property name="date3" type="date"/>   
+        <property name="date4" type="date"/>   
+        <property name="testTested" type="string"/>  
+        <property name="liveTested" type="string"/>
+        <property name="liveIssue" type="string"/>
+    </class>
+</hibernate-mapping>

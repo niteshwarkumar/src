@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Capa.hbm.xml
+    Created on : September 6, 2011, 7:30 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.Capa" table="capa">
+        <id name="capa_id" type="int" column="capa_id">
+            <generator class="identity"/>
+        </id>
+
+  <property name="number" type="string"/>
+  <property name="cdate" type="date"/>
+  <property name="employee" type="string"/>
+  <property name="location" type="string"/>
+  <property name="description" type="string"/>
+  <property name="reportedby" type="string"/>
+  <property name="fromc" type="string"/>
+  <property name="issueId" type="string"/>
+  <property name="source" type="string"/>
+  <property name="status" type="string"/>
+  <property name="ncr" type="string"/>
+
+
+    </class>
+</hibernate-mapping>

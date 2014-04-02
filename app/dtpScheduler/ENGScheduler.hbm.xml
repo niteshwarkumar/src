@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : ENGScheduler.hbm.xml
+    Created on : August 26, 2010, 11:26 AM
+    Author     : Neil
+    Description:
+        Purpose of the document follows.
+-->
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.dtpScheduler.ENGScheduler" table="eng_scheduler">
+      <id name="ID_Schedule" type="int" column="ID_Scheduler">
+         <generator class="identity"/>
+      </id>
+      <property name="requester" type="string"/>
+      <property name="ID_Project" type="string"/>
+      <property name="ID_Quote" type="string"/>
+      <property name="task" type="string"/>
+      <property name="timeNeeded" type="string"/>
+      <property name="finishDate" type="date"/>
+      <property name="projectOrQuote" type="string"/>
+      <property name="hour" type="string"/>
+      <property name="timeNeededUnit" type="string"/>
+
+
+
+
+
+   </class>
+
+</hibernate-mapping>

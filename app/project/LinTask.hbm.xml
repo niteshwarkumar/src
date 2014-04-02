@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.project.LinTask" table="LinTask">
+      <id name="linTaskId" type="int" column="ID_LinTask">
+         <generator class="identity"/>
+      </id>
+      <property name="changeDesc" type="string"/>
+      <property name="taskName" type="string"/>
+      <property name="personName" type="string"/>
+      <property name="orderNum" type="java.lang.Integer"/>
+      <property name="sourceLanguage" type="string"/>
+      <property name="targetLanguage" type="string"/>
+      <property name="scoreDescription" type="string"/>
+
+      <property name="poNumber" type="string"/>
+      <property name="score" type="java.lang.Integer"/>
+      <property name="postQuote" type="string"/>
+
+      <property name="sentDate" type="string"/>
+      <property name="dueDate" type="string"/>
+      <property name="receivedDate" type="string"/>
+      <property name="sentDateDate" type="date"/>
+      <property name="dueDateDate" type="date"/>
+      <property name="receivedDateDate" type="date"/>
+      <property name="invoiceDate" type="string"/>
+      <property name="invoiceDateDate" type="date"/>
+      <property name="quantity" type="java.lang.Double"/>
+
+      <property name="units" type="string"/>
+      <property name="word100" type="java.lang.Integer"/>
+      <property name="wordRep" type="java.lang.Integer"/>
+      <property name="word95" type="java.lang.Integer"/>
+      <property name="word85" type="java.lang.Integer"/>
+      <property name="word75" type="java.lang.Integer"/>
+      <property name="wordNew" type="java.lang.Integer"/>
+      <property name="word8599" type="java.lang.Integer"/>
+      <property name="wordNew4" type="java.lang.Double"/>
+      <property name="wordPerfect" type="java.lang.Integer"/>
+      <property name="wordContext" type="java.lang.Integer"/>
+      <property name="wordTotal" type="java.lang.Double"/>
+      <property name="minFee" type="java.lang.Double"/>
+      <property name="currency" type="string"/>
+      <property name="notes" type="string"/>
+      <property name="rate" type="string"/>
+      <property name="dollarTotal" type="string"/>
+
+
+      <property name="word100Fee" type="java.lang.Integer"/>
+      <property name="wordRepFee" type="java.lang.Integer"/>
+      <property name="word95Fee" type="java.lang.Integer"/>
+      <property name="word85Fee" type="java.lang.Integer"/>
+      <property name="word75Fee" type="java.lang.Integer"/>
+      <property name="wordNewFee" type="java.lang.Integer"/>
+      <property name="word8599Fee" type="java.lang.Integer"/>
+      <property name="wordNew4Fee" type="java.lang.Double"/>
+      <property name="wordTotalFee" type="java.lang.Double"/>
+      <property name="wordPerfectFee" type="java.lang.Integer"/>
+      <property name="WordContextFee" type="java.lang.Integer"/>
+      <property name="currencyFee" type="string"/>
+      <property name="notesFee" type="string"/>
+      <property name="rateFee" type="string"/>
+      <property name="dollarTotalFee" type="string"/>
+      <property name="unitsFee" type="string"/>
+
+      <property name="icrRecievedDate" type="date"/>
+      <property name="icrSentDate" type="date"/>
+      <property name="icrFinal" type="string"/>
+      <property name="internalRate" type="string"/>
+      <property name="internalDollarTotal" type="string"/>
+      <property name="internalCurrency" type="string"/>
+      <property name="ICRcheck" type="boolean"/>
+      <property name="minFeeRsf" type="java.lang.Double"/>
+      <property name="POCheck" type="boolean"/>
+      <property name="multi" type="string"/>
+
+
+      <many-to-one name="TargetDoc" class="app.project.TargetDoc" column="ID_TargetDoc"/>
+
+   </class>
+
+</hibernate-mapping>

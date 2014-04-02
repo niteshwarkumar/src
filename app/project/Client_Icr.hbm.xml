@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.project.Client_Icr" table="client_icr">
+      <id name="icrno" type="int">
+         <generator class="identity"/>
+      </id>
+
+      <property name="ID_TargetDoc" type="int"/>
+      <property name="icr_sent" type="date"/>
+      <property name="icr_recieve" type="date"/>
+      <property name="comment" type="string"/>
+      
+   </class>
+
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="ClientAddEditForm.java">
+        <attr name="class_dependency_org.apache.struts.action.ActionForm" stringvalue="ClientAddEditForm"/>
+    </fileobject>
+    <fileobject name="ClientAddIndustryAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ClientAddIndustryAction"/>
+    </fileobject>
+    <fileobject name="ClientContactEditAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ClientContactEditAction"/>
+    </fileobject>
+    <fileobject name="ClientContactEditForm.java">
+        <attr name="class_dependency_org.apache.struts.action.ActionForm" stringvalue="ClientContactEditForm"/>
+    </fileobject>
+    <fileobject name="ClientContactEditUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ClientContactEditUpdateAction"/>
+    </fileobject>
+    <fileobject name="ClientEditForm.java">
+        <attr name="class_dependency_org.apache.struts.action.ActionForm" stringvalue="ClientEditForm"/>
+    </fileobject>
+    <fileobject name="ClientViewAccountingAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ClientViewAccountingAction"/>
+    </fileobject>
+    <fileobject name="ClientViewGeneralAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ClientViewGeneralAction"/>
+    </fileobject>
+</attributes>

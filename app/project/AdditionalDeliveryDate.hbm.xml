@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.AdditionalDeliveryDate" table="additional_delivery_dates">
+      <id name="add_id" type="int" column="add_id">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="ID_Project" type="int"/> 
+      <property name="description" type="string"/>     
+      <property name="delivery_date" type="date"/> 
+     
+   </class>
+   
+</hibernate-mapping>

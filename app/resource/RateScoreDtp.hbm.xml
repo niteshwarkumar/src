@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.RateScoreDtp" table="RateScoreDtp">
+      <id name="RateScoreDtpId" type="int" column="ID_RateScoreDtp">
+         <generator class="identity"/>
+      </id>
+      <property name="application" type="string"/>
+      <property name="version" type="string"/>
+      <property name="os" type="string"/>
+      <property name="source" type="string"/>
+      <property name="target" type="string"/> 
+      <property name="currency" type="string"/>
+      <property name="min" type="java.lang.Double"/>
+      <property name="rate" type="java.lang.Double"/>
+      <property name="unit" type="string"/>
+      
+      <property name="scoreNotes" type="string"/>
+      <property name="assesmentSent" type="string"/>
+      <property name="assesmentReceived" type="string"/>
+      <property name="evaluationSent" type="string"/>
+      <property name="score" type="java.lang.Double"/>
+      <property name="evaluationReceived" type="string"/>
+      <property name="evaluator" type="string"/>
+      
+      
+      <many-to-one name="Resource" class="app.resource.Resource" column="ID_Resource"/>      
+      
+   </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<!--
+    Document   : Technical.hbm.xml
+    Created on : 29 October, 2010, 11:56 AM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<hibernate-mapping>
+    <class name="app.quote.Technical" table="technical">
+        <id name="technicalId" type="int" column="ID_Technical">
+            <generator class="identity"/>
+        </id>
+        <property name="clientQuote_ID" type="int"/>
+        <property name="sourceOs" type="string"/>
+        <property name="targetOs" type="string"/>
+        <property name="sourceApplication" type="string"/>
+        <property name="targetApplication" type="string"/>
+        <property name="sourceVersion" type="string"/>
+        <property name="targetVersion" type="string"/>
+    </class>
+
+</hibernate-mapping>

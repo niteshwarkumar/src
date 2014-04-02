@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Hardware.hbm.xml
+    Created on : May 11, 2010, 12:11 PM
+    Author     : Neil
+    Description:
+        Purpose of the document follows.
+-->
+
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.menu.Software" table="Software">
+      <id name="software_no" type="int">
+         <generator class="identity"/>
+      </id>
+
+      <property name="application" type="string"/>
+      <property name="description" type="string"/>
+      <property name="platform" type="string"/>
+      <property name="version" type="string"/>
+      <property name="language" type="string"/>
+      <property name="purchase_date" type="date"/>
+      <property name="wish" type="boolean"/>
+
+   </class>
+
+</hibernate-mapping>

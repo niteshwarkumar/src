@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.admin.AdminOption" table="AdminOption">
+      <id name="adminOptionId" type="int" column="ID_AdminOption">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="description" type="string"/>
+      <property name="trueFalseOption" type="string"/>
+      <property name="stringOption" type="string"/>      
+      
+      <property name="module" type="string"/>      
+     
+   </class>
+</hibernate-mapping>

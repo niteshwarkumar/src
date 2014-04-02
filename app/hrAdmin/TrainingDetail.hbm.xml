@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+
+<hibernate-mapping>
+    <class name="app.hrAdmin.TrainingDetail" table="trainingdetail">
+        <id name="trainingId" type="java.lang.Integer" column="trainingId">
+            <generator class="increment"/>
+        </id>
+        <property name="description" type="java.lang.String"/>
+        <property name="company" type="java.lang.String"/>
+        <property name="trainer" type="java.lang.String"/>
+        <property name="location" type="java.lang.String"/>
+        <property name="fromDate" type="java.sql.Date"/>
+        <property name="toDate" type="java.sql.Date"/>
+        <property name="result" type="java.lang.String"/>
+        <property name="evidence" type="java.lang.String"/>
+
+    </class>
+
+</hibernate-mapping>

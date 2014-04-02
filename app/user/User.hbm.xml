@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.User" table="User">
+      <id name="userId" type="int" column="ID_User">
+         <generator class="identity"/>
+      </id>
+      <property name="username" type="string" not-null="true"/>
+      <property name="password" type="string" not-null="true"/>  
+      <property name="currentEmployee" type="string" not-null="true"/>
+      <property name="userType" type="string" column="usertype"/>
+      <property name="id_client" type="int" column="ID_Client"/>
+      
+
+      
+      <property name="firstName" type="string"/>
+      <property name="lastName" type="string" />
+      <property name="picture" type="string"/>
+      <property name="adminUser" type="string"/>
+      <property name="dropDown" type="string"/>
+      <property name="human" type="string"/>
+      
+      <property name="homeAddress" type="string" />
+      <property name="homeCity" type="string" />
+      <property name="homeState" type="string" />
+      <property name="homeCountry" type="string" />
+      <property name="homeZip" type="string" />
+      <property name="homePhone" type="string" />
+      <property name="homeCell" type="string" />
+      <property name="homeEmail1" type="string" />
+      <property name="homeEmail2" type="string" />
+      
+      <property name="workAddress" type="string" />
+      <property name="workCity" type="string" />
+      <property name="workState" type="string" />
+      <property name="workCountry" type="string" />
+      <property name="workZip" type="string" />
+      <property name="workPhone" type="string" />
+      <property name="workPhoneEx" type="string" />
+      <property name="workCell" type="string" />
+      <property name="workEmail1" type="string" />
+      <property name="workEmail2" type="string" />
+      
+      <property name="activeLevel" type="string" />
+      <property name="extjsTheme" type="string" />
+      <property name="myExcelRange" type="int"/>
+      
+      <property name="emergencyContactName" type="string" />
+      <property name="emergencyContactPhone" type="string" />
+      <property name="emergencyContactRelation" type="string" />
+       
+      <property name="birthDay" type="date" />
+      <property name="hireDate" type="date" />
+      <property name="vacationDaysTotal" type="java.lang.Double"/>
+      <property name="vacationDaysUsed" type="java.lang.Double"/>
+      <property name="sickDaysTotal" type="java.lang.Double"/>
+      <property name="sickDaysUsed" type="java.lang.Double"/>
+      <property name="unpaidDaysUsed" type="java.lang.Double"/>
+      
+      <property name="notes" type="text"/>
+      <property name="skypeId" type="string" />
+      <property name="status" type="string" />
+      <property name="clientShow" type="string" />
+      <property name="signature" type="string" />
+      <property name="client_contact" type="int"/>
+
+      <property name="last_activity" type="java.sql.Timestamp"/>
+      
+      <many-to-one name="Location" class="app.user.Location" column="ID_Location"/>
+      <many-to-one name="Department" class="app.user.Department" column="ID_Department"/>
+      <many-to-one name="Position" class="app.user.Position1" column="ID_Position1"/>
+     
+      <set name="Training" inverse="true" order-by="dateCompleted">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.user.Training"/>
+      </set>
+      
+      <set name="PerformanceReviews" inverse="true" order-by="actualDate">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.user.PerformanceReview"/>
+      </set>
+      
+      <set name="Away" inverse="true">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.user.Away"/>
+      </set>
+      
+      <set name="Privileges" inverse="true">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.user.Privilege"/>
+      </set>
+      
+      <set name="SavedSearches" inverse="true" order-by="description">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.user.SavedSearch"/>
+      </set>
+      
+      <set name="ProjectCarts" inverse="true" order-by="description">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.user.ProjectCart"/>
+      </set>
+      
+      <set name="Todos" inverse="true" order-by="dateDue">
+      	<key column="ID_User"/>
+      	<one-to-many class="app.menu.Todo"/>
+      </set>
+      
+   </class>
+      
+</hibernate-mapping>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!--
+    Document   : ClientFeedback.hbm.xml
+    Created on : 27 January, 2011, 3:35 PM
+    Author     : Niteshwar
+    Description:
+        Hibernate Mapping of the Client_Feedback table
+-->
+
+
+<hibernate-mapping>
+   <class name="app.client.ClientFeedback" table="client_feedback">
+      <id name="feedbackId" type="int" column="feedbackId">
+         <generator class="increment"/>
+      </id>
+      <property name="clientId" type="int"/>
+      <property name="feedbackDate" type="java.sql.Date"/>
+      <property name="clientContact" type="string"/>
+      <property name="feedback" type="string"/>
+      <property name="fromRole" type="string"/>
+      <property name="department" type="string"/>
+      <property name="language" type="string"/>
+      <property name="details" type="string"/>
+      <property name="rate" type="string"/>
+
+     </class>
+
+</hibernate-mapping>
+

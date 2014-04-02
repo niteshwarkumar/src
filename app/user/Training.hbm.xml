@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.Training" table="Training">
+      <id name="trainingId" type="int" column="ID_Training">
+         <generator class="identity"/>
+      </id>
+      <property name="description" type="string"/>
+      <property name="dateCompleted" type="date"/>
+      <property name="type" type="string"/>
+      <property name="company" type="string"/>
+      <property name="trainer" type="string"/>
+      <property name="location" type="string"/>
+      <property name="dateStart" type="date"/>
+      <property name="result" type="string"/>
+      <property name="evidence" type="string"/>
+      <property name="docId" type="int"/>
+      <property name="departmentId" type="int"/>
+
+      <property name="effectiveness" type="string"/>
+      <property name="verifiedBy" type="string"/>
+      <property name="verificationResult" type="string"/>
+      <property name="notes" type="string"/>
+
+      <many-to-one name="User" class="app.user.User" column="ID_User"/>
+      
+   </class>
+</hibernate-mapping>

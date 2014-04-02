@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.OthTask" table="OthTask">
+      <id name="othTaskId" type="int" column="ID_OthTask">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="taskName" type="string"/>
+      <property name="personName" type="string"/>
+      <property name="orderNum" type="java.lang.Integer"/>
+      <property name="sourceLanguage" type="string"/>
+      <property name="targetLanguage" type="string"/>
+      <property name="notes" type="string"/>
+      <property name="poNumber" type="string"/>
+      <property name="score" type="java.lang.Integer"/> 
+      <property name="postQuote" type="string"/>
+      
+      <property name="sentDate" type="string"/> 
+      <property name="dueDate" type="string"/> 
+      <property name="receivedDate" type="string"/>  
+      <property name="sentDateDate" type="date"/> 
+      <property name="dueDateDate" type="date"/> 
+      <property name="receivedDateDate" type="date"/>    
+      <property name="invoiceDate" type="string"/> 
+      <property name="invoiceDateDate" type="date"/> 
+        
+      <property name="units" type="string"/>       
+      <property name="quantity" type="java.lang.Double"/>
+      <property name="currency" type="string"/>
+      <property name="internalCurrency" type="string"/>
+      <property name="total" type="java.lang.Double"/>
+      <property name="rate" type="string"/>
+      <property name="dollarTotal" type="string"/>
+      <property name="internalRate" type="string"/>
+      <property name="internalDollarTotal" type="string"/>
+      
+      <property name="notesTeam" type="string"/>       
+      <property name="totalTeam" type="java.lang.Double"/>
+      <property name="unitsTeam" type="string"/>
+      
+      <many-to-one name="TargetDoc" class="app.project.TargetDoc" column="ID_TargetDoc"/>
+            
+   </class>
+         
+</hibernate-mapping>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : CapaId.hbm.xml
+    Created on : September 6, 2011, 7:31 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.CapaId" table="capa_id">
+        <id name="capaid_id" type="int" column="capaid_id">
+            <generator class="identity"/>
+        </id>
+        <property name="capa_number" type="string"/>
+        <property name="rca" type="string"/>
+        <property name="rca_t_date" type="date"/>
+        <property name="rca_a_date" type="date"/>
+        <property name="nc" type="string"/>
+        <property name="ncyesno" type="string"/>
+        <property name="ncminormajor" type="string"/>
+        <property name="actionplan" type="string"/>
+        <property name="actionplan_approve" type="string"/>
+        <property name="actionplan_approve2" type="string"/>
+        <property name="actionimp" type="string"/>
+        <property name="actionimp_t_date" type="date"/>
+        <property name="actionimp_a_date" type="date"/>
+        <property name="actionimp_status" type="string"/>
+        <property name="effectiveplan" type="string"/>
+        <property name="verify" type="string"/>
+        <property name="verify_t_date" type="date"/>
+        <property name="verify_a_date" type="date"/>
+        <property name="verify_approve" type="string"/>
+        <property name="verify_approve2" type="string"/>
+        <property name="comments" type="string"/>
+        <property name="admin_rec_date" type="date"/>
+        <property name="admin_own_date" type="date"/>
+        <property name="admin_disp_date" type="date"/>
+        <property name="admin_rec_person" type="string"/>
+        <property name="admin_own_person" type="string"/>
+        <property name="admin_disp_person" type="string"/>
+        <property name="admin_disposition" type="string"/>
+        <property name="owner" type="string"/>
+        <property name="owner2" type="string"/>
+        <property name="owner3" type="string"/>
+        <property name="capaid_description" type="string"/>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : INQualityFeedback.hbm.xml
+    Created on : 22 April, 2012, 3:24 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INQualityFeedback" table="in_qualityfeedback">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="tab" type="string"/>
+        <property name="comScore" type="string"/>
+        <property name="comExplain" type="string"/>
+        <property name="comEnteredBy" type="string"/>
+        <property name="timScore" type="string"/>
+        <property name="timExplain" type="string"/>
+        <property name="timEnteredBy" type="string"/>
+        <property name="quaScore" type="string"/>
+        <property name="quaExplain" type="string"/>
+        <property name="quaEnteredBy" type="string"/>
+        <property name="othScore" type="string"/>
+        <property name="othExplain" type="string"/>
+        <property name="othEnteredBy" type="string"/>
+        <property name="porq" type="string"/>
+        <property name="number" type="string"/>
+        <property name="inteqaid" type="int"/>
+        <property name="porqid" type="int"/>
+
+
+    </class>
+</hibernate-mapping>

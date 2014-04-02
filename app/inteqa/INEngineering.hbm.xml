@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : INEngineering.hbm.xml
+    Created on : 11 July, 2011, 3:24 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INEngineering" table="in_engineering">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="projectId" type="int"/>
+        <property name="prepTime" type="float"/>
+        <property name="prepLang" type="string"/>
+        <property name="prepTotal" type="float"/>
+        <property name="deliveryTime" type="float"/>
+        <property name="deliveryLang" type="string"/>
+        <property name="deliveryTotal" type="float"/>
+        <property name="filePrep01" type="boolean"/>
+        <property name="filePrep02" type="boolean"/>
+        <property name="filePrep1" type="boolean"/>
+        <property name="filePrep2" type="boolean"/>
+        <property name="filePrep3" type="boolean"/>
+        <property name="filePrep4" type="boolean"/>
+        <property name="filePrep5" type="boolean"/>
+        <property name="filePrep6" type="boolean"/>
+
+        <property name="extract1" type="boolean"/>
+        <property name="extract2" type="boolean"/>
+        <property name="extractText" type="string"/>
+
+
+        <property name="verified" type="boolean"/>
+        <property name="verifiedBy" type="string"/>
+        <property name="verifiedDate" type="date"/>
+        <property name="verifiedText" type="string"/>
+
+        <property name="check1" type="boolean"/>
+        <property name="check2" type="boolean"/>
+        <property name="check21" type="boolean"/>
+        <property name="check22" type="boolean"/>
+        <property name="check4" type="boolean"/>
+        <property name="check5" type="boolean"/>
+        <property name="check3Text" type="string"/>
+        <property name="checkText1" type="string"/>
+        <property name="checkText2" type="string"/>
+
+        <property name="lpr1" type="boolean"/>
+        <property name="lpr2" type="boolean"/>
+        <property name="lpr3" type="boolean"/>
+        <property name="lpr4" type="boolean"/>
+        <property name="lpr5" type="boolean"/>
+        <property name="lpr6" type="boolean"/>
+
+        <property name="lprInfo" type="string"/>
+
+        <property name="lpr5Text" type="string"/>
+        <property name="lpr6Text" type="string"/>
+
+        <property name="textBox1" type="string"/>
+        <property name="enggNotes" type="string"/>
+        
+        <property name="tmCheck1" type="boolean"/>
+        <property name="tmCheck2" type="boolean"/>
+        <property name="tmCheck3" type="boolean"/>
+        <property name="tmPath1" type="string"/>
+        <property name="tmPath2" type="string"/>
+        <property name="tmPath3" type="string"/>
+        <property name="tmName1" type="string"/>
+        <property name="tmName2" type="string"/>
+        <property name="tmName3" type="string"/>
+        <property name="tmNotes" type="string"/>
+        
+
+
+
+    </class>
+</hibernate-mapping>

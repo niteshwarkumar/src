@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.extjs.vo.Dropdown" table="dropdown">
+      <id name="ID_Dropdown" type="int" column="ID_Dropdown">
+         <generator class="identity"/>
+      </id>
+      <property name="dropdownType" type="string"/>
+      <property name="dropdownValue" type="string"/>
+      <property name="priority" type="string"/>
+      <property name="tab" type="string"/>
+      
+   </class>
+</hibernate-mapping>

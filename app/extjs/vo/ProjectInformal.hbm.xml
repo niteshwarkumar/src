@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.extjs.vo.ProjectInformal" table="project_informal">
+      <id name="informalId" type="int" column="informalId">
+         <generator class="identity"/>
+      </id>
+      <property name="ID_Project" type="int"/>
+      <property name="informalDate" type="date"/>
+      <property name="clientContact" type="string"/>
+      <property name="feedback" type="string"/>
+      
+      <property name="fromRole" type="string"/>
+      <property name="department" type="string"/>
+      <property name="language" type="string"/>
+      <property name="details" type="string"/>
+      <property name="rate" type="string"/>
+      <property name="satisfaction" type="int"/>
+      <property name="disposition" type="string"/>
+      <property name="cause" type="string"/>
+      <property name="notes" type="string"/>
+    
+   </class>
+</hibernate-mapping>

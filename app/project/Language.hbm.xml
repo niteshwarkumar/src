@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.Language" table="Language">
+      <id name="languageId" type="int" column="Language_ID">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="language" type="string"/>
+      <property name="abr" type="string"/>
+      <property name="lang_group" type="string"/>
+      
+   </class>
+              
+</hibernate-mapping>

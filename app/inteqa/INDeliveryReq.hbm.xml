@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : INDeliveryReq.hbm.xml
+    Created on : August 29, 2011, 3:22 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INDeliveryReq" table="in_deliveryreq">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="inDeliveryId" type="int"/>
+        <property name="clientReqText" type="string"/>
+        <property name="clientReqCheck" type="boolean"/>
+        <property name="clientReqBy" type="string"/>
+        <property name="fromPorQ" type="string"/>
+
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.extjs.vo.LinStylesheets" table="linguistic_stylesheets">
+      <id name="style_id" type="int" column="style_id">
+         <generator class="identity"/>
+      </id>
+      <property name="ID_Client" type="int"/>
+      <property name="srcLanguage" type="string"/>
+      <property name="targetLanguage" type="string"/>
+      <property name="stylesheet" type="string"/>
+      <property name="updatedBy" type="string"/>
+      
+   </class>
+</hibernate-mapping>

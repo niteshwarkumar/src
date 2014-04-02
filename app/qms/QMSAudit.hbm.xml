@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : QMSAudit.hbm.xml
+    Created on : 8 December, 2010, 10:32 AM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.qms.QMSAudit" table="qmsaudit">
+      <id name="auditno" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+
+      <property name="standard" type="string"/>
+      <property name="version" type="string"/>
+      <property name="type" type="string"/>
+      <property name="auditby" type="string"/>
+      <property name="company" type="string"/>
+      <property name="leadauditor" type="string"/>
+      <property name="office" type="string"/>
+      <property name="scheduled" type="date"/>
+      <property name="actual" type="date"/>
+      <property name="nonconformities" type="string"/>
+      <property name="result" type="string"/>
+      <property name="report" type="string"/>
+
+   </class>
+</hibernate-mapping>

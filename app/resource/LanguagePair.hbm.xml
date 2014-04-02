@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.LanguagePair" table="LanguagePair">
+      <id name="languagePairId" type="int" column="ID_LanguagePair">
+         <generator class="identity"/>
+      </id>
+      <property name="source" type="string"/>
+      <property name="sourceId" type="java.lang.Integer"/>      
+      <property name="target" type="string"/> 
+      <property name="targetId" type="java.lang.Integer"/>  
+      
+      <property name="nativeLanguage" type="boolean"/>
+      <property name="country" type="string"/>
+      
+      <many-to-one name="Resource" class="app.resource.Resource" column="ID_Resource"/>
+      
+      <set name="RateScoreLanguages" inverse="true" order-by="source, target">
+      	<key column="ID_LanguagePair"/>
+      	<one-to-many class="app.resource.RateScoreLanguage"/>
+      </set>  
+      
+   </class>
+</hibernate-mapping>

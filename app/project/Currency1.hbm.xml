@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.Currency1" table="Currency1">
+      <id name="currency1Id" type="int" column="Currency1_ID">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="currency" type="string"/>
+      
+   </class>
+              
+</hibernate-mapping>

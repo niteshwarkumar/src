@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.quote.Quote1" table="Quote1">
+      <id name="quote1Id" type="int" column="ID_Quote1">
+         <generator class="identity"/>
+      </id>
+     
+      <property name="number" type="string"/>
+      <property name="isTracked" type="string"/>        
+      <property name="approvalDate" type="date"/> 
+      <property name="quoteDate" type="date"/>
+      <property name="subQuoteId" type="string"/>
+      <property name="status" type="string"/>
+      <property name="note" type="text"/>
+      
+      <property name="subDollarTotal" type="string"/>
+      <property name="subPmDollarTotal" type="string"/>
+      <property name="pmPercent" type="string"/>
+      <property name="pmPercentDollarTotal" type="string"/>
+      <property name="rushPercent" type="string"/>
+      <property name="rushPercentDollarTotal" type="string"/>
+      <property name="quoteDollarTotal" type="java.lang.Double"/>
+      
+      <property name="enteredById" type="string"/>    
+      <property name="enteredByTS" type="date"/> 
+      <property name="lastModifiedById" type="string"/>    
+      <property name="lastModifiedByTS" type="date"/> 
+      <property name="approvedTS" type="java.sql.Timestamp"/>
+      <property name="rejectReason" type="string"/>   
+      
+      <property name="subDiscountDollarTotal" type="string"/>
+      <property name="discountPercent" type="string"/>
+      <property name="discountDollarTotal" type="string"/>
+      <property name="publish" type="boolean"/>
+      <property name="approvalTimeEsimate" type="string"/>
+      <property name="archiveId" type="string"/>
+      <property name="clientRejectReason" type="string"/>
+      <property name="publishDate" type="date"/>
+      <property name="publishBy" type="string"/>
+      <property name="clientFileNote" type="string"/>
+      <property name="manualPMFee" type="string"/>
+
+      
+      
+      <many-to-one name="Project" class="app.project.Project" column="ID_Project"/>
+      
+      <set name="SourceDocs" lazy="true" inverse="true" order-by="language">
+      	<key column="ID_Quote1"/>
+      	<one-to-many class="app.project.SourceDoc"/>
+      </set>
+      
+      <set name="Files" lazy="true" inverse="true" order-by="fileName">
+      	<key column="ID_Quote1"/>
+      	<one-to-many class="app.quote.File"/>
+      </set>
+      
+   </class>
+       
+</hibernate-mapping>

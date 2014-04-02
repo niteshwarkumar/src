@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="HrSearchShowAllAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrSearchShowAllAction"/>
+    </fileobject>
+    <fileobject name="HrViewGeneralAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewGeneralAction"/>
+    </fileobject>
+    <fileobject name="HrViewGeneralUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewGeneralUpdateAction"/>
+    </fileobject>
+    <fileobject name="HrViewNavigationAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewNavigationAction"/>
+    </fileobject>
+    <fileobject name="HrViewNotesAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewNotesAction"/>
+    </fileobject>
+    <fileobject name="HrViewNotesUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewNotesUpdateAction"/>
+    </fileobject>
+    <fileobject name="HrViewPrivateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewPrivateAction"/>
+    </fileobject>
+    <fileobject name="HrViewPrivateTravelNotify1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewPrivateTravelNotify1Action"/>
+    </fileobject>
+    <fileobject name="HrViewPrivateTravelNotify2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewPrivateTravelNotify2Action"/>
+    </fileobject>
+    <fileobject name="HrViewPrivateVacationRequest2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrViewPrivateVacationRequest2Action"/>
+    </fileobject>
+</attributes>

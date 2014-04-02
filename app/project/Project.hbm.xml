@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.Project" table="Project">
+      <id name="projectId" type="int" column="ID_Project">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="number" type="string"/>
+      <property name="status" type="string"/>
+      
+      <property name="product" type="string"/>  
+      <property name="ae" type="string"/>    
+      <property name="productDescription" type="string"/>
+      <property name="productUnits" type="string"/>
+      <property name="projectRequirements" type="string"/>
+      <property name="projectDescription" type="string"/>
+      
+      <property name="startDate" type="date"/> 
+      <property name="dueDate" type="date"/> 
+      <property name="deliveryDate" type="date"/> 
+      <property name="completeDate" type="date"/> 
+      <property name="deliveryMethod" type="string"/>
+      <property name="beforeWorkTurn" type="string"/>
+      <property name="afterWorkTurn" type="string"/>
+      <property name="cancelled" type="string"/>
+      <property name="beforeWorkTurnUnits" type="string"/>
+      <property name="afterWorkTurnUnits" type="string"/>
+      <property name="afterWorkTurnReason" type="string"/>
+      <property name="deliverableSame" type="string"/>
+      
+      <property name="clientPO" type="string"/> 
+      <property name="fee" type="string"/> 
+      
+      <property name="invoiceDate" type="date"/>
+      <property name="invoicePaid" type="date"/>
+      <property name="totalAmountInvoiced" type="string"/>
+        
+      <property name="notes" type="text"/> 
+      
+      <property name="linRequirements" type="string"/> 
+      <property name="dtpRequirements" type="string"/>
+      <property name="engRequirements" type="string"/> 
+      <property name="othRequirements" type="string"/> 
+           
+      <property name="sourceOS" type="string"/> 
+      <property name="sourceApplication" type="string"/> 
+      <property name="sourceVersion" type="string"/> 
+      <property name="sourceTechNotes" type="string"/> 
+      <property name="deliverableOS" type="string"/> 
+      <property name="deliverableApplication" type="string"/> 
+      <property name="deliverableVersion" type="string"/> 
+      <property name="deliverableTechNotes" type="string"/> 
+      
+        <property name="allInOne" type="string"/> 
+        <property name="orderConfirmation" type="string"/> 
+        <property name="deliveryConfirmation" type="string"/> 
+        <property name="translationApprovalConfirmation" type="string"/> 
+        <property name="other" type="string"/>
+         <property name="otherText" type="string"/>
+          <property name="otherPercent" type="string"/>
+           <property name="otherDollarTotal" type="string"/>
+      
+        <property name="createdBy" type="string"/> 
+        <property name="createdDate" type="date"/> 
+        <property name="lastModifiedBy" type="string"/> 
+        <property name="lastModifiedDate" type="date"/> 
+       
+         <property name="discountPercent" type="string"/> 
+          <property name="discountDollarTotal" type="string"/> 
+     <property name="subDiscountDollarTotal" type="string"/> 
+      
+      <property name="pm" type="string"/>       
+      <property name="clientAuthorization" type="string"/>
+      <property name="component" type="string"/>
+      <property name="subDollarTotal" type="string"/>
+      <property name="subPmDollarTotal" type="string"/>
+      <property name="pmPercent" type="string"/>
+      <property name="pmPercentDollarTotal" type="string"/>
+      <property name="rushPercent" type="string"/>
+      <property name="rushPercentDollarTotal" type="string"/>
+      <property name="legacyCost" type="string"/>
+      <property name="projectAmount" type="java.lang.Double"/>
+      <property name="isTracked" type="string"/>
+      <property name="euroToUsdExchangeRate" type="java.lang.Double"/>
+      <property name="independent" type="boolean"/>
+      <property name="pm_id" type="int"/>
+      <property name="archiveId" type="string"/>
+      <property name="confirmationRecieved" type="boolean"/>
+      <property name="original_project_number" type="string"/>
+      <property name="original_project_id" type="int"/>
+      <property name="typeOfText" type="string"/>
+      <property name="clientSatisfaction" type="java.lang.Double"/>
+      <property name="orderConfirmationMail" type="string"/>
+      <property name="deliveryConfirmationMail" type="string"/>
+      <property name="translationApprovalConfirmationMulti" type="string"/>
+      
+      <many-to-one name="Company" class="app.client.Client" column="ID_Client"/>
+      
+      <set name="ClientInvoices" lazy="true" inverse="true" order-by="number">
+      	<key column="ID_Project"/>
+      	<one-to-many class="app.project.ClientInvoice"/>
+      </set>
+      
+      <set name="Inspections" lazy="true" inverse="true" order-by="orderNum">
+      	<key column="ID_Project"/>
+      	<one-to-many class="app.project.Inspection"/>
+      </set>
+      
+      <set name="Quotes" lazy="false" inverse="true" order-by="approvalDate desc, approvedTS desc, lastModifiedByTS desc">
+      	<key column="ID_Project"/>
+      	<one-to-many class="app.quote.Quote1"/>
+      </set>
+      
+      <set name="SourceDocs" lazy="true" inverse="true" order-by="language">
+      	<key column="ID_Project"/>
+      	<one-to-many class="app.project.SourceDoc"/>
+      </set>
+      
+      <set name="Qualities" lazy="true" inverse="true" order-by="dateRaised desc">
+      	<key column="ID_Project"/>
+      	<one-to-many class="app.project.Quality"/>
+      </set>
+      
+      <set name="Change1s" lazy="true" inverse="true" order-by="number">
+      	<key column="ID_Project"/>
+      	<one-to-many class="app.project.Change1"/>
+      </set>
+      
+      <many-to-one name="Contact" class="app.client.ClientContact" column="ID_Client_Contact"/>
+      
+      
+      
+   </class>
+         
+</hibernate-mapping>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.ResourceContact" table="ResourceContact">
+      <id name="resourceContactId" type="int" column="ID_ResourceContact">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="firstName" type="string"/>
+      <property name="lastName" type="string"/>      
+      <property name="Address_1" type="string"/>
+      <property name="Address_2" type="string"/>
+      <property name="City" type="string"/>
+      <property name="State_prov" type="string"/>
+      <property name="Zip_postal_code" type="string"/>
+      <property name="Country" type="string"/>
+      <property name="Main_telephone_numb1" type="string"/>
+      <property name="workPhoneEx1" type="string"/>
+      <property name="Main_telephone_numb2" type="string"/>
+      <property name="workPhoneEx2" type="string"/>
+      <property name="Fax_number" type="string"/>
+      <property name="cellPhone" type="string"/>
+      <property name="url" type="string"/>
+      <property name="Email_address1" type="string"/>
+      <property name="Email_address2" type="string"/>
+      <property name="Email_address3" type="string"/>
+      <property name="Note" type="string"/>
+      <property name="skype" type="string"/>
+      <property name="timeDifference" type="string"/>
+      
+      <many-to-one name="Resource" class="app.resource.Resource" column="ID_Resource"/>      
+           
+   </class>
+              
+</hibernate-mapping>

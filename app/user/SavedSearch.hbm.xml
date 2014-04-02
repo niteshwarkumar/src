@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.SavedSearch" table="SavedSearch">
+      <id name="savedSearchId" type="int" column="ID_SavedSearch">
+         <generator class="identity"/>
+      </id>
+      <property name="clientName" type="string"/>
+      <property name="description" type="string"/>
+      <property name="resultTotal" type="string"/>
+      
+      <property name="firstName" type="string"/>
+      <property name="lastName" type="string"/>
+      <property name="singleCompanyName" type="string"/>
+      <property name="contactFirstName" type="string"/>
+      <property name="contactLastName" type="string"/>
+      <property name="agency" type="string"/>
+      <property name="oldId" type="string"/>
+      <property name="sourceId" type="string"/>
+      <property name="targetId" type="string"/>
+      <property name="status" type="string"/>
+      <property name="includeDoNot" type="string"/>
+      <property name="translator" type="string"/>
+      <property name="editor" type="string"/>
+      <property name="proofreader" type="string"/>
+      <property name="dtp" type="string"/>
+      <property name="icr" type="string"/>
+      <property name="trate" type="string"/>
+      <property name="erate" type="string"/>
+      <property name="terate" type="string"/>
+      <property name="prate" type="string"/>
+      <property name="dtpRate" type="string"/>
+      <property name="rateOldDb" type="string"/>
+      <property name="dtpSourceId" type="string"/>
+      <property name="dtpTargetId" type="string"/>
+     <property name="scoresLin" type="string"/>
+      <property name="scoreOldDb" type="string"/>
+      <property name="projectScoreGreater" type="string"/>
+      <property name="usesTrados" type="string"/>
+      <property name="usesSdlx" type="string"/>
+      <property name="usesDejavu" type="string"/>
+      <property name="usesCatalyst" type="string"/>
+      <property name="usesTransit" type="string"/>
+      <property name="usesOtherTool1" type="string"/>
+      <property name="usesOtherTool2" type="string"/>
+      <property name="city" type="string"/>
+      <property name="country" type="string"/>
+      <property name="resume" type="string"/>
+      <many-to-one name="User" class="app.user.User" column="ID_User"/>
+      <property name="other" type="string"/>
+      <property name="consultant" type="string"/>
+      <property name="partner" type="string"/>
+      <property name="engineering" type="string"/>
+      <property name="businesssuport" type="string"/>
+      <property name="fqa" type="string"/>
+
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+
+<!--
+    Document   : INDtp.hbm.xml
+    Created on : 11 July, 2011, 2:58 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INDtp" table="in_dtp">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="projectId" type="int"/>
+        <property name="prepTime" type="float"/>
+        <property name="prepLang" type="string"/>
+        <property name="prepTotal" type="float"/>
+        <property name="deliveryTime" type="float"/>
+        <property name="deliveryLang" type="string"/>
+        <property name="deliveryTotal" type="float"/>
+
+        <property name="srcPf1" type="boolean"/>
+        <property name="srcPf2" type="boolean"/>
+        <property name="srcPf3" type="boolean"/>
+        <property name="srcPf4" type="boolean"/>
+        <property name="srcPf5" type="boolean"/>
+        <property name="srcPf6" type="boolean"/>
+        <property name="dtpToolName" type="string"/>
+        <property name="dtpTool1" type="boolean"/>
+        <property name="dtpToolOth" type="boolean"/>
+        <property name="dtpToolOthText" type="string"/>
+        <property name="srcFont1" type="boolean"/>
+        <property name="srcFont2" type="boolean"/>
+        <property name="tgtFont1" type="boolean"/>
+        <property name="tgtFont2" type="boolean"/>
+
+        <property name="TgtFontText" type="string"/>
+
+        <property name="verified" type="boolean"/>
+        <property name="verifiedBy" type="string"/>
+        <property name="verifiedDate" type="date"/>
+        <property name="verifiedText" type="string"/>
+
+        <property name="textBox1" type="string"/>
+        <property name="textBox2" type="string"/>
+        <property name="textBox3" type="string"/>
+        <property name="textBox4" type="string"/>
+
+        <property name="check1" type="boolean"/>
+        <property name="check2" type="boolean"/>
+        <property name="check21" type="boolean"/>
+        <property name="check22" type="boolean"/>
+        <property name="check3" type="boolean"/>
+        <property name="check4" type="boolean"/>
+        <property name="check5" type="boolean"/>
+        <property name="check6" type="boolean"/>
+        <property name="check7" type="boolean"/>
+        <property name="check6text" type="string"/>
+        <property name="check7text" type="string"/>
+        <property name="checkText3" type="string"/>
+        <property name="checkText1" type="string"/>
+        <property name="checkText2" type="string"/>
+
+        <property name="hours0" type="java.lang.Double"/>
+        <property name="unit0" type="string"/>
+        <property name="hours1" type="java.lang.Double"/>
+        <property name="unit1" type="string"/>
+        <property name="hours2" type="java.lang.Double"/>
+        <property name="unit2" type="string"/>
+        <property name="hours3" type="java.lang.Double"/>
+        <property name="unit3" type="string"/>
+        <property name="hours4" type="java.lang.Double"/>
+        <property name="unit4" type="string"/>
+        <property name="hours5" type="java.lang.Double"/>
+        <property name="unit5" type="string"/>
+        <property name="hours6" type="java.lang.Double"/>
+        <property name="unit6" type="string"/>
+        <property name="dtpnotes" type="string"/>
+
+     
+
+<property name="porq" type="string"/>
+    </class>
+</hibernate-mapping>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.extjs.vo.Upload_Doc" table="upload_doc">
+      <id name="uploadDoc" type="int" >
+         <generator class="identity"/>
+      </id>
+       <property name="ClientID" type="int"/>
+       <property name="QuoteID" type="int"/>
+       <property name="pathname" type="string"/>
+       <property name="path" type="string"/>
+       <property name="uploadedBy" type="string"/>
+       <property name="uploadDate" type="date"/>
+
+   </class>
+</hibernate-mapping>

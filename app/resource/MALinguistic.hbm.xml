@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.MALinguistic" table="linMA">
+      <id name="ID_linMA" type="int" column="ID_linMA">
+         <generator class="identity"/>
+      </id>
+       <property name="totalScore" type="java.lang.Double"/>    
+      <property name="id_resource" type="java.lang.Integer"/>          
+      <property name="nativeSpeaker" type="string"/>
+      <property name="professionalLinguist" type="string"/>
+      <property name="formalEducationYears" type="java.lang.Integer"/>
+      <property name="nativeLocation" type="string"/>
+      <property name="formalEducationLevel" type="string"/>
+      <property name="contentExpert1" type="string"/>
+      <property name="contentExpert3" type="string"/>
+      <property name="contentExpert2" type="string"/>
+      <property name="contentExpert4" type="string"/>
+      <property name="contentExpert5" type="string"/>
+      <property name="contentExpert6" type="string"/>
+      <property name="profession" type="string"/>
+      <property name="educatedIn1" type="string"/>
+      <property name="educatedIn2" type="string"/>
+      <property name="educatedIn3" type="string"/>
+      <property name="educatedInLevel1" type="string"/>
+      <property name="educatedInLevel2" type="string"/>
+      <property name="educatedInLevel3" type="string"/>
+      <property name="educatedInYears1" type="java.lang.Integer"/>      
+      <property name="educatedInYears3" type="java.lang.Integer"/>      
+      <property name="educatedInYears2" type="java.lang.Integer"/>      
+      <property name="professionYears" type="java.lang.Integer"/>      
+      <property name="medicalExpirienceYears" type="java.lang.Integer"/>      
+      <property name="softwareExpirienceYears" type="java.lang.Integer"/>      
+      <property name="techExpirienceYears" type="java.lang.Integer"/>      
+      <property name="legalExpirienceYears" type="java.lang.Integer"/>      
+      <property name="marketingExpirienceYears" type="java.lang.Integer"/>  
+      
+      <property name="medicalExpirience" type="string"/>      
+      <property name="softwareExpirience" type="string"/>      
+      <property name="techExpirience" type="string"/>      
+      <property name="legalExpirience" type="string"/>      
+      <property name="marketingExpirience" type="string"/>        
+      
+      <property name="iso9001" type="string"/>
+      <property name="iso13485" type="string"/>
+      <property name="iso14971" type="string"/>
+      <property name="otherIso" type="string"/>     
+      <property name="industry1" type="string"/>     
+      <property name="industry2" type="string"/>     
+      <property name="industry3" type="string"/>     
+      <property name="countryCert1" type="string"/>     
+      <property name="countryCert2" type="string"/>     
+      <property name="countryCert3" type="string"/>     
+      <property name="reference" type="string"/>     
+      <property name="referenceNotes" type="string"/>     
+      <property name="sizeUnit" type="string"/>     
+      <property name="location1" type="string"/>     
+      <property name="location2" type="string"/>     
+      <property name="location3" type="string"/>     
+      <property name="nicheLangs" type="string"/>     
+      <property name="nicheSpecialization" type="string"/>              
+      <property name="sizeFullTimeEmp" type="java.lang.Integer"/>      
+      <property name="sizeVolume" type="java.lang.Double"/>  
+      <property name="professionalLinguistFT" type="string"/>   
+      <property name="professionalLinguistPT" type="string"/>   
+      
+      
+   <property name="speakerScore" type="java.lang.Double"/> 
+   <property name="profLinScore" type="java.lang.Double"/>
+   <property name="nativeCountryScore" type="java.lang.Double"/>
+   <property name="formalEdScore" type="java.lang.Double"/>
+   <property name="contentExpertScore" type="java.lang.Double"/>
+   <property name="educatedInScore" type="java.lang.Double"/>
+   <property name="professionScore" type="java.lang.Double"/>
+   <property name="experienceScore" type="java.lang.Double"/>
+   <property name="toolsScore" type="java.lang.Double"/>
+   <property name="accreditationScore" type="java.lang.Double"/>
+   <property name="referenceScore" type="java.lang.Double"/>
+   <property name="size1Score" type="java.lang.Double"/>
+   <property name="size2Score" type="java.lang.Double"/>
+   <property name="locationScore" type="java.lang.Double"/>
+   <property name="nicheLangScore" type="java.lang.Double"/>
+   <property name="nicheSpecScore" type="java.lang.Double"/>
+
+
+   </class>
+</hibernate-mapping>

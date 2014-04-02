@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.menu.Announcement" table="Announcement">
+      <id name="announcementId" type="int" column="ID_Announcement">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="startDate" type="date"/>      
+      <property name="endDate" type="date"/> 
+      <property name="header" type="string"/>
+      <property name="body" type="text"/>     
+      <property name="picture" type="string"/>
+      <property name="ID_Client" type="int"/>  
+      
+   </class>
+       
+</hibernate-mapping>

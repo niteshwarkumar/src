@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.Quality" table="Quality">
+      <id name="qualityId" type="int" column="ID_Quality">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="issue" type="string"/>     
+      <property name="dateRaised" type="date"/> 
+      <property name="number" type="string"/>
+      <property name="dateClosed" type="date"/>
+      <property name="minorMajor" type="string"/>
+      
+      <many-to-one name="Project" class="app.project.Project" column="ID_Project"/>
+      
+   </class>
+   
+</hibernate-mapping>

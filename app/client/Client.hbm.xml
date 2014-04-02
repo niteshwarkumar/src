@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.client.Client" table="Client_Information">
+      <id name="clientId" type="int" column="ID_Client">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="delinquent" type="int"/>
+      <property name="Company_name" type="string"/>
+      <property name="business_desc" type="string"/>
+      <property name="Company_code" type="string"/>
+      <property name="Address_1" type="string"/>
+      <property name="Address_2" type="string"/>
+      <property name="billing1" type="string"/>
+      <property name="billing2" type="string"/>
+      <property name="billing3" type="string"/>      
+      <property name="City" type="string"/>
+      <property name="State_prov" type="string"/>
+      <property name="Zip_postal_code" type="string"/>
+      <property name="Country" type="string"/>
+      <property name="Main_telephone_numb" type="string"/>
+      <property name="workPhoneEx" type="string"/>
+      <property name="Fax_number" type="string"/>
+      <property name="url" type="string"/>
+      <property name="Status" type="string"/>
+      <property name="Email_address" type="string"/>
+      <property name="Note" type="text"/>
+      <property name="Project_mngr" type="string"/>
+      <property name="Backup_pm" type="string"/>
+      <property name="Sales_rep" type="string"/>
+      <property name="Satisfaction_score" type="string"/>
+      <property name="Satisfaction_level" type="string"/>
+      <property name="Ftp_host_excel" type="string"/>
+      <property name="Ftp_user_id_excel" type="string"/>
+      <property name="Ftp_password_excel" type="string"/>
+      <property name="Ftp_host_client" type="string"/>
+      <property name="Ftp_user_id_client" type="string"/>
+      <property name="Ftp_password_client" type="string"/>
+      <property name="logo" type="string"/>
+      <property name="scaleRep" type="string"/>
+      <property name="scale100" type="string"/>
+      <property name="scale95" type="string"/>
+      <property name="scale85" type="string"/>
+      <property name="scale75" type="string"/>
+      <property name="scaleNew" type="string"/>
+      <property name="scale8599" type="string"/>
+      <property name="scaleNew4" type="string"/>
+      <property name="scalePerfect" type="string"/>
+      <property name="scaleContext" type="string"/>
+      <property name="scaleDefault" type="boolean"/>
+      
+      <property name="lin_css_other" type="string"/>
+      <property name="tech_css_other" type="string"/>
+      
+      <property name="main_engineer" type="string"/>
+      <property name="main_dtp" type="string"/>
+      <property name="other_engineer" type="string"/>
+      <property name="other_dtp" type="string"/>
+   
+      <property name="tracker_password" type="string"/>
+      <property name="certifications" type="string"/>
+      
+      
+      <property name="createdBy" type="string"/>
+      <property name="createdByDate" type="date"/>
+      <property name="modifiedBy" type="string"/>
+      <property name="modifiedByDate" type="date"/>
+      
+      <property name="billing_address1" type="string"/>
+      <property name="billing_address2" type="string"/>
+      <property name="billing_zip" type="string"/>
+      <property name="billing_city" type="string"/>
+      <property name="billing_country" type="string"/>
+      <property name="billing_attention" type="string"/>
+      <property name="billing_reference" type="string"/>
+      <property name="ccurrency" type="string"/>
+      <property name="tm_maintained" type="string"/>
+      <property name="mainSource" type="string"/>
+      <property name="mainTarget" type="string"/>
+      <property name="otherContact1" type="string"/>
+      <property name="otherContact2" type="string"/>
+      <property name="otherContact3" type="string"/>
+      <property name="otherContact4" type="string"/>
+      <property name="otherContact5" type="string"/>
+      <property name="terms" type="string"/>
+      <property name="termsNames" type="string"/>
+      <property name="pmfeePercentage" type="double"/>
+      <property name="auto_alert" type="string"/>
+
+      
+       <set name="Contacts" inverse="true" order-by="Last_name">
+      	<key column="ID_Client"/>
+      	<one-to-many class="app.client.ClientContact"/>
+      </set>      
+      
+      <set name="Projects" lazy="true" inverse="true" order-by="number desc">
+      	<key column="ID_Client"/>
+      	<one-to-many class="app.project.Project"/>
+      </set>
+      
+      <set name="ClientLanguagePairs" lazy="true" inverse="true" order-by="source, target">
+      	<key column="ID_Client"/>
+      	<one-to-many class="app.client.ClientLanguagePair"/>
+      </set>
+      
+      <set name="ClientOtherRates" lazy="true" inverse="true" order-by="note">
+      	<key column="ID_Client"/>
+      	<one-to-many class="app.client.ClientOtherRate"/>
+      </set>
+            
+      <many-to-one name="Industry" class="app.client.Industry" column="Industry_ID"/>
+      
+   </class>
+              
+</hibernate-mapping>

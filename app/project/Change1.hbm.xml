@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+    <class name="app.project.Change1" table="Change1">
+        <id name="change1Id" type="int" column="ID_Change1">
+            <generator class="identity"/>
+        </id>
+      
+        <property name="number" type="string"/>
+        <property name="description" type="string"/>
+        <property name="changeDate" type="date"/>
+        <property name="dollarTotal" type="string"/>
+        <property name="approved" type="boolean"/>
+      
+        <many-to-one name="Project" class="app.project.Project" column="ID_Project"/>
+      
+    </class>
+   
+</hibernate-mapping>

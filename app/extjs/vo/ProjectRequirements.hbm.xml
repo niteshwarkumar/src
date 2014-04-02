@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.extjs.vo.ProjectRequirements" table="project_team_fee_requirements">
+      <id name="req_id" type="int" column="req_id">
+         <generator class="identity"/>
+      </id>
+      <property name="ID_Project" type="int"/>
+      <property name="requirement" type="string"/>
+      <property name="notes" type="string"/>
+      <property name="satisfied" type="string"/>
+      <property name="type" type="string"/>
+      
+    
+   </class>
+</hibernate-mapping>

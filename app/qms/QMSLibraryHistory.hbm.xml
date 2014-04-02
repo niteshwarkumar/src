@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+
+<!--
+    Document   : QMSLibraryHistory.xml
+    Created on : February 20, 2012, 8:15 PM
+    Author     : Niteshwar
+    Description:
+       QMS DOCS HISTORY
+-->
+
+<hibernate-mapping>
+   <class name="app.qms.QMSLibraryHistory" table="qmslibraryhistory">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+  <property name="QMSLibId" type="int"/>
+  <property name="title" type="string"/>
+  <property name="docId" type="string"/>
+  <property name="version" type="string"/>
+  <property name="releaseDate" type="date"/>
+  <property name="changes" type="string"/>
+  <property name="fileName" type="string"/>
+  <property name="fileSaveName" type="string"/>
+   </class>
+</hibernate-mapping>

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.quote.Client_Quote" table="Client_Quote">
+        <id name="id" type="int" >
+            <generator class="identity"/>
+        </id>
+        <property name="Quote_ID" type="int"/>
+        <property name="ID_Client" type="int"/>
+        <property name="Product_ID" type="int"/>
+        <property name="productName" type="string"/>
+        <property name="productText" type="string"/>
+        <property name="medical" type="string"/>
+        <property name="Type" type="string"/>
+        <property name="application" type="string"/>
+        <property name="os" type="string"/>
+        <property name="unit" type="string"/>
+        <property name="volume" type="string"/>
+        <property name="version" type="string"/>
+
+        <property name="target_application" type="string"/>
+        <property name="target_os" type="string"/>
+        <property name="target_version" type="string"/>
+        <property name="deliverable" type="string"/>
+        <property name="component" type="string"/>
+        <property name="typeOfText" type="string"/>
+        <property name="instruction" type="string"/>
+        <property name="requirement" type="string"/>
+         <property name="clientTask" type="string"/>
+        <property name="otherTask" type="string"/>
+        <property name="srcComment" type="string"/>
+
+    <set name="SourceDocs" lazy="true" inverse="true" order-by="language">
+      	<key column="ID_Client_Quote"/>
+      	<one-to-many class="app.project.SourceDoc"/>
+      </set>
+
+    </class>
+
+</hibernate-mapping>

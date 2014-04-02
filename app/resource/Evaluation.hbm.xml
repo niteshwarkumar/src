@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.resource.Evaluation" table="Evaluation">
+      <id name="eval_id" type="int" >
+         <generator class="identity"/>
+      </id>
+      <property name="evaluation_area" type="string"/>
+      <property name="enteredBy" type="string"/>
+      <property name="projectId" type="string"/>
+      <property name="rate" type="java.lang.Integer"/>
+
+      <property name="comment" type="string"/>
+      <property name="resourceId" type="string"/>
+
+
+   </class>
+</hibernate-mapping>

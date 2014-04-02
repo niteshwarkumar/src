@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.client.ClientContact" table="Client_Contact_Info">
+      <id name="clientContactId" type="int" column="ID_Client_Contact">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="First_name" type="string"/>
+      <property name="Last_name" type="string"/>
+      <property name="Title" type="string"/>
+      <property name="Email_address" type="string"/>
+      <property name="Email_address2" type="string"/>
+      <property name="Department" type="string"/>
+      <property name="Telephone_number" type="string"/>
+      <property name="workPhoneEx" type="string"/>
+      <property name="Fax_number" type="string"/>
+      <property name="Cell_phone_number" type="string"/>
+      <property name="Address_1" type="string"/>
+      <property name="Address_2" type="string"/>
+      <property name="City" type="string"/>
+      <property name="State_prov" type="string"/>
+      <property name="Zip_postal_code" type="string"/>
+      <property name="Country" type="string"/>
+      <property name="timeZone" type="string"/>
+      <property name="division" type="string"/>
+      <property name="Note" type="string"/>  
+      <property name="key_personnel" type="boolean"/>   
+      <property name="tracker_password" type="string"/>
+      <property name="display" type="boolean"/>
+      <many-to-one name="Company" class="app.client.Client" column="ID_Client"/>
+      
+      <set name="Projects" lazy="true" inverse="true" order-by="number">
+      	<key column="ID_Client_Contact"/>
+      	<one-to-many class="app.project.Project"/>
+      </set>
+
+   </class>
+   
+   
+   <sql-query name="app.client.ClientContactSearch">
+        <return alias="app" class="app.client.ClientContact"/>
+        <![CDATA[
+            select {app.*} from APPOINTMENT as {app} where 
+            {app}.USER_ID = :user and 
+            {app}.STARTDATE >= :startDate and 
+            {app}.ENDDATE <= :endDate and 
+            {app}.STARTTIME >= :startTime and 
+            {app}.ENDTIME <= :endTime and 
+            {app}.OCCURRENCES = :occurrences and 
+            {app}.DESCRIPTION like :description
+            order by {app}.STARTDATE, {app}.STARTTIME
+        ]]>
+   </sql-query>
+       
+</hibernate-mapping>

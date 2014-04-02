@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.menu.Todo" table="Todo">
+      <id name="todoId" type="int" column="ID_Todo">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="description" type="string"/>      
+      <property name="priority" type="string"/>      
+      <property name="started" type="boolean"/>      
+      <property name="completed" type="boolean"/>      
+      <property name="dateAdded" type="date"/>      
+      <property name="dateDue" type="date"/>      
+      <property name="dateCompleted" type="date"/>      
+           
+      <many-to-one name="User" class="app.user.User" column="ID_User"/>
+      
+   </class>
+       
+</hibernate-mapping>

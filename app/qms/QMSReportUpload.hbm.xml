@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : QMSReportUpload.hbm.xml
+    Created on : 13 December, 2010, 1:01 AM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.qms.QMSReportUpload" table="qmsreportupload">
+      <id name="id" type="int" >
+         <generator class="identity"/>
+      </id>
+      <property name="auditno" type="int"/>
+      <property name="pathname" type="string"/>
+      <property name="path" type="string"/>
+   </class>
+</hibernate-mapping>

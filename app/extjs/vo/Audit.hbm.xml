@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.extjs.vo.Audit" table="audits">
+      <id name="audit_id" type="int" column="audit_id">
+         <generator class="identity"/>
+      </id>
+      <property name="ID_Client" type="int"/>         
+      <property name="audit_date" type="string"/>
+      <property name="auditor" type="string"/>
+    <property name="result" type="string"/>
+<property name="report_url" type="string"/>
+<property name="minor_non" type="int"/>         
+      <property name="major_non" type="int"/>         
+      
+     
+    
+   </class>
+</hibernate-mapping>

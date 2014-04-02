@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.client.SpecificIndustry" table="SpecificIndustry">
+      <id name="specificIndustryId" type="int" column="SpecificIndustry_ID">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="specificIndustry" type="string"/>
+
+      <many-to-one name="Industry" class="app.client.Industry" column="Industry_ID"/>
+      
+      <set name="Resources" lazy="true" table="Resource_SpecificIndustry" inverse="true">
+        <key column="SpecificIndustry_ID"/>
+        <many-to-many class="app.resource.Resource" column="ID_Resource"/>
+      </set>
+      
+   </class>
+              
+</hibernate-mapping>

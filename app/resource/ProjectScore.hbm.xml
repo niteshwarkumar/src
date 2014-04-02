@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.ProjectScore" table="ProjectScore">
+      <id name="ProjectScoreId" type="int" column="ID_ProjectScore">
+         <generator class="identity"/>
+      </id>
+      <property name="projectNumber" type="string"/>
+      <property name="score" type="java.lang.Integer"/>
+            
+      
+   </class>
+</hibernate-mapping>

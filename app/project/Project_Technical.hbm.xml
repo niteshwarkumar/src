@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.project.Project_Technical" table="Project_Technical">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="sourceos" type="string"/>
+        <property name="sourceapp" type="string"/>
+        <property name="sourcever" type="string"/>
+        <property name="targetos" type="string"/>
+        <property name="targetapp" type="string"/>
+        <property name="targetver" type="string"/>
+        <property name="projectid" type="int"/>
+
+    </class>
+
+</hibernate-mapping>

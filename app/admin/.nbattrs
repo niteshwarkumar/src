@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="AdminClientDeleteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="AdminClientDeleteAction"/>
+    </fileobject>
+    <fileobject name="AdminProjectDeleteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="AdminProjectDeleteAction"/>
+    </fileobject>
+    <fileobject name="AdminQuoteDeleteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="AdminQuoteDeleteAction"/>
+    </fileobject>
+</attributes>

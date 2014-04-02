@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.Unavail" table="Unavail">
+      <id name="unavailId" type="int" column="ID_Unavail">
+         <generator class="identity"/>
+      </id>
+      <property name="notes" type="string"/>
+      <property name="startDate" type="date"/> 
+      <property name="endDate" type="date"/> 
+      
+      <many-to-one name="Resource" class="app.resource.Resource" column="ID_Resource"/>
+      
+   </class>
+</hibernate-mapping>

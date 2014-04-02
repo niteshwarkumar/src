@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+
+   <class name="app.tracker.MilestoneLanguage" table="milestone_language">
+      <id name="millan_id" type="int" column="millan_id">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="milestone_id" type="java.lang.Integer"/>      
+      <property name="lang_id" type="java.lang.Integer"/>      
+      <property name="project_id" type="java.lang.Integer"/>      
+      <property name="completed_ts" type="java.sql.Timestamp"/>      
+      
+      
+   </class>
+       
+</hibernate-mapping>

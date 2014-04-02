@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!--
+    Document   : qmsLibrary.hbm.xml
+    Created on : February 20, 2012, 8:12 PM
+    Author     : Niteshwar
+    Description:
+        QMS DOCS
+-->
+
+<hibernate-mapping>
+   <class name="app.qms.QMSLibrary" table="qmslibrary">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+  <property name="mainTab" type="string"/>
+  <property name="title" type="string"/>
+  <property name="description" type="string"/>
+  <property name="isoreference" type="string"/>
+  <property name="category" type="string"/>
+  <property name="docId" type="string"/>
+  <property name="version" type="string"/>
+  <property name="type" type="string"/>
+  <property name="format" type="string"/>
+  <property name="releaseDate" type="date"/>
+  <property name="owner" type="string"/>
+  <property name="allCheck" type="boolean"/>
+  <property name="pmCheck" type="boolean"/>
+  <property name="engCheck" type="boolean"/>
+  <property name="dtpCheck" type="boolean"/>
+  <property name="vmCheck" type="boolean"/>
+  <property name="smCheck" type="boolean"/>
+  <property name="manCheck" type="boolean"/>
+  <property name="accCheck" type="boolean"/>
+  <property name="hrCheck" type="boolean"/>
+  <property name="itCheck" type="boolean"/>
+  <property name="qmCheck" type="boolean"/>
+  <property name="mqaCheck" type="boolean"/>
+  <property name="other" type="string"/>
+  <property name="uploadBy" type="string"/>
+  <property name="uploadDate" type="date"/>
+  <property name="fileName" type="string"/>
+  <property name="fileSaveName" type="string"/>
+  <property name="link" type="string"/>
+  <property name="sign1" type="boolean"/>
+  <property name="sign2" type="boolean"/>
+  <property name="sign3" type="boolean"/>
+  <property name="date1" type="date"/>
+  <property name="date2" type="date"/>
+  <property name="date3" type="date"/>
+  <property name="person1" type="string"/>
+  <property name="person2" type="string"/>
+  <property name="person3" type="string"/>
+  <property name="needed" type="string"/>
+  <property name="reason" type="string"/>
+  <property name="affected" type="boolean"/>
+  <property name="affectedBox" type="string"/>
+  <property name="type1" type="string"/>
+  <property name="type2" type="string"/>
+  <property name="type3" type="string"/>
+
+
+
+ </class>
+</hibernate-mapping>

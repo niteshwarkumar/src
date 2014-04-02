@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : INDelivery.hbm.xml
+    Created on : August 10, 2011, 1:04 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INSourceFile" table="in_sourcefile">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="quantity" type="int"/>
+        <property name="extension" type="string"/>
+        <property name="notes" type="string"/>
+        <property name="projectId" type="int"/>
+
+
+    </class>
+</hibernate-mapping>

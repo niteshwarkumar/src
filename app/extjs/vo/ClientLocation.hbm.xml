@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+    <class name="app.extjs.vo.ClientLocation" table="client_additional_location">
+        <id name="location_id" type="int" column="location_id">
+            <generator class="identity"/>
+        </id>
+        <property name="ID_Client" type="int"/>
+        <property name="division" type="string"/>
+        <property name="address1" type="string"/>
+        <property name="address2" type="string"/>
+        <property name="city" type="string"/>
+        <property name="state" type="string"/>
+        <property name="zip" type="string"/>
+        <property name="country" type="string"/>
+ 
+    </class>
+</hibernate-mapping>

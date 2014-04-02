@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.client.ClientLanguagePair" table="ClientLanguagePair">
+      <id name="clientlanguagePairId" type="int" column="ID_ClientLanguagePair">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="source" type="string"/>
+      <property name="target" type="string"/>
+      <property name="rate" type="string"/>      
+      <property name="units" type="string"/>  
+       <property name="task" type="string"/>
+      <many-to-one name="Company" class="app.client.Client" column="ID_Client"/>
+      
+      </class>
+       
+</hibernate-mapping>

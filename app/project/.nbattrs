@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="CompareTaskDtp.java">
+        <attr name="class_dependency_java.util.Comparator" stringvalue="CompareTaskDtp"/>
+    </fileobject>
+    <fileobject name="CompareTaskEng.java">
+        <attr name="class_dependency_java.util.Comparator" stringvalue="CompareTaskEng"/>
+    </fileobject>
+    <fileobject name="CompareTaskOth.java">
+        <attr name="class_dependency_java.util.Comparator" stringvalue="CompareTaskOth"/>
+    </fileobject>
+    <fileobject name="Project.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="Project"/>
+    </fileobject>
+    <fileobject name="ProjectScopeEditUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectScopeEditUpdateAction"/>
+    </fileobject>
+    <fileobject name="ProjectSearchAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectSearchAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewAccountingAddInvoice1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewAccountingAddInvoice1Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewAccountingAddPreInvoiceAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewAccountingAddPreInvoiceAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewAccountingDeleteInvoiceAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewAccountingDeleteInvoiceAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewForms1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewForms1Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewFormsAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewFormsAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewFormsGen11Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewFormsGen11Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewFormsGen13Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewFormsGen13Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewFormsGen4Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewFormsGen4Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewFormsGen5Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewFormsGen5Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewFormsGen6Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewFormsGen6Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewNavigationAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewNavigationAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewOverviewAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewOverviewAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewScopeAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewScopeAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewScopeDeleteSourceAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewScopeDeleteSourceAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewScopeDeleteTargetAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewScopeDeleteTargetAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewTeamAddTaskEng1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewTeamAddTaskEng1Action"/>
+    </fileobject>
+    <fileobject name="ProjectViewTeamAddTaskEngPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewTeamAddTaskEngPreAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewTeamDeleteDtpTaskAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewTeamDeleteDtpTaskAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewTeamDeleteOthTaskAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewTeamDeleteOthTaskAction"/>
+    </fileobject>
+    <fileobject name="ProjectViewTeamGeneratePoAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ProjectViewTeamGeneratePoAction"/>
+    </fileobject>
+</attributes>

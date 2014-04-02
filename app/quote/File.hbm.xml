@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.quote.File" table="File">
+      <id name="fileId" type="int" column="ID_File">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="fileName" type="string"/>      
+      <property name="location" type="string"/>      
+      <property name="locationType" type="string"/>      
+      <property name="note" type="string"/>      
+      <property name="beforeAnalysis" type="string"/>      
+            
+      <many-to-one name="Quote" class="app.quote.Quote1" column="ID_Quote1"/>
+      
+   </class>
+       
+</hibernate-mapping>

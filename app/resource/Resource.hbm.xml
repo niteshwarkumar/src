@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.Resource" table="Resource">
+      <id name="resourceId" type="int" column="ID_Resource">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="firstName" type="string"/>
+      <property name="lastName" type="string"/>
+      <property name="companyName" type="string"/>
+      <property name="agency" type="boolean"/>
+      <property name="resume" type="text"/>
+      <property name="status" type="string"/>
+      <property name="url" type="string"/>
+      <property name="doNotUse" type="boolean"/>      
+      <property name="translator" type="boolean"/>
+      <property name="editor" type="boolean"/>
+      <property name="proofreader" type="boolean"/>
+      <property name="evaluator" type="boolean"/>
+      <property name="localizer" type="boolean"/>
+      <property name="dtp" type="boolean"/>
+      <property name="icr" type="boolean"/>
+      <property name="yearsInIndustry" type="date"/>
+      <property name="nativeCountry" type="string"/>
+      <property name="projectScoreAverage" type="java.lang.Double"/>
+      
+      <property name="Address_1" type="string"/>
+      <property name="Address_2" type="string"/>
+      <property name="City" type="string"/>
+      <property name="State_prov" type="string"/>
+      <property name="Zip_postal_code" type="string"/>
+      <property name="Country" type="string"/>
+      <property name="Main_telephone_numb1" type="string"/>
+      <property name="workPhoneEx1" type="string"/>
+      <property name="Main_telephone_numb2" type="string"/>
+      <property name="workPhoneEx2" type="string"/>
+      <property name="Fax_number" type="string"/>
+      <property name="cellPhone" type="string"/>
+      
+      <property name="Email_address1" type="string"/>
+      <property name="Email_address2" type="string"/>
+      <property name="Email_address3" type="string"/>
+      <property name="Note" type="text"/>
+      
+      <property name="confiAgreement" type="boolean"/>
+      <property name="msaSent" type="date"/>
+      <property name="msaReceived" type="date"/>
+      
+      <property name="usesTrados" type="boolean"/>
+      <property name="tradosVersion" type="string"/>
+      <property name="usesDejavu" type="boolean"/>
+      <property name="dejavuVersion" type="string"/>
+      <property name="usesCatalyst" type="boolean"/>
+      <property name="catalystVersion" type="string"/>
+      <property name="usesSdlx" type="boolean"/>
+      <property name="sdlxVersion" type="string"/>
+      <property name="usesTransit" type="boolean"/>
+      <property name="transitVersion" type="string"/>
+      <property name="usesOther" type="boolean"/>
+      <property name="otherName" type="string"/>
+      <property name="otherVersion" type="string"/>      
+       <property name="linRatesNotes" type="string"/>  
+        <property name="dtpRatesNotes" type="string"/>  
+        
+         <property name="linISANotes" type="string"/>  
+        <property name="dtpISANotes" type="string"/>  
+        <property name="osaNotes" type="string"/>  
+      
+      
+      <property name="medicalScore" type="java.lang.Double"/>
+      <property name="technicalScore" type="java.lang.Double"/>
+      <property name="softwareScore" type="java.lang.Double"/>
+      <property name="legalFinancialScore" type="java.lang.Double"/>
+      <property name="currency" type="string"/>
+      <property name="min" type="java.lang.Double"/>
+      <property name="t" type="java.lang.Double"/>
+      <property name="tunit" type="string"/>
+      <property name="e" type="java.lang.Double"/>
+      <property name="eunit" type="string"/>
+      <property name="te" type="java.lang.Double"/>
+      <property name="teunit" type="string"/>
+      <property name="p" type="java.lang.Double"/>
+      <property name="punit" type="string"/>
+      <property name="scaleRep" type="string"/>
+      <property name="scale100" type="string"/>
+      <property name="scale95" type="string"/>
+      <property name="scale85" type="string"/>
+      <property name="scale75" type="string"/>
+      <property name="scaleNew" type="string"/>
+      <property name="scaleDefault" type="boolean"/>
+      <property name="qualityProcess" type="string"/>    
+      <property name="enteredById" type="string"/>    
+      <property name="enteredByTS" type="date"/> 
+      <property name="lastModifiedById" type="string"/>    
+      <property name="lastModifiedByTS" type="date"/> 
+
+      <property name="other" type="boolean"/>
+      <property name="tne" type="boolean"/>
+      <property name="consultant" type="boolean"/>
+      <property name="partner" type="boolean"/>
+      <property name="engineering" type="boolean"/>
+      <property name="businesssuport" type="boolean"/>
+      <property name="fqa" type="boolean"/>
+      <property name="beingTested" type="boolean"/>
+      <property name="beingTestedBy" type="string"/>
+  
+      <property name="interpreting" type="boolean"/>
+      <property name="expert" type="boolean"/>
+      <property name="quality" type="boolean"/>
+      
+      <property name="informationTechnology" type="boolean"/>
+      <property name="humanResource" type="boolean"/>
+      <property name="office" type="boolean"/>
+      <property name="sales" type="boolean"/>
+      <property name="accounting" type="boolean"/>
+      <property name="bsdOther" type="boolean"/>
+      <property name="prodOther" type="boolean"/>
+          
+      <property name="prodOtherText" type="string"/>
+      <property name="bsdOtherText" type="string"/>
+      <property name="otherText" type="string"/>
+
+      <property name="linDiscountName1" type="string"/>
+      <property name="linDiscountDescription1" type="string"/>
+      <property name="linDiscountName2" type="string"/>
+      <property name="linDiscountDescription2" type="string"/>
+      <property name="linDiscountName3" type="string"/>
+      <property name="linDiscountDescription3" type="string"/>
+      <property name="linDiscountName4" type="string"/>
+      <property name="linDiscountDescription4" type="string"/>
+      <property name="dtpDiscountName1" type="string"/>
+      <property name="dtpDiscountDescription1" type="string"/>
+      <property name="dtpDiscountName2" type="string"/>
+      <property name="dtpDiscountDescription2" type="string"/>
+      <property name="dtpDiscountName3" type="string"/>
+      <property name="dtpDiscountDescription3" type="string"/>
+      <property name="dtpDiscountName4" type="string"/>
+      <property name="dtpDiscountDescription4" type="string"/>
+      <property name="skypeId" type="string"/>
+      <property name="singleCompanyName" type="string"/>
+      <property name="scalePerfect"  type="string"/>
+      <property name="scaleContext"  type="string"/>
+      <property name="scale8599"  type="string"/>
+      <property name="scaleNew4"  type="string"/>
+      <property name="riskrating"  type="string"/>
+      <property name="nativeLanguage"  type="string"/>
+      <property name="teamNotes"  type="string"/>
+    
+      
+       <set name="LanguagePairs" lazy="true" inverse="true" order-by="sourceId, targetId">
+      	<key column="ID_Resource"/>
+      	<one-to-many class="app.resource.LanguagePair"/>
+      </set>      
+           
+      <set name="Unavails" lazy="true" inverse="true" order-by="startDate">
+      	<key column="ID_Resource"/>
+      	<one-to-many class="app.resource.Unavail"/>
+      </set> 
+      
+      <set name="Industries" lazy="true" table="Resource_Industry" order-by="Industry_ID">
+        <key column="ID_Resource"/>
+        <many-to-many class="app.client.Industry" column="Industry_ID"/>
+      </set>
+      
+       <set name="SpecificIndustries" lazy="true" table="Resource_SpecificIndustry" order-by="SpecificIndustry_ID">
+        <key column="ID_Resource"/>
+        <many-to-many class="app.client.SpecificIndustry" column="SpecificIndustry_ID"/>
+      </set>
+      
+      <set name="ResourceTools" lazy="true" inverse="true" order-by="description">
+      	<key column="ID_Resource"/>
+      	<one-to-many class="app.resource.ResourceTool"/>
+      </set> 
+      
+     <set name="ResourceContacts" lazy="true" inverse="true" order-by="lastName, firstName">
+      	<key column="ID_Resource"/>
+      	<one-to-many class="app.resource.ResourceContact"/>
+      </set> 
+      
+      <set name="RateScoreDtps" lazy="true" inverse="true" order-by="application">
+      	<key column="ID_Resource"/>
+      	<one-to-many class="app.resource.RateScoreDtp"/>
+      </set> 
+      
+      
+      
+   </class>
+              
+</hibernate-mapping>

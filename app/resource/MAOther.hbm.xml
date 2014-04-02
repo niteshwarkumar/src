@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.resource.MAOther" table="otherMA">
+      <id name="id_ma" type="int" column="id_ma">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="id_resource" type="java.lang.Integer"/> 
+      <property name="holdAmount" type="java.lang.Double"/>                     
+       
+      
+      <property name="tRate" type="java.lang.Double"/>                     
+      <property name="eRate" type="java.lang.Double"/>                     
+      <property name="teRate" type="java.lang.Double"/>                     
+       <property name="icrRate" type="java.lang.Double"/>                     
+             
+      <property name="refusingISA" type="string"/>
+     <property name="deductionReason1" type="string"/>
+     <property name="deductionReason2" type="string"/>
+     <property name="generalTandC" type="string"/>
+     <property name="paymentPolicy" type="string"/>
+     <property name="tradosPolicy" type="string"/>
+     <property name="paymentCheck" type="string"/>
+     <property name="paymentMail" type="string"/>
+     <property name="paymentRegistered" type="string"/>
+     <property name="wireTransfer" type="string"/>
+     <property name="holdCcy" type="string"/>
+     
+      <property name="refusingScore" type="java.lang.Double"/> 
+       <property name="rateScore" type="java.lang.Double"/> 
+        <property name="deductionReason2Score" type="java.lang.Double"/> 
+         <property name="rateCcy" type="string"/> 
+         <property name="totalScore" type="java.lang.Double"/> 
+         
+          <property name="dtprefusingScore" type="java.lang.Double"/> 
+           <property name="dtprateScore" type="java.lang.Double"/> 
+            <property name="dtpdeductionReason2Score" type="java.lang.Double"/> 
+             <property name="expertrefusingScore" type="java.lang.Double"/> 
+              <property name="expertrateScore" type="java.lang.Double"/> 
+               <property name="expertdeductionReason2Score" type="java.lang.Double"/> 
+                <property name="experttotalScore" type="java.lang.Double"/> 
+                 <property name="dtptotalScore" type="java.lang.Double"/> 
+   
+
+    
+     
+   </class>
+</hibernate-mapping>

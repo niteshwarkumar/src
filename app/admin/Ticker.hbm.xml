@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.admin.Ticker" table="ticker">
+        <id name="tickerId" type="int" column="tickerId">
+            <generator class="identity"/>
+        </id>
+
+        <property name="userId" type="int"/>
+        <property name="userEmail" type="string"/>
+        <property name="boxNumber" type="int"/>
+
+    </class>
+</hibernate-mapping>

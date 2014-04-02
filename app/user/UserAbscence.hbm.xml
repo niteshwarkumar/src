@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.UserAbscence" table="userabscence">
+      <id name="abscence_id" type="int" column="abscence_id">
+         <generator class="identity"/>
+      </id>
+      
+      
+      
+      <property name="ID_User" type="int" />
+      <property name="ID_Location" type="int" />
+      <property name="reason" type="string" />
+      <property name="notes" type="string" />
+      <property name="abscence_date" type="date" /> 
+      <property name="timeOut" type="double" /> 
+      
+      
+   </class>
+      
+</hibernate-mapping>

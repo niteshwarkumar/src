@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+
+<!--
+    Document   : Couples.hbm.xml
+    Created on : February 3, 2013, 7:43 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+
+<hibernate-mapping>
+   <class name="app.resource.Couples" table="couples">
+      <id name="id" type="int" >
+         <generator class="identity"/>
+      </id>
+      <property name="resourceid" type="java.lang.Integer"/>
+      <property name="resourcetype" type="string"/>
+      <property name="coupleid" type="java.lang.Integer"/>
+      <property name="coupletype" type="string"/>
+      <property name="yesno" type="string"/>
+      <property name="resourcename" type="string"/>
+      <property name="couplename" type="string"/>
+
+
+   </class>
+</hibernate-mapping>

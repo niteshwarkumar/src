@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.PerformanceReview" table="PerformanceReview">
+      <id name="performanceReviewId" type="int" column="ID_PerformanceReview">
+         <generator class="identity"/>
+      </id>
+      <property name="description" type="string"/>
+      <property name="dueDate" type="date"/> 
+      <property name="actualDate" type="date"/> 
+      <property name="signedDate" type="date"/> 
+      <property name="filedDate" type="date"/> 
+     
+      <many-to-one name="User" class="app.user.User" column="ID_User"/>
+      
+   </class>
+</hibernate-mapping>

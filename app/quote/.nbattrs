@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="QuoteAdd3Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteAdd3Action"/>
+    </fileobject>
+    <fileobject name="QuoteAddDoneAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteAddSourceAction"/>
+    </fileobject>
+    <fileobject name="QuoteAddEmailAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteAddEmailAction"/>
+    </fileobject>
+    <fileobject name="QuoteAddSourceAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteAdd4Action"/>
+    </fileobject>
+    <fileobject name="QuoteAddTargetAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteAdd4Action"/>
+    </fileobject>
+    <fileobject name="QuoteSearchAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteSearchAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddSource1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddSource1Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddSource2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddSource2Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddSourcePreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddSourcePreAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTarget1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTarget1Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTarget2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTarget2Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTargetPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTargetPreAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskDtp2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskDtp2Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskEng1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskEng1Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskEng2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskEng2Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskLin1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskLin1Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskLin2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskLin2Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskLinPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskLinPreAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskOth2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskOth2Action"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralAddTaskOthPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralAddTaskOthPreAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralApprovedAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralApprovedAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralDeleteDtpTaskAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralDeleteDtpTaskAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralDeleteEngTaskAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralDeleteEngTaskAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralDeleteLinTaskAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralDeleteLinTaskAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralGenerateLongAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralGenerateLongAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralGenerateMedicalAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralGenerateMedicalAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralGenerateShortActionBAK.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralGenerateShortActionBAK"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralModifyAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralModifyAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralTradosUploadAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralTradosUploadAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralTradosUploadPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralTradosUploadPreAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewGeneralUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewGeneralUpdateAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewNavigationAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewNavigationAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewNotesUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewNotesUpdateAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewProjectRequirementsAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewProjectRequirementsAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewProjectRequirementsDeleteSourceAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewProjectRequirementsDeleteSourceAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewProjectRequirementsDeleteTargetAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewProjectRequirementsDeleteTargetAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewProjectRequirementsUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewProjectRequirementsUpdateAction"/>
+    </fileobject>
+    <fileobject name="QuoteViewSubQuoteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="QuoteViewSubQuoteAction"/>
+    </fileobject>
+</attributes>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="HrAdminAddEmployee1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminAddEmployee1Action"/>
+    </fileobject>
+    <fileobject name="HrAdminEmployeeMaintenanceAddAway1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminEmployeeMaintenanceAddAway1Action"/>
+    </fileobject>
+    <fileobject name="HrAdminEmployeeMaintenanceChangeDates1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminEmployeeMaintenanceChangeDates1Action"/>
+    </fileobject>
+    <fileobject name="HrAdminEmployeeMaintenanceChangeTotalAwayDays1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminEmployeeMaintenanceChangeTotalAwayDays1Action"/>
+    </fileobject>
+    <fileobject name="HrAdminEmployeeMaintenanceChangeTotalAwayDaysPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminEmployeeMaintenanceChangeTotalAwayDaysPreAction"/>
+    </fileobject>
+    <fileobject name="HrAdminEmployeeMaintenanceChangeUsernamePasswordPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminEmployeeMaintenanceChangeUsernamePasswordPreAction"/>
+    </fileobject>
+    <fileobject name="HrAdminRemoveEmployee1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminRemoveEmployee1Action"/>
+    </fileobject>
+    <fileobject name="HrAdminRemoveEmployeePreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="HrAdminRemoveEmployeePreAction"/>
+    </fileobject>
+</attributes>

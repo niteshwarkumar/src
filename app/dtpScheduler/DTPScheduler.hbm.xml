@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.dtpScheduler.DTPScheduler" table="DTP_Scheduler">
+      <id name="ID_Schedule" type="int" column="ID_Scheduler">
+         <generator class="identity"/>
+      </id>
+      
+      <property name="ID_Project" type="int"/>
+      <property name="startDate" type="string"/>      
+      <property name="endDate" type="string"/> 
+      <property name="operatorStartDate" type="string"/>
+      <property name="operatorEndDate" type="string"/>
+      <property name="updatedId" type="string"/>
+      <property name="updatedTS" type="java.sql.Timestamp"/>
+      
+      <property name="priority" type="int"/>
+      <property name="status" type="string"/>
+      <property name="operatorName" type="string"/>
+      <property name="application" type="string"/>
+      <property name="volume" type="string"/>
+      <property name="units" type="string"/>
+      <property name="stage" type="string"/>
+      
+      <many-to-one name="project" class="app.project.Project" column="ID_Project" insert="false" update="false" />
+      
+      
+      
+   </class>
+       
+</hibernate-mapping>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="LanguagePair.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="LanguagePair"/>
+    </fileobject>
+    <fileobject name="ProjectScore.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="ProjectScore"/>
+    </fileobject>
+    <fileobject name="Resource.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="Resource"/>
+    </fileobject>
+    <fileobject name="ResourceAddEditAgencyAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceAddEditAgencyAction"/>
+    </fileobject>
+    <fileobject name="ResourceAddEditFreelanceAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceAddEditFreelanceAction"/>
+    </fileobject>
+    <fileobject name="ResourceAddEditPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceAddEditPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchEditResetAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchEditResetAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchGetSaved1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchGetSaved1Action"/>
+    </fileobject>
+    <fileobject name="ResourceSearchGetSavedDeleteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchGetSavedDeleteAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchGetSavedPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchGetSavedPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchProjectCartManageDeleteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchProjectCartManageDeleteAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchProjectCartSearch1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchProjectCartSearch1Action"/>
+    </fileobject>
+    <fileobject name="ResourceSearchProjectCartSearchExisting1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchProjectCartSearchExisting1Action"/>
+    </fileobject>
+    <fileobject name="ResourceSearchProjectCartSearchExistingPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchProjectCartSearchExistingPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchProjectCartSearchNew1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchProjectCartSearchNew1Action"/>
+    </fileobject>
+    <fileobject name="ResourceSearchProjectCartSearchNewPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchProjectCartSearchNewPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceSearchSave1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchSave1Action"/>
+    </fileobject>
+    <fileobject name="ResourceSearchSavePreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceSearchSavePreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewAgencyAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewAgencyAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewContactAddAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewContactAddAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewContactAddPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewContactAddPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewContactSingleAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewContactSingleAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewFormsAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewFormsAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewGeneralAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewGeneralAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewGeneralUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewGeneralUpdateAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewLanguagesAdd1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewLanguagesAdd1Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewLanguagesAddPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewLanguagesAddPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewLanguagesDeleteAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewLanguagesDeleteAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewLanguagesUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewLanguagesUpdateAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewNavigationAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewNavigationAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewNotesUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewNotesUpdateAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewRatesScoresAdd1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewRatesScoresAdd1Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewRatesScoresAdd2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewRatesScoresAdd2Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewRatesScoresAddPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewRatesScoresAddPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewRatesScoresDtpAdd2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewRatesScoresDtpAdd2Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewRatesScoresDtpAddPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewRatesScoresDtpAddPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesAddGeneral1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesAddGeneral1Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesAddGeneralPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesAddGeneralPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesAddSpecific1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesAddSpecific1Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesAddSpecific2Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesAddSpecific2Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesAddSpecificPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesAddSpecificPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewSpecialtiesUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewSpecialtiesUpdateAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewToolsAdd1Action.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewToolsAdd1Action"/>
+    </fileobject>
+    <fileobject name="ResourceViewToolsAddPreAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewToolsAddPreAction"/>
+    </fileobject>
+    <fileobject name="ResourceViewToolsUpdateAction.java">
+        <attr name="class_dependency_org.apache.struts.action.Action" stringvalue="ResourceViewToolsUpdateAction"/>
+    </fileobject>
+</attributes>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.user.Location" table="Location">
+      <id name="locationId" type="int" column="ID_Location">
+         <generator class="identity"/>
+      </id>
+      <property name="location" type="string" not-null="true"/>         
+      <property name="friendlyName" type="string"/>
+      <property name="Address_1" type="string"/>
+      <property name="Address_2" type="string"/>
+      <property name="City" type="string"/>
+      <property name="State_prov" type="string"/>
+      <property name="Zip_postal_code" type="string"/>
+      <property name="Country" type="string"/>
+      <property name="Main_telephone_numb" type="string"/>
+      <property name="workPhoneEx" type="string"/>
+      <property name="Fax_number" type="string"/>
+      <property name="url" type="string"/>
+      <property name="Status" type="string"/>
+      <property name="Email_address" type="string"/>
+      <property name="Note" type="string"/>
+      <property name="Ftp_host_excel" type="string"/>
+      <property name="Ftp_user_id_excel" type="string"/>
+      <property name="Ftp_password_excel" type="string"/>
+      <property name="logo" type="string"/>
+      
+      <set name="Users" inverse="true">
+      	<key column="ID_Location"/>
+      	<one-to-many class="app.user.User"/>
+      </set>
+      
+   </class>
+</hibernate-mapping>
