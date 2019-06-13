@@ -106,7 +106,7 @@ public class ClientHomePageAddAnnouncement1Action  extends Action {
             //random number in image name to prevent repeats
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
-            File saveFile = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName);        
+            File saveFile = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName);        
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();

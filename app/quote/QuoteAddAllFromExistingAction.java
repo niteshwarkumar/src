@@ -126,7 +126,14 @@ public final class QuoteAddAllFromExistingAction extends Action {
         newQ.setSubDollarTotal(qFrom.getSubDollarTotal());
         newQ.setQuoteDate(new Date());
         newQ.setPublish(Boolean.TRUE);
-        QuoteService.getInstance().updateQuote(newQ);
+        QuoteService.getInstance().updateQuote(newQ,(String)request.getSession(false).getAttribute("username"));
+        Client_Quote fromcQuote = QuoteService.getInstance().get_SingleClientQuote(Integer.valueOf(fromId));
+        Client_Quote cQuote = new Client_Quote();
+        cQuote = fromcQuote;
+        cQuote.setQuote_ID(quoteId);
+        cQuote.setInstruction("");
+        cQuote.setRequirement("");
+        QuoteService.getInstance().updateClientQuote(cQuote);
         
         //add all sets, such as source doc, target doc, and the four tasks, as new objects to the new q
         Set sourceDocs = qFrom.getSourceDocs();

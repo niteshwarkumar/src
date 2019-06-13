@@ -54,7 +54,7 @@ public final class LogoutUserAction extends Action {
 				 HttpServletResponse response)
 	throws Exception {
 
-        System.out.println("logout Action @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        //System.out.println("logout Action @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 	// Extract attributes we will need
 	MessageResources messages = getResources(request);	
 
@@ -74,7 +74,7 @@ public final class LogoutUserAction extends Action {
 	}        
 
         User u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
-        System.out.println("user name logout@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        //System.out.println("user name logout@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         u.setLast_activity(new java.sql.Timestamp(System.currentTimeMillis()-1000*60*16));
         UserService.getInstance().updateUser(u);
 // clear session variables

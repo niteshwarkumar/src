@@ -30,7 +30,7 @@ class MyStackedBarRenderer3D extends StackedBarRenderer3D
             // here we assume we're working with the primary dataset 
             //XYDataset dataset = getPlot().getDataset(); 
             //double value = dataset.getYValue(series, item); 
-            //System.out.println("item="+item+",series="+series);
+            ////System.out.println("item="+item+",series="+series);
             
             String result = (String) getToolTipMessages().get(""+series+"_"+item);
             if(result==null){

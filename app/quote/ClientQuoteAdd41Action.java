@@ -93,21 +93,21 @@ MessageResources messages = getResources(request);
           String oth0=noNull(request.getParameter("oth0"));
           String oth1=noNull(request.getParameter("oth1"));
 
-           System.out.println("linnnnnnnnnnnnnnnnnn"+linOther);
-          System.out.println("otherrrrrrrrrrrrrrrrrrrrrrr"+othOther);
-          System.out.println("otherrrrrrrrrrrrrrrrrrrrrrr"+oth0);
+           //System.out.println("linnnnnnnnnnnnnnnnnn"+linOther);
+          //System.out.println("otherrrrrrrrrrrrrrrrrrrrrrr"+othOther);
+          //System.out.println("otherrrrrrrrrrrrrrrrrrrrrrr"+oth0);
 
 
         String projectViewId = request.getParameter("projectViewId");
         Client_Quote cq1=QuoteService.getInstance().getSingleClient_Quote(new Integer(request.getParameter("quoteViewId")));
         //Project pLazyLoad = ProjectService.getInstance().getSingleProject(currentProject.getProjectId());
         Quote1 newQ = QuoteService.getInstance().getSingleQuote(cq1.getQuote_ID());
-         System.out.println(request.getParameter("quoteViewId"));
+         //System.out.println(request.getParameter("quoteViewId"));
         Project currentProject = ProjectService.getInstance().getSingleProject(newQ.getProject().getProjectId());
         Project pLazyLoad = ProjectService.getInstance().getSingleProject(currentProject.getProjectId());
         //Project currentProject = ProjectService.getInstance().getSingleProject(Integer.valueOf(projectViewId));
          Integer productId=Integer.parseInt(request.getParameter("productId"));
-         System.out.println("productIdproductIdproductId"+productId);
+         //System.out.println("productIdproductIdproductId"+productId);
 
 
         String[] linTaskOptions = ProjectService.getInstance().getLinTaskOptions1();
@@ -119,12 +119,12 @@ MessageResources messages = getResources(request);
 
         Client c =currentProject.getCompany();
         ClientLanguagePair[] clp = null;
-         System.out.println(currentProject.getCompany().getCompany_name());
+         //System.out.println(currentProject.getCompany().getCompany_name());
 
-         System.out.println("ling Task  "+linOther);
-         System.out.println("request.getParameter(lin1)"+request.getParameter("lin1"));
-         System.out.println("request.getParameter(lin1)"+request.getParameter("lin2"));
-         System.out.println("request.getParameter(lin1)"+request.getParameter("lin3"));
+         //System.out.println("ling Task  "+linOther);
+         //System.out.println("request.getParameter(lin1)"+request.getParameter("lin1"));
+         //System.out.println("request.getParameter(lin1)"+request.getParameter("lin2"));
+         //System.out.println("request.getParameter(lin1)"+request.getParameter("lin3"));
 
 
         if(c!=null){
@@ -139,7 +139,7 @@ MessageResources messages = getResources(request);
         String[] defaultInspections = ProjectService.getInstance().getDefaultInspectionOptions();
         String[] inspections = ProjectService.getInstance().getInspectionOptions();
           Client_Quote cq = QuoteService.getInstance().getSingleClient_Quote(new Integer(request.getSession(false).getAttribute("cid").toString()));
-        //System.out.println("currentProject.getProjectId()="+currentProject.getProjectId());
+        ////System.out.println("currentProject.getProjectId()="+currentProject.getProjectId());
         List sourcelang=QuoteService.getInstance().getSourceLang(newQ,cq.getId());
          for (int ii = 0; ii < sourcelang.size(); ii++) {
                     // SourceDoc sd = (SourceDoc) iterSources.next();
@@ -223,32 +223,35 @@ MessageResources messages = getResources(request);
 
             }
        if(linOther!=null){
-           System.out.println("Lin Length"+linOther.length);
+           //System.out.println("Lin Length"+linOther.length);
         for(int i=0;i<=linOther.length-1;i++)
         {  if(!linOther[i].equalsIgnoreCase("")){
-            System.out.println("Linguistic task" +linOther[i]);
+            //System.out.println("Linguistic task" +linOther[i]);
             LinTask lt=new LinTask();
              lt.setSourceLanguage(sd.getLanguage());
              lt.setTargetLanguage(td.getLanguage());
              lt.setTargetDoc(td);
              lt.setTaskName(linOther[i]);
              lt.setOrderNum(new Integer(12+i));
+//             pLazyLoad.getTypeOfText();
              if(clp != null){
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                 System.out.println("lt.getTaskName()"+lt.getTaskName());
+                                 //System.out.println("lt.getTaskName()"+lt.getTaskName());
+                                 if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){
                                 lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                                }
                             }
                         }
                       }
 
                 linTasks.add(lt);
-                System.out.println("lt"+lt);
+                //System.out.println("lt"+lt);
 
             }
            }
@@ -274,9 +277,11 @@ MessageResources messages = getResources(request);
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){
+                                 lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 break;
+                                }
                             }
                         }
                       }
@@ -296,9 +301,11 @@ MessageResources messages = getResources(request);
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
+                                 {
+                                 lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 break;
+                                 }
                             }
                         }
                       }
@@ -317,9 +324,11 @@ MessageResources messages = getResources(request);
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){
+                                 lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 break;
+                                }
                             }
                         }
                       }
@@ -330,7 +339,7 @@ MessageResources messages = getResources(request);
                   //for each LinTask, add it to db and link it to this targetDoc
             for(Iterator iter = linTasks.iterator(); iter.hasNext();) {
                 LinTask lt = (LinTask) iter.next();
-                //System.out.println("linking task id="+lt.getLinTaskId());
+                ////System.out.println("linking task id="+lt.getLinTaskId());
 
                 //link this linTask to the targetDoc; add new linTask to db
                 Integer y = ProjectService.getInstance().linkTargetDocLinTask(td, lt);
@@ -339,11 +348,11 @@ MessageResources messages = getResources(request);
           //Add DTP tasks now
 
         if(dtpOther!=null){
-      //  System.out.println("Lin Length"+linOther.length);
+      //  //System.out.println("Lin Length"+linOther.length);
         for(int i=0;i<=dtpOther.length-1;i++)
         {
             if(!dtpOther[i].equalsIgnoreCase("")){
-            System.out.println("Linguistic task" +dtpOther[i]);
+            //System.out.println("Linguistic task" +dtpOther[i]);
             DtpTask dt=new DtpTask();
              dt.setSourceLanguage(sd.getLanguage());
              dt.setTargetLanguage(td.getLanguage());
@@ -432,7 +441,7 @@ MessageResources messages = getResources(request);
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(et.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(et.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+et.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 et.setRate(clp[z].getRate());
                                 et.setUnits(clp[z].getUnits());
                                 break;
@@ -455,7 +464,7 @@ MessageResources messages = getResources(request);
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(et.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(et.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+et.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 et.setRate(clp[z].getRate());
                                 et.setUnits(clp[z].getUnits());
                                 break;
@@ -478,7 +487,7 @@ MessageResources messages = getResources(request);
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(et.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(et.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+et.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 et.setRate(clp[z].getRate());
                                 et.setUnits(clp[z].getUnits());
                                 break;
@@ -492,11 +501,11 @@ MessageResources messages = getResources(request);
 
 
         if(engOther!=null){
-           System.out.println("Lin Length"+engOther.length);
+           //System.out.println("Lin Length"+engOther.length);
         for(int i=0;i<=engOther.length-1;i++)
         {
              if(!engOther[i].equalsIgnoreCase("")){
-            System.out.println("Linguistic task" +engOther[i]);
+            //System.out.println("Linguistic task" +engOther[i]);
             EngTask et=new EngTask();
              et.setSourceLanguage(sd.getLanguage());
              et.setTargetLanguage(td.getLanguage());
@@ -506,7 +515,7 @@ MessageResources messages = getResources(request);
              if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(et.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(et.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+et.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 et.setRate(clp[z].getRate());
                                 et.setUnits(clp[z].getUnits());
                                 break;
@@ -543,7 +552,7 @@ MessageResources messages = getResources(request);
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(ot.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(ot.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+ot.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 ot.setRate(clp[z].getRate());
                                 ot.setUnits(clp[z].getUnits());
                                 break;
@@ -567,7 +576,7 @@ MessageResources messages = getResources(request);
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(ot.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(ot.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+ot.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 ot.setRate(clp[z].getRate());
                                 ot.setUnits(clp[z].getUnits());
                                 break;
@@ -581,11 +590,11 @@ MessageResources messages = getResources(request);
 
 
         if(othOther!=null){
-           System.out.println("Lin Length"+othOther.length);
+           //System.out.println("Lin Length"+othOther.length);
         for(int i=0;i<=othOther.length-1;i++)
         {
             if(!othOther[i].equalsIgnoreCase("")){
-            System.out.println("Linguistic task" +othOther[i]);
+            //System.out.println("Linguistic task" +othOther[i]);
             OthTask ot=new OthTask();
              ot.setSourceLanguage(sd.getLanguage());
              ot.setTargetLanguage(td.getLanguage());
@@ -595,7 +604,7 @@ MessageResources messages = getResources(request);
              if(clp != null){
                          for(int z=0; z<clp.length; z++){
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(ot.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(ot.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("OTH - "+ot.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 ot.setRate(clp[z].getRate());
                                 ot.setUnits(clp[z].getUnits());
                                 break;

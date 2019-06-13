@@ -114,12 +114,12 @@ public final class ClientQuoteSearchAction extends Action {
        List results = null;
        try{
        results = QuoteService.getInstance().getClientQuoteSearch(status,id, project,productDescription,quoteNum, startQuoteDateDate, endQuoteDateDate, startQuoteTotalDouble, endQuoteTotalDouble);
-       System.out.println("sizeeee"+results.size());
+       //System.out.println("sizeeee"+results.size());
        }
        catch(Exception e){
            e.printStackTrace();
        }
-       // System.out.println("Result size of Quote >>>>>>>>>>>>>>>"+results.size());
+       // //System.out.println("Result size of Quote >>>>>>>>>>>>>>>"+results.size());
         ArrayList finalResults = new ArrayList();
 
         //remove all sub quotes (only display the most recent quote per parent object (project))
@@ -127,7 +127,7 @@ public final class ClientQuoteSearchAction extends Action {
             for(ListIterator iter = results.listIterator(); iter.hasNext();) {
                 Quote1 q = (Quote1) iter.next();
                 Project p = q.getProject();
-                //System.out.println("p.getProjectId()="+p.getProjectId());
+                ////System.out.println("p.getProjectId()="+p.getProjectId());
                 Project pLazyLoad = null;
                 try{
                     pLazyLoad = ProjectService.getInstance().getSingleProject(p.getProjectId());
@@ -135,13 +135,13 @@ public final class ClientQuoteSearchAction extends Action {
                     Quote1 lastQuote = QuoteService.getInstance().getLastQuote(quotes);
                   //  if(lastQuote!=null && q.getNumber().equals(lastQuote.getNumber())) {
                     //add this quote to final list; it is  the last modified sub quote
-                        System.out.println("Quote Numberrrrr"+q.getNumber());
+                        //System.out.println("Quote Numberrrrr"+q.getNumber());
 
                     finalResults.add(q);
                    // }
 
                 }catch(Exception e){
-                    System.out.println("QuoteSearchAction::"+e);
+                    //System.out.println("QuoteSearchAction::"+e);
                 }
 
             }

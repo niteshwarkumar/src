@@ -98,22 +98,22 @@ public final class ResourceViewRatesScoresUpdateAction extends Action {
         //load resource info for editing
         DynaValidatorForm rvrs = (DynaValidatorForm) form;
         
-        RateScoreLanguage[] rateScoreLanguages = (RateScoreLanguage[]) rvrs.get("rateScoreLanguages");
+        RateScoreLanguage[] ratescorelanguages = (RateScoreLanguage[]) rvrs.get("rateScoreLanguages");
         RateScoreDtp[] rateScoreDtps = (RateScoreDtp[]) rvrs.get("rateScoreDtps");
         
         
         //update each rateSourceLanguage
-        for(int i = 0; i < rateScoreLanguages.length; i++) {
+        for(int i = 0; i < ratescorelanguages.length; i++) {
           
             
-            ResourceService.getInstance().updateRateScoreLanguage(rateScoreLanguages[i]);
-            System.out.println("rate score language..........................."+ResourceService.getInstance().updateRateScoreLanguage(rateScoreLanguages[i]));
+            ResourceService.getInstance().updateRateScoreLanguage(ratescorelanguages[i]);
+            //System.out.println("rate score language..........................."+ResourceService.getInstance().updateRateScoreLanguage(ratescorelanguages[i]));
         }
         
         //update each rateSourceDtp
         for(int i = 0; i < rateScoreDtps.length; i++) {
             //rateScoreDtps[i].setAssesmentSent(request.getParameter("rateScoreDtps["+i+"].assesmentSent"));
-           // System.out.println("getApplication="+rateScoreDtps[i].getApplication());
+           // //System.out.println("getApplication="+rateScoreDtps[i].getApplication());
             ResourceService.getInstance().updateRateScoreDtp(rateScoreDtps[i]);
         }
             r.setCurrency(request.getParameter("toggleCurrencies"));
@@ -138,6 +138,9 @@ public final class ResourceViewRatesScoresUpdateAction extends Action {
             r.setScaleNew(request.getParameter("scaleNew"));
             r.setScaleNew4(request.getParameter("scaleNew"));
             r.setScaleRep(request.getParameter("scaleRep"));
+            try{if(request.getParameter("defaultRate").equalsIgnoreCase("on"))r.setDefaultRate(true);
+            else r.setDefaultRate(false);
+            }catch(Exception e){r.setDefaultRate(false);}
              ResourceService.getInstance().updateResource(r);
             
                     

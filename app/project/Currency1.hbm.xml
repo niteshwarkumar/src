@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.project.Currency1" table="Currency1">
+   <class name="app.project.Currency1" table="currency1">
       <id name="currency1Id" type="int" column="Currency1_ID">
          <generator class="identity"/>
       </id>

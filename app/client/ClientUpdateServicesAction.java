@@ -80,7 +80,7 @@ public final class ClientUpdateServicesAction extends Action {
       
         
         String jsonProducts = request.getParameter("serviceJSON");
-        //System.out.println("serviceJSON="+jsonProducts+", clientViewId="+id);
+        ////System.out.println("serviceJSON="+jsonProducts+", clientViewId="+id);
         request.setAttribute("clientViewId",id);
         
         

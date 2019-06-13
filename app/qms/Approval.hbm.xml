@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Approval.hbm.xml
+    Created on : July 20, 2014, 7:30 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.Approval" table="qmsapproval">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+  <property name="docId" type="int"/>
+  <property name="userId" type="int"/>
+  <property name="status" type="boolean"/>
+  <property name="updateDate" type="date"/>
+   <property name="mainTab" type="string"/>
+   <property name="disable" type="boolean"/>
+
+    </class>
+</hibernate-mapping>

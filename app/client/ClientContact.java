@@ -61,6 +61,9 @@ public class ClientContact implements Serializable {
     
     /** nullable persistent field */
     private boolean display = true;
+    
+    /** nullable persistent field */
+    private boolean isformer;
 
     /** nullable persistent field */
     private String Zip_postal_code;
@@ -321,5 +324,16 @@ public class ClientContact implements Serializable {
     public void setDivision(String division) {
         this.division = division;
     }
+
+    public boolean isIsformer() {
+        
+        return isformer;
+    }
+
+    public void setIsformer(boolean isformer) {
+        this.isformer = isformer;
+    }
+    
+    
 
 }

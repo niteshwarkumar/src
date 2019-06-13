@@ -18,7 +18,9 @@ import java.util.*;
 import app.project.*;
 import app.security.*;
 import app.standardCode.*;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import org.json.CDL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -70,10 +72,6 @@ public final class ClientViewProjectHistoryAction extends Action {
         if(!SecurityService.getInstance().checkForLogin(request.getSession(false))) { 
             return (mapping.findForward("welcome"));
         }
-        //END check for login (security)
-        Calendar cal= new GregorianCalendar();
-        String year=request.getParameter("projectYear");
-        if(year.equalsIgnoreCase("")){year=""+cal.get(Calendar.YEAR);}
         //id from request attribute
         String clientId = (String) request.getAttribute("clientViewId");
         
@@ -81,7 +79,10 @@ public final class ClientViewProjectHistoryAction extends Action {
         if(clientId == null) {
             clientId = StandardCode.getInstance().getCookie("clientViewId", request.getCookies());	
         }
-        System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
+        //System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
+        
+        //add tab location to cookies; this will remember which tab we are at
+        response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
         
         //Integer id = Integer.parseInt(clientId);
         
@@ -98,10 +99,42 @@ public final class ClientViewProjectHistoryAction extends Action {
         //add this client id to cookies; this will remember the last client
         //response.addCookie(StandardCode.getInstance().setCookie("clientViewId", clientId));
         
-        //add tab location to cookies; this will remember which tab we are at
-        response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
+                String print = request.getParameter("print");
+        if (print != null) {
+            if (print.equalsIgnoreCase("yes")) {
+                response.setContentType("text/csv");
+                response.setHeader("Content-Disposition", "attachment; filename=\"ProjectList.csv\"");
+                try {
+                    List quotes = ProjectHelper.getProjectListForClient(clientId);
+                    JSONArray projectHistory = new JSONArray();
+                    for (ListIterator iter = quotes.listIterator(); iter.hasNext();) {
+                        Project p = (Project) iter.next();
+                        //Client Quote cq=QuoteService.getInstance().getS
+                        JSONObject jo = ProjectHelper.ProjectToJsonPrint(p);
+                        ////System.out.println(q.getQuote1Id() + "-----|----" + jo);
+                        projectHistory.put(jo);
+                        ///  //System.out.println(jo.getString("year")+"     ");
+                    }
+
+                    String csv = CDL.toString(projectHistory);
+                    ////System.out.println(csv);
+                    OutputStream outputStream = response.getOutputStream();
+                    outputStream.write(csv.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (Exception e) {
+                    //System.out.println(e.toString());
+                }
+                return (null);
+            }
+        }
+        //END check for login (security)
+        Calendar cal= new GregorianCalendar();
+        String year=request.getParameter("projectYear");
+        if(year.equalsIgnoreCase("")){year=""+cal.get(Calendar.YEAR);}
+        
        // long end1 = System.currentTimeMillis();
-        //System.out.println("old way:"+(end1-start1));
+        ////System.out.println("old way:"+(end1-start1));
        // long start2 = System.currentTimeMillis();
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
@@ -114,12 +147,12 @@ public final class ClientViewProjectHistoryAction extends Action {
                 JSONObject jo = ProjectHelper.ProjectToJson2(p);
                 projectHistory.add(jo);          
             }
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();       
         out.println(new JSONArray(projectHistory.toArray()));
         out.flush();
        // long end2 = System.currentTimeMillis();
-       //System.out.println("Finnished ClientViewProjectHistoryAction!");
+       ////System.out.println("Finnished ClientViewProjectHistoryAction!");
 	// Forward control to the specified success URI
 	//return (mapping.findForward("Success"));
             return null;

@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.user.Privilege" table="Privilege">
+   <class name="app.user.Privilege" table="privilege">
       <id name="privilegeId" type="int" column="ID_Privilege">
          <generator class="identity"/>
       </id>

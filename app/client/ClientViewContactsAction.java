@@ -70,6 +70,10 @@ public final class ClientViewContactsAction extends Action {
         //id from request attribute
 
        String clientId = request.getParameter("clientViewId");
+       
+       String isFormer = request.getParameter("isformer");
+       
+       String country = request.getParameter("country");
 
         if(clientId == null || clientId.equals("")) {
             clientId =  (String) request.getAttribute("clientViewId");
@@ -81,6 +85,9 @@ public final class ClientViewContactsAction extends Action {
             clientId = StandardCode.getInstance().getCookie("clientViewId", request.getCookies());
         }
 
+//        if(!StandardCode.getInstance().noNull(country).isEmpty()){
+            request.setAttribute("country", StandardCode.getInstance().noNull(country));
+//        }
 
 
 
@@ -99,6 +106,11 @@ public final class ClientViewContactsAction extends Action {
       //Client  c = ClientService.getInstance().getSingleClient(Integer.parseInt(clientId));
 
         //place the client into an attribute for displaying in jsp
+        if(StandardCode.getInstance().noNull(isFormer).equalsIgnoreCase("true")){
+            request.setAttribute("isFormer", true);
+        }else{
+            request.setAttribute("isFormer", false);
+        }
         request.setAttribute("client", c);
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");

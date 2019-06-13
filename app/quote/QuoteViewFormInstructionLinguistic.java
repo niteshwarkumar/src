@@ -127,7 +127,7 @@ public class QuoteViewFormInstructionLinguistic extends Action {
         String filename =  q.getNumber()+ "_Instruction_Linguistic.doc";
 
 //        content = content.replaceAll("T5 - Quote template - short_non_medical.rtf", StandardCode.getInstance().noNull(filename));
-        System.out.println("hereeeeee6");
+        //System.out.println("hereeeeee6");
         //END content
         //write to client (web browser)
         response.setHeader("Content-Type", "Application/msword");

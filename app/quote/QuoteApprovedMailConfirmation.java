@@ -4,6 +4,7 @@
  */
 package app.quote;
 
+import app.standardCode.StandardCode;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -85,47 +86,34 @@ public final class QuoteApprovedMailConfirmation extends Action {
 //                + "<div>Volume:&nbsp;&nbsp;" + wordTotal + " </div>"
                 + "<div>Fee:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + projectAmount + " </div><div><br></div>"
                 + "<div>Best regards,</div><div><br></div><div>ExcelNet Administrator</div>"
-                +"<div><img src='http://excelnet.xltrans.com/logo/images/-1168566039logoExcel.gif'></div>";
+                +"<div><img src='https://excelnet.xltrans.com/logo/images/excel-logo-blue.jpg'></div>";
 
 
         try {
             String[] emailList = toAddress.split(",");
             QuoteApprovedMailConfirmation smtpMailSender = new QuoteApprovedMailConfirmation();
 
-     //       smtpMailSender.postMail(emailList, subject, body, emailFromAddress);
-            System.out.println("mail send ");
+     //       smtpMailSender.postMail(emailList, subject, body, StandardCode.emailFromAddress);
+            //System.out.println("mail send ");
         } catch (Exception e) {
         }
 // Forward control to the specified success URI
         return (mapping.findForward("Client"));
 
     }
-    private static final String SMTP_HOST_NAME = "xltrans.com";
-    private static final String SMTP_AUTH_USER = "excelnet@xltrans.com";
-    private static final String SMTP_AUTH_PWD = "3vB@zMsp";
-    private static final String emailFromAddress = "excelnet@xltrans.com";
+ 
 
     public void postMail(String recipients[], String subject,
             String message, String from) throws MessagingException {
         boolean debug = false;
 
-        //Set the host smtp address
-        Properties props = new Properties();
-        props.put("mail.smtp.host", SMTP_HOST_NAME);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.timeout", 60000);
-
-        Authenticator auth = new SMTPAuthenticator();
-        Session session = Session.getDefaultInstance(props, auth);
-
-        session.setDebug(debug);
-
+        
         // create a message
-        Message msg = new MimeMessage(session);
+        Message msg = StandardCode.getInstance().getMimeMessage();
 
         // set the from and to address
-        InternetAddress addressFrom = new InternetAddress(from);
-        msg.setFrom(addressFrom);
+        //InternetAddress addressFrom = new InternetAddress(from);
+        //msg.setFrom(addressFrom);
 
         InternetAddress[] addressTo = new InternetAddress[recipients.length];
         for (int i = 0; i < recipients.length; i++) {
@@ -140,12 +128,5 @@ public final class QuoteApprovedMailConfirmation extends Action {
         Transport.send(msg);
     }
 
-    private class SMTPAuthenticator extends javax.mail.Authenticator {
 
-        public PasswordAuthentication getPasswordAuthentication() {
-            String username = SMTP_AUTH_USER;
-            String password = SMTP_AUTH_PWD;
-            return new PasswordAuthentication(username, password);
-        }
-    }
 }

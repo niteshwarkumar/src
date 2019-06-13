@@ -4,6 +4,7 @@
 package app.extjs.actions;
 import app.extjs.helpers.QuoteHelper;
 import app.quote.Quote1;
+import app.quote.QuoteService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -75,30 +76,31 @@ public final class GetMyBackupQuotesAction extends Action {
         ArrayList myQuotes = new ArrayList();
         //get a user's Backup projects
         long startProjects = System.currentTimeMillis();
-        System.out.println("getPMBackupQuotes entered:");
+        //System.out.println("getPMBackupQuotes entered:");
         
         
 //look for pm or ae that matches active projects for this user
         String myName = u.getFirstName() + " " + u.getLastName();
-        List pmQuotes = QuoteHelper.getPMBackupQuotes(myName);
+//        List pmQuotes = QuoteHelper.getPMBackupQuotes(myName);
+        List pmQuotes = QuoteService.getInstance().getPMBackupQuotes(myName);
         Quote1 q = null;
         
-        
+        if(null != pmQuotes){
         for(ListIterator iter = pmQuotes.listIterator(); iter.hasNext();) {
              
                 q = (Quote1) iter.next();
                 JSONObject jo = QuoteHelper.quoteToJson(q);
                 myQuotes.add(jo);          
             }
-     
+        }
            
         long endProjects = System.currentTimeMillis();
-        System.out.println("getPMBackupQuotes took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("getPMBackupQuotes took:"+ ((endProjects-startProjects)/1000.0));
         
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         out.println(new JSONArray(myQuotes.toArray()));
         out.flush();

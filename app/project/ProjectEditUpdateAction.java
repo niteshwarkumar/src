@@ -16,7 +16,10 @@ import org.apache.struts.validator.*;
 import java.util.*;
 import app.user.*;
 import app.client.*;
+import app.extjs.helpers.ProjectHelper;
+import app.inteqa.InteqaService;
 import app.security.*;
+import app.standardCode.StandardCode;
 
 public final class ProjectEditUpdateAction extends Action {
 
@@ -85,15 +88,23 @@ public final class ProjectEditUpdateAction extends Action {
         String clientSatisfaction95=request.getParameter("clientSatisfaction95");
         String clientSatisfaction50=request.getParameter("clientSatisfaction50");
         String clientSatisfaction0=request.getParameter("clientSatisfaction0");
+        String clientSatisfactionNull=request.getParameter("clientSatisfactionNull");
+        String statusMessage = "";
+        String caretaker =(String) pvo.get("caretaker");
+        String orderReqNum =(String) pvo.get("orderReqNum");
+          
+         
         //update the project's values
 
         try{if(clientSatisfaction100.equalsIgnoreCase("100")){p.setClientSatisfaction(100.0);}}catch(Exception e){}
         try{if(clientSatisfaction95.equalsIgnoreCase("95")){p.setClientSatisfaction(95.0);}}catch(Exception e){}
-        try{if(clientSatisfaction50.equalsIgnoreCase("50")){p.setClientSatisfaction(50.0);}}catch(Exception e){}
-        try{if(clientSatisfaction0.equalsIgnoreCase("0")){p.setClientSatisfaction(0.0);}}catch(Exception e){}
+        try{if(clientSatisfaction50.equalsIgnoreCase("75")){p.setClientSatisfaction(75.0);}}catch(Exception e){}
+        try{if(clientSatisfaction0.equalsIgnoreCase("50")){p.setClientSatisfaction(50.0);}}catch(Exception e){}
+        try{if(clientSatisfactionNull.equalsIgnoreCase("")){p.setClientSatisfaction(null);}}catch(Exception e){}
         
         p.setPm(PM);
         p.setClientPO(clientPO);
+        p.setOrderReqNum(orderReqNum);
         if(products!=null){
             for(int i=0;i<products.length;i++){
             newProduct+=products[i];
@@ -123,10 +134,63 @@ public final class ProjectEditUpdateAction extends Action {
 
         if (status.equals("active")) {
             p.setCompleteDate(null);
+            p.setStatus(status);
         } else if (!p.getStatus().equals("complete")) {
-            p.setCompleteDate(new Date());
-        }
+            if(status.equals("complete")){
+//            check complete status
+//                - if there is a vendor name in the Team tab, the Sent, Due and Received fields need to have dates. (if there is no vendor name, it’s ok if the date fields are empty)
+//                - INTEQA > Delivery/Final: Verification Complete box should be checked.
+//                - Forms > Accounting: total invoiced amount should match the total amount in RSF > Fee
+                 //get this project's sources
+        boolean flag =true;
+        
+        Set sources = p.getSourceDocs();
+        
+        //for each source
+        for(Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
+            SourceDoc sd = (SourceDoc) sourceIter.next();
+            
+            //for each target of this source
+            for(Iterator linTargetIter = sd.getTargetDocs().iterator(); linTargetIter.hasNext();) {
+                TargetDoc td = (TargetDoc) linTargetIter.next();
+                
+                //for each lin Task of this target
+                for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
+                   LinTask lt = (LinTask) linTaskIter.next();
+                   if(flag){ 
+                    if(null != lt.getPersonName()){
+                        if(!"".equals(lt.getPersonName())){
+                        if(null==lt.getSentDateDate()||null==lt.getDueDateDate()||null==lt.getReceivedDateDate()){
+                        flag = false;
+                        statusMessage="TEAM tab: There are dates missing for some vendors (Sent, Due or Received).";
+                        }
+                    }}}}
+                    
+                }
+                
+        } 
+        if(flag){
+        if(null != p.getTotalAmountInvoiced()){
+            double amount = Double.parseDouble(StandardCode.getInstance().formatMoney(p.getProjectAmount()).replace(",", ""));
+            if(p.getCompany().getCcurrency().equalsIgnoreCase("euro")){
+                amount=p.getProjectAmount()/p.getEuroToUsdExchangeRate();
+            }
+        if(Math.abs(amount-Double.parseDouble(p.getTotalAmountInvoiced().replace(",", "")))>1){
+            flag = false;statusMessage="FORMS > Accounting: Invoice is missing or total invoice amount is below total fee amount.";
+        }}else{flag = false;statusMessage="FORMS > Accounting: Invoice is missing or total invoice amount is below total fee amount.";}}
+        if(flag){if(!InteqaService.getInstance().isProjectBlocked(p.getProjectId())){
+            flag = false;statusMessage="INTEQA > Delivery Final: There are missing verifications. Verification needs to take place prior to delivery to client.";
+        }}
+        if(flag){
+        p.setCompleteDate(new Date());
         p.setStatus(status);
+        }}else{
+        p.setStatus(status);
+        }
+        }else{
+        p.setStatus(status);
+        }
+     
 
         User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
         p.setLastModifiedBy(u.getFirstName() + " " + u.getLastName());
@@ -158,7 +222,7 @@ public final class ProjectEditUpdateAction extends Action {
      
         }
         if(description!=null){
-p.setProductDescription(description);
+        p.setProductDescription(description);
         }
         //set updated values to db
         ProjectService.getInstance().updateProject(p);
@@ -168,11 +232,19 @@ p.setProductDescription(description);
         //update contact
         if (contactId != null && contactId.length() > 0) {
             ClientContact cc = ClientService.getInstance().getSingleClientContact(Integer.valueOf(contactId));
-            //insert into db, building link between contact and project
+            //insert into db, building link between contact and p roject
             ProjectService.getInstance().linkProjectClientContact(p, cc);
         }
+        
+        //update contact
+        if (caretaker!= null && caretaker.length() > 0) {
+            ClientContact cc = ClientService.getInstance().getSingleClientContact(Integer.valueOf(caretaker));
+            //insert into db, building link between contact and project
+            ProjectService.getInstance().linkProjectCareTaker(p, cc);
+        }
+        ProjectHelper.updateLanguageCount(p);
 
-     
+     request.setAttribute("statusMessage", statusMessage);
         // Forward control to the specified success URI
         return (mapping.findForward("Success"));
     }

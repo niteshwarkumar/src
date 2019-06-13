@@ -27,6 +27,7 @@
   <property name="format" type="string"/>
   <property name="releaseDate" type="date"/>
   <property name="owner" type="string"/>
+  <property name="ownerid" type="int"/>
   <property name="allCheck" type="boolean"/>
   <property name="pmCheck" type="boolean"/>
   <property name="engCheck" type="boolean"/>

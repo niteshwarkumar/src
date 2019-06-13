@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.LanguagePair" table="LanguagePair">
+   <class name="app.resource.LanguagePair" table="languagepair">
       <id name="languagePairId" type="int" column="ID_LanguagePair">
          <generator class="identity"/>
       </id>
@@ -14,7 +14,10 @@
       <property name="targetId" type="java.lang.Integer"/>  
       
       <property name="nativeLanguage" type="boolean"/>
+      <property name="prefferedVendor" type="boolean"/>
       <property name="country" type="string"/>
+      <property name="experienceSince" type="java.lang.Integer"/>
+      <property name="level" type="string"/>
       
       <many-to-one name="Resource" class="app.resource.Resource" column="ID_Resource"/>
       

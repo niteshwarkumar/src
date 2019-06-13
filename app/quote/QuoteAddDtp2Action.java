@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -301,7 +301,7 @@ public final class QuoteAddDtp2Action extends Action {
                     if(clp != null){  
                          for(int z=0; z<clp.length; z++){                       
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(dt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(dt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("DTP - "+dt.getTaskName())){                            
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 dt.setRate(clp[z].getRate());
                                 dt.setUnits(clp[z].getUnits());
                                 break;

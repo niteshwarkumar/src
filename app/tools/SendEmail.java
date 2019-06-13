@@ -31,6 +31,8 @@ import app.security.*;
 import app.standardCode.StandardCode;
 import app.user.User;
 import app.user.UserService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -120,7 +122,7 @@ public class SendEmail extends Action{
 
                   
 
-                    System.out.println("iiiiiiiiiiiiiiiddddddddddddddddddddddiiiiiiiiii" + ur11);
+                    //System.out.println("iiiiiiiiiiiiiiiddddddddddddddddddddddiiiiiiiiii" + ur11);
                     String quoteViewId1 = quoteId;
                     Quote1 newQ1 = QuoteService.getInstance().getSingleQuote(new Integer(quoteViewId1));
 msg+="<table border='1'><tr><td style='background-color:orange'><font color='blue' size='4'><b>SUMMARY</b></font></td><td width='640'><font color='blue' size='4'><b>"+newQ1.getNumber()+"</b></font></td></tr></table>";
@@ -145,8 +147,8 @@ msg+="<table border='1'><tr><td style='background-color:orange'><font color='blu
 
                 String sources11 = "";
                 String targets11 = "";
-                System.out.println("Hello");
-                System.out.println("newQ,ur.getProduct_ID()" + newQ1.getQuote1Id() + "        " + ur1.getId());
+                //System.out.println("Hello");
+                //System.out.println("newQ,ur.getProduct_ID()" + newQ1.getQuote1Id() + "        " + ur1.getId());
                 try {
                     List sourcelang1 = QuoteService.getInstance().getSourceLang(newQ1, ur1.getId());
 
@@ -165,7 +167,7 @@ msg+="<table border='1'><tr><td style='background-color:orange'><font color='blu
                         if (ii != sourcelang1.size() - 1) {
                             sources11 += ", ";
                         }
-                        System.out.println("sources" + sources11);
+                        //System.out.println("sources" + sources11);
                         List targetlang = QuoteService.getInstance().getTargetLang(sd1.getSourceDocId());
                         for (int jj = 0; jj < targetlang.size(); jj++) {
                             TargetDoc td1 = (TargetDoc) targetlang.get(jj);
@@ -184,7 +186,7 @@ msg+="<table border='1'><tr><td style='background-color:orange'><font color='blu
                             }
 
                             idTask1 = td1.getTargetDocId();
-                        }//System.out.println("targets"+targets);
+                        }////System.out.println("targets"+targets);
                         if (targets11.endsWith(", ")) {
                             targets11 = targets11.substring(0, targets11.length() - 2);
                         }
@@ -300,11 +302,11 @@ String emailSubjectTxt  = "Request for Quote Analysis :"+newQ1.getNumber();
 //String whoToNotify=request.getSession(false).getAttribute("whoToNotify").toString();
 HttpSession session = request.getSession(false);
 String whoToNotify=(String) session.getAttribute("whoToNotify");
-        System.out.println("whoToNotify"+whoToNotify);
+        //System.out.println("whoToNotify"+whoToNotify);
 
 
           String emailId=request.getParameter("id");
-   //                 System.out.println("mailId"+emailId);
+   //                 //System.out.println("mailId"+emailId);
  //emailId="excelnet@xltrans.com";
 Client c=ClientService.getInstance().getSingleClient(clientId);
 ///User user=UserService.getInstance().getSingleUser(c.getProject_mngr());
@@ -322,8 +324,8 @@ String[] emailList = {emailId};
 
     SendEmail smtpMailSender = new SendEmail();
 
-    smtpMailSender.postMail( emailList, emailSubjectTxt, emailMsgTxt, emailFromAddress);
-    System.out.println("Sucessfully Sent mail to All Users");
+    smtpMailSender.postMail( emailList, emailSubjectTxt, emailMsgTxt, StandardCode.emailFromAddress);
+    //System.out.println("Sucessfully Sent mail to All Users");
 
 
 
@@ -332,66 +334,28 @@ String[] emailList = {emailId};
 
 
 
+    private void execute(SendMail sm){
+		ExecutorService execSvc = Executors.newSingleThreadExecutor();
+		execSvc.execute(sm);
+		execSvc.shutdown();
+		
+	}
 
-
- private static final String SMTP_HOST_NAME = "xltrans.com";
- private static final String SMTP_AUTH_USER = "excelnet@xltrans.com";
- private static final String SMTP_AUTH_PWD  = "3vB@zMsp";
- //private static final String emailSubjectTxt  = "Request for Quote Analysis :"+newQ1.;
- private static final String emailFromAddress = "excelnet@xltrans.com";
 
   // Add List of Email address to who email needs to be sent to
  // private static final String[] emailList = {"niteshwar.kumar@spatialideas.com"};
 
 
-     public void postMail( String recipients[ ], String subject,
-                            String message , String from) throws MessagingException
-  {
-    boolean debug = false;
-
-     //Set the host smtp address
-     Properties props = new Properties();
-     props.put("mail.smtp.host", SMTP_HOST_NAME);
-     props.put("mail.smtp.auth", "true");
-     props.put("mail.smtp.timeout", 60000);
-
-    Authenticator auth = new SMTPAuthenticator();
-    Session session = Session.getDefaultInstance(props, auth);
-
-    session.setDebug(debug);
-
-    // create a message
-    Message msg = new MimeMessage(session);
-
-    // set the from and to address
-    InternetAddress addressFrom = new InternetAddress(from);
-    msg.setFrom(addressFrom);
-
-    InternetAddress[] addressTo = new InternetAddress[recipients.length];
-    for (int i = 0; i < recipients.length; i++)
+     public void postMail( String recipients[ ], String subject,String message , String from) throws MessagingException
     {
-        addressTo[i] = new InternetAddress(recipients[i]);
+      SendMail sm = new SendMail(recipients, subject, message, from);
+      execute(sm);
     }
-    msg.setRecipients(Message.RecipientType.TO, addressTo);
-
-
-    // Setting the Subject and Content Type
-    msg.setSubject(subject);
-    msg.setContent(message, "text/html");
-    Transport.send(msg);
- }
-
-
-
-
-    private class SMTPAuthenticator extends javax.mail.Authenticator
-{
-
-    public PasswordAuthentication getPasswordAuthentication()
+    
+     public void postMail( String recipients[ ],String ccRecipients[ ], String subject,String message , String from) throws MessagingException
     {
-        String username = SMTP_AUTH_USER;
-        String password = SMTP_AUTH_PWD;
-        return new PasswordAuthentication(username, password);
+        SendMail sm = new SendMail(recipients,ccRecipients, subject, message, from);
+      execute(sm);
     }
-}
+
 }

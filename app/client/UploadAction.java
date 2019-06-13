@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -75,12 +75,12 @@ public  class UploadAction extends Action {
         if(clientId == null) {
             clientId = StandardCode.getInstance().getCookie("clientViewId", request.getCookies());
         }
-        System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
+        //System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
 
         //add tab location to cookies; this will remember which tab we are at
         response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
        // long end1 = System.currentTimeMillis();
-        //System.out.println("old way:"+(end1-start1));
+        ////System.out.println("old way:"+(end1-start1));
        // long start2 = System.currentTimeMillis();
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
@@ -91,12 +91,12 @@ public  class UploadAction extends Action {
                 JSONObject jo = ProjectHelper.ProjectToJson2(p);
                 projectHistory.add(jo);
             }
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         out.println(new JSONArray(projectHistory.toArray()));
         out.flush();
        // long end2 = System.currentTimeMillis();
-       //System.out.println("Finnished ClientViewProjectHistoryAction!");
+       ////System.out.println("Finnished ClientViewProjectHistoryAction!");
 	// Forward control to the specified success URI
 	//return (mapping.findForward("Success"));
             return null;    }

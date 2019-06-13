@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -120,7 +120,7 @@ public final class QuoteViewNotesUpdateAction extends Action {
         }
 
         //update to db
-        QuoteService.getInstance().updateQuote(q);      
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));      
         
         //place quote into attribute for display
         request.setAttribute("quote", q);

@@ -17,6 +17,7 @@ import net.sf.hibernate.Hibernate;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import app.db.*;
+import app.resource.ResourceService;
 import app.user.*;
 
 
@@ -66,6 +67,34 @@ public class SecurityService
             
             if( lastSessionUpdate==null || "null".equals(lastSessionUpdate) || (System.currentTimeMillis()- Long.parseLong(lastSessionUpdate) > 1000*60*10)){
                 long lastUserSessionTableUpdate = UserService.getInstance().updateUserSessionInfo((String)session.getAttribute("username"));
+                session.setAttribute("lastUserSessionTableUpdate",""+lastUserSessionTableUpdate);
+            }
+            //user has security object in session
+            return true;
+        }
+        
+               //make sure user has passed through login page
+        public boolean checkForVendorLogin(HttpSession session) {
+            SecurityObject securityObject = null;
+            try {
+                securityObject = (SecurityObject) session.getAttribute("SecurityObject");   
+            }
+            catch(Exception e) {
+                return false;
+            }
+            
+            //the object doesn't exist for the user or it is not of type SecurityObject
+            if(securityObject == null || !(securityObject instanceof SecurityObject)) {
+                return false;
+            }
+            String lastSessionUpdate = (String) session.getAttribute("lastUserSessionTableUpdate");
+            
+            
+            //CHECK IF THIS IS NEEDED BY READING A VAR FROM THE DB and UPDATING it
+            //This should speed things up
+            
+            if( lastSessionUpdate==null || "null".equals(lastSessionUpdate) || (System.currentTimeMillis()- Long.parseLong(lastSessionUpdate) > 1000*60*10)){
+                long lastUserSessionTableUpdate = ResourceService.getInstance().updateUserSessionInfo((String)session.getAttribute("username"));
                 session.setAttribute("lastUserSessionTableUpdate",""+lastUserSessionTableUpdate);
             }
             //user has security object in session

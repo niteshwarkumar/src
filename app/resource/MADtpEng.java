@@ -7,7 +7,6 @@
  * the Source Creation and Management node. Right-click the template and choose
  * Open. You can then make changes to the template in the Source Editor.
  */
-
 package app.resource;
 
 /**
@@ -15,8 +14,10 @@ package app.resource;
  * @author PP41387
  */
 public class MADtpEng {
-    
-    /** Creates a new instance of MADtpEng */
+
+    /**
+     * Creates a new instance of MADtpEng
+     */
     public MADtpEng() {
     }
     private Integer id_ma;
@@ -30,32 +31,31 @@ public class MADtpEng {
     private String contentExpert5;
     private String contentExpert6;
     private String iso1;
-     private String iso2;
-     private String iso3;
-     private String iso4;
-     private String industry1;
-     private String industry2;
+    private String iso2;
+    private String iso3;
+    private String iso4;
+    private String industry1;
+    private String industry2;
     private String industry3;
     private String countryCert1;
     private String countryCert2;
     private String countryCert3;
-    
+
     private String tools1;
     private String tools2;
     private String tools3;
     private String tools4;
     private String tools5;
     private String tools6;
-    
-    
+
     private double size1Score;
-private double size2Score;
-private double toolsScore;
-private double accreditationScore;
-private double contentExpertScore;
+    private double size2Score;
+    private double toolsScore;
+    private double accreditationScore;
+    private double contentExpertScore;
 
+    private double totalScore;
 
-private double totalScore;
     public Integer getId_ma() {
         return id_ma;
     }
@@ -312,5 +312,4 @@ private double totalScore;
         this.tools6 = tools6;
     }
 
-    
 }

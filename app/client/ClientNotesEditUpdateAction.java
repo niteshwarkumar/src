@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -78,7 +78,7 @@ public final class ClientNotesEditUpdateAction extends Action {
 
         //the new note data from the form
         String note = request.getParameter("note");
-        System.out.println("note="+note);
+        //System.out.println("note="+note);
         //get the client to be updated
         Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(id));
         

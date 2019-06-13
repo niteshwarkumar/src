@@ -100,7 +100,7 @@ public class LinTask implements Serializable {
     private Integer word75;
 
     /** nullable persistent field */
-    private Integer wordNew;
+    private Double wordNew;
 
     /** nullable persistent field */
     private Integer word8599;
@@ -146,7 +146,7 @@ public class LinTask implements Serializable {
     private Integer word75Fee;
 
     /** nullable persistent field */
-    private Integer wordNewFee;
+    private Double wordNewFee;
 
     /** nullable persistent field */
     private Integer word8599Fee;
@@ -192,10 +192,15 @@ public class LinTask implements Serializable {
 
     /** nullable persistent field */
     private app.project.TargetDoc TargetDoc;
+    
+    private app.project.Scale Scale;
 
     private Double minFee;
-    /** full constructor */
-    public LinTask(String taskName, String personName, Integer orderNum, String sourceLanguage, String targetLanguage, String notes, String notesFee,String poNumber, Integer score, String postQuote, String sentDate, String dueDate, String receivedDate, Date sentDateDate, Date dueDateDate, Date receivedDateDate, String invoiceDate, Date invoiceDateDate, String units, String unitsFee,Double quantity, Integer word100, Integer wordRep, Integer word95, Integer word85, Integer word75, Integer wordNew, Integer word8599, Double wordNew4, Double wordTotal, String currency, String internalCurrency, String rate, String dollarTotal, String internalRate, String internalDollarTotal, Integer wordRepFee, Integer word95Fee, Integer word85Fee, Integer word75Fee, Integer wordNewFee, Integer word8599Fee, Double wordNew4Fee, Double wordTotalFee, String currencyFee, String internalCurrencyFee, String rateFee, String dollarTotalFee, String internalRateFee, String internalDollarTotalFee, app.project.TargetDoc TargetDoc, String multi) {
+    /** full constructor
+     * @param taskName
+     * @param scoreDescription
+     * @param personName */
+    public LinTask(String taskName,String scoreDescription, String personName, Integer orderNum, String sourceLanguage, String targetLanguage, String notes, String notesFee,String poNumber, Integer score, String postQuote, String sentDate, String dueDate, String receivedDate, Date sentDateDate, Date dueDateDate, Date receivedDateDate, String invoiceDate, Date invoiceDateDate, String units, String unitsFee,Double quantity, Integer word100, Integer wordRep, Integer word95, Integer word85, Integer word75, Double wordNew, Integer word8599, Double wordNew4, Double wordTotal, String currency, String internalCurrency, String rate, String dollarTotal, String internalRate, String internalDollarTotal, Integer wordRepFee, Integer word95Fee, Integer word100Fee, Integer word85Fee, Integer word75Fee, Double wordNewFee, Integer word8599Fee, Double wordNew4Fee, Double wordTotalFee, String currencyFee, String internalCurrencyFee, String rateFee, String dollarTotalFee, String internalRateFee, String internalDollarTotalFee, app.project.TargetDoc TargetDoc, String multi, app.project.Scale Scale) {
         this.taskName = taskName;
         this.personName = personName;
         this.orderNum = orderNum;
@@ -203,6 +208,7 @@ public class LinTask implements Serializable {
         this.targetLanguage = targetLanguage;
 
         this.poNumber = poNumber;
+        this.scoreDescription = scoreDescription;
         this.score = score;
         this.postQuote = postQuote;
         this.sentDate = sentDate;
@@ -252,6 +258,7 @@ public class LinTask implements Serializable {
         this.internalRate = internalRate;
         this.internalDollarTotal = internalDollarTotal;
         this.TargetDoc = TargetDoc;
+        this.Scale = Scale;
     }
 
     /** default constructor */
@@ -482,11 +489,11 @@ public class LinTask implements Serializable {
         this.word75 = word75;
     }
 
-    public Integer getWordNew() {
+    public Double getWordNew() {
         return this.wordNew;
     }
 
-    public void setWordNew(Integer wordNew) {
+    public void setWordNew(Double wordNew) {
         this.wordNew = wordNew;
     }
 
@@ -624,11 +631,11 @@ public class LinTask implements Serializable {
         this.word75Fee = word75Fee;
     }
 
-    public Integer getWordNewFee() {
+    public Double getWordNewFee() {
         return wordNewFee;
     }
 
-    public void setWordNewFee(Integer wordNewFee) {
+    public void setWordNewFee(Double wordNewFee) {
         this.wordNewFee = wordNewFee;
     }
 
@@ -781,6 +788,14 @@ public class LinTask implements Serializable {
 
     public void setMulti(String multi) {
         this.multi = multi;
+    }
+
+    public Scale getScale() {
+        return Scale;
+    }
+
+    public void setScale(Scale Scale) {
+        this.Scale = Scale;
     }
 
 

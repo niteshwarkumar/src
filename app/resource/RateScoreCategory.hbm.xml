@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.RateScoreCategory" table="RateScoreCategory">
+   <class name="app.resource.RateScoreCategory" table="ratescorecategory">
       <id name="rateScoreCategoryId" type="int" column="ID_RateScoreCategory">
          <generator class="identity"/>
       </id>

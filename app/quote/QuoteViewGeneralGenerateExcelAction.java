@@ -126,7 +126,7 @@ public final class QuoteViewGeneralGenerateExcelAction extends Action {
            //Output to the system
            response.setContentType("application/vnd.ms-excel");
            response.setHeader
-             ("Content-Disposition", "attachment; filename=" + q.getNumber() + "-"+q.getProject().getCompany().getCompany_name()+"_quote.xls");
+             ("Content-Disposition", "attachment; filename=" + q.getNumber() + "-"+q.getProject().getCompany().getCompany_name().replaceAll(" ", "_").replaceAll(",", "_")+"_quote.xls");
            
            w.write();
            w.close();
@@ -413,7 +413,7 @@ public final class QuoteViewGeneralGenerateExcelAction extends Action {
  	
     //for each source add each sources' Tasks
      //Define field label font
-     System.out.println("Language="+sd.getLanguage());
+     //System.out.println("Language="+sd.getLanguage());
     WritableFont labelFont = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD, true); 
     WritableCellFormat labelFormat = new WritableCellFormat (labelFont); 
     labelFormat.setWrap(true);
@@ -466,7 +466,7 @@ public final class QuoteViewGeneralGenerateExcelAction extends Action {
             if(!"All".equals(td.getLanguage())){
 	    s.setColumnView(startColumn+1,20);
 	    s.addCell(new Label(startColumn+1, 3, "Target: " + td.getLanguage(),labelFormat));
-             //System.out.println("td.getLanguage()="+td.getLanguage());
+             ////System.out.println("td.getLanguage()="+td.getLanguage());
 
             //for each lin Task of this target
             int totalWords100 = 0;

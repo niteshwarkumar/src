@@ -16,27 +16,24 @@ import java.util.*;
 import app.security.*;
 import app.resource.*;
 import app.standardCode.*;
-import java.awt.image.RescaleOp;
 import org.apache.struts.validator.*;
 
 public final class ProjectViewTeamUpdateActionLin extends Action {
 
     // ----------------------------------------------------- Instance Variables
     /**
-     * The
-     * <code>Log</code> instance for this application.
+     * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
-     * Return an
-     * <code>ActionForward</code> instance describing where and how control
-     * should be forwarded, or
-     * <code>null</code> if the response has already been completed.
+     * Return an <code>ActionForward</code> instance describing where and how
+     * control should be forwarded, or <code>null</code> if the response has
+     * already been completed.
      *
      * @param mapping The ActionMapping used to select this instance
      * @param form The optional ActionForm bean for this request (if any)
@@ -93,8 +90,7 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
         Integer id = Integer.valueOf(projectId);
 
         //END get id of current project from either request, attribute, or cookie 
-
-
+//        Integer newScaleprojectId =11713;
         //get project to edit
         Project p = ProjectService.getInstance().getSingleProject(id);
 
@@ -129,26 +125,155 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
             double scale75 = 0.60;
             double scaleNew = 1.0;
 
+//            if(id<newScaleprojectId){
+//            try {
+//                Resource res = ResourceService.getInstance().getSingleResource(Integer.parseInt(lt.getPersonName()));
+//
+//                scale100 = new Double(res.getScale100());
+//                scaleRep = new Double(res.getScaleRep());
+//                scale8599 = new Double(res.getScale8599());
+//                scaleNew4 = new Double(res.getScaleNew4());
+//                scalePerfect = new Double(res.getScalePerfect());
+//                scaleContext = new Double(res.getScaleContext());
+//                scale95 = new Double(res.getScale95());
+//                scale85 = new Double(res.getScale85());
+//                scale75 = new Double(res.getScale75());
+//                scaleNew = new Double(res.getScaleNew());
+//            } catch (Exception e) {
+//            }
+//            }else{
+//                        if(id<newScaleprojectId){
             try {
                 Resource res = ResourceService.getInstance().getSingleResource(Integer.parseInt(lt.getPersonName()));
+                if (res.isDefaultRate()) {
+                    if (null != lt.getScale()) {
+                        scale100 = new Double(lt.getScale().getScale100());
+                        scaleRep = new Double(lt.getScale().getScaleRep());
+                        scaleNew4 = new Double(lt.getScale().getScaleNew());
+                        scalePerfect = new Double(lt.getScale().getScalePerfect());
+                        scaleContext = new Double(lt.getScale().getScaleContext());
+                        scale95 = new Double(lt.getScale().getScale95());
+                        scale85 = new Double(lt.getScale().getScale85());
+                        scale75 = new Double(lt.getScale().getScale75());
+                        scaleNew = new Double(lt.getScale().getScaleNew());
+                    } else {
+                        scale100 = new Double(res.getScale100());
+                        scaleRep = new Double(res.getScaleRep());
+//                    scale8599 = new Double(res.getScale8599());
+                        try {
+                            scaleNew4 = new Double(res.getScaleNew4());
+                        } catch (Exception e) {
+                            scaleNew4 = new Double(res.getScaleNew());
+                        }
+                        scalePerfect = new Double(res.getScalePerfect());
+                        scaleContext = new Double(res.getScaleContext());
+                        scale95 = new Double(res.getScale95());
+                        scale85 = new Double(res.getScale85());
+                        scale75 = new Double(res.getScale75());
+                        scaleNew = new Double(res.getScaleNew());
+                        Scale scale = new Scale();
+                        scale.setScale100(res.getScale100());
+                        scale.setScale75(res.getScale75());
+                        scale.setScale85(res.getScale85());
+                        scale.setScale95(res.getScale95());
+                        scale.setScaleContext(res.getScaleContext());
+                        scale.setScaleNew(res.getScaleNew());
+                        scale.setScalePerfect(res.getScalePerfect());
+                        scale.setScaleRep(res.getScaleRep());
+                        lt.setScale(scale);
+                        ProjectService.getInstance().updateScale(scale);
 
-                scale100 = new Double(res.getScale100()).doubleValue();
-                scaleRep = new Double(res.getScaleRep()).doubleValue();
-                scale8599 = new Double(res.getScale8599()).doubleValue();
-                scaleNew4 = new Double(res.getScaleNew4()).doubleValue();
-                scalePerfect = new Double(res.getScalePerfect()).doubleValue();
-                scaleContext = new Double(res.getScaleContext()).doubleValue();
-                scale95 = new Double(res.getScale95()).doubleValue();
-                scale85 = new Double(res.getScale85()).doubleValue();
-                scale75 = new Double(res.getScale75()).doubleValue();
-                scaleNew = new Double(res.getScaleNew()).doubleValue();
+                    }
+                } else {
+                    if (null != lt.getScale()) {
+                        scale100 = new Double(lt.getScale().getScale100());
+                        scaleRep = new Double(lt.getScale().getScaleRep());
+//                        scaleNew4 = new Double(lt.getScale().getScaleNew4());
+                        scalePerfect = new Double(lt.getScale().getScalePerfect());
+                        scaleContext = new Double(lt.getScale().getScaleContext());
+                        scale95 = new Double(lt.getScale().getScale95());
+                        scale85 = new Double(lt.getScale().getScale85());
+                        scale75 = new Double(lt.getScale().getScale75());
+                        scaleNew = new Double(lt.getScale().getScaleNew());
+                    } else {
+                        scale100 = p.getCompany().getScale100_team();
+                        scaleRep = p.getCompany().getScaleRep_team();
+                        try {
+                            scale8599 = p.getCompany().getScale8599_team();
+                        } catch (Exception e1) {
+                        }
+                        try {
+                            scaleNew4 = p.getCompany().getScaleNew4_team();
+                        } catch (Exception e1) {
+                        }
+                        scalePerfect = p.getCompany().getScalePerfect_team();
+                        scaleContext = p.getCompany().getScaleContext_team();
+                        scale95 = p.getCompany().getScale95_team();
+                        scale85 = p.getCompany().getScale85_team();
+                        scale75 = p.getCompany().getScale75_team();
+                        scaleNew = p.getCompany().getScaleNew_team();
+                        Scale scale = new Scale();
+                        scale.setScale100(p.getCompany().getScale100_team().toString());
+                        scale.setScale75(p.getCompany().getScale75_team().toString());
+                        scale.setScale85(p.getCompany().getScale85_team().toString());
+                        scale.setScale95(p.getCompany().getScale95_team().toString());
+                        scale.setScaleContext(p.getCompany().getScaleContext_team().toString());
+                        scale.setScaleNew(p.getCompany().getScaleNew_team().toString());
+                        scale.setScalePerfect(p.getCompany().getScalePerfect_team().toString());
+                        scale.setScaleRep(p.getCompany().getScaleRep_team().toString());
+                        lt.setScale(scale);
+                        ProjectService.getInstance().updateScale(scale);
+
+                    }
+                }
             } catch (Exception e) {
+                scale100 = p.getCompany().getScale100_team();
+                scaleRep = p.getCompany().getScaleRep_team();
+                try {
+                    scale8599 = p.getCompany().getScale8599_team();
+                } catch (Exception e1) {
+                }
+                try {
+                    scaleNew4 = p.getCompany().getScaleNew4_team();
+                } catch (Exception e1) {
+                }
+                scalePerfect = p.getCompany().getScalePerfect_team();
+                scaleContext = p.getCompany().getScaleContext_team();
+                scale95 = p.getCompany().getScale95_team();
+                scale85 = p.getCompany().getScale85_team();
+                scale75 = p.getCompany().getScale75_team();
+                scaleNew = p.getCompany().getScaleNew_team();
+            }
+//            }
+//            }else{
+//            scale100 = p.getCompany().getScale100_team();
+//                scaleRep = p.getCompany().getScaleRep_team();
+//                scale8599 = p.getCompany().getScale8599_team();
+//                scaleNew4 = p.getCompany().getScaleNew4_team();
+//                scalePerfect = p.getCompany().getScalePerfect_team();
+//                scaleContext = p.getCompany().getScaleContext_team();
+//                scale95 = p.getCompany().getScale95_team();
+//                scale85 = p.getCompany().getScale85_team();
+//                scale75 = p.getCompany().getScale75_team();
+//                scaleNew = p.getCompany().getScaleNew_team();
+////            }
+
+            if (lt.getICRcheck() != null) {
+                Boolean ICRcheck = lt.getICRcheck().FALSE;
+
             }
 
             if (lt.getICRcheck() != null) {
                 Boolean ICRcheck = lt.getICRcheck().FALSE;
 
             }
+//            String resourceName = request.getParameter("resourceName" + String.valueOf(i));
+//                if (resourceName.length() >= 1) {
+//                    Resource r = ResourceService.getInstance().getSingleResourceByUserName(resourceName);
+//                } else {
+//                    lt.setReceivedDateDate(null);
+//                }
+//            
 
             //START process new total values (2 of them: Total and dollar TOTAL)
             // if((lt.getWord100() != null  && !lt.getWord100().equals(new Integer(0))) || (lt.getWordRep() != null  && !lt.getWordRep().equals(new Integer(0))) || (lt.getWord85() != null  && !lt.getWord85().equals(new Integer(0))) || (lt.getWordNew() != null  && !lt.getWordNew().equals(new Integer(0))) || (lt.getWordNew4() != null  && !lt.getWordNew4().equals(new Double(0)))) { //trados
@@ -157,7 +282,7 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
             int word95 = 0;
             int word85 = 0;
             int word75 = 0;
-            int wordNew = 0;
+            double wordNew = 0;
             int word8599 = 0;
             int wordContext = 0;
             int wordPerfect = 0;
@@ -180,13 +305,13 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
                 word75 = lt.getWord75().intValue();
             }
             if (lt.getWordNew() != null) {
-                wordNew = lt.getWordNew().intValue();
+                wordNew = lt.getWordNew().doubleValue();
             }
             if (lt.getWord8599() != null) {
                 word8599 = lt.getWord8599().intValue();
             }
             if (lt.getWordNew4() != null) {
-                wordNew4 = lt.getWordNew4().doubleValue();
+                wordNew4 = lt.getWordNew4();
             }
             if (lt.getWordContext() != null) {
                 wordContext = lt.getWordContext().intValue();
@@ -195,20 +320,17 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
                 wordPerfect = lt.getWordPerfect().intValue();
             }
 
-            
-
-
             double rate = 0;
             try {
                 String unformattedRate = lt.getInternalRate().replaceAll(",", "");
-                rate = Double.valueOf(unformattedRate).doubleValue();
+                rate = Double.valueOf(unformattedRate);
             } catch (java.lang.NumberFormatException nfe) {
                 rate = 0;
             }
 
             double wordTotal = word100 + wordRep + word8599 + wordNew4 + wordContext + wordPerfect;
 
-            if (!p.getCompany().isScaleDefault()) {
+            if (!p.getCompany().isScaleDefault(p.getProjectId())) {
                 wordTotal = word100 + wordRep + word95 + word85 + word75 + wordNew + wordContext + wordPerfect;
             }
 
@@ -219,7 +341,7 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
 //                if(lt.getPersonName() != null && lt.getPersonName().length() > 0) {
 //                  //  r = ResourceService.getInstance().getSingleResource(Integer.valueOf(lt.getPersonName()));
 //                }
-            if (p.getCompany().isScaleDefault()) {
+            if (p.getCompany().isScaleDefault(p.getProjectId())) {
                 double rateNew4 = rate * scaleNew4;
                 double rate100 = rate * scale100;
                 double rateRep = rate * scaleRep;
@@ -256,41 +378,39 @@ public final class ProjectViewTeamUpdateActionLin extends Action {
                 thisTotal = costNew4 + cost100 + costRep + cost7584 + cost8594 + cost9599 + costPerfect + costContext;
                 //thisTotal = wordTotal*rate;
             }
-            
-            
-           // lt.setMinFee(null);
+
+            // lt.setMinFee(null);
             try {
                 if (!lt.getMulti().equalsIgnoreCase("")) {
                     lt.setMulti(lt.getMulti());
                 }
-                    
-                        if (lt.getPersonName() != null && lt.getMulti().equalsIgnoreCase("minimum fee")) {
-                            LinTask lintask = ProjectService.getInstance().getSingleLinTask(lt.getLinTaskId());
-                            
-                            Resource res = ResourceService.getInstance().getSingleResource(Integer.parseInt(lt.getPersonName()));
 
-                            for (Iterator outer = res.getLanguagePairs().iterator(); outer.hasNext();) {
-                                LanguagePair lp = (LanguagePair) outer.next();
-                                for (Iterator inner = lp.getRateScoreLanguages().iterator(); inner.hasNext();) {
-                                    RateScoreLanguage rsl = (RateScoreLanguage) inner.next();
-                                    if (rsl.getSource().equals(lt.getTargetDoc().getSourceDoc().getLanguage()) && rsl.getTarget().equals(lt.getTargetDoc().getLanguage())) {
-                                        minFee = rsl.getMin();
-                                    }
-                                }
+                if (lt.getPersonName() != null && lt.getMulti().equalsIgnoreCase("minimum fee")) {
+                    LinTask lintask = ProjectService.getInstance().getSingleLinTask(lt.getLinTaskId());
+
+                    Resource res = ResourceService.getInstance().getSingleResource(Integer.parseInt(lt.getPersonName()));
+
+                    for (Iterator outer = res.getLanguagePairs().iterator(); outer.hasNext();) {
+                        LanguagePair lp = (LanguagePair) outer.next();
+                        for (Iterator inner = lp.getRateScoreLanguages().iterator(); inner.hasNext();) {
+                            RateScoreLanguage rsl = (RateScoreLanguage) inner.next();
+                            if (rsl.getSource().equals(lt.getTargetDoc().getSourceDoc().getLanguage()) && rsl.getTarget().equals(lt.getTargetDoc().getLanguage())) {
+                                minFee = rsl.getMin();
                             }
-                            if (lt.getMinFee() != null && !lt.getMinFee().toString().equalsIgnoreCase("")) {                       
-                                 minFee = lt.getMinFee().doubleValue();
-                            } 
-                            thisTotal=minFee;
-                            lt.setMinFee(minFee);
-                        }else{lt.setMinFee(null);}
-                   
-              
-                
-          
+                        }
+                    }
+                    if (lt.getMinFee() != null && !lt.getMinFee().toString().equalsIgnoreCase("")) {
+                        minFee = lt.getMinFee();
+                    }
+                    thisTotal = minFee;
+                    lt.setMinFee(minFee);
+                } else {
+                    lt.setMinFee(null);
+                }
+
             } catch (Exception e) {
             }
-linTotal += thisTotal; //update lin block
+            linTotal += thisTotal; //update lin block
 
             lt.setWordTotal(new Double(wordTotal));
             ////Let user overwrite automatic calculations
@@ -299,49 +419,76 @@ linTotal += thisTotal; //update lin block
             lt.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
 
             // }
-
-            lt.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
-
-
+            lt.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
 
             //END process new total values (2 of them)
-
             if (autoUpdate == null) { //update dates only if not updating tasks
                 //START update lin dates
-                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + String.valueOf(i));
-                if (linTasksProjectSentArray.length() >= 1) {
-                    lt.setSentDateDate(DateService.getInstance().convertDate(linTasksProjectSentArray).getTime());
-                } else {
-                    lt.setSentDateDate(null);
+                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + lt.getLinTaskId());
+                try {
+                    if (linTasksProjectSentArray.length() >= 1) {
+                        lt.setSentDateDate(DateService.getInstance().convertDate(linTasksProjectSentArray).getTime());
+                    } else {
+                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                        System.out.println("request.getParameter(\"linTasksProjectSentArray\" + lt.getLinTaskId()"); 
+                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//                        lt.setSentDateDate(null);
+                    }
+                } catch (Exception e) {
+                     System.out.println("################################################################################################");
+                     e.printStackTrace();
+                     System.out.println("################################################################################################");
                 }
-                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + String.valueOf(i));
-                if (linTasksProjectDueArray.length() >= 1) {
-                    lt.setDueDateDate(DateService.getInstance().convertDate(linTasksProjectDueArray).getTime());
-                } else {
-                    lt.setDueDateDate(null);
+                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + lt.getLinTaskId());
+                try {
+                    if (linTasksProjectDueArray.length() >= 1) {
+                        lt.setDueDateDate(DateService.getInstance().convertDate(linTasksProjectDueArray).getTime());
+                    } else {
+//                        lt.setDueDateDate("");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + String.valueOf(i));
-                if (linTasksProjectReceivedArray.length() >= 1) {
-                    lt.setReceivedDateDate(DateService.getInstance().convertDate(linTasksProjectReceivedArray).getTime());
-                } else {
-                    lt.setReceivedDateDate(null);
+                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + lt.getLinTaskId());
+                try {
+                    if (linTasksProjectReceivedArray.length() >= 1) {
+                        lt.setReceivedDateDate(DateService.getInstance().convertDate(linTasksProjectReceivedArray).getTime());
+                    } else {
+//                        lt.setReceivedDateDate("");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                String linTasksProjectICRSentArray = request.getParameter("linTasksProjectICRSentArray" + String.valueOf(i));
-                if (linTasksProjectICRSentArray.length() >= 1) {
-                    lt.setIcrSentDate(DateService.getInstance().convertDate(linTasksProjectICRSentArray).getTime());
-                } else {
-                    lt.setIcrSentDate(null);
+                String linTasksProjectICRSentArray = request.getParameter("linTasksProjectICRSentArray" + lt.getLinTaskId());
+                try {
+                    if (linTasksProjectICRSentArray.length() >= 1) {
+                        lt.setIcrSentDate(DateService.getInstance().convertDate(linTasksProjectICRSentArray).getTime());
+                    } else {
+//                        lt.setIcrSentDate(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                String linTasksProjectICRReceivedArray = request.getParameter("linTasksProjectICRReceivedArray" + String.valueOf(i));
-                if (linTasksProjectICRReceivedArray.length() >= 1) {
-                    lt.setIcrRecievedDate(DateService.getInstance().convertDate(linTasksProjectICRReceivedArray).getTime());
-                } else {
-                    lt.setIcrRecievedDate(null);
+                String linTasksProjectICRReceivedArray = request.getParameter("linTasksProjectICRReceivedArray" + lt.getLinTaskId());
+                try {
+                    if (linTasksProjectICRReceivedArray.length() >= 1) {
+                        lt.setIcrRecievedDate(DateService.getInstance().convertDate(linTasksProjectICRReceivedArray).getTime());
+                    } else {
+//                        lt.setIcrRecievedDate(null);
+                    }
+                } catch (Exception e) {
+                   e.printStackTrace();
                 }
 
-                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + String.valueOf(i));
-                if (linTasksProjectInvoiceArray.length() >= 1) {
-                    lt.setInvoiceDateDate(DateService.getInstance().convertDate(linTasksProjectInvoiceArray).getTime());
+                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + lt.getLinTaskId());
+                try {
+                    if (linTasksProjectInvoiceArray.length() >= 1) {
+                        lt.setInvoiceDateDate(DateService.getInstance().convertDate(linTasksProjectInvoiceArray).getTime());
+                    } else {
+//                        lt.setInvoiceDateDate(null);
+                    }
+                } catch (Exception e) {
+                   e.printStackTrace();
                 }
                 String linTasksProjectICRFinal = request.getParameter("linTasksProjectICRFinalArray");
                 lt.setIcrFinal(linTasksProjectICRFinal);
@@ -353,8 +500,6 @@ linTotal += thisTotal; //update lin block
             ProjectService.getInstance().updateLinTask(lt);
 
         }//END LIN TASKS
-
-
 
         //update project to db
         //NOTE: NO PROJECT TOTALS CHANGES 
@@ -368,7 +513,6 @@ linTotal += thisTotal; //update lin block
             Integer newAutoUpdate = new Integer(autoUpdate.intValue() + 1);
             request.setAttribute("AutoUpdate", newAutoUpdate); //place true value (1) into request 
         }
-
 
         if (request.getParameter("projectInformalsJSON") != null) {
 

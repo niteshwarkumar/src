@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -143,12 +143,12 @@ public final class ClientViewAccountingUpdateAction extends Action {
         c.setScaleNew(scaleNew);
         c.setScaleNew4(scaleNew4);
         
-        if(request.getParameter("rowsSubmit").equals("4")) {
-            c.setScaleDefault(true);
-        }
-        else {
-            c.setScaleDefault(false);
-        }
+//        if(request.getParameter("rowsSubmit").equals("4")) {
+//            c.setScaleDefault(true);
+//        }
+//        else {
+//            c.setScaleDefault(false);
+//        }
         //END process linguistic scaling
         
         

@@ -199,7 +199,7 @@ public final class ProjectViewFeeUpdateAction_Dtp extends Action {
 thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotalFee()).replaceAll(",", ""));
             }catch(Exception e){}
     try{
-                      //System.out.println("Currencyyyyyyyy"+lt.getCurrencyFee());
+                      ////System.out.println("Currencyyyyyyyy"+lt.getCurrencyFee());
                       if (lt.getCurrencyFee().equalsIgnoreCase("EURO")){
                         //linCurrencyTotal=thisTotal;
                       linTotal+=thisTotal*p.getEuroToUsdExchangeRate();
@@ -281,7 +281,7 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
 //                   unformattedRate = lt.getRateFee().replaceAll(",", "");
 //                   rate = Double.valueOf(unformattedRate).doubleValue();
 //                    // rate = Double.valueOf(lt.getRate()).doubleValue();
-//                   System.out.println(unformattedRate+"     "+rate);
+//                   //System.out.println(unformattedRate+"     "+rate);
 //                } catch(java.lang.NumberFormatException nfe) {
 //                    rate = 0;
 //                }
@@ -413,7 +413,7 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
                 //engTotal += thisTotal; //update eng block
 
                 et.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                et.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                et.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
             }
             //END process new total value
 
@@ -444,7 +444,7 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
                 dtpTotal += thisTotal; //update dtp block
 
                 dt.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                dt.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                dt.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
                 try{
                     if(dt.getCurrency().equalsIgnoreCase("EURO")){
                     dtpCurrencyTotal+=thisTotal*p.getEuroToUsdExchangeRate();
@@ -482,7 +482,7 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
                 othTotal += thisTotal; //update oth block
 
                 ot.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                ot.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                ot.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
             }
             //END process new total value
 
@@ -530,7 +530,7 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
 
         //START sub total with pm block
         double subPmTotal = subTotal + pmPercentDollarTotalDouble;
-        p.setSubPmDollarTotal(StandardCode.getInstance().formatDouble(new Double(subPmTotal)));
+//        p.setSubPmDollarTotal(StandardCode.getInstance().formatDouble(new Double(subPmTotal)));
         //END sub total with pm block
 
 
@@ -592,38 +592,35 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
         p.setSubDiscountDollarTotal(""+projectTotal);
 //END DISCOUNT block
 
+String otherText=p.getOtherText();
+        String otherPercent=p.getOtherPercent();
+        String otherDollarTotal=p.getOtherDollarTotal();
 
-//            //START DISCOUNT block
-//        String otherPercent = (String) qvg.get("discountPercent");
-//        String otherDollarTotal = (String) qvg.get("discountDollarTotal");
-//        double otherRate = 0;
-//        double otherPercentDollarTotal=0;
-//        if(otherPercent != null && !otherPercent.equals("") && !otherPercent.equals("0.00")) { //if rushPercent is present
-//            try {
-//                otherRate = Double.valueOf(otherPercent.replaceAll(",","")).doubleValue();
-//            } catch(java.lang.NumberFormatException nfe) {
-//                otherRate = 0;
-//            }
-//            //discountDollarTotal = ;
-//            projectTotal = projectTotal - (otherRate / 100) * projectTotal;
-//        }else if(otherDollarTotal != null && !otherPercent.equals("") && !otherPercent.equals("0.00")) { //if rushPercent is present
-//            try {
-//                otherPercentDollarTotal = Double.valueOf(otherDollarTotal.replaceAll(",","")).doubleValue();
-//            } catch(java.lang.NumberFormatException nfe) {
-//                otherPercentDollarTotal = 0;
-//            }
-//            projectTotal = projectTotal - otherPercentDollarTotal;
-//
-//        }
-//
-//        p.setDiscountDollarTotal(otherDollarTotal);
-//        p.setDiscountPercent(otherPercent);
-//        p.setSubDiscountDollarTotal(""+projectTotal);
-////END DISCOUNT block
+        
+        double otherPercentRate = 0;
+        double otherPercentDollarTotal = 0;
+
+        if (otherPercent != null && !otherPercent.equals("") && !otherPercent.equals("0.00")) { //if rushPercent is present
+            try {
+                otherPercentRate = Double.valueOf(otherPercent.replaceAll(",", "")).doubleValue();
+            } catch (java.lang.NumberFormatException nfe) {
+                otherPercentRate = 0;
+            }
+            //discountDollarTotal = ;
+            projectTotal =projectTotal+((otherPercentRate / 100) * projectTotal);
+        } else if (otherDollarTotal != null && !otherDollarTotal.equals("") && !otherDollarTotal.equals("0.00")) { //if rushPercent is present
+            try {
+                otherPercentDollarTotal = Double.valueOf(otherDollarTotal.replaceAll(",", "")).doubleValue();
+            } catch (java.lang.NumberFormatException nfe) {
+                otherPercentDollarTotal = 0;
+            }
+            projectTotal = projectTotal + otherPercentDollarTotal;
+
+        }
 
 
 
-        p.setProjectAmount(new Double(projectTotal));
+//        p.setProjectAmount(new Double(projectTotal));
 
 //        if(request.getParameter("euroToUsdExchangeRate")!=null){
 //            p.setEuroToUsdExchangeRate(new Double(request.getParameter("euroToUsdExchangeRate")));
@@ -666,6 +663,7 @@ thisTotal=Double.parseDouble(StandardCode.getInstance().noNull(lt.getDollarTotal
 
         //update project to db
         ProjectService.getInstance().updateProject(p);
+        ProjectService1.getInstance().updateProjectAmount(p, u);
 
         //mark AutoUpdate as true
         if(autoUpdate != null) {

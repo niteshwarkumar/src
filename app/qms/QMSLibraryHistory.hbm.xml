@@ -25,5 +25,6 @@
   <property name="changes" type="string"/>
   <property name="fileName" type="string"/>
   <property name="fileSaveName" type="string"/>
+  <property name="trained" type="string"/>
    </class>
 </hibernate-mapping>

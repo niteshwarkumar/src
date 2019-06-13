@@ -264,7 +264,7 @@ User u = UserService.getInstance().getSingleUser((String)request.getSession(fals
 
                 //team (fee) TOTAL
                 double teamTotal = 0;
-                //System.out.println("p.getProjectAmount()="+p.getProjectAmount());
+                ////System.out.println("p.getProjectAmount()="+p.getProjectAmount());
                 if(p.getProjectAmount() != null && !"".equals(p.getProjectAmount())) {
                     teamTotal = p.getProjectAmount().doubleValue();
                 }
@@ -292,22 +292,24 @@ User u = UserService.getInstance().getSingleUser((String)request.getSession(fals
                     }
 
                 }
+                      double pmTotal = ProjectService1.getInstance().getTotalPMFee(p);
+                     double rushTotal = ProjectService1.getInstance().getTotalRushFee(p);
                 
-                String rushTotal = "",pmTotal = "";
-                if(p.getRushPercentDollarTotal()!=null && !"".equals(p.getRushPercentDollarTotal()) && !"0.00".equals(p.getRushPercentDollarTotal()) ){
-                   rushTotal  = StandardCode.getInstance().formatDouble(new Double(p.getRushPercentDollarTotal().replaceAll(",", ""))).replaceAll(",", "");
-                    //subtotal += Double.parseDouble(p.getRushPercentDollarTotal().replaceAll(",", ""));
-                     htTaskDescriptions.put("Rush", "");
-                }
-                try{
-                if(p.getPmPercent()!=null && !"".equals(p.getPmPercent())){
-                Double pmFee=taskTotal*Double.parseDouble(p.getPmPercent())/100;
-                 pmTotal =  StandardCode.getInstance().formatDouble(pmFee).replaceAll(",", "");
-                }else if(p.getPmPercentDollarTotal()!=null && !"".equals(p.getPmPercentDollarTotal())){
-                   pmTotal = StandardCode.getInstance().formatDouble(new Double(p.getPmPercentDollarTotal().replaceAll(",", ""))).replaceAll(",", "");
-                    //subtotal += Double.parseDouble(p.getPmPercentDollarTotal().replaceAll(",", ""));
-                }
-                }catch(Exception e){}
+//                String rushTotal = "0.00",pmTotal = "";
+//                if(p.getRushPercentDollarTotal()!=null && !"".equals(p.getRushPercentDollarTotal()) && !"0.00".equals(p.getRushPercentDollarTotal()) ){
+//                   rushTotal  = StandardCode.getInstance().formatDouble(new Double(p.getRushPercentDollarTotal().replaceAll(",", ""))).replaceAll(",", "");
+//                    //subtotal += Double.parseDouble(p.getRushPercentDollarTotal().replaceAll(",", ""));
+//                     htTaskDescriptions.put("Rush", "");
+//                }
+//                try{
+//                if(p.getPmPercent()!=null && !"".equals(p.getPmPercent())){
+//                Double pmFee=taskTotal*Double.parseDouble(p.getPmPercent())/100;
+//                 pmTotal =  StandardCode.getInstance().formatDouble(pmFee).replaceAll(",", "");
+//                }else if(p.getPmPercentDollarTotal()!=null && !"".equals(p.getPmPercentDollarTotal())){
+//                   pmTotal = StandardCode.getInstance().formatDouble(new Double(p.getPmPercentDollarTotal().replaceAll(",", ""))).replaceAll(",", "");
+//                    //subtotal += Double.parseDouble(p.getPmPercentDollarTotal().replaceAll(",", ""));
+//                }
+//                }catch(Exception e){}
 
                 int taskNameCounter = 2;
 
@@ -326,7 +328,7 @@ User u = UserService.getInstance().getSingleUser((String)request.getSession(fals
 //                        }
 //                    }
 //                }
-//                //System.out.println("changeTotal="+changeTotal);
+//                ////System.out.println("changeTotal="+changeTotal);
 //                if(changeCount > 1) { //changes were made, so show change total
 //                    form1.setField("changeTotal", StandardCode.getInstance().formatDouble(new Double(changeTotal)));
 //                }
@@ -353,44 +355,45 @@ User u = UserService.getInstance().getSingleUser((String)request.getSession(fals
 
 
              
-      
-   String htmlBody="<table style='font-family:verdana;font-size:11'>";
+   String divClassLeft="display: table-cell;width:150px; valign='top'";
+   String divClassRight="display:table-cell; valign='top'"; 
+   String htmlBody="<div style='font-family:verdana;font-size:11'>";
               String comma=", ";
-             htmlBody += "<tr><td>Hello,</td></tr>";
+             htmlBody += "<div><div>Hello,</div></div>";
             
-            htmlBody += "<tr><td colspan=\"2\">Please find below the invoice for "+p.getNumber() + p.getCompany().getCompany_code()+" :</td></tr>";
+            htmlBody += "<div><div>Please find below the invoice for "+p.getNumber() + p.getCompany().getCompany_code()+" :</div></div>";
 
-htmlBody += "<tr><td colspan=\"2\"><hr></td></tr>";
+htmlBody += "<div><div><hr></div></div>";
 
-htmlBody += "<tr><td>Client: </td><td>"+ p.getCompany().getCompany_name()+"</td></tr>";
-htmlBody += "<tr><td>Project: </td><td>"+p.getNumber() + p.getCompany().getCompany_code()+"</td></tr>";
-htmlBody += "<tr><td>Client PO:</td><td>"+StandardCode.getInstance().noNull(p.getClientPO())+"</td></tr>";
-htmlBody += "<tr><td colspan=\"2\"><hr></td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Client: </div><div style=\""+divClassRight+"\">"+ p.getCompany().getCompany_name()+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Project: </div><div style=\""+divClassRight+"\">"+p.getNumber() + p.getCompany().getCompany_code()+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Client PO:</div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().noNull(p.getClientPO())+"</div></div>";
+htmlBody += "<div><div><hr></div></div>";
 
-htmlBody += "<tr><td>Contact:</td><td>"+StandardCode.getInstance().noNull(p.getContact().getFirst_name()) + " " + StandardCode.getInstance().noNull(p.getContact().getLast_name())+"</td></tr>";
-htmlBody += "<tr><td></td><td>"+StandardCode.getInstance().noNull(p.getContact().getDivision())+comma+StandardCode.getInstance().noNull(p.getContact().getAddress_1())+"</td></tr>";
-htmlBody += "<tr><td></td><td>"+StandardCode.getInstance().noNull(p.getContact().getCity())+", "+StandardCode.getInstance().noNull(p.getContact().getState_prov())+", "+StandardCode.getInstance().noNull(p.getContact().getZip_postal_code())+", "+StandardCode.getInstance().noNull(p.getContact().getCountry())+"</td></tr>";
-htmlBody += "<tr><td colspan=\"2\"><hr></td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Contact:</div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().noNull(p.getContact().getFirst_name()) + " " + StandardCode.getInstance().noNull(p.getContact().getLast_name())+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\"></div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().noNull(p.getContact().getDivision())+comma+StandardCode.getInstance().noNull(p.getContact().getAddress_1())+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\"></div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().noNull(p.getContact().getCity())+", "+StandardCode.getInstance().noNull(p.getContact().getState_prov())+", "+StandardCode.getInstance().noNull(p.getContact().getZip_postal_code())+", "+StandardCode.getInstance().noNull(p.getContact().getCountry())+"</div></div>";
+htmlBody += "<div><div><hr></div></div>";
 
-htmlBody += "<tr><td>Target:  </td><td>"+targets.toString()+"</td></tr>";
-htmlBody += "<tr><td>Product: </td><td>"+StandardCode.getInstance().noNull(p.getProduct())+"</td></tr>";
-htmlBody += "<tr><td>Description:</td><td>"+ StandardCode.getInstance().noNull(p.getProductDescription())+"</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Target:  </div><div style=\""+divClassRight+"\">"+targets.toString()+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Product: </div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().noNull(p.getProduct())+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Description:</div><div style=\""+divClassRight+"\">"+ StandardCode.getInstance().noNull(p.getProductDescription())+"</div></div>";
 
-htmlBody += "<tr><td colspan=\"2\"><hr></td></tr>";
+htmlBody += "<div><div><hr></div></div>";
 
-htmlBody += "<tr><td>INVOICE"+"</td></tr>";
+htmlBody += "<div><div>INVOICE"+"</div></div>";
 
-htmlBody += "<tr><td>Currency: </td><td>"+ StandardCode.getInstance().noNull(p.getCompany().getCcurrency())+"</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Currency: </div><div style=\""+divClassRight+"\">"+ StandardCode.getInstance().noNull(p.getCompany().getCcurrency())+"</div></div>";
 
-htmlBody += "<tr><td>Linguistic: </td><td>"+StandardCode.getInstance().formatDouble(new Double(linTaskTotal)).replaceAll(",", "")+"</td></tr>";
-htmlBody += "<tr><td>Engineering:</td><td>"+StandardCode.getInstance().formatDouble(new Double(engTaskTotal)).replaceAll(",", "")+"</td></tr>";
-htmlBody += "<tr><td>DTP:    </td><td>"+StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)).replaceAll(",", "")+"</td></tr>";
-htmlBody += "<tr><td>Other: </td><td>"+StandardCode.getInstance().formatDouble(new Double(othTaskTotal)).replaceAll(",", "")+"</td></tr>";
-htmlBody += "<tr><td>PM:     </td><td>"+pmTotal+"</td></tr>";
-htmlBody += "<tr><td>Rush:    </td><td>"+rushTotal+"</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Linguistic: </div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().formatMoney(new Double(linTaskTotal))+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Engineering:</div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().formatMoney(new Double(engTaskTotal))+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">DTP:    </div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().formatMoney(new Double(dtpTaskTotal))+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Other: </div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().formatMoney(new Double(othTaskTotal))+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">PM:     </div><div style=\""+divClassRight+"\">"+pmTotal+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Rush:    </div><div style=\""+divClassRight+"\">"+rushTotal+"</div></div>";
 
-htmlBody += "<tr><td>TOTAL:  </td><td>"+StandardCode.getInstance().formatDouble(new Double(subtotal))+"</td></tr>";
-htmlBody += "<tr><td>&nbsp;</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">TOTAL:  </div><div style=\""+divClassRight+"\">"+StandardCode.getInstance().formatMoney(new Double(subtotal))+"</div></div>";
+htmlBody += "<div><div>&nbsp;</div></div>";
 String task="";
 for(Iterator iter = htTaskDescriptions.keySet().iterator(); iter.hasNext();) {
 
@@ -399,23 +402,23 @@ for(Iterator iter = htTaskDescriptions.keySet().iterator(); iter.hasNext();) {
                     else task += ", " + taskName;
                     
                  }
-htmlBody += "<tr><td>Task:  </td><td>"+task+"</td></tr>";
-htmlBody += "<tr><td>Description of Changes:</td></tr>";
-htmlBody += "<tr><td colspan=\"2\">Describe changes here (if needed)"+"</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Task:  </div><div style=\""+divClassRight+"\">"+task+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Description of Changes:</div></div>";
+htmlBody += "<div><div>Describe changes here (if needed)"+"</div></div>";
 
-htmlBody += "<tr><td>Invoice Instructions:</td><td>"+billingReqsJSArray+"</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Invoice Instructions:</div><div style=\""+divClassRight+"\">"+billingReqsJSArray+"</div></div>";
 
-htmlBody += "<tr><td colspan=\"2\"><hr></td></tr>";
+htmlBody += "<div><div><hr></div></div>";
 
-htmlBody += "<tr><td>Project Manager: </td><td>"+ p.getPm()+"</td></tr>";
-htmlBody += "<tr><td>Date:     </td><td>"+ DateFormat.getDateInstance(DateFormat.SHORT).format(new Date())+"</td></tr>";
-htmlBody += "<tr><td>Account Manager:</td><td>"+ p.getCompany().getSales_rep()+"</td></tr>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Project Manager: </div><div style=\""+divClassRight+"\">"+ p.getPm()+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Date:     </div><div style=\""+divClassRight+"\">"+ DateFormat.getDateInstance(DateFormat.SHORT).format(new Date())+"</div></div>";
+htmlBody += "<div><div style=\""+divClassLeft+"\">Account Manager:</div><div style=\""+divClassRight+"\">"+ p.getCompany().getSales_rep()+"</div></div>";
 
-htmlBody += "<tr><td colspan=\"2\"><hr></td></tr>";
+htmlBody += "<div><div><hr></div></div>";
 
-htmlBody += "<tr><td colspan=\"2\">Please let me know if you have any questions."+"</td></tr>";
+htmlBody += "<div><div>Please let me know if you have any questions."+"</div></div>";
 
-htmlBody += "<tr><td colspan=\"2\">"+u.getFirstName()+" "+u.getLastName()+"</td></tr>";
+htmlBody += "<div><div>"+u.getFirstName()+" "+u.getLastName()+"</div></div></div>";
 
 request.setAttribute("htmlBody", htmlBody);
 request.setAttribute("htmlSubject", p.getNumber() + p.getCompany().getCompany_code()+ " - " + p.getPm());

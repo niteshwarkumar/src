@@ -2,6 +2,7 @@ package app.project;
 
 import app.client.Client;
 import app.client.ClientContact;
+import app.standardCode.StandardCode;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -9,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /** @author Hibernate CodeGenerator */
 public class Project implements Serializable {
-
+ 
     /** identifier field */
     private Integer projectId;
     /** nullable persistent field */
@@ -120,6 +121,7 @@ public class Project implements Serializable {
     private Client Company;
     /** nullable persistent field */
     private ClientContact Contact;
+    private ClientContact CareTaker;
     /** persistent field */
     private Set ClientInvoices;
     /** persistent field */
@@ -149,9 +151,11 @@ public class Project implements Serializable {
     private String orderConfirmation;
     private String deliveryConfirmation;
     private String translationApprovalConfirmation;
+    private String translationApprovalConfirmationWord;
     private String orderConfirmationMail;
     private String deliveryConfirmationMail;
     private String translationApprovalConfirmationMulti;
+    private String translationApprovalConfirmationWordMulti;
     private String other;
     private String otherText;
     private String otherPercent;
@@ -160,7 +164,15 @@ public class Project implements Serializable {
     private boolean independent;
     private boolean confirmationRecieved;
     private Double clientSatisfaction;
-
+    private Integer srcLangCnt;
+    private Integer targetLangCnt;
+    
+    private String orderReqNum;
+    private String srcLang;
+    private String targetLang;
+    private String task;
+    private Date reqProjDelDate;
+    private boolean postProjectReview;
 
     /** full constructor */
     public Project(String number, String status, String product, String productDescription, String productUnits, String projectRequirements, String projectDescription, Date startDate, Date dueDate, Date deliveryDate, Date completeDate, String deliveryMethod, String beforeWorkTurn, String afterWorkTurn, String cancelled, String beforeWorkTurnUnits, String afterWorkTurnUnits, String afterWorkTurnReason, String deliverableSame, String clientPO, String fee, Date invoiceDate, Date invoicePaid, String totalAmountInvoiced, String notes, String linRequirements, String dtpRequirements, String engRequirements, String othRequirements, String sourceOS, String sourceApplication, String sourceVersion, String sourceTechNotes, String deliverableOS, String deliverableApplication, String deliverableVersion, String deliverableTechNotes, String pm, String subDollarTotal, String subPmDollarTotal, String pmPercent, String pmPercentDollarTotal, String rushPercent, String rushPercentDollarTotal, String legacyCost, Double projectAmount, Client Company, ClientContact Contact, Set ClientInvoices, Set Inspections, Set Quotes, Set SourceDocs, Set Qualities, Set Change1s) {
@@ -439,7 +451,8 @@ public class Project implements Serializable {
     }
 
     public void setNotes(String notes) {
-        this.notes = notes;
+      this.notes = StandardCode.getInstance().convertTextToUTF(notes);
+     
     }
 
     public String getLinRequirements() {
@@ -562,8 +575,15 @@ public class Project implements Serializable {
         this.subPmDollarTotal = subPmDollarTotal;
     }
 
-    public String getPmPercent() {
-        return this.pmPercent;
+//    public String getPmPercent(String change) {
+//        if(change.isEmpty())
+//            return this.pmPercent;
+//        else
+//            return "100";
+//    }
+    
+     public String getPmPercent() {
+            return this.pmPercent;
     }
 
     public void setPmPercent(String pmPercent) {
@@ -626,6 +646,15 @@ public class Project implements Serializable {
     public void setContact(ClientContact Contact) {
         this.Contact = Contact;
     }
+
+    public ClientContact getCareTaker() {
+        return CareTaker;
+    }
+
+    public void setCareTaker(ClientContact CareTaker) {
+        this.CareTaker = CareTaker;
+    }
+    
 
     public Set getClientInvoices() {
         return this.ClientInvoices;
@@ -934,6 +963,87 @@ public class Project implements Serializable {
     public void setTranslationApprovalConfirmationMulti(String translationApprovalConfirmationMulti) {
         this.translationApprovalConfirmationMulti = translationApprovalConfirmationMulti;
     }
+
+    public Integer getSrcLangCnt() {
+        return srcLangCnt;
+    }
+
+    public void setSrcLangCnt(Integer srcLangCnt) {
+        this.srcLangCnt = srcLangCnt;
+    }
+
+    public Integer getTargetLangCnt() {
+        return targetLangCnt;
+    }
+
+    public void setTargetLangCnt(Integer targetLangCnt) {
+        this.targetLangCnt = targetLangCnt;
+    }
+
+    public String getSrcLang() {
+        return srcLang;
+    }
+
+    public void setSrcLang(String srcLang) {
+        this.srcLang = srcLang;
+    }
+
+    public String getTargetLang() {
+        return targetLang;
+    }
+
+    public void setTargetLang(String targetLang) {
+        this.targetLang = targetLang;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+    public String getTranslationApprovalConfirmationWord() {
+        return translationApprovalConfirmationWord;
+    }
+
+    public void setTranslationApprovalConfirmationWord(String translationApprovalConfirmationWord) {
+        this.translationApprovalConfirmationWord = translationApprovalConfirmationWord;
+    }
+
+    public String getTranslationApprovalConfirmationWordMulti() {
+        return translationApprovalConfirmationWordMulti;
+    }
+
+    public void setTranslationApprovalConfirmationWordMulti(String translationApprovalConfirmationWordMulti) {
+        this.translationApprovalConfirmationWordMulti = translationApprovalConfirmationWordMulti;
+    }
+
+    public Date getReqProjDelDate() {
+        return reqProjDelDate;
+    }
+
+    public void setReqProjDelDate(Date reqProjDelDate) {
+        this.reqProjDelDate = reqProjDelDate;
+    }
+
+    public boolean isPostProjectReview() {
+        return postProjectReview;
+    }
+
+    public void setPostProjectReview(boolean postProjectReview) {
+        this.postProjectReview = postProjectReview;
+    }
+
+    public String getOrderReqNum() {
+        return orderReqNum;
+    }
+
+    public void setOrderReqNum(String orderReqNum) {
+        this.orderReqNum = orderReqNum;
+    }
+
 
   
 }

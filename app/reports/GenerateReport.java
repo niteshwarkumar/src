@@ -77,7 +77,7 @@ public class GenerateReport extends Action {
         }
         //END check for login (security)
 
-        System.out.println("I am here 1");
+        //System.out.println("I am here 1");
 
         User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
        
@@ -121,7 +121,7 @@ public class GenerateReport extends Action {
 
 
 
-        System.out.println("I am here 4");
+        //System.out.println("I am here 4");
         Map parameters = new HashMap();
         parameters.put("pmId", pmId);
         parameters.put("resource", resource);
@@ -155,13 +155,13 @@ public class GenerateReport extends Action {
             exporter.exportReport();
         } catch (JRException e) {
             //throw new ServletException(e);
-            System.out.println(e);
+            //System.out.println(e);
         } finally {
             if (ouputStream != null) {
                 try {
                     ouputStream.close();
                 } catch (IOException ex) {
-                    System.out.println("PLEASE CHECK THE CRITERIA" + ex);
+                    //System.out.println("PLEASE CHECK THE CRITERIA" + ex);
                 }
             }
         }

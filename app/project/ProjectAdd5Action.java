@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -111,6 +111,7 @@ public final class ProjectAdd5Action extends Action {
         //need the source to add the target(s)
         String sourceDocId = StandardCode.getInstance().getCookie("projectAddSourceDocId", request.getCookies());
         SourceDoc sd = ProjectService.getInstance().getSingleSourceDoc(Integer.valueOf(sourceDocId)); 
+        Project pLazyLoad = sd.getProject();
         
         String clientViewId = StandardCode.getInstance().getCookie("projectAddClientId", request.getCookies());
         Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(clientViewId));
@@ -120,7 +121,7 @@ public final class ProjectAdd5Action extends Action {
             if(c.getClientLanguagePairs()!=null){
                 clp = (ClientLanguagePair[])c.getClientLanguagePairs().toArray(new ClientLanguagePair[0]);
                 for(int z=0; z<clp.length; z++){                       
-                    System.out.println("source="+clp[z].getSource()+", getTarget="+clp[z].getTarget()+", getTask="+clp[z].getTask())   ;     
+                    //System.out.println("source="+clp[z].getSource()+", getTarget="+clp[z].getTarget()+", getTask="+clp[z].getTask())   ;     
                 }
             }
         }
@@ -153,9 +154,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -180,9 +181,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -207,9 +208,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -233,9 +234,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -260,9 +261,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -288,9 +289,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -316,9 +317,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -343,9 +344,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -370,9 +371,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -393,9 +394,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -422,9 +423,9 @@ public final class ProjectAdd5Action extends Action {
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){                               
-                                lt.setRateFee(clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
                                 lt.setUnitsFee(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }

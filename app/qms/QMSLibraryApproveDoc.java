@@ -82,9 +82,9 @@ public class QMSLibraryApproveDoc extends Action {
         if (id != null) {
             QMSLibrary qms = QMSService.getInstance().getSingleQMSLibraryDocument(Integer.parseInt(id));
             DynaValidatorForm qvg = (DynaValidatorForm) form;
-            if (person.equalsIgnoreCase("person1")) {
+            if (person.equalsIgnoreCase("person1")||StandardCode.getInstance().checkPrivStringArray((String[]) request.getSession(false).getAttribute("userPrivs"), "admin")) {
                 signPerson = (String) qvg.get("person1");
-                if (userName.equalsIgnoreCase(signPerson)) {
+                if (userName.equalsIgnoreCase(signPerson)||StandardCode.getInstance().checkPrivStringArray((String[]) request.getSession(false).getAttribute("userPrivs"), "admin")) {
                     qms.setSign1(true);
                     qms.setPerson1(signPerson);
                     qms.setType1((String) qvg.get("type1"));
@@ -104,14 +104,14 @@ public class QMSLibraryApproveDoc extends Action {
                         qms.setDate1(DateService.getInstance().convertDate(releaseDate).getTime());
                     }}
                 } catch (Exception e) {
-                    System.out.println("Date Errooooorr " + e.getMessage());
+                    //System.out.println("Date Errooooorr " + e.getMessage());
                 }
 
             }
 
-            if (person.equalsIgnoreCase("person2")) {
+            if (person.equalsIgnoreCase("person2")||StandardCode.getInstance().checkPrivStringArray((String[]) request.getSession(false).getAttribute("userPrivs"), "admin")) {
                 signPerson = (String) qvg.get("person2");
-                if (userName.equalsIgnoreCase(signPerson)) {
+                if (userName.equalsIgnoreCase(signPerson)||StandardCode.getInstance().checkPrivStringArray((String[]) request.getSession(false).getAttribute("userPrivs"), "admin")) {
                     qms.setSign2(true);
                     qms.setPerson2(signPerson);
                     qms.setType2((String) qvg.get("type2"));
@@ -131,13 +131,13 @@ public class QMSLibraryApproveDoc extends Action {
                         qms.setDate2(DateService.getInstance().convertDate(releaseDate).getTime());
                     }}
                 } catch (Exception e) {
-                    System.out.println("Date Errooooorr " + e.getMessage());
+                    //System.out.println("Date Errooooorr " + e.getMessage());
                 }
             }
 
-            if (person.equalsIgnoreCase("person3")) {
+            if (person.equalsIgnoreCase("person3")||StandardCode.getInstance().checkPrivStringArray((String[]) request.getSession(false).getAttribute("userPrivs"), "admin")) {
                 signPerson = (String) qvg.get("person3");
-                if (userName.equalsIgnoreCase(signPerson)) {
+                if (userName.equalsIgnoreCase(signPerson)||StandardCode.getInstance().checkPrivStringArray((String[]) request.getSession(false).getAttribute("userPrivs"), "admin")) {
                     qms.setSign3(true);
                     qms.setPerson3(signPerson);
                     qms.setType3((String) qvg.get("type3"));
@@ -158,14 +158,14 @@ public class QMSLibraryApproveDoc extends Action {
                         qms.setDate3(DateService.getInstance().convertDate(releaseDate).getTime());
                     }}
                 } catch (Exception e) {
-                    System.out.println("Date Errooooorr " + e.getMessage());
+                    //System.out.println("Date Errooooorr " + e.getMessage());
                 }
             }
 
 
 
 
-            Integer id1 = QMSService.getInstance().addLibrary(qms);
+            Integer id1 = QMSServiceAddUpdate.getInstance().addLibrary(qms);
 
             qvg.set("allCheck", "" + qms.isAllCheck());
             qvg.set("pmCheck", "" + qms.isPmCheck());

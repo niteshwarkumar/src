@@ -17,11 +17,13 @@
       <property name="department" type="string"/>
       <property name="language" type="string"/>
       <property name="details" type="string"/>
+      <property name="textType" type="string"/>
       <property name="rate" type="string"/>
       <property name="satisfaction" type="int"/>
       <property name="disposition" type="string"/>
       <property name="cause" type="string"/>
       <property name="notes" type="string"/>
+      <property name="nc" type="string"/>
     
    </class>
 </hibernate-mapping>

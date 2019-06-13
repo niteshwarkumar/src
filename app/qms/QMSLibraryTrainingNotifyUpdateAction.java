@@ -79,14 +79,14 @@ public class QMSLibraryTrainingNotifyUpdateAction extends Action {
         if(needed.equalsIgnoreCase("Y")){
             qmsLib.setNeeded("Y");
             qmsLib.setReason("");
-            QMSService.getInstance().addLibrary(qmsLib);
+            QMSServiceAddUpdate.getInstance().addLibrary(qmsLib);
             request.setAttribute("id", trainingId);
             return (mapping.findForward("Success"));
 
         }else if(needed.equalsIgnoreCase("N")) {
             qmsLib.setNeeded("N");
             qmsLib.setReason(request.getParameter("reason"));
-            QMSService.getInstance().addLibrary(qmsLib);
+            QMSServiceAddUpdate.getInstance().addLibrary(qmsLib);
             request.setAttribute("id", trainingId);
             return (mapping.findForward("Success"));
 
@@ -100,7 +100,7 @@ public class QMSLibraryTrainingNotifyUpdateAction extends Action {
             train = QMSService.getInstance().getTrainingNotify(Integer.parseInt(departmentId), Integer.parseInt(trainingId), Integer.parseInt(userId));
         }
         if (deleteTrain != null) {
-            QMSService.getInstance().deletetTraininNotify(train);
+            QMSServiceDelete.getInstance().deletetTraininNotify(train);
             request.setAttribute("id", trainingId);
             return (mapping.findForward("Success"));
         }
@@ -119,7 +119,7 @@ public class QMSLibraryTrainingNotifyUpdateAction extends Action {
                 train.setDepartmentId(Integer.parseInt(departmentId));
                 train.setTrainingId(Integer.parseInt(trainingId));
                 train.setUserId(du.getUserId());
-                QMSService.getInstance().addTrainingNotify(train);
+                QMSServiceAddUpdate.getInstance().addTrainingNotify(train);
             }
            }
 
@@ -141,7 +141,7 @@ public class QMSLibraryTrainingNotifyUpdateAction extends Action {
         } catch (Exception e) {
             train.setUserId(0);
         }
-        QMSService.getInstance().addTrainingNotify(train);
+        QMSServiceAddUpdate.getInstance().addTrainingNotify(train);
         request.setAttribute("id", trainingId);
 
 // Forward control to the specified success URI

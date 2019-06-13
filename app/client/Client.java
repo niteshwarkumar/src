@@ -1,6 +1,7 @@
 package app.client;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Set;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -8,7 +9,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 /** @author Hibernate CodeGenerator */
 public class Client implements Serializable {
+   
+    
+//    private int projectNo = 11330;
+    private int projectNo = 11823;
+//    scaleRep, scale100, scale95, scale85, scale75, scaleNew, scale8599, scaleNew4,scalePerfect,scaleContext
+    private String[] scale_100 = {"0.25", "0.25", "0.30", "0.60", "1", "1", ".6666", "1.0", "0.25", "0.25"};
+    private String[] scale_330 = {"0.2", "0.2", "0.5", "0.5", "0.75", "1", ".6666", "1.0", "0.25", "0.25"};
+    private String[] scale_522 = {"0.25", "0.25", "0.3", "0.6", "1", "1", ".6666", "1.0", "0.25", "0.25"};
+    private String[] scale = {".3333", ".3333", "null", "null", "null", "null", ".6666", "1.0", "0.25", "0.25"};
 
+    
     
     private int delinquent;
     /** identifier field */
@@ -78,6 +89,9 @@ public class Client implements Serializable {
     /** nullable persistent field */
     private String Sales_rep;
 
+    /** nullable persistent field */
+    private String Sales;
+    
     /** nullable persistent field */
     private String Satisfaction_score;
 
@@ -186,7 +200,42 @@ public class Client implements Serializable {
     private String terms;
     private String termsNames;
     private String auto_alert;
+    private String specialNotes;
     private Double pmfeePercentage;
+    private Boolean autoPmFee;
+    
+     /** nullable persistent field */
+    private Double scaleRep_team;
+
+    /** nullable persistent field */
+    private Double scale100_team;
+
+    /** nullable persistent field */
+    private Double scale95_team;
+
+    /** nullable persistent field */
+    private Double scale85_team;
+
+    /** nullable persistent field */
+    private Double scale75_team;
+
+    /** nullable persistent field */
+    private Double scaleNew_team;
+   
+    /** nullable persistent field */
+    private Double scale8599_team;
+
+    /** nullable persistent field */
+    private Double scaleNew4_team;
+
+    /** nullable persistent field */
+    private Double scalePerfect_team;
+
+    /** nullable persistent field */
+    private Double scaleContext_team;
+    
+    /** nullable persistent field */
+    private Double targetProfitability;
 
     public String getCcurrency() {
         return ccurrency;
@@ -196,7 +245,14 @@ public class Client implements Serializable {
         this.ccurrency = ccurrency;
     }
     /** full constructor */
-    public Client(String Company_name, String Company_code, String Address_1, String Address_2, String billing1, String billing2, String billing3, String City, String State_prov, String Zip_postal_code, String Country, String Main_telephone_numb, String workPhoneEx, String Fax_number, String url, String Status, String Email_address, String Note, String Project_mngr, String Backup_pm, String Sales_rep, String Satisfaction_score, String Satisfaction_level, String Ftp_host_excel, String Ftp_user_id_excel, String Ftp_password_excel, String Ftp_host_client, String Ftp_user_id_client, String Ftp_password_client, String logo, String scaleRep, String scale100, String scale95, String scale85, String scale75, String scaleNew, String scale8599, String scaleNew4, String scaleContext, String scalePerfect,Boolean scaleDefault, app.client.Industry Industry, Set Contacts, Set Projects, Set ClientLanguagePairs, Set ClientOtherRates,String otherContact1,String otherContact2,String otherContact3,String otherContact4,String otherContact5,String ccurrency,String terms,String termsNames) {
+    public Client(String Company_name, String Company_code, String Address_1, String Address_2, String billing1, String billing2, String billing3, String City, 
+            String State_prov, String Zip_postal_code, String Country, String Main_telephone_numb, String workPhoneEx, String Fax_number, String url, String Status, 
+            String Email_address, String Note, String Project_mngr, String Backup_pm, String Sales_rep, String Sales, String Satisfaction_score, 
+            String Satisfaction_level, String Ftp_host_excel, String Ftp_user_id_excel, String Ftp_password_excel, String Ftp_host_client, 
+            String Ftp_user_id_client, String Ftp_password_client, String logo, String scaleRep, String scale100, String scale95, String scale85, 
+            String scale75, String scaleNew, String scale8599, String scaleNew4, String scaleContext, String scalePerfect,Boolean scaleDefault, 
+            app.client.Industry Industry, Set Contacts, Set Projects, Set ClientLanguagePairs, Set ClientOtherRates,String otherContact1,String otherContact2,
+            String otherContact3,String otherContact4,String otherContact5,String ccurrency,String terms,String termsNames,String specialNotes) {
         this.Company_name = Company_name;
         this.Company_code = Company_code;
         this.Address_1 = Address_1;
@@ -218,6 +274,7 @@ public class Client implements Serializable {
         this.Project_mngr = Project_mngr;
         this.Backup_pm = Backup_pm;
         this.Sales_rep = Sales_rep;
+        this.Sales = Sales;
         this.Satisfaction_score = Satisfaction_score;
         this.Satisfaction_level = Satisfaction_level;
         this.Ftp_host_excel = Ftp_host_excel;
@@ -227,17 +284,26 @@ public class Client implements Serializable {
         this.Ftp_user_id_client = Ftp_user_id_client;
         this.Ftp_password_client = Ftp_password_client;
         this.logo = logo;
-        this.scaleRep = scaleRep;
-        this.scale100 = scale100;
-        this.scale95 = scale95;
-        this.scale85 = scale85;
-        this.scale75 = scale75;
-        this.scaleNew = scaleNew;
+        this.scaleRep = ".33";
+        this.scale100 = ".33";
+        this.scale95 = ".66";
+        this.scale85 = ".66";
+        this.scale75 = "1.00";
+        this.scaleNew = "1.00";
         this.scale8599 = scale8599;
         this.scaleNew4 = scaleNew4;
-        this.scaleContext = scaleContext;
-        this.scalePerfect = scalePerfect;
+        this.scaleContext = ".25";
+        this.scalePerfect = ".25";
         this.scaleDefault = scaleDefault;
+        
+        this.scaleRep_team = .20;
+        this.scale100_team = .20;
+        this.scale95_team = .50;
+        this.scale85_team = .66;
+        this.scale75_team = .75;
+        this.scaleNew_team = 1.00;
+        this.scaleContext_team = 0.00;
+        this.scalePerfect_team = 0.00;
         //this.tm_maintained=tm_maintained;
         this.Industry = Industry;
         this.Contacts = Contacts;
@@ -252,13 +318,18 @@ public class Client implements Serializable {
         this.ccurrency=ccurrency;
         this.terms=terms;
         this.termsNames=termsNames;
+        this.specialNotes = specialNotes;
     }
-
+    
     /** default constructor */
     public Client() {
     }
 
-    /** minimal constructor */
+    /** minimal constructor
+     * @param Contacts
+     * @param Projects
+     * @param ClientLanguagePairs
+     * @param ClientOtherRates */
     public Client(Set Contacts, Set Projects, Set ClientLanguagePairs, Set ClientOtherRates) {
         this.Contacts = Contacts;
         this.Projects = Projects;
@@ -442,6 +513,14 @@ public class Client implements Serializable {
         this.Sales_rep = Sales_rep;
     }
 
+    public String getSales() {
+        return Sales;
+    }
+
+    public void setSales(String Sales) {
+        this.Sales = Sales;
+    }
+    
     public String getSatisfaction_score() {
         return this.Satisfaction_score;
     }
@@ -513,6 +592,18 @@ public class Client implements Serializable {
     public void setLogo(String logo) {
         this.logo = logo;
     }
+    public String getScaleRep(Integer projectId, Integer ClientId) {
+       if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[0];
+        if(ClientId == 522)
+            return scale_522[0];
+        if(ClientId == 330)
+            return scale_330[0];
+        return scale[0];
+       }    
+        return this.scaleRep;
+    }
 
     public String getScaleRep() {
         return this.scaleRep;
@@ -522,6 +613,18 @@ public class Client implements Serializable {
         this.scaleRep = scaleRep;
     }
 
+    public String getScale100(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[1];
+        if(ClientId == 522)
+            return scale_522[1];
+        if(ClientId == 330)
+            return scale_330[1];
+        return scale[1];
+       }
+        return this.scale100;
+    }
     public String getScale100() {
         return this.scale100;
     }
@@ -530,6 +633,19 @@ public class Client implements Serializable {
         this.scale100 = scale100;
     }
 
+    public String getScale95(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[2];
+        if(ClientId == 522)
+            return scale_522[2];
+        if(ClientId == 330)
+            return scale_330[2];
+        return scale[2];
+       }
+        return this.scale95;
+    }
+   
     public String getScale95() {
         return this.scale95;
     }
@@ -538,6 +654,18 @@ public class Client implements Serializable {
         this.scale95 = scale95;
     }
 
+    public String getScale85(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[3];
+        if(ClientId == 522)
+            return scale_522[3];
+        if(ClientId == 330)
+            return scale_330[3];
+        return scale[3];
+       }
+        return this.scale85;
+    }
     public String getScale85() {
         return this.scale85;
     }
@@ -546,6 +674,19 @@ public class Client implements Serializable {
         this.scale85 = scale85;
     }
 
+    public String getScale75(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[4];
+        if(ClientId == 522)
+            return scale_522[4];
+        if(ClientId == 330)
+            return scale_330[4];
+        return scale[4];
+       }
+        return this.scale75;
+    }
+   
     public String getScale75() {
         return this.scale75;
     }
@@ -554,6 +695,19 @@ public class Client implements Serializable {
         this.scale75 = scale75;
     }
 
+    public String getScaleNew(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[5];
+        if(ClientId == 522)
+            return scale_522[5];
+        if(ClientId == 330)
+            return scale_330[5];
+        return scale[5];
+       }
+        return this.scaleNew;
+    }
+ 
     public String getScaleNew() {
         return this.scaleNew;
     }
@@ -578,8 +732,14 @@ public class Client implements Serializable {
         this.scaleNew4 = scaleNew4;
     }
 
-    public Boolean isScaleDefault() {
+    public Boolean isScaleDefault(Integer projectId) {
+        if(projectId > projectNo)
+            return false;
+
         return this.scaleDefault;
+    }
+    public Boolean isScaleDefault() {
+         return false;
     }
 
     public void setScaleDefault(Boolean scaleDefault) {
@@ -653,7 +813,17 @@ public class Client implements Serializable {
     }
 
     public void setBusiness_desc(String business_desc) {
+        try {
+        if(null != business_desc){
+        byte ptext[] = business_desc.getBytes();
+        this.business_desc = new String(ptext, "UTF-8");}
+        else {
+          this.business_desc = business_desc;
+        }
+      } catch (UnsupportedEncodingException ex) {
         this.business_desc = business_desc;
+//        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
 
     public String getCertifications() {
@@ -814,6 +984,18 @@ public class Client implements Serializable {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    public String getScaleContext(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[9];
+        if(ClientId == 522)
+            return scale_522[9];
+        if(ClientId == 330)
+            return scale_330[9];
+        return scale[0];
+       }
+        return scaleContext;
+    }
     public String getScaleContext() {
         return scaleContext;
     }
@@ -822,7 +1004,20 @@ public class Client implements Serializable {
         this.scaleContext = scaleContext;
     }
 
+    public String getScalePerfect(Integer projectId, Integer ClientId) {
+        if(projectId < projectNo){
+        if(ClientId == 100)
+            return scale_100[8];
+        if(ClientId == 522)
+            return scale_522[8];
+        if(ClientId == 330)
+            return scale_330[8];
+        return scale[0];
+       }
+        return scalePerfect;
+    }
     public String getScalePerfect() {
+        
         return scalePerfect;
     }
 
@@ -926,5 +1121,112 @@ public class Client implements Serializable {
     this.auto_alert = auto_alert;
   }
 
+    public String getSpecialNotes() {
+        return specialNotes;
+    }
+
+    public void setSpecialNotes(String specialNotes) {
+        this.specialNotes = specialNotes;
+    }
+
+    public Double getScaleRep_team() {
+        return scaleRep_team;
+    }
+
+    public void setScaleRep_team(Double scaleRep_team) {
+        this.scaleRep_team = scaleRep_team;
+    }
+
+    public Double getScale100_team() {
+        return scale100_team;
+    }
+
+    public void setScale100_team(Double scale100_team) {
+        this.scale100_team = scale100_team;
+    }
+
+    public Double getScale95_team() {
+        return scale95_team;
+    }
+
+    public void setScale95_team(Double scale95_team) {
+        this.scale95_team = scale95_team;
+    }
+
+    public Double getScale85_team() {
+        return scale85_team;
+    }
+
+    public void setScale85_team(Double scale85_team) {
+        this.scale85_team = scale85_team;
+    }
+
+    public Double getScale75_team() {
+        return scale75_team;
+    }
+
+    public void setScale75_team(Double scale75_team) {
+        this.scale75_team = scale75_team;
+    }
+
+    public Double getScaleNew_team() {
+        return scaleNew_team;
+    }
+
+    public void setScaleNew_team(Double scaleNew_team) {
+        this.scaleNew_team = scaleNew_team;
+    }
+
+    public Double getScale8599_team() {
+        return scale8599_team;
+    }
+
+    public void setScale8599_team(Double scale8599_team) {
+        this.scale8599_team = scale8599_team;
+    }
+
+    public Double getScaleNew4_team() {
+        return scaleNew4_team;
+    }
+
+    public void setScaleNew4_team(Double scaleNew4_team) {
+        this.scaleNew4_team = scaleNew4_team;
+    }
+
+    public Double getScalePerfect_team() {
+        return scalePerfect_team;
+    }
+
+    public void setScalePerfect_team(Double scalePerfect_team) {
+        this.scalePerfect_team = scalePerfect_team;
+    }
+
+    public Double getScaleContext_team() {
+        return scaleContext_team;
+    }
+
+    public void setScaleContext_team(Double scaleContext_team) {
+        this.scaleContext_team = scaleContext_team;
+    }
+
+    public Double getTargetProfitability() {
+        return targetProfitability;
+    }
+
+    public void setTargetProfitability(Double targetProfitability) {
+        this.targetProfitability = targetProfitability;
+    }
+
+    public Boolean getAutoPmFee() {
+        return autoPmFee;
+    }
+
+    public void setAutoPmFee(Boolean autoPmFee) {
+        this.autoPmFee = autoPmFee;
+    }
+
+
+    
+    
   
 }

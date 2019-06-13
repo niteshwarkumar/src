@@ -3,6 +3,8 @@
 
 package app.quote;
 
+import app.project.Notes;
+import app.project.ProjectService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -15,6 +17,7 @@ import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.*;
 import app.standardCode.*;
 import app.security.*;
+import java.util.List;
 
 
 public final class QuoteViewNotesAction extends Action {
@@ -81,25 +84,42 @@ public final class QuoteViewNotesAction extends Action {
         }
         
         
+        
+        
         Integer id = Integer.valueOf(quoteId);
         
         //END get id of current quote from either request, attribute, or cookie               
         
         //get quote
         Quote1 q = QuoteService.getInstance().getSingleQuote(id); 
+        
+        List noteList = ProjectService.getInstance().getNotesList(q.getProject().getProjectId());
               
+        String noteId = request.getParameter("noteId");
+        Notes note = null;
+        
         //values of the note
         DynaValidatorForm qvn = (DynaValidatorForm) form;
         qvn.set("note", q.getNote());
         
+        if(null != noteId)
+            note = ProjectService.getInstance().getSingleNotes(Integer.parseInt(noteId));
+        
+        
         //place quote into attribute for display
         request.setAttribute("quote", q);
+        request.setAttribute("notes", noteList);
+        request.setAttribute("note", note);
+        
+        
         
         //add this quote id to cookies; this will remember the last quote
         response.addCookie(StandardCode.getInstance().setCookie("quoteViewId", quoteId));
         
         //add tab location to cookies; this will remember which tab we are at
         response.addCookie(StandardCode.getInstance().setCookie("quoteViewTab", "Notes"));
+        
+        
         
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));

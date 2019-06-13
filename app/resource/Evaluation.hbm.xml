@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
-   <class name="app.resource.Evaluation" table="Evaluation">
+   <class name="app.resource.Evaluation" table="evaluation">
       <id name="eval_id" type="int" >
          <generator class="identity"/>
       </id>

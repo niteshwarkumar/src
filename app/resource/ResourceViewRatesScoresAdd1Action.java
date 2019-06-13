@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -121,16 +121,16 @@ public final class ResourceViewRatesScoresAdd1Action extends Action {
         String source = ProjectService.getInstance().getLanguageString(lp.getSourceId());
         String target = ProjectService.getInstance().getLanguageString(lp.getTargetId());
             
-        //prepare the rateScoreLanguage Array with the number of categories from the db
-        List rateScoreLanguages = ResourceService.getInstance().getRateScoreCategoryList();
-        RateScoreLanguage[] rateScoreLanguagesArray = new RateScoreLanguage[rateScoreLanguages.size()];
+        //prepare the ratescorelanguage Array with the number of categories from the db
+        List ratescorelanguages = ResourceService.getInstance().getRateScoreCategoryList();
+        RateScoreLanguage[] ratescorelanguagesArray = new RateScoreLanguage[ratescorelanguages.size()];
         int i = 0;
-        for(ListIterator iter = rateScoreLanguages.listIterator(); iter.hasNext(); i++) {
+        for(ListIterator iter = ratescorelanguages.listIterator(); iter.hasNext(); i++) {
             RateScoreCategory rsc = (RateScoreCategory) iter.next();
-            rateScoreLanguagesArray[i] = new RateScoreLanguage();
-            rateScoreLanguagesArray[i].setSpecialty(rsc.getCategory());
-            rateScoreLanguagesArray[i].setSource(source);
-            rateScoreLanguagesArray[i].setTarget(target);
+            ratescorelanguagesArray[i] = new RateScoreLanguage();
+            ratescorelanguagesArray[i].setSpecialty(rsc.getCategory());
+            ratescorelanguagesArray[i].setSource(source);
+            ratescorelanguagesArray[i].setTarget(target);
         }
         
         //place this resource into the request for display       
@@ -139,7 +139,7 @@ public final class ResourceViewRatesScoresAdd1Action extends Action {
         request.getSession(false).setAttribute("languagePair", lp);
         
         //the new rate-score-language list for this language pair
-        rvrs.set("rateScoreLanguagesAdd", rateScoreLanguagesArray);
+        rvrs.set("rateScoreLanguagesAdd", ratescorelanguagesArray);
         
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));

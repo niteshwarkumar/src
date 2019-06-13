@@ -107,6 +107,8 @@ public final class ProjectViewAccountingUpdateAction extends Action {
                 String changeDateChanged = request.getParameter("dateChanged" + String.valueOf(i));
                 if(changeDateChanged.length() >= 1) {
                     c.setChangeDate(DateService.getInstance().convertDate(changeDateChanged).getTime());
+                }else{
+                c.setChangeDate(null);
                 }
                 //END update change dates
             
@@ -147,6 +149,8 @@ public final class ProjectViewAccountingUpdateAction extends Action {
                 String paidDate = request.getParameter("paidDate" + String.valueOf(i));
                 if(paidDate.length() >= 1) {
                     c.setInvoicePaidDate(DateService.getInstance().convertDate(paidDate).getTime());
+                }else{
+                c.setInvoicePaidDate(null);
                 }
                 //END update dates           
                 

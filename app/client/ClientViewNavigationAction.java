@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -35,7 +35,7 @@ public final class ClientViewNavigationAction extends Action {
 
     public ClientViewNavigationAction()
     {
-        System.out.println("ClientViewNavigationAction constructor is calling*****************************************************");
+        //System.out.println("ClientViewNavigationAction constructor is calling*****************************************************");
     }
 
     // ----------------------------------------------------- Instance Variables
@@ -86,7 +86,7 @@ public final class ClientViewNavigationAction extends Action {
         //id of current client
         String clientId = StandardCode.getInstance().getCookie("clientViewId", request.getCookies());
         Integer currentId = Integer.valueOf(clientId);
-        System.out.println("currentId value*****************************"+currentId);
+        //System.out.println("currentId value*****************************"+currentId);
                         
         //get where to move: <code>previous, stay, next</code>
         //where to move from request
@@ -99,7 +99,7 @@ public final class ClientViewNavigationAction extends Action {
         
         //get current client being viewed from db
         Client currentC = ClientService.getInstance().getSingleClient(currentId);
-        System.out.println("currentC value*****************************"+currentC);
+        //System.out.println("currentC value*****************************"+currentC);
         Client newC = null; //save next new move
                 
         //all clients in db in alphabetical order
@@ -107,7 +107,7 @@ public final class ClientViewNavigationAction extends Action {
         
         //set the total now
         clientRecordTotal = String.valueOf(new Integer(clients.size()));
-        System.out.println("clientRecordTotal*******************"+clientRecordTotal);
+        //System.out.println("clientRecordTotal*******************"+clientRecordTotal);
         
         //determine which client to display next
         if(move.equals("previous")) {

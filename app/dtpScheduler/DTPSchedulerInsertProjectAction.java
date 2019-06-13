@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -84,9 +84,9 @@ public final class DTPSchedulerInsertProjectAction extends Action {
         int projectid = 1;
         //if(request.getParameter("pid")!=null && !"".equals(request.getParameter("pid"))){
         
-        //System.out.println("ALEXXXX pid:"+request.getParameter("prid"));
-        //System.out.println("ALEXXXX operatorEstEndDate:"+request.getParameter("operatorEstEndDate"));
-        //System.out.println("ALEXXXX status:"+request.getParameter("status"));
+        ////System.out.println("ALEXXXX pid:"+request.getParameter("prid"));
+        ////System.out.println("ALEXXXX operatorEstEndDate:"+request.getParameter("operatorEstEndDate"));
+        ////System.out.println("ALEXXXX status:"+request.getParameter("status"));
         projectid = Integer.parseInt(request.getParameter("prid"));
         //}
         dtp.setID_Project(projectid);

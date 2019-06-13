@@ -128,7 +128,14 @@ public final class QuoteAddFromExistingAction extends Action {
         }
         newQ.setQuoteDate(new Date());
 
-        QuoteService.getInstance().updateQuote(newQ);
+        QuoteService.getInstance().updateQuote(newQ,(String)request.getSession(false).getAttribute("username"));
+        Client_Quote fromcQuote = QuoteService.getInstance().get_SingleClientQuote(Integer.valueOf(fromId));
+        Client_Quote cQuote = new Client_Quote();
+        cQuote = fromcQuote;
+        cQuote.setQuote_ID(quoteId);
+        cQuote.setInstruction("");
+        cQuote.setRequirement("");
+        QuoteService.getInstance().updateClientQuote(cQuote);
         
         //add all sets, such as source doc, target doc, and the four tasks, as new objects to the new q
         Set sourceDocs = qFrom.getSourceDocs();
@@ -186,28 +193,28 @@ public final class QuoteAddFromExistingAction extends Action {
                                 lt.setWord95(new Integer(0));
                                 lt.setWord85(new Integer(0));
                                 lt.setWord75(new Integer(0));
-                                lt.setWordNew(new Integer(0));
+                                lt.setWordNew(new Double(0));
                                 lt.setWord8599(new Integer(0));
                                 lt.setWordNew4(new Double(0));
                                 lt.setWordTotal(new Double(0.0));
-                                lt.setRate("0.000");
+//                                lt.setRate("0.000");
                                 lt.setDollarTotal("0.000");
-                                lt.setInternalRate("0.000");
+//                                lt.setInternalRate("0.000");
                                 lt.setInternalDollarTotal("0.000");
-                                lt.setRate("0.000");     
+//                                lt.setRate("0.000");     
                                 
                                 lt.setWord100Fee(new Integer(0));
                                 lt.setWordRepFee(new Integer(0));
                                 lt.setWord95Fee(new Integer(0));
                                 lt.setWord85Fee(new Integer(0));
                                 lt.setWord75Fee(new Integer(0));
-                                lt.setWordNewFee(new Integer(0));
+                                lt.setWordNewFee(new Double(0));
                                 lt.setWord8599Fee(new Integer(0));
                                 lt.setWordNew4Fee(new Double(0));
                                 lt.setWordTotalFee(new Double(0.0));
-                                lt.setRateFee("0.000");
+//                                lt.setRateFee("0.000");
                                 lt.setDollarTotalFee("0.000");
-                                lt.setRateFee("0.000");                                
+//                                lt.setRateFee("0.000");                                
                                 lt.setMinFee(new Double(0));
                                 
                                 Integer newLtId = ProjectService.getInstance().linkTargetDocLinTask(td, lt);
@@ -235,9 +242,9 @@ public final class QuoteAddFromExistingAction extends Action {
                                 et.setInvoiceDateDate(null);
                                 et.setQuantity(null);
                                 et.setTotal(new Double(0.0));
-                                et.setRate("0.000");
+//                                et.setRate("0.000");
                                 et.setDollarTotal("0.000");
-                                et.setInternalRate("0.000");
+//                                et.setInternalRate("0.000");
                                 et.setInternalDollarTotal("0.000");
                                 
                                 Integer newEtId = ProjectService.getInstance().linkTargetDocEngTask(td, et);
@@ -265,9 +272,9 @@ public final class QuoteAddFromExistingAction extends Action {
                                 dt.setInvoiceDateDate(null);
                                 dt.setQuantity(null);
                                 dt.setTotal(new Double(0.0));
-                                dt.setRate("0.000");
+//                                dt.setRate("0.000");
                                 dt.setDollarTotal("0.000");
-                                dt.setInternalRate("0.000");
+//                                dt.setInternalRate("0.000");
                                 dt.setInternalDollarTotal("0.000");
                                 
                                 Integer newDtId = ProjectService.getInstance().linkTargetDocDtpTask(td, dt);
@@ -295,9 +302,9 @@ public final class QuoteAddFromExistingAction extends Action {
                                 ot.setInvoiceDateDate(null);
                                 ot.setQuantity(null);
                                 ot.setTotal(new Double(0.0));
-                                ot.setRate("0.000");
+//                                ot.setRate("0.000");
                                 ot.setDollarTotal("0.000");
-                                ot.setInternalRate("0.000");
+//                                ot.setInternalRate("0.000");
                                 ot.setInternalDollarTotal("0.000");
                                 
                                 Integer newOtId = ProjectService.getInstance().linkTargetDocOthTask(td, ot);

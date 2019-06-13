@@ -172,7 +172,7 @@ public final class ProjectViewChangeAction extends Action {
                     linTotal = "0";
                 }
                 Double total = Double.valueOf(linTotal);
-                System.out.println("rray[i]..................................."+linTasksArray[i].getChangeDesc());
+                //System.out.println("rray[i]..................................."+linTasksArray[i].getChangeDesc());
                 if("EURO".equals(linTasksArray[i].getCurrency())){
                     
                     if(linTasksArray[i].getChangeDesc()==null){
@@ -381,7 +381,7 @@ public final class ProjectViewChangeAction extends Action {
         
         
         for(int i = 0; i < linTasksArray.length; i++) {
-            //System.out.println("fee="+linTasksArray[i].getDollarTotalFee());
+            ////System.out.println("fee="+linTasksArray[i].getDollarTotalFee());
             if(linTasksArray[i].getDollarTotalFee() != null) {
                 //remove comma's
                 String linTotal = linTasksArray[i].getDollarTotalFee();

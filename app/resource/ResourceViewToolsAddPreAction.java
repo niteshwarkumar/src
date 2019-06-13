@@ -1,51 +1,33 @@
 //ResourceViewToolsAddPreAction.java gets the current team object (resource)
 //from the db.  It then places that resource into the 
 //form for display
-
 package app.resource;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
-import java.text.*;
-import app.user.*;
-import app.resource.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
 
-
 public final class ResourceViewToolsAddPreAction extends Action {
 
-
     // ----------------------------------------------------- Instance Variables
-
-
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-        LogFactory.getLog("org.apache.struts.webapp.Example");
-
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
-
-
     /**
      * Process the specified HTTP request, and create the corresponding HTTP
      * response (or forward to another web component that will create it).
@@ -61,60 +43,80 @@ public final class ResourceViewToolsAddPreAction extends Action {
      * @exception Exception if business logic throws an exception
      */
     public ActionForward execute(ActionMapping mapping,
-				 ActionForm form,
-				 HttpServletRequest request,
-				 HttpServletResponse response)
-	throws Exception {
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws Exception {
 
-	// Extract attributes we will need
-	MessageResources messages = getResources(request);	
+        // Extract attributes we will need
+        MessageResources messages = getResources(request);
 
-	// save errors
-	ActionMessages errors = new ActionMessages();
-        
+        // save errors
+        ActionMessages errors = new ActionMessages();
+
         //START check for login (security)
-        if(!SecurityService.getInstance().checkForLogin(request.getSession(false))) { 
+        if (!SecurityService.getInstance().checkForLogin(request.getSession(false))) {
             return (mapping.findForward("welcome"));
         }
         //END check for login (security)
-        
+
         //START get id of current resource from either request, attribute, or cookie 
         //id of resource from request
-	String resourceId = null;
-	resourceId = request.getParameter("resourceViewId");
-        
+        String resourceId = null;
+        resourceId = request.getParameter("resourceViewId");
+
         //check attribute in request
-        if(resourceId == null) {
+        if (resourceId == null) {
             resourceId = (String) request.getAttribute("resourceViewId");
         }
-        
+
         //id of resource from cookie
-        if(resourceId == null) {            
+        if (resourceId == null) {
             resourceId = StandardCode.getInstance().getCookie("resourceViewId", request.getCookies());
         }
 
         //default resource to first if not in request or cookie
-        if(resourceId == null) {
-                List results = ResourceService.getInstance().getResourceList();
-                Resource first = (Resource) results.get(0);
-                resourceId = String.valueOf(first.getResourceId());
-            }            
-        
+        if (resourceId == null) {
+            List results = ResourceService.getInstance().getResourceList();
+            Resource first = (Resource) results.get(0);
+            resourceId = String.valueOf(first.getResourceId());
+        }
+
         Integer id = Integer.valueOf(resourceId);
-        
+
         //END get id of current resource from either request, attribute, or cookie               
-        
         //get resource to edit
-        Resource r = ResourceService.getInstance().getSingleResource(id); 
-                
+        Resource r = ResourceService.getInstance().getSingleResource(id);
+        String resourceToolId = request.getParameter("resourceToolId");
+        ResourceTool rt = new ResourceTool();
+        if(resourceToolId != null){
+            try {
+              rt =  ResourceService.getInstance().getResourceTool(Integer.valueOf(resourceToolId));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+           
+        }
+
         //values for getting a new tool from form
         DynaValidatorForm rvtusa = (DynaValidatorForm) form;
-        rvtusa.set("resourceToolsAdd", new ResourceTool());
-        
-        request.setAttribute("resource", r);        
-                
-	// Forward control to the specified success URI
-	return (mapping.findForward("Success"));
-    }
+        rvtusa.set("resourceToolsAdd", rt);
+        String screen = request.getParameter("screen");
+        if (screen != null) {
+            if (screen.equalsIgnoreCase("competance")) {
+                request.setAttribute("screen", "competance");
 
-}
+            } else {
+                request.setAttribute("screen", "");
+            }
+        } else {
+            request.setAttribute("screen", "");
+        }
+
+            request.setAttribute("resource", r);
+
+            // Forward control to the specified success URI
+            return (mapping.findForward("Success"));
+        }
+
+    }

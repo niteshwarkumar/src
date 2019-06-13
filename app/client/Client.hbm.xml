@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.client.Client" table="Client_Information">
+   <class name="app.client.Client" table="client_information">
       <id name="clientId" type="int" column="ID_Client">
          <generator class="identity"/>
       </id>
@@ -32,6 +32,7 @@
       <property name="Project_mngr" type="string"/>
       <property name="Backup_pm" type="string"/>
       <property name="Sales_rep" type="string"/>
+      <property name="Sales" type="string"/>
       <property name="Satisfaction_score" type="string"/>
       <property name="Satisfaction_level" type="string"/>
       <property name="Ftp_host_excel" type="string"/>
@@ -52,6 +53,16 @@
       <property name="scalePerfect" type="string"/>
       <property name="scaleContext" type="string"/>
       <property name="scaleDefault" type="boolean"/>
+      <property name="scaleRep_team" type="double"/>
+      <property name="scale100_team" type="double"/>
+      <property name="scale95_team" type="double"/>
+      <property name="scale85_team" type="double"/>
+      <property name="scale75_team" type="double"/>
+      <property name="scaleNew_team" type="double"/>
+      <property name="scale8599_team" type="double"/>
+      <property name="scaleNew4_team" type="double"/>
+      <property name="scalePerfect_team" type="double"/>
+      <property name="scaleContext_team" type="double"/>
       
       <property name="lin_css_other" type="string"/>
       <property name="tech_css_other" type="string"/>
@@ -90,6 +101,9 @@
       <property name="termsNames" type="string"/>
       <property name="pmfeePercentage" type="double"/>
       <property name="auto_alert" type="string"/>
+      <property name="specialNotes" type="string"/>
+      <property name="targetProfitability" type="double"/>
+      <property name="autoPmFee" type="boolean"/>
 
       
        <set name="Contacts" inverse="true" order-by="Last_name">

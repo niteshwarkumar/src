@@ -5,19 +5,11 @@
 
 package org.report.dbport;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.*;
-import java.io.*;
 /**
  *
  * @author Nadesh
@@ -44,7 +36,7 @@ public class DBConnection {
 	  catch (SQLException sqle)
 	  {
 		logger.log(Level.SEVERE, " #####  Error "+sqle);
-                System.out.println("Hello Error here!!!");
+                //System.out.println("Hello Error here!!!");
 	  }
 	  
 	     return conn;

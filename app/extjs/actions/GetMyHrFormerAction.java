@@ -77,15 +77,15 @@ public final class GetMyHrFormerAction extends Action {
 
         //get the current user for displaying personal info, such as "My Projects"
         User u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
-        System.out.println("local addresss sssssssssssssss"+request.getLocalAddr()+"          "+request.getLocalName());
+        //System.out.println("local addresss sssssssssssssss"+request.getLocalAddr()+"          "+request.getLocalName());
         long startProjects = System.currentTimeMillis();
         String myName = u.getFirstName() + " " + u.getLastName();
         List myHr = HrHelper.getAllEmployeesFormer(u);
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyHrAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetMyHrAction took:"+ ((endProjects-startProjects)/1000.0));
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         out.println(new JSONArray(myHr.toArray()));
         out.flush();

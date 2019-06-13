@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.RiskMitigation" table="riskmitigation">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+  
+  <property name ="hazard" type="string"/>
+  <property name ="description" type="string"/>
+<!--  <property name ="probability" type="int"/>
+  <property name ="severity" type="int"/>-->
+  <property name ="hazardnumber" type="int"/>
+  <property name ="hazardnumber1" type="int"/>
+  <property name ="existingmitigation" type="string"/>
+  <property name ="nonexistingmitigation" type="string"/>
+  <property name ="comment" type="string"/>
+  <property name ="notePre" type="string"/>
+  <property name ="date" type="date"/>
+  <property name ="approve1" type="string"/>
+  <property name ="approve2" type="string"/>
+  <many-to-one name="Probability" class="app.qms.RiskProbability" column="probability"/>
+  <many-to-one name="Severity" class="app.qms.RiskSeverity" column="severity"/>
+  <many-to-one name="Probability1" class="app.qms.RiskProbability" column="probability1"/>
+  <many-to-one name="Severity1" class="app.qms.RiskSeverity" column="severity1"/>
+  <property name="indexcolor" type="string"/>
+  <property name="indexcolor1" type="string"/>
+    </class>
+</hibernate-mapping>

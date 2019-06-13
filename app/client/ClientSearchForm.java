@@ -5,7 +5,6 @@ package app.client;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -21,7 +20,7 @@ public class ClientSearchForm extends ActionForm
         private String clientPhoneNo;
         private String clientIndustry;
         private String clientAe;
-        
+        private Integer delinquent;
 	/**
 	* validate() ensures the user's item is valid and returns the appropriate <code>ActionErrors</code>
 	* object, if any errors are generated.
@@ -147,6 +146,14 @@ public class ClientSearchForm extends ActionForm
         this.clientAe = clientAe;
     }
 
+    public Integer getDelinquent() {
+        return delinquent;
+    }
+
+    public void setDelinquent(Integer delinquent) {
+        this.delinquent = delinquent;
+    }
+
  
 
 	/**
@@ -164,6 +171,7 @@ public class ClientSearchForm extends ActionForm
                 this.clientPhoneNo=null;
                 this.clientAe=null;
                 this.clientIndustry=null;
+                this.delinquent = null;
 
 	}
 

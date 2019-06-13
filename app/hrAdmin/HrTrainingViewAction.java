@@ -118,7 +118,7 @@ public class HrTrainingViewAction extends Action {
             jo.put("notes", rs.getString("notes"));
 
 
-            System.out.println("author.............."+rs.getString("description"));
+            //System.out.println("author.............."+rs.getString("description"));
             result.add(jo);
             }
             tx.commit();
@@ -158,7 +158,7 @@ public class HrTrainingViewAction extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(result.toArray()));

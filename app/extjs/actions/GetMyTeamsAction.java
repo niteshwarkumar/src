@@ -77,23 +77,23 @@ public final class GetMyTeamsAction extends Action {
         String myName = u.getFirstName() + " " + u.getLastName();
         List myteams = null;
             if("DTP".equals(request.getParameter("tabType"))){
-                myteams = TeamHelper.getPMDtpTeams(myName, u.getMyExcelRange());
+                myteams = TeamHelper.getPMDtpTeams(myName, u.getMyExcelRange(), u.getUserId());
             }else if("ENG".equals(request.getParameter("tabType"))){
-                myteams = TeamHelper.getPMEngTeams(myName, u.getMyExcelRange());
+                myteams = TeamHelper.getPMEngTeams(myName, u.getMyExcelRange(), u.getUserId());
             }else{
-                myteams = TeamHelper.getPMTeams(myName, u.getMyExcelRange());
+                myteams = TeamHelper.getPMTeams(myName, u.getMyExcelRange(), u.getUserId());
             }
         
         
             
            
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyTeamsAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetMyTeamsAction took:"+ ((endProjects-startProjects)/1000.0));
         
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         
         out.println(new JSONArray(myteams.toArray()));

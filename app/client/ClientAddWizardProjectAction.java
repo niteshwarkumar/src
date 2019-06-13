@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -114,6 +114,7 @@ public final class ClientAddWizardProjectAction extends Action {
         String Project_mngr = cef.getProject_mngr();
         String Backup_pm = cef.getBackup_pm();
         String Sales_rep = cef.getSales_rep();
+        String Sales = cef.getSales();
         String Satisfaction_score = cef.getSatisfaction_score();
         String Satisfaction_level = cef.getSatisfaction_level();
         String Ftp_host_excel = cef.getFtp_host_excel();
@@ -127,9 +128,11 @@ public final class ClientAddWizardProjectAction extends Action {
         String otherContact3=cef.getOtherContact3();
         String otherContact4=cef.getOtherContact4();
         String otherContact5=cef.getOtherContact5();
+        String specialNotes= cef.getSpecialNotes();
+//    private String specialNotes;
         
         //create new client object from above values
-        Client c = new Client(Company_name, Company_code, Address_1, Address_2, "", "", "", City, State_prov, Zip_postal_code, Country, Main_telephone_numb, workPhoneEx, Fax_number, url, Status, Email_address, Note, Project_mngr, Backup_pm, Sales_rep, Satisfaction_score, Satisfaction_level, Ftp_host_excel, Ftp_user_id_excel, Ftp_password_excel, Ftp_host_client, Ftp_user_id_client, Ftp_password_client, "",".3333",".3333","","", "","",".6666","1.0",".25",".25", true, industry, new HashSet(), new HashSet(), new HashSet(), new HashSet(),otherContact1,otherContact2,otherContact3,otherContact4,otherContact5,"USD","","");
+        Client c = new Client(Company_name, Company_code, Address_1, Address_2, "", "", "", City, State_prov, Zip_postal_code, Country, Main_telephone_numb, workPhoneEx, Fax_number, url, Status, Email_address, Note, Project_mngr, Backup_pm, Sales_rep, Sales, Satisfaction_score, Satisfaction_level, Ftp_host_excel, Ftp_user_id_excel, Ftp_password_excel, Ftp_host_client, Ftp_user_id_client, Ftp_password_client, "",".3333",".3333","","", "","",".6666","1.0",".25",".25", true, industry, new HashSet(), new HashSet(), new HashSet(), new HashSet(),otherContact1,otherContact2,otherContact3,otherContact4,otherContact5,"USD","","",specialNotes);
         c.setPmfeePercentage(0.0);
         //Add new client to db
         ClientService.getInstance().addClient(c);        

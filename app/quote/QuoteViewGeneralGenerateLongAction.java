@@ -110,7 +110,7 @@ public final class QuoteViewGeneralGenerateLongAction extends Action {
         content = content.replaceAll("INSERT_COMPANYNAME_INSERT", q.getProject().getCompany().getCompany_name());
         try {
             content = content.replaceAll("INSERT_CONTACTNAME_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getFirst_name()) + " " + StandardCode.getInstance().noNull(q.getProject().getContact().getLast_name()));
-            System.out.println("hereeeeee3");
+            //System.out.println("hereeeeee3");
             content = content.replaceAll("INSERT_CONTACTTITLE_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getTitle()));
             String comma = ", ";
             if ("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getContact().getDivision()))) {
@@ -246,7 +246,7 @@ public final class QuoteViewGeneralGenerateLongAction extends Action {
                 category += ",";
             }
         }
-        System.out.println("ddddddddddddddddddddd" + category + med);
+        //System.out.println("ddddddddddddddddddddd" + category + med);
         Upload_Doc ud1 = QuoteService.getInstance().getUploadDoc(id);
         List pname = QuoteService.getInstance().getUploadDocList(id);
         String uDoc = null;
@@ -601,7 +601,7 @@ public final class QuoteViewGeneralGenerateLongAction extends Action {
             content = content.replaceAll("INSERT_ENGPRICE_INSERT", "Included");
         } else {
             String engtotal1 = "\\$" + (String) StandardCode.getInstance().formatDouble(new Double(engTaskTotal));
-            System.out.println("Testtttttttttttttttttt" + engtotal1);
+            //System.out.println("Testtttttttttttttttttt" + engtotal1);
             content = content.replaceAll("INSERT_ENGPRICE_INSERT", engtotal1);
         }
         content = content.replaceAll("INSERT_ENGPRICE_INSERT", StandardCode.getInstance().formatDouble(new Double(engTaskTotal)));
@@ -697,7 +697,7 @@ public final class QuoteViewGeneralGenerateLongAction extends Action {
         //write to client (web browser)
 
         response.setHeader("Content-Type", "Application/msword");
-        String filename = q.getNumber() + "-" + q.getProject().getCompany().getCompany_name().replaceAll(" ", "_") + "_quote.doc";
+        String filename = q.getNumber() + "-" + q.getProject().getCompany().getCompany_name().replaceAll(" ", "_").replaceAll(",", "_") + "_quote.doc";
         response.setHeader("Content-disposition", "attachment; filename=" + filename);
 
         OutputStream os = response.getOutputStream();

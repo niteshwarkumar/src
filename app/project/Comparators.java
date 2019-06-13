@@ -14,7 +14,7 @@ import app.resource.Resource;
 import java.util.*;
 import app.standardCode.*;
 import app.quote.*;
-
+ 
 /**
  *
  * @author Aleksandar

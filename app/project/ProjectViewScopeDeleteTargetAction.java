@@ -15,6 +15,7 @@ import org.apache.struts.util.MessageResources;
 import app.security.*;
 import app.admin.*;
 import app.extjs.global.LanguageAbs;
+import app.extjs.helpers.ProjectHelper;
 
 
 public final class ProjectViewScopeDeleteTargetAction extends Action {
@@ -90,7 +91,7 @@ public final class ProjectViewScopeDeleteTargetAction extends Action {
 
          AdminService.getInstance().deleteInspection(abr,td.getSourceDoc().getProject().getProjectId());
         AdminService.getInstance().delete(td);        
-        
+        ProjectHelper.updateLanguageCount(p);
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));
     }

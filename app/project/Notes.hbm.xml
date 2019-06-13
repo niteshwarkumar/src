@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+    <class name="app.project.Notes" table="notes">
+        <id name="idnotes" type="int" column="idnotes">
+            <generator class="identity"/>
+        </id>
+      
+        <property name="userid" type="int"/>
+        <property name="author" type="string"/>
+        <property name="notes" type="string"/>
+        <property name="createDate" type="date"/>
+        <property name="editDate" type="date"/>
+        <property name="quoteId" type="int"/>
+        <property name="projectId" type="int"/>
+        <property name="bgcolor" type="string"/>
+            
+    </class>
+   
+</hibernate-mapping>

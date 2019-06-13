@@ -1,4 +1,4 @@
-//ResourceViewRatesScoresDeleteAction.java deletes one rateScoreLanguage
+//ResourceViewRatesScoresDeleteAction.java deletes one ratescorelanguage
 
 package app.resource;
 
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -77,11 +77,11 @@ public final class ResourceViewRatesScoresDeleteAction extends Action {
         }
         //END check for login (security)
 	     
-        //get rateScoreLanguage to delete
-        String rateScoreLanguageId = request.getParameter("id");
-        RateScoreLanguage r = ResourceService.getInstance().getSingleRateScoreLanguage(Integer.valueOf(rateScoreLanguageId));        
+        //get ratescorelanguage to delete
+        String ratescorelanguageId = request.getParameter("id");
+        RateScoreLanguage r = ResourceService.getInstance().getSingleRateScoreLanguage(Integer.valueOf(ratescorelanguageId));        
         
-        //delete the rateScoreLanguage
+        //delete the ratescorelanguage
         ResourceService.getInstance().deleteRateScoreLanguage(r);
         
 	// Forward control to the specified success URI

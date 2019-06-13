@@ -5,9 +5,12 @@
 package app.qms;
 
 import app.extjs.helpers.HrHelper;
+import app.extjs.helpers.QuoteHelper;
+import app.quote.Quote1;
 import app.standardCode.StandardCode;
 import app.user.User;
 import app.user.UserService;
+import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -19,6 +22,8 @@ import org.apache.struts.action.ActionMapping;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+import org.json.CDL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -57,13 +62,76 @@ public class QMSLibraryStore extends Action {
 
 
         List results = new ArrayList();
+         JSONArray printResults = new JSONArray();
 
         String mainTab = request.getParameter("mainTab");
         String query=request.getParameter("query");
+        List<Integer> isoDocFilterId = new ArrayList<>();
         if(query==null)query="";
+        if(query.contains("@iso")){
+            String isoPart = query.split("@iso")[0];
+            String[] isoStandard= isoPart.split("@");
+            query = query.replaceAll(isoPart, "").replaceAll("@iso", "");
+            isoDocFilterId = QMSService.getInstance().getISODocList(isoStandard);
+        }
 
       
         List docList = QMSService.getInstance().getQMSLibraryDocumentByTabs(mainTab,query);
+        
+        
+        String print = request.getParameter("print");
+        if (print != null) {
+            if (print.equalsIgnoreCase("yes")) {
+                response.setContentType("text/csv");
+                response.setHeader("Content-Disposition", "attachment; filename=\"QMS_"+mainTab+".csv\"");
+                try {
+                    for (int i = 0; i < docList.size(); i++) {
+            QMSLibrary lu = (QMSLibrary) docList.get(i);
+            JSONObject jo = new JSONObject();
+
+            //jo.put("id", lu.getId());
+            jo.put("Title", lu.getTitle());
+            jo.put("Description", lu.getDescription());
+            jo.put("Category", lu.getCategory());
+            jo.put("Doc Id", lu.getDocId());
+            jo.put("Doc Format", lu.getFormat());
+            if (lu.getLink() == null) {
+            } else if (lu.getLink().equalsIgnoreCase("")) {
+            } else {
+                jo.put("Html Link",  lu.getLink());
+            }
+            jo.put("Version", lu.getVersion());
+            jo.put("Document Type", lu.getType());
+             if (lu.getFileSaveName() == null) {
+            } else if (lu.getFileSaveName().equalsIgnoreCase("")) {
+            } else {
+             jo.put("File",  lu.getFileName());
+//                jo.put("readFlie",  "NKS");
+            }
+
+            jo.put("Release Date", lu.getReleaseDate());
+            jo.put("Owner", lu.getOwner());
+//            jo.put("MainTab", lu.getMainTab());
+            jo.put("ISO Reference", lu.getIsoreference());
+
+
+          
+            printResults.put(jo);
+        }
+
+                    String csv = CDL.toString(printResults);
+                    ////System.out.println(csv);
+                    OutputStream outputStream = response.getOutputStream();
+                    outputStream.write(csv.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (Exception e) {
+                    //System.out.println(e.toString());
+                }
+                return (null);
+            }
+        }
+        
         for (int i = 0; i < docList.size(); i++) {
             QMSLibrary lu = (QMSLibrary) docList.get(i);
             JSONObject jo = new JSONObject();
@@ -100,14 +168,21 @@ public class QMSLibraryStore extends Action {
             jo.put("update", "<a " + HrHelper.LINK_STYLE + " href=../qmsLibUpdateDocumentPreAction.do?mainTab="+mainTab+"&id=" + lu.getId() + ">Click</a>");
             }
             jo.put("training", "<a " + HrHelper.LINK_STYLE + " href=../qmsLibraryTraining.do?mainTab="+mainTab+"&id=" + lu.getId() + ">Click</a>");
-
+            
+            if(isoDocFilterId.size()>0){
+                if(isoDocFilterId.contains(lu.getId())){
+                results.add(jo);
+                }
+            }else{
+                results.add(jo);
+            }
           
-            results.add(jo);
+            
         }
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

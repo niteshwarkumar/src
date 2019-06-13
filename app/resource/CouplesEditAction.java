@@ -5,8 +5,6 @@
 
 package app.resource;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;

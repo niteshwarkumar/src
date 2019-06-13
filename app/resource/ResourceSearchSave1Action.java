@@ -89,6 +89,10 @@ public final class ResourceSearchSave1Action extends Action {
         if(IncludeDoNot == null) {    
             rs.set("resourceSearchIncludeDoNot", "off");
         }
+        String isagency = (String) rs.get("resourceSearchisAgency");
+        if(isagency == null) {    
+            rs.set("resourceSearchisAgency", "off");
+        }
             
         String Translator = (String) rs.get("resourceSearchTranslator");
         if(Translator == null) {    
@@ -194,6 +198,8 @@ public final class ResourceSearchSave1Action extends Action {
         String Country = (String) rs.get("resourceSearchCountry");
         
         String Resume = (String) rs.get("resourceSearchResume");
+        String Note = (String) rs.get("resourceSearchNote");
+        
         
         //save search to db
         //get this user
@@ -232,7 +238,7 @@ public final class ResourceSearchSave1Action extends Action {
 //                specifics.append(Specific[i] + ",");
 //            }
 //            ss.setSpecific(specifics.toString());
-//            System.out.println("Specificssssssssssss"+specifics.toString());
+//            //System.out.println("Specificssssssssssss"+specifics.toString());
 //        }
 //        else {
 //            ss.setSpecific("0,");

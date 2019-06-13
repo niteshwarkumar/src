@@ -180,7 +180,7 @@ try{
                 }
 
                 }
-                QMSService.getInstance().addQMSAudit(audit);
+                QMSServiceAddUpdate.getInstance().addQMSAudit(audit);
 
             }
 String atype= "";
@@ -214,7 +214,7 @@ try{
                     }
                 }
                 if (flag == 0) {
-                    QMSService.getInstance().deleteAudit(aud);
+                    QMSServiceDelete.getInstance().deleteAudit(aud);
                 }
 
             }

@@ -54,14 +54,6 @@ public class Client_Quote implements Serializable {
         this.Project = Project;
     }
 
-    public Integer getid() {
-        return id;
-    }
-
-    public void setid(Integer id) {
-        this.id = id;
-    }
-
     public Integer getQuote_ID() {
         return Quote_ID;
     }

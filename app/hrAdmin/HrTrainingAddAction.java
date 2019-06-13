@@ -79,7 +79,7 @@ public class HrTrainingAddAction extends Action {
   UserService.getInstance().unlinkTraining(id);
             for (int i = 0; i < training.length(); i++) {
                 JSONObject j = (JSONObject) training.get(i);
-                System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
+                //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
                 Training td = new Training();
 //                if (j.getString("id").equalsIgnoreCase("new")) {
                   
@@ -92,10 +92,10 @@ public class HrTrainingAddAction extends Action {
 
                 try {
                     if (datestarted.length() > 0) {
-                       // System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(datestarted)));
+                       // //System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(datestarted)));
                         td.setDateStart(DateService.getInstance().convertDate1(datestarted).getTime());
                     }
-                    //System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(j.getString("firstDraft")).getTime()));
+                    ////System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(j.getString("firstDraft")).getTime()));
                 } catch (Exception ex) {
                     
 
@@ -131,10 +131,10 @@ public class HrTrainingAddAction extends Action {
 //
 //                try {
 //                    if (datestarted.length() > 0) {
-//                        System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(datestarted)));
+//                        //System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(datestarted)));
 //                        td.setDateStart(DateService.getInstance().convertDate1(datestarted).getTime());
 //                    }
-//                    //System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(j.getString("firstDraft")).getTime()));
+//                    ////System.out.println("first Date is>>>>>>>>>>>>>>>>>" + (df.parse(j.getString("firstDraft")).getTime()));
 //                } catch (Exception ex) {
 //
 //

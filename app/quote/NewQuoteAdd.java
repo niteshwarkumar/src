@@ -51,7 +51,7 @@ public class NewQuoteAdd extends Action {
             Cookie cookie1 = new Cookie("clientViewId", Company_name);
             cookie1.setMaxAge(365 * 24 * 60 * 60);
             response.addCookie(cookie1);
-            System.out.println("StandardCode.getInstance().getCookie(clientViewId, request.getCookies())" + StandardCode.getInstance().getCookie("clientViewId", request.getCookies()));
+            //System.out.println("StandardCode.getInstance().getCookie(clientViewId, request.getCookies())" + StandardCode.getInstance().getCookie("clientViewId", request.getCookies()));
 
             Integer quoteId = 0;
             request.setAttribute("clientViewId1", String.valueOf(c.getClientId()));
@@ -63,7 +63,7 @@ public class NewQuoteAdd extends Action {
             session.setAttribute("quoteViewId", String.valueOf(quoteId));
             request.setAttribute("quoteViewId", String.valueOf(quoteId));
 
-            System.out.println("ClientIddddddddddddddddddddd" + request.getAttribute("clientViewId"));
+            //System.out.println("ClientIddddddddddddddddddddd" + request.getAttribute("clientViewId"));
 
         } else {
             c = ClientService.getInstance().getSingleClient(Integer.valueOf(clientViewId));

@@ -29,7 +29,7 @@ public class Blog extends ActionForm{
 
     public Blog()
     {
-        System.out.println("Blog constructor>>>>>>>>>>>>>>>>>>>>");
+        //System.out.println("Blog constructor>>>>>>>>>>>>>>>>>>>>");
     }
       public Integer getId() {
         return this.id;

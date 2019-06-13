@@ -91,7 +91,7 @@ public class UpdateAdminDefaultAction extends Action{
             st.executeUpdate();
             st.close();
             String jsonProducts = request.getParameter("dropdownJSON");
-            //System.out.println("jsonProducts="+jsonProducts);
+            ////System.out.println("jsonProducts="+jsonProducts);
 
             //First delete all products, and then re-insert it
             if (jsonProducts != null && !"".equals(jsonProducts)) {

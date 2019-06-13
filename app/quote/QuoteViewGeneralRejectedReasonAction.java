@@ -65,7 +65,7 @@ public final class QuoteViewGeneralRejectedReasonAction extends Action {
         //id of quote from request
         String quoteId = null;
         quoteId = (String) request.getSession().getAttribute("RejectedQuote");
-        System.out.println("XXXXXXX" + quoteId);
+        //System.out.println("XXXXXXX" + quoteId);
         String rejectReason = request.getParameter("rejectReason");
 
 
@@ -92,7 +92,7 @@ public final class QuoteViewGeneralRejectedReasonAction extends Action {
 
         //update quote as rejected
         q.setStatus("rejected");
-        System.out.println("Quote Status          ----------" + q.getQuote1Id() + q.getStatus());
+        //System.out.println("Quote Status          ----------" + q.getQuote1Id() + q.getStatus());
         q.setApprovalDate(new Date());
         if (u.getuserType() != null && u.getuserType().equalsIgnoreCase("client")) {
             q.setClientRejectReason(rejectReason);
@@ -107,7 +107,7 @@ public final class QuoteViewGeneralRejectedReasonAction extends Action {
             q.setLastModifiedByTS(new Date());
         }
 
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
         Project p = ProjectService.getInstance().getSingleProject(q.getProject().getProjectId());
         try {
             User pm = UserService.getInstance().getSingleUser(p.getPm_id());

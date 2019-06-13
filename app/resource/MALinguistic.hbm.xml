@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.MALinguistic" table="linMA">
+   <class name="app.resource.MALinguistic" table="linma">
       <id name="ID_linMA" type="int" column="ID_linMA">
          <generator class="identity"/>
       </id>

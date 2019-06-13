@@ -81,9 +81,10 @@ public final class ClientSearchAction extends Action {
         }
         
         String clientAe=clientSF.getClientAe();
+        Integer delinquent = clientSF.getDelinquent();
         
         //perform search and store results in a List
-        List results = ClientService.getInstance().getClientSearch(status, companyName, clientContactLastName, clientContactFirstName,clientLocation,clientPhoneNo,clientAe,clientIndustry );
+        List results = ClientService.getInstance().getClientSearch(status, companyName, clientContactLastName, clientContactFirstName,clientLocation,clientPhoneNo,clientAe,clientIndustry,delinquent );
        // 
         //place results in attribute for displaying in jsp
         request.setAttribute("results", results);

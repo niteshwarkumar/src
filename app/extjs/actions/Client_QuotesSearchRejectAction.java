@@ -94,8 +94,8 @@ public final class Client_QuotesSearchRejectAction extends Action {
                 JSONObject jo = QuoteHelper.ClientQuoteToJson2(q);
                 quoteHistory.add(jo);
             }
-      // System.out.println(actResponse.toXML());
-        System.out.println("quoteHistory"+quoteHistory);
+      // //System.out.println(actResponse.toXML());
+        //System.out.println("quoteHistory"+quoteHistory);
         PrintWriter out = response.getWriter();
         out.println(new JSONArray(quoteHistory.toArray()));
         out.flush();

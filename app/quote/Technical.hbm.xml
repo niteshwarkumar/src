@@ -22,6 +22,7 @@
         <property name="targetApplication" type="string"/>
         <property name="sourceVersion" type="string"/>
         <property name="targetVersion" type="string"/>
+        <property name="unitCount" type="double"/>
     </class>
 
 </hibernate-mapping>

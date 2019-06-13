@@ -69,7 +69,7 @@ public class ProductAddEditWizardAction extends Action{
         //which client to update from hidden value in form
         String clientId = null;
 	clientId = request.getParameter("clientViewId");
-        System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
+        //System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
         //check attribute in request
         if(clientId == null) {
             clientId = (String) request.getAttribute("clientViewId");
@@ -97,7 +97,7 @@ public class ProductAddEditWizardAction extends Action{
 
 
          String jsonProducts = request.getParameter("productJSON");
-        //System.out.println("jsonProducts="+jsonProducts);
+        ////System.out.println("jsonProducts="+jsonProducts);
 
         //First delete all products, and then re-insert it
        // ClientService.getInstance().unlinkClientAndProducts(Integer.parseInt(id));

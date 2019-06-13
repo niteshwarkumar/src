@@ -4,29 +4,32 @@ package app.extjs.helpers;
 
 import app.client.Client;
 import app.db.ConnectionFactory;
+import app.extjs.global.LanguageAbs;
 import app.newmodel.OSAModel;
 import app.standardCode.StandardCode;
 import java.util.*;
 import app.project.*;
 import app.resource.*;
-import java.awt.image.RescaleOp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.Query;
 import net.sf.hibernate.Session;
 import net.sf.hibernate.Transaction;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public final class TeamHelper {
 
     private TeamHelper() {
-        System.out.println("TeamHelper constuctor is calling***********************************");
+        //System.out.println("TeamHelper constuctor is calling***********************************");
     }
     private static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-    public static List getPMTeams(String pmName, int myExcelRange) {
+    public static List getPMTeams(String pmName, int myExcelRange, Integer pmID) {
 
 
 
@@ -34,6 +37,7 @@ public final class TeamHelper {
         Query query;
         //accumulate resource summary for display in ClientViewTeamDisplay object
         ArrayList results = new ArrayList();
+        ArrayList projects = new ArrayList();
 
         try {
 
@@ -41,13 +45,31 @@ public final class TeamHelper {
             //List clientList = query.list();
             long startProcessProjects = System.currentTimeMillis();
 
-            query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds where project.pm = '" + pmName + "'  and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day) ");
-            List projects = query.list();
-            // System.out.println("projects.size():"+projects.size());
+//            query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds where project.pm = '" + pmName + "'  and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day) ");
+            String qry = "select * from project project where project.pm_id = " + pmID + "  and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day) ";
+//            List projects = query.list();
+            
+            PreparedStatement st = session.connection().prepareStatement(qry);
+            ResultSet rs = st.executeQuery();
+             Hashtable duplicateProjects = new Hashtable();
+            while(rs.next()) {
+                if (duplicateProjects.get(rs.getString("number")) != null || rs.getString("number").equals("000000")) {
+                  
+                } else {
+                    duplicateProjects.put(rs.getString("number"),rs.getString("number"));
+                    Project p = ProjectService.getInstance().getSingleProject(rs.getInt("Id_Project"));
+//                Hibernate.initialize(p.getSourceDocs());
+                projects.add(p);
+                }
+                
+            }
+            rs.close();
+            st.close();
+            // //System.out.println("projects.size():"+projects.size());
             // for(int i=0;i<clientList.size();i++){
 
             //     Client c = (Client)clientList.get(i);
-            //     System.out.println("Processing client: "+c.getCompany_name());
+            //     //System.out.println("Processing client: "+c.getCompany_name());
             //get Tasks for display
             List linTasksDisplay = new ArrayList();
 
@@ -122,7 +144,7 @@ public final class TeamHelper {
             }
 
             long endProcessProjects = System.currentTimeMillis();
-            //System.out.println("teamHelper took:"+((endProcessProjects-startProcessProjects)/1000.00));
+            ////System.out.println("teamHelper took:"+((endProcessProjects-startProcessProjects)/1000.00));
 
             HashMap fetchedResources = new HashMap();
             HashMap myTotalCounts = new HashMap();
@@ -203,21 +225,22 @@ public final class TeamHelper {
                     //fetchedResources.put(t.getPersonName(), r);
 
                     mtTotals.totalPaid = getAllProjectsTotalForPerson(session, t.getPersonName());
-
-                    //the list for display (load all rateScoreLanguage entries)
+                    try{
+                    //the list for display (load all ratescorelanguage entries)
+                    //System.out.println("l=================================  "+r.getResourceId());
                     Set languagePairs = r.getLanguagePairs();
-                    //System.out.println("languagePairs="+languagePairs);
+                    //System.out.println("languagePairs="+languagePairs+"resource:-   "+r.getResourceId());
                     for (Iterator iter2 = languagePairs.iterator(); iter2.hasNext();) {
                         LanguagePair lp = (LanguagePair) iter2.next();
                         for (Iterator rateScoreIter = lp.getRateScoreLanguages().iterator(); rateScoreIter.hasNext();) {
                             RateScoreLanguage rsl = (RateScoreLanguage) rateScoreIter.next();
                             rateScoreLangs.put(r.getResourceId() + "_" + rsl.getSource() + "_" + rsl.getTarget() + "_" + rsl.getSpecialty(), rsl);
-                            //System.out.println("rsl.getSpecialty()="+rsl.getSpecialty());
+                            ////System.out.println("rsl.getSpecialty()="+rsl.getSpecialty());
                         }
 
                     }
 
-
+                    }catch(Exception e){}
                 }
 
                 if (t.getInternalDollarTotal() != null && !"".equals(t.getInternalDollarTotal())) {
@@ -226,7 +249,7 @@ public final class TeamHelper {
                 }
                 mtClient.countProjects++;
                 mtTotals.countProjects++;
-                // System.out.println("person="+t.getPersonName()+", score="+t.getScore());
+                // //System.out.println("person="+t.getPersonName()+", score="+t.getScore());
                 if (t.getScore() != null) {
                     mtTotals.totalScore += t.getScore().intValue();
                     //mtClient.totalScore += t.getScore().intValue();
@@ -335,21 +358,21 @@ public final class TeamHelper {
                 jo.put("totalPaidClient", StandardCode.getInstance().formatMoney(mtClient.totalPaid));
                 //jo.put("averageScoreClient", (mtClient.totalScore/mtClient.countProjects));
 
-                //System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
+                ////System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
                 results.add(jo);
             }
 
 
 
         } catch (Exception e) {
-            System.out.println("Exception::" + e.getMessage());
+            //System.out.println("Exception::" + e.getMessage());
             throw new RuntimeException(e);
         } finally {
             if (session != null) {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception" + e.getMessage());
+                    //System.out.println("Hibernate Exception" + e.getMessage());
                     throw new RuntimeException(e);
                 }
 
@@ -358,7 +381,7 @@ public final class TeamHelper {
         return results;
     }
 
-    public static List getPMDtpTeams(String pmName, int myExcelRange) {
+    public static List getPMDtpTeams(String pmName, int myExcelRange, Integer pmID) {
 
 
 
@@ -372,13 +395,13 @@ public final class TeamHelper {
             //query =	session.createQuery("select client from app.client.Client client left join client.Projects project where (client.Project_mngr='"+pmName+"' or client.Sales_rep='"+pmName+"' or project.pm = '"+pmName+"')");
             //List clientList = query.list();
             long startProcessProjects = System.currentTimeMillis();
-            query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds where project.pm = '" + pmName + "'  and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day) ");
+            query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds where project.pm_id = " + pmID + "  and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day) ");
             List projects = query.list();
-            // System.out.println("projects.size():"+projects.size());
+            // //System.out.println("projects.size():"+projects.size());
             // for(int i=0;i<clientList.size();i++){
 
             //     Client c = (Client)clientList.get(i);
-            //     System.out.println("Processing client: "+c.getCompany_name());
+            //     //System.out.println("Processing client: "+c.getCompany_name());
             //get Tasks for display
             List linTasksDisplay = new ArrayList();
             List engTasksDisplay = new ArrayList();
@@ -428,7 +451,7 @@ public final class TeamHelper {
             }
 
             long endProcessProjects = System.currentTimeMillis();
-            // System.out.println("processProjects took:"+((endProcessProjects-startProcessProjects)/1000.00));
+            // //System.out.println("processProjects took:"+((endProcessProjects-startProcessProjects)/1000.00));
 
             HashMap fetchedResources = new HashMap();
             HashMap myTotalCounts = new HashMap();
@@ -515,7 +538,7 @@ public final class TeamHelper {
 
 
             HashMap addedApps = new HashMap();
-            // System.out.println("appClients="+appClients);
+            // //System.out.println("appClients="+appClients);
             for (Iterator iter = myTeamDisplays.values().iterator(); iter.hasNext();) {
                 MyTeamsDisplay mtd = (MyTeamsDisplay) iter.next();
                 Resource r = (Resource) fetchedResources.get(mtd.resourceId);
@@ -570,7 +593,7 @@ public final class TeamHelper {
                         jo.put("testScore", mtClient.testScore);
                         jo.put("countProjectsClient", mtClient.countProjects);
                         jo.put("totalPaidClient", StandardCode.getInstance().formatMoney(mtClient.totalPaid));
-                        //System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
+                        ////System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
                         results.add(jo);
                         addedApps.put(r.getResourceId() + "_" + mtd.sourceLang + "_" + mtd.targetLang + "_" + rscore.getApplication(), "");
                     }
@@ -581,14 +604,14 @@ public final class TeamHelper {
 
 
         } catch (Exception e) {
-            System.out.println("Exception::" + e.getMessage());
+            //System.out.println("Exception::" + e.getMessage());
             throw new RuntimeException(e);
         } finally {
             if (session != null) {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception" + e.getMessage());
+                    //System.out.println("Hibernate Exception" + e.getMessage());
                     throw new RuntimeException(e);
                 }
 
@@ -597,7 +620,7 @@ public final class TeamHelper {
         return results;
     }
 
-    public static List getPMEngTeams(String pmName, int myExcelRange) {
+    public static List getPMEngTeams(String pmName, int myExcelRange, Integer pmID) {
 
 
 
@@ -611,13 +634,13 @@ public final class TeamHelper {
             //query =	session.createQuery("select client from app.client.Client client left join client.Projects project where (client.Project_mngr='"+pmName+"' or client.Sales_rep='"+pmName+"' or project.pm = '"+pmName+"')");
             //List clientList = query.list();
             long startProcessProjects = System.currentTimeMillis();
-            query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds  where project.pm = '" + pmName + "' and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day)");
+            query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds  where project.pm_id = " + pmID + " and project.startDate>DATE_SUB(current_date,INTERVAL  " + myExcelRange + " day)");
             List projects = query.list();
-            //System.out.println("projects.size():"+projects.size());
+            ////System.out.println("projects.size():"+projects.size());
             // for(int i=0;i<clientList.size();i++){
 
             //     Client c = (Client)clientList.get(i);
-            //     System.out.println("Processing client: "+c.getCompany_name());
+            //     //System.out.println("Processing client: "+c.getCompany_name());
             //get Tasks for display
 
             List engTasksDisplay = new ArrayList();
@@ -666,7 +689,7 @@ public final class TeamHelper {
             }
 
             long endProcessProjects = System.currentTimeMillis();
-            //  System.out.println("processProjects took:"+((endProcessProjects-startProcessProjects)/1000.00));
+            //  //System.out.println("processProjects took:"+((endProcessProjects-startProcessProjects)/1000.00));
 
             HashMap fetchedResources = new HashMap();
             HashMap myTotalCounts = new HashMap();
@@ -695,7 +718,7 @@ public final class TeamHelper {
                     mtd.dtpCCy = t.getCurrency();
                     mtd.dtpRate = t.getRate();
                     mtd.dtpUnit = t.getUnitsTeam();
-                    // System.out.println("t.getTaskName()="+t.getTaskName());
+                    // //System.out.println("t.getTaskName()="+t.getTaskName());
                     myTeamDisplays.put(t.getTaskName() + "_" + t.getSourceLanguage() + "_" + t.getTargetLanguage() + "_" + t.getPersonName(), mtd);
                 }
 
@@ -806,7 +829,7 @@ public final class TeamHelper {
                     jo.put("testScore", mtClient.testScore);
                     jo.put("countProjectsClient", mtClient.countProjects);
                     jo.put("totalPaidClient", StandardCode.getInstance().formatMoney(mtClient.totalPaid));
-                    //System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
+                    ////System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
                     results.add(jo);
                     addedApps.put(mtd.sourceLang + "_" + mtd.targetLang + "_" + mtd.dtpApp, "");
                 }
@@ -817,14 +840,14 @@ public final class TeamHelper {
 
 
         } catch (Exception e) {
-            System.out.println("Exception::" + e.getMessage());
+            //System.out.println("Exception::" + e.getMessage());
             throw new RuntimeException(e);
         } finally {
             if (session != null) {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception" + e.getMessage());
+                    //System.out.println("Hibernate Exception" + e.getMessage());
                     throw new RuntimeException(e);
                 }
 
@@ -835,7 +858,7 @@ public final class TeamHelper {
 
     public static double getAllProjectsTotalForPerson(Session session, String personId) throws Exception {
         double myTotal = 0;
-        PreparedStatement st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from LinTask where personName=?");
+        PreparedStatement st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from lintask where personName=?");
         st.setString(1, personId);
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
@@ -844,7 +867,7 @@ public final class TeamHelper {
         st.close();
         st = null;
 
-        st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from DtpTask where personName=?");
+        st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from dtptask where personName=?");
         st.setString(1, personId);
         rs = st.executeQuery();
         if (rs.next()) {
@@ -853,7 +876,7 @@ public final class TeamHelper {
         st.close();
         st = null;
 
-        st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from EngTask where personName=?");
+        st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from engtask where personName=?");
         st.setString(1, personId);
         rs = st.executeQuery();
         if (rs.next()) {
@@ -862,7 +885,7 @@ public final class TeamHelper {
         st.close();
         st = null;
 
-        st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from OthTask where personName=?");
+        st = session.connection().prepareStatement("Select SUM(CAST(internalDollarTotal AS DECIMAL)) as mysum from othtask where personName=?");
         st.setString(1, personId);
         rs = st.executeQuery();
         if (rs.next()) {
@@ -878,7 +901,7 @@ public final class TeamHelper {
 
     public static int getAllProjectsCountForPerson(Session session, String personId) throws Exception {
         int myTotal = 0;
-        PreparedStatement st = session.connection().prepareStatement("Select count(*) from LinTask where personName=?");
+        PreparedStatement st = session.connection().prepareStatement("Select count(*) from lintask where personName=?");
         st.setString(1, personId);
         ResultSet rs = st.executeQuery();
         if (rs.next()) {
@@ -887,7 +910,7 @@ public final class TeamHelper {
         st.close();
         st = null;
 
-        st = session.connection().prepareStatement("Select count(*) from DtpTask where personName=?");
+        st = session.connection().prepareStatement("Select count(*) from dtptask where personName=?");
         st.setString(1, personId);
         rs = st.executeQuery();
         if (rs.next()) {
@@ -896,7 +919,7 @@ public final class TeamHelper {
         st.close();
         st = null;
 
-        st = session.connection().prepareStatement("Select count(*) from EngTask where personName=?");
+        st = session.connection().prepareStatement("Select count(*) from engtask where personName=?");
         st.setString(1, personId);
         rs = st.executeQuery();
         if (rs.next()) {
@@ -905,7 +928,7 @@ public final class TeamHelper {
         st.close();
         st = null;
 
-        st = session.connection().prepareStatement("Select count(*)  from OthTask where personName=?");
+        st = session.connection().prepareStatement("Select count(*)  from othtask where personName=?");
         st.setString(1, personId);
         rs = st.executeQuery();
         if (rs.next()) {
@@ -946,17 +969,17 @@ String eDate=year+"-12-31";
 
             //query = session.createQuery("select project from app.project.Project project left join fetch project.SourceDocs sds where project.Company.clientId="+clientId +" order by project.completeDate desc");
             //query.setMaxResults(100);
-            System.out.println("bfr query excuteed********************************************");
+            //System.out.println("bfr query excuteed********************************************");
 //          query = session.createQuery("select project from app.project.Project as project left join fetch project.SourceDocs sds where project.Company.clientId='" + clientId + "' order by project.completeDate desc");
             query = session.createQuery("select project from app.project.Project as project where project.Company.clientId='" + clientId + "' and project.completeDate <'"+eDate+"' and project.completeDate >'"+sDate+"'");
-            System.out.println("after query executed******************************" + query);
+            //System.out.println("after query executed******************************" + query);
             List projects = query.list();
-            System.out.println("Query size of getClientTeams ********************" + projects.size());
-            //  System.out.println("projects.size():"+projects.size());
+            //System.out.println("Query size of getClientTeams ********************" + projects.size());
+            //  //System.out.println("projects.size():"+projects.size());
             // for(int i=0;i<clientList.size();i++){
 
             //     Client c = (Client)clientList.get(i);
-            //     System.out.println("Processing client: "+c.getCompany_name());
+            //     //System.out.println("Processing client: "+c.getCompany_name());
             //get Tasks for display
             List linTasksDisplay = new ArrayList();
             List engTasksDisplay = new ArrayList();
@@ -1039,7 +1062,7 @@ String eDate=year+"-12-31";
             }
 
             long endProcessProjects = System.currentTimeMillis();
-            //System.out.println("got all tasks took:"+((endProcessProjects-startProcessProjects)/1000.00));
+            ////System.out.println("got all tasks took:"+((endProcessProjects-startProcessProjects)/1000.00));
 
             HashMap fetchedResources = new HashMap();
             HashMap myTotalCounts = new HashMap();
@@ -1103,9 +1126,12 @@ String eDate=year+"-12-31";
                 }
                 Resource r = null;
                 if ((r = (Resource) fetchedResources.get(t.getPersonName())) == null) {
+                  try{
+//                  //System.out.println("Name==============>>"+t.getPersonName());
                     Query query2 = session.createQuery("select resource from Resource as resource where resource.resourceId = " + t.getPersonName());
 
                     List myList = query2.list();
+//                    //System.out.println("Name==============>>"+t.getPersonName());
                     if (myList.size() > 0) {
                         r = (Resource) query2.list().get(0);
                         fetchedResources.put(t.getPersonName(), r);
@@ -1117,7 +1143,9 @@ String eDate=year+"-12-31";
                     mtTotals.totalPaid = getAllProjectsTotalForPerson(session, t.getPersonName());
                     mtTotals.countProjects = getAllProjectsCountForPerson(session, t.getPersonName());
 
-
+                  }catch(Exception e){
+                    //System.out.println("errorrrrrrrrrrrr"+t.getLinTaskId());
+                  }
 
                 }
 
@@ -1127,7 +1155,7 @@ String eDate=year+"-12-31";
                 }
                 mtClient.countProjects++;
                 // mtTotals.countProjects++;
-                // System.out.println("person="+t.getPersonName()+", score="+t.getScore());
+                // //System.out.println("person="+t.getPersonName()+", score="+t.getScore());
                 if (t.getScore() != null) {
                     mtTotals.totalScore += t.getScore().intValue();
                     if(t.getScore().intValue()==0){mtTotals.totalScore +=35;}
@@ -1151,7 +1179,7 @@ String eDate=year+"-12-31";
 
 
             }
-            //  System.out.println("dtp");
+            //  //System.out.println("dtp");
 
             for (ListIterator iter = dtpTasksDisplay.listIterator(); iter.hasNext();) {
                 DtpTask t = (DtpTask) iter.next();
@@ -1223,9 +1251,9 @@ String eDate=year+"-12-31";
                     mtTotals.totalPaid = getAllProjectsTotalForPerson(session, t.getPersonName());
                     mtTotals.countProjects = getAllProjectsCountForPerson(session, t.getPersonName());
 
-                    //the list for display (load all rateScoreLanguage entries)
+                    //the list for display (load all ratescorelanguage entries)
                     // Set languagePairs = r.getLanguagePairs();
-                    //System.out.println("languagePairs="+languagePairs);
+                    ////System.out.println("languagePairs="+languagePairs);
 
 
 
@@ -1237,7 +1265,7 @@ String eDate=year+"-12-31";
                 }
                 mtClient.countProjects++;
                 // mtTotals.countProjects++;
-                // System.out.println("person="+t.getPersonName()+", score="+t.getScore());
+                // //System.out.println("person="+t.getPersonName()+", score="+t.getScore());
                 if (t.getScore() != null) {
                     mtTotals.totalScore += t.getScore().intValue();
                     //mtClient.totalScore += t.getScore().intValue();
@@ -1250,7 +1278,7 @@ String eDate=year+"-12-31";
 
             }
 
-            //System.out.println("eng");
+            ////System.out.println("eng");
             for (ListIterator iter = engTasksDisplay.listIterator(); iter.hasNext();) {
                 EngTask t = (EngTask) iter.next();
 
@@ -1321,9 +1349,9 @@ String eDate=year+"-12-31";
                     mtTotals.totalPaid = getAllProjectsTotalForPerson(session, t.getPersonName());
                     mtTotals.countProjects = getAllProjectsCountForPerson(session, t.getPersonName());
 
-                    //the list for display (load all rateScoreLanguage entries)
+                    //the list for display (load all ratescorelanguage entries)
                     // Set languagePairs = r.getLanguagePairs();
-                    //System.out.println("languagePairs="+languagePairs);
+                    ////System.out.println("languagePairs="+languagePairs);
 
 
 
@@ -1335,7 +1363,7 @@ String eDate=year+"-12-31";
                 }
                 mtClient.countProjects++;
                 //mtTotals.countProjects++;
-                // System.out.println("person="+t.getPersonName()+", score="+t.getScore());
+                // //System.out.println("person="+t.getPersonName()+", score="+t.getScore());
                 if (t.getScore() != null) {
                     mtTotals.totalScore += t.getScore().intValue();
                     //mtClient.totalScore += t.getScore().intValue();
@@ -1348,7 +1376,7 @@ String eDate=year+"-12-31";
 
             }
 
-            // System.out.println("oth");
+            // //System.out.println("oth");
 
             for (ListIterator iter = othTasksDisplay.listIterator(); iter.hasNext();) {
                 OthTask t = (OthTask) iter.next();
@@ -1420,9 +1448,9 @@ String eDate=year+"-12-31";
                     mtTotals.totalPaid = getAllProjectsTotalForPerson(session, t.getPersonName());
                     mtTotals.countProjects = getAllProjectsCountForPerson(session, t.getPersonName());
 
-                    //the list for display (load all rateScoreLanguage entries)
+                    //the list for display (load all ratescorelanguage entries)
                     // Set languagePairs = r.getLanguagePairs();
-                    //System.out.println("languagePairs="+languagePairs);
+                    ////System.out.println("languagePairs="+languagePairs);
 
 
 
@@ -1434,7 +1462,7 @@ String eDate=year+"-12-31";
                 }
                 mtClient.countProjects++;
                 // mtTotals.countProjects++;
-                // System.out.println("person="+t.getPersonName()+", score="+t.getScore());
+                // //System.out.println("person="+t.getPersonName()+", score="+t.getScore());
                 if (t.getScore() != null) {
                     mtTotals.totalScore += t.getScore().intValue();
                     //mtClient.totalScore += t.getScore().intValue();
@@ -1446,10 +1474,11 @@ String eDate=year+"-12-31";
             }
 
 
-            //System.out.println("finished oth");
+            ////System.out.println("finished oth");
 
             for (Iterator iter = myTeamDisplays.values().iterator(); iter.hasNext();) {
-                MyTeamsDisplay mtd = (MyTeamsDisplay) iter.next();
+             try{   
+              MyTeamsDisplay mtd = (MyTeamsDisplay) iter.next();
                 JSONObject jo = new JSONObject();
 
 
@@ -1587,21 +1616,23 @@ String eDate=year+"-12-31";
                 jo.put("totalPaidClient", StandardCode.getInstance().formatMoney(mtClient.totalPaid));
                 //jo.put("averageScoreClient", (mtClient.totalScore/mtClient.countProjects));
 
-                //System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
+                ////System.out.println(mtd.resourceId+":::"+mtd.sourceLang+" to " + mtd.targetLang);
                 results.add(jo);
+            }catch(Exception e1){
+            }
             }
 
 
 
         } catch (Exception e) {
-            System.out.println("Exception::" + e);
+            //System.out.println("Exception::" + e);
             throw new RuntimeException(e);
         } finally {
             if (session != null) {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception:" + e);
+                    //System.out.println("Hibernate Exception:" + e);
                     throw new RuntimeException(e);
                 }
 
@@ -1788,7 +1819,91 @@ String eDate=year+"-12-31";
         }
 
     }
+    
+        public static HashMap<String, Integer> getVendorProjCounts() {
 
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        HashMap<String, Integer> result = new HashMap();
+
+        try {
+            String linq =" select count(distinct id_project) as id_projectc ,personname " +
+                    " from lintask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             lintask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " group by personname ";
+                 
+                   String dtpq = " select count(distinct id_project) as id_projectc ,personname " +
+                    " from dtptask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " group by personname ";
+                 
+                    String engq =" select count(distinct id_project) as id_projectc ,personname " +
+                    " from engtask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             engtask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " group by personname " ;
+
+
+            PreparedStatement st = session.connection().prepareStatement(linq);
+            ResultSet rs = st.executeQuery();
+            while(rs.next()) {
+                try {
+                    if(!rs.getString(2).isEmpty()&&!rs.getString(2).equalsIgnoreCase("null"))
+                    result.put(rs.getString(2),rs.getInt(1));
+                } catch (Exception e) {}
+            }st.close();
+            
+            st = session.connection().prepareStatement(dtpq);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                try {
+                    if(!rs.getString(2).isEmpty()&&!rs.getString(2).equalsIgnoreCase("null"))
+                    result.put(rs.getString("personname"),result.getOrDefault(rs.getString(2), 0)+rs.getInt(1));
+                } catch (Exception e) {}
+            }st.close();
+            
+            st = session.connection().prepareStatement(engq);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                try {
+                    if(!rs.getString(2).isEmpty()&&!rs.getString(2).equalsIgnoreCase("null"))
+                    result.put(rs.getString(2),result.getOrDefault(rs.getString(2), 0)+rs.getInt(1));
+                } catch (Exception e) {}
+            }st.close();
+
+
+            return result;
+
+        } catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
     public static Vector getVendorCounts(int resourceId) {
 
         Session session = ConnectionFactory.getInstance().getSession();
@@ -1862,6 +1977,460 @@ String eDate=year+"-12-31";
 //                result.add(1, rs.getString(1));
             }
 
+            return result;
+
+        } catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+
+    public static Vector getVendorCounts(int resourceId, int clientId) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        Vector result = new Vector();
+
+        try {
+
+
+            PreparedStatement st = session.connection().prepareStatement(
+                    " select count(distinct id_project)  from " +
+                    " ( " +
+                    " select * from ( " +
+                    " select project.id_project as id_project" +
+                    " from lintask, targetdoc, sourcedoc, project " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and lintask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                             " and project.id_project = sourcedoc.id_project " +
+                             " and project.id_client = ? " +
+                    " ) AS T1 " +
+                    " union " +
+                    " select * from ( " +
+                    " select project.id_project as id_project " +
+                    " from dtptask, targetdoc, sourcedoc, project " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                            " and project.id_project = sourcedoc.id_project " +
+                             " and project.id_client = ? " +
+                    " ) AS T2 " +
+                    " union " +
+                    " select * from ( " +
+                    " select project.id_project as id_project " +
+                    " from engtask, targetdoc, sourcedoc, project " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and engtask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                            " and project.id_project = sourcedoc.id_project " +
+                             " and project.id_client = ? " +
+                    " ) AS T1 " +
+                    " ) AS MAINTABLE ");
+
+
+            st.setString(1, "" + resourceId);
+            st.setString(2, "" + clientId);
+            st.setString(3, "" + resourceId);
+            st.setString(4, "" + clientId);
+            st.setString(5, "" + resourceId);
+            st.setString(6, "" + clientId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                try {
+                    result.add(0, rs.getString(1));
+                } catch (NullPointerException e) {
+                    result.add(0, "0");
+                }
+                
+            }
+
+            st.close();
+            
+
+            return result;
+
+        } catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
+    public static Vector getVendorCountsDTP(int resourceId) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        Vector result = new Vector();
+
+        try {
+
+
+            PreparedStatement st = session.connection().prepareStatement(
+                  
+                    " select count(distinct id_project) " +
+                    " from dtptask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc ");
+                   
+
+
+            st.setString(1, "" + resourceId);
+           
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                try {
+                    result.add(0, rs.getString(1));
+                } catch (NullPointerException e) {
+                    result.add(0, "0");
+                }
+                
+            }
+
+            st.close();
+            st = session.connection().prepareStatement(
+                    "select sum(wordTotal) " +
+                    " from lintask, targetdoc, sourcedoc " +
+                    " where " +
+                    " personname=? " +
+                    " and lintask.id_targetDoc=targetdoc.id_targetDoc " +
+                    " and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc ");
+            st.setString(1, "" + resourceId);
+            rs = st.executeQuery();
+            if (rs.next()) {
+                 try {
+                    result.add(1, rs.getString(1));
+                } catch (NullPointerException e) {
+                    result.add(1, "0");
+                }
+//                result.add(1, rs.getString(1));
+            }
+
+            return result;
+
+        } catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+
+    public static Vector getVendorCountsDTP(int resourceId, int clientId) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        Vector result = new Vector();
+
+        try {
+
+
+            PreparedStatement st = session.connection().prepareStatement(
+                  
+                    " select count(distinct project.id_project) as id_project " +
+                    " from dtptask, targetdoc, sourcedoc, project " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                            " and project.id_project = sourcedoc.id_project " +
+                             " and project.id_client = ? " +
+                    "  ");
+
+
+            st.setString(1, "" + resourceId);
+            st.setString(2, "" + clientId);
+           
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                try {
+                    result.add(0, rs.getString(1));
+                } catch (NullPointerException e) {
+                    result.add(0, "0");
+                }
+                
+            }
+
+            st.close();
+            
+
+            return result;
+
+        } catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
+     public static Vector getVendorCounts(int resourceId, String source, String target) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        Vector result = new Vector();
+
+        try {
+
+
+            PreparedStatement st = session.connection().prepareStatement(
+                    " select count(distinct id_project)  from " +
+                    " ( " +
+                    " select * from ( " +
+                    " select id_project " +
+                    " from lintask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and targetdoc.language=? " +
+                    "             and sourcedoc.language  = ? " +
+                    "             and lintask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " ) AS T1 " +
+                    " union " +
+                    " select * from ( " +
+                    " select id_project " +
+                    " from dtptask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and targetdoc.language=? " +
+                    "             and sourcedoc.language  = ? " +
+                    "             and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " ) AS T2 " +
+                    " union " +
+                    " select * from ( " +
+                    " select id_project " +
+                    " from engtask, targetdoc, sourcedoc " +
+                    "             where " +
+                    "             personname=? " +
+                    "             and targetdoc.language=? " +
+                    "             and sourcedoc.language  = ? " +
+                    "             and engtask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "             and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " ) AS T1 " +
+                    " ) AS MAINTABLE ");
+
+
+            st.setString(1, "" + resourceId);
+            st.setString(2, "" + target);
+            st.setString(3, "" + source);
+            
+            st.setString(4, "" + resourceId);
+            st.setString(5, "" + target);
+            st.setString(6, "" + source);
+            
+            st.setString(7, "" + resourceId);
+            st.setString(8, "" + target);
+            st.setString(9, "" + source);
+            
+ 
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                try {
+                    result.add(0, rs.getString(1));
+                } catch (NullPointerException e) {
+                    result.add(0, "0");
+                }
+                
+            }
+
+            st.close();
+            st = session.connection().prepareStatement(
+                    "select sum(wordTotal) " +
+                    " from lintask, targetdoc, sourcedoc " +
+                    " where " +
+                    " personname=? " +
+                    "             and targetdoc.language=? " +
+                    "             and sourcedoc.language  = ? " +
+                    " and lintask.id_targetDoc=targetdoc.id_targetDoc " +
+                    " and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc ");
+            st.setString(1, "" + resourceId);
+            st.setString(2, "" + target);
+            st.setString(3, "" + source);
+            
+            rs = st.executeQuery();
+            if (rs.next()) {
+                 try {
+                    result.add(1, rs.getString(1));
+                } catch (NullPointerException e) {
+                    result.add(1, "0");
+                }
+//                result.add(1, rs.getString(1));
+            }
+
+            return result;
+
+        } catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
+       public static String getPaymentHistory(int resourceId) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        String result = "";
+
+        try {
+
+             String query =       "   select year(startDate) as startYear, sum( idt ) as amount from " +
+                    "  ( " +
+                    "  select * from (  " +
+                    "  select  startDate, REPLACE(lintask.internalDollarTotal, \",\", \"\") as idt " +
+                    "  from lintask, targetdoc, sourcedoc, project " +
+                    "              where " +
+                    "              personname=? " +
+                    "              and lintask.id_targetDoc=targetdoc.id_targetDoc  " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    "              and sourcedoc.id_project = project.id_project " +
+                    "  ) AS T1  " +
+                    "  union  " +
+                    "  select * from (  " +
+                    "  select startDate, REPLACE(dtptask.internalDollarTotal, \",\", \"\") as idt " +
+                    "  from dtptask, targetdoc, sourcedoc , project " +
+                    "              where  " +
+                    "              personname=? " +
+                    "              and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " and sourcedoc.id_project = project.id_project " +
+                    "  ) AS T2  " +
+                    "  union  " +
+                    "  select * from (  " +
+                    "  select startDate, REPLACE(engtask.internalDollarTotal, \",\", \"\") as idt  " +
+                    "  from engtask, targetdoc, sourcedoc , project " +
+                    "              where " +
+                    "              personname=? " +
+                    "              and engtask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " and sourcedoc.id_project = project.id_project " +
+                    "  ) AS T3  " +
+                    "  ) AS MAINTABLE " +
+                    " group by year(startDate) " +
+                    " order by year(startDate) desc ";
+PreparedStatement st = session.connection().prepareStatement(query);
+
+            st.setString(1, "" + resourceId);
+            st.setString(2, "" + resourceId);
+            st.setString(3, "" + resourceId);
+            ResultSet rs = st.executeQuery();
+
+            double totalInternalDollarTotal=0.00;
+            int yearCount=0;
+            while (rs.next()) {
+                
+                result += "<tr><td style=\"text-align:middle;\">" + StandardCode.getInstance().noNull(rs.getString("startYear")) + "</td>"
+                        + "<td  style=\"text-align:right;\">" + StandardCode.getInstance().formatMoney(rs.getDouble("amount")) + "</td></tr>";
+                totalInternalDollarTotal+= rs.getDouble("amount");
+                ++yearCount;
+            }
+
+            st.close();
+            result += "<tr><td colspan=4><hr></td></tr>";
+          /*
+           Calculate average per project use this
+           */
+            //  result += "<tr><td><b>OVERALL OSA:</td><td><b>" + StandardCode.getInstance().formatMoney(totalProjects) + "</td><td><b>" + StandardCode.getInstance().formatMoney(totalScore / totalProjects) + "</tr>";
+          /*
+           Calculate average per Annum use this
+           */
+            result += "<tr><td><b>Total:</td><td  style=\"text-align:right;\"><b>" + StandardCode.getInstance().formatMoney(totalInternalDollarTotal) + "</td></tr>";
+           
             return result;
 
         } catch (Exception e) {
@@ -2010,12 +2579,12 @@ String eDate=year+"-12-31";
          result += "<tr><td colspan=6><hr></td></tr>";
           try {
                 PreparedStatement st = session.connection().prepareStatement(
-                        "select firstName,lastName,companyName,specialty,score from ratescorelanguage rs inner join languagepair lp on rs.ID_LanguagePair=lp.ID_LanguagePair inner join resource rc on lp.ID_Resource=rc.ID_Resource where rs.evaluatedBy=?");
+                        "select rc.firstName,rc.lastName,rc.companyName,specialty,score from ratescorelanguage rs inner join languagepair lp on rs.ID_LanguagePair=lp.ID_LanguagePair inner join resource rc on lp.ID_Resource=rc.ID_Resource where rs.evaluatedBy=?");
                  st.setString(1, evaluator);
                    ResultSet rs = st.executeQuery();
                     while (rs.next()) {
 
-                        if(rs.getString("firstName")!= null){
+                        if(rs.getString("firstName")!= null&&!rs.getString("firstName").equalsIgnoreCase("")){
                         if(Double.parseDouble(rs.getString("score"))<=20){
               
                          result += "<tr><td><font color='red'>"+rs.getString("firstName")+" "+rs.getString("lastName")+"</td><td>"+rs.getString("specialty")+"</td><td>"+rs.getString("score")+"</font></td></tr>";
@@ -2026,7 +2595,7 @@ String eDate=year+"-12-31";
                         {
                         if(Double.parseDouble(rs.getString("score"))<=20){
 
-                         result += "<tr><td><font color='red'>"+rs.getString("firstName")+" "+rs.getString("lastName")+"</td><td>"+rs.getString("specialty")+"</td><td>"+rs.getString("score")+"</font></td></tr>";
+                         result += "<tr><td><font color='red'>"+rs.getString("companyName")+"</td><td>"+rs.getString("specialty")+"</td><td>"+rs.getString("score")+"</font></td></tr>";
                     }else
                      result += "<tr><td>"+rs.getString("companyName")+"</td><td>"+rs.getString("specialty")+"</td><td>"+rs.getString("score")+"</td></tr>";
 
@@ -2324,7 +2893,9 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                 }catch(Exception e){
                 result +="<td></td>";
                 }
-                    result += "<td>" + rs.getString("taskName") + "</td><td>" + rs.getDouble("rate") + " " + rs.getString("currency") + "</td><td>" + rs.getString("units") + "</td><td>" + rs.getString("pm") + "</td></tr>";
+                //System.out.println(rs.getString("number")+"---");
+                //System.out.println(rs.getString("rate")+"---");
+                    result += "<td>" + rs.getString("taskName") + "</td><td>" + rs.getString("rate") + " " + rs.getString("currency") + "</td><td>" + rs.getString("units") + "</td><td>" + rs.getString("pm") + "</td></tr>";
 
             }
 
@@ -2475,7 +3046,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
 
 
             PreparedStatement st = session.connection().prepareStatement(
-                    "select lastName, firstName from resource where id_resource in( " +
+                    "select lastName, firstName,companyName from resource where id_resource in( " +
                     " select distinct id_resource from languagepair " +
                     " where id_languagepair in( " +
                     "   SELECT distinct id_languagepair " +
@@ -2489,6 +3060,8 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
             while (rs.next()) {
                 if (rs.getString("lastName") != null && !"".equals(rs.getString("lastName"))) {
                     result.add(rs.getString("firstName") + " " + rs.getString("lastName"));
+                }else if(rs.getString("companyName") != null){
+                    result.add(rs.getString("companyName"));
                 }
             }
             st.close();
@@ -2518,6 +3091,174 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
 
 
     }
+    
+     public static JSONArray getAllOSAHistoryJSON(int resourceId) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        JSONArray result = new JSONArray();
+
+        try {
+
+
+            PreparedStatement st = session.connection().prepareStatement(
+                    " select ID_LinTask as id, score, scoreDescription, targetLanguage, sourceLanguage, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, year(project.startDate) as dYear, 'LIN' as taskType,receivedDateDate " +
+                    " from lintask, targetdoc, sourcedoc, project, client_information " +
+                    "             where " +
+                    "             personname=? " +
+                    "            and lintask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "           and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    "            and sourcedoc.id_project = project.id_project " +
+                    "            and project.id_client = client_information.id_client " +
+                    " union " +
+                    " select ID_DtpTask as id, score, scoreDescription, targetLanguage, sourceLanguage, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, year(project.startDate) as dYear, 'DTP' as taskType,receivedDateDate   " +
+                    " from dtptask, targetdoc, sourcedoc, project, client_information " +
+                    "             where " +
+                    "             personname=? " +
+                    "            and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "           and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    "            and sourcedoc.id_project = project.id_project " +
+                    "            and project.id_client = client_information.id_client " +
+                    " union " +
+                    " select ID_EngTask as id, score, scoreDescription, targetLanguage, sourceLanguage, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, year(project.startDate) as dYear, 'ENG' as taskType,receivedDateDate   " +
+                    " from engtask, targetdoc, sourcedoc, project, client_information " +
+                    "             where " +
+                    "             personname=? " +
+                    "            and engtask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "           and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    "            and sourcedoc.id_project = project.id_project " +
+                    "            and project.id_client = client_information.id_client " +
+                    " order by  number");
+
+
+            st.setString(1, "" + resourceId);
+            st.setString(2, "" + resourceId);
+            st.setString(3, "" + resourceId);
+            ResultSet rs = st.executeQuery();
+            int dYear = 0;
+            int osaScore;
+
+            Map<String, List<OSAModel>> map = new HashMap<String, List<OSAModel>>();
+
+            while (rs.next()) {
+                if (rs.getString("startDate") != null) {
+                    if(rs.getInt("score")!=35){
+
+                    if (rs.getInt("dYear") != dYear) {
+
+                        dYear = rs.getInt("dYear");
+                       
+                    }
+                    List<OSAModel> aModels = null;
+                    if (map.containsKey(dYear+"")) {
+                        aModels = map.get(dYear+"");
+                        OSAModel oSAModel = new OSAModel();
+                        if(rs.getDate("deliveryDate")!=null) oSAModel.setDeliveryDate(rs.getDate("deliveryDate"));
+                        oSAModel.setTaskName(rs.getString("taskName"));
+                        oSAModel.setScore(rs.getInt("score"));
+                        oSAModel.setPm(rs.getString("pm"));
+                        oSAModel.setScoreDescription(rs.getString("scoreDescription"));
+                        oSAModel.setNumber(rs.getString("number"));
+                        oSAModel.setCompany_code(rs.getString("company_code"));
+                        oSAModel.setId_project(rs.getString("id_project"));
+                        oSAModel.setTaskType(rs.getString("taskType"));
+                        oSAModel.setId(rs.getString("id"));
+                        oSAModel.setSrc(rs.getString("sourceLanguage"));
+                        oSAModel.setTgt(rs.getString("targetLanguage"));
+                        aModels.add(oSAModel);
+                        map.put(dYear+"", aModels);
+                    } else {
+                        aModels = new ArrayList<OSAModel>();
+                        OSAModel oSAModel = new OSAModel();
+                        if(rs.getDate("deliveryDate")!=null) oSAModel.setDeliveryDate(rs.getDate("deliveryDate"));
+                        oSAModel.setTaskName(rs.getString("taskName"));
+                        oSAModel.setScore(rs.getInt("score"));
+                        oSAModel.setPm(rs.getString("pm"));
+                        oSAModel.setScoreDescription(rs.getString("scoreDescription"));
+                        oSAModel.setNumber(rs.getString("number"));
+                        oSAModel.setCompany_code(rs.getString("company_code"));
+                        oSAModel.setId_project(rs.getString("id_project"));
+                        oSAModel.setTaskType(rs.getString("taskType"));
+                        oSAModel.setId(rs.getString("id"));
+                        oSAModel.setSrc(rs.getString("sourceLanguage"));
+                        oSAModel.setTgt(rs.getString("targetLanguage"));
+                        aModels.add(oSAModel);
+                       
+                        map.put(dYear+"", aModels);
+                    }
+
+
+                    }
+                }
+            }
+
+                        TreeSet<String> treeSet = new TreeSet<String>(Collections.reverseOrder());
+                        treeSet.addAll(map.keySet());
+                        int osacount = 0;
+            for(String year1 : treeSet){
+               List<OSAModel> list = map.get(year1);
+
+                Collections.sort(list);
+                
+                for(OSAModel osa:list)
+                {
+                   osaScore=osa.getScore();
+                   if(osaScore==0)osaScore=35;
+
+                        String delDate = "";
+                          try {
+                              
+                              delDate = sdf.format(osa.getDeliveryDate());}catch(Exception e){}
+                    if(osaScore!=35 && osacount<10) {  
+                        osacount++;
+                    JSONObject jo = new JSONObject();
+                    jo.put("delDate", delDate);
+                    jo.put("taskName", osa.getTaskName());
+                    jo.put("osaScore", osaScore);
+                    jo.put("scoreDesc", noNull(osa.getScoreDescription()));
+                    jo.put("projectNumb", osa.getNumber()  + osa.getCompany_code());
+                    jo.put("src", osa.getSrc());
+                    jo.put("tgt", osa.getTgt());
+                    jo.put("id", osa.getId());
+                    
+                    result.put(jo);
+                    }
+                }
+                }
+        st.close();
+        return result;
+
+    }
+    catch
+
+
+
+        (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+        throw new RuntimeException(e);
+    } /*
+     * Regardless of whether the above processing resulted in an Exception
+     * or proceeded normally, we want to close the Hibernate session.  When
+     * closing the session, we must allow for the possibility of a Hibernate
+     * Exception.
+     *
+     */ finally
+
+    {
+        if (session != null) {
+            try {
+
+                session.close();
+            } catch (HibernateException e) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+}
+
 
     public static String getAllOSAHistory(int resourceId, boolean isAgency) {
 
@@ -2530,7 +3271,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
 
 
             PreparedStatement st = session.connection().prepareStatement(
-                    " select ID_LinTask as id, score, scoreDescription, deliveryDate, taskName, pm, project.number, company_code, units, project.id_project, year(deliveryDate) as dYear, 'LIN' as taskType " +
+                    " select ID_LinTask as id, score, scoreDescription, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, year(project.startDate) as dYear, 'LIN' as taskType,receivedDateDate " +
                     " from lintask, targetdoc, sourcedoc, project, client_information " +
                     "             where " +
                     "             personname=? " +
@@ -2539,7 +3280,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                     "            and sourcedoc.id_project = project.id_project " +
                     "            and project.id_client = client_information.id_client " +
                     " union " +
-                    " select ID_DtpTask as id, score, scoreDescription, deliveryDate, taskName, pm, project.number, company_code, units, project.id_project, year(deliveryDate) as dYear, 'DTP' as taskType   " +
+                    " select ID_DtpTask as id, score, scoreDescription, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, year(project.startDate) as dYear, 'DTP' as taskType,receivedDateDate   " +
                     " from dtptask, targetdoc, sourcedoc, project, client_information " +
                     "             where " +
                     "             personname=? " +
@@ -2548,7 +3289,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                     "            and sourcedoc.id_project = project.id_project " +
                     "            and project.id_client = client_information.id_client " +
                     " union " +
-                    " select ID_EngTask as id, score, scoreDescription, deliveryDate, taskName, pm, project.number, company_code, units, project.id_project, year(deliveryDate) as dYear, 'DTP' as taskType   " +
+                    " select ID_EngTask as id, score, scoreDescription, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, year(project.startDate) as dYear, 'ENG' as taskType,receivedDateDate   " +
                     " from engtask, targetdoc, sourcedoc, project, client_information " +
                     "             where " +
                     "             personname=? " +
@@ -2578,7 +3319,8 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
             Map<String, List<OSAModel>> map = new HashMap<String, List<OSAModel>>();
 
             while (rs.next()) {
-                if (rs.getDate("deliveryDate") != null) {
+                if (rs.getString("startDate") != null) {
+                    if(rs.getInt("score")!=35){
 
                     if (rs.getInt("dYear") != dYear) {
 
@@ -2590,7 +3332,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                         }
                         
                         dYear = rs.getInt("dYear");
-                        System.out.println("dYeardYeardYeardYeardYeardYear"+dYear);
+                        //System.out.println("dYeardYeardYeardYeardYeardYear"+dYear);
                         totalYearlyOsa = 0;
                         totalYearlyProjects = 0;
                     }
@@ -2600,7 +3342,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                     if (map.containsKey(dYear+"")) {
                         aModels = map.get(dYear+"");
                         OSAModel oSAModel = new OSAModel();
-                        oSAModel.setDeliveryDate(rs.getDate("deliveryDate"));
+                        if(rs.getDate("deliveryDate")!=null) oSAModel.setDeliveryDate(rs.getDate("deliveryDate"));
                         oSAModel.setTaskName(rs.getString("taskName"));
                         oSAModel.setScore(rs.getInt("score"));
                         oSAModel.setPm(rs.getString("pm"));
@@ -2617,7 +3359,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                     } else {
                         aModels = new ArrayList<OSAModel>();
                         OSAModel oSAModel = new OSAModel();
-                        oSAModel.setDeliveryDate(rs.getDate("deliveryDate"));
+                        if(rs.getDate("deliveryDate")!=null) oSAModel.setDeliveryDate(rs.getDate("deliveryDate"));
                         oSAModel.setTaskName(rs.getString("taskName"));
                         oSAModel.setScore(rs.getInt("score"));
                         oSAModel.setPm(rs.getString("pm"));
@@ -2652,7 +3394,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
 
                     totalYearlyOsa += rs.getInt("score");
                     totalYearlyProjects++;*/
-
+                    }
                 }
             }
 
@@ -2662,8 +3404,13 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                         treeSet.addAll(map.keySet());
             for(String year1 : treeSet){
                List<OSAModel> list = map.get(year1);
-                System.out.println("----"+year1);
+                //System.out.println("----"+year1);
+                if(year1.equalsIgnoreCase("0")){
+                result += "<tr><td colspan='10'><b><font size=4>Project Not delivered </td></tr>";
+                }else{
                 result += "<tr><td><b><font size=4>" +year1 + "</td></tr>";
+                }
+                
                 Collections.sort(list);
                 String imagePath="";
                 String desc="";
@@ -2673,7 +3420,7 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                 {
                    osaScore=osa.getScore();
                    if(osaScore==0)osaScore=35;
-                    System.out.println("idddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"+osa.getId()+osa.getTaskType());
+                    //System.out.println("idddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"+osa.getId()+osa.getTaskType());
                   // if(osaScore==-3)osaScore=20;
                   // else if(osaScore==-2)osaScore=25;
                   // else if(osaScore==-1)osaScore=30;
@@ -2691,13 +3438,16 @@ result+="<td>" + rs.getDouble("rateFee") + " " + StandardCode.getInstance().noNu
                    }
                    else {imagePath="";desc="";}
 
+                        String delDate = "";
+                          try {
+                              
+                              delDate = sdf.format(osa.getDeliveryDate());}catch(Exception e){}
 
-
-                    System.out.println("prrrrrrrrrrrrrrrrrrrrrr" +osa.getNumber() + osa.getCompany_code() + "', '" +count++ + osa.getId_project());
+                    //System.out.println("prrrrrrrrrrrrrrrrrrrrrr" +osa.getNumber() + osa.getCompany_code() + "', '" +count++ + osa.getId_project());
                   result += "<tr><td>" +
                     "<a " + HrHelper.LINK_STYLE + " href=\"javascript:parent.openSingleProjectWindow('" + osa.getNumber() + osa.getCompany_code() + "','" + osa.getId_project() + "')\">" + osa.getNumber()  + osa.getCompany_code() + "</a>" +
-
-                    "</td><td>" + sdf.format(osa.getDeliveryDate()) + "</td><td>" + osa.getTaskName() + "</td><td>" +imagePath+"</td><td>"+ osaScore +"</td><td>" + osa.getPm() + "</td><td>" +desc+"  "+ noNull(osa.getScoreDescription()) + "</td></tr>";
+                    
+                    "</td><td>" + delDate + "</td><td>" + osa.getTaskName() + "</td><td>" +imagePath+"</td><td>"+ osaScore +"</td><td>" + osa.getPm() + "</td><td>" +desc+"  "+ noNull(osa.getScoreDescription()) + "</td></tr>";
 
                     if ("LIN".equals(osa.getTaskType())) {
 
@@ -2815,50 +3565,54 @@ result += "<tr><td align='center'><font size=5>" + name + "</td></tr>";
 
             //GET OSA SCORE and # OF PROJECTS FIRST
             PreparedStatement st = session.connection().prepareStatement(
-                    "   select sum(score) AS score, count(id_project) AS projects  from " +
+                    "   select sum(score) AS score, count(task) AS projects  from " +
                     "  ( " +
                     "  select * from (  " +
-                    "  select score,project.id_project, deliveryDate " +
+                    "  select score,project.id_project, deliveryDate, project.startDate,lintask.ID_LinTask as task  " +
                     "  from lintask, targetdoc, sourcedoc, project " +
                     "              where " +
                     "              personname=? " +
                     "              and lintask.id_targetDoc=targetdoc.id_targetDoc  " +
                     "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
-                    "              and sourcedoc.id_project = project.id_project " +
+                    "              and sourcedoc.id_project = project.id_project "+ 
+                    "              and project.startDate is not null  and score <>0" +
                     "  ) AS T1  " +
                     "  union  " +
                     "  select * from (  " +
-                    "  select score ,project.id_project , deliveryDate " +
+                    "  select score ,project.id_project , deliveryDate, project.startDate,dtptask.ID_DtpTask as task   " +
                     "  from dtptask, targetdoc, sourcedoc , project " +
                     "              where  " +
                     "              personname=? " +
                     "              and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
                     "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
                     " and sourcedoc.id_project = project.id_project " +
+                    "              and project.startDate is not null  and score <>0" +
                     "  ) AS T2  " +
                     "  union  " +
                     "  select * from (  " +
-                    "  select score ,project.id_project , deliveryDate " +
+                    "  select score ,project.id_project , deliveryDate, project.startDate,engtask.ID_EngTask as task   " +
                     "  from engtask, targetdoc, sourcedoc , project " +
                     "              where " +
                     "              personname=? " +
                     "              and engtask.id_targetDoc=targetdoc.id_targetDoc " +
                     "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
-                    " and sourcedoc.id_project = project.id_project " +
+                    " and sourcedoc.id_project = project.id_project and project.startDate is not null and score <>0" +
                     "  ) AS T3  " +
                     "  union  " +
                     "  select * from (  " +
-                    "  select score ,project.id_project , deliveryDate " +
+                    "  select score ,project.id_project , deliveryDate, project.startDate,othtask.ID_OthTask as task   " +
                     "  from othtask, targetdoc, sourcedoc , project " +
                     "              where " +
                     "              personname=? " +
                     "              and othtask.id_targetDoc=targetdoc.id_targetDoc " +
                     "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
                     " and sourcedoc.id_project = project.id_project " +
+                    "              and project.startDate is not null  and score <>0" +
                     "  ) AS T4  " +
                     "  ) AS MAINTABLE "+
-                    " group by year(deliveryDate) " +
-                    " order by year(deliveryDate) desc ");
+//                    " group by year(deliveryDate) " +
+//                    " order by year(deliveryDate) desc " +
+                    "");
 
 
             st.setString
@@ -2876,32 +3630,35 @@ result += "<tr><td align='center'><font size=5>" + name + "</td></tr>";
             ResultSet rs= st.executeQuery();
             int totalProjects = 0;
             double avgScore=0;
+            double totalScore=0;
             int yearCount=0;
             while(rs.next()) {
              //   result += " | <b># PROJECTS: </b>" + rs.getInt("projects");
                // result +=" | <b>OSA: </b>" + StandardCode.getInstance().formatMoney(rs.getDouble("score") / rs.getInt("projects"));
                  totalProjects += rs.getInt("projects");
-                avgScore+=rs.getDouble("score") / rs.getInt("projects") ;
+                //System.out.println("-----"+totalProjects);
+//                avgScore+=rs.getDouble("score") / rs.getInt("projects") ;
+                totalScore += rs.getDouble("score");
                 ++yearCount;
             }
-
+avgScore = totalScore/totalProjects;
    /*Use this for Annual Avg OSA*/
    result += " | <b># PROJECTS: </b>" + totalProjects;
    result +="| <b>Email: </b><a href='mailto:"+StandardCode.getInstance().noNull(r.getEmail_address1())+"'>"+StandardCode.getInstance().noNull(r.getEmail_address1())+"</a>";
 
-   result +=" | <b>OSA: </b>" + StandardCode.getInstance().formatMoney(avgScore /yearCount);
+   result +=" | <b>OSA: </b>" + StandardCode.getInstance().formatMoney(avgScore )+" ( "+StandardCode.getInstance().formatMoney(totalScore)+"/"+totalProjects+" )";
 st.close();
 
 
             st =session.connection().prepareStatement(
                     "select sum(totalScore)/sum(numOfScores) as ISA from " +
                     " (select * from " +
-                    " (select count(*) as numOfScores,sum(score) as totalScore from rateScoredtp " +
+                    " (select count(*) as numOfScores,sum(score) as totalScore from ratescoredtp " +
                     " where id_resource=? and score <>0) AS T1 " +
                     " union " +
                     " select * from " +
                     " (select count(*) as numOfScores,sum(score) as totalScore from " +
-                    " rateScoreLanguage rsl, languagepair lp " +
+                    " ratescorelanguage rsl, languagepair lp " +
                     " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair " +
                     " and score<>0) AS T2 " +
                     " ) AS MAIN_TABLE ");
@@ -2923,23 +3680,26 @@ for(int i=0;i<4;i++){
 
 
 st =session.connection().prepareStatement(
-                    "select sum(totalScore)/sum(numOfScores) as ISAME from " +
-                    " (select count(*) as numOfScores,sum(score) as totalScore from " +
-                    " rateScoreLanguage rsl, languagepair lp " +
-                    " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair " +
-                    " and score<>0 and specialty=?) AS T2 ");
+                    "select count(0) as numOfScores,sum(score) as totalScore,lp.id_languagepair,l.abr from  " +
+                    "language l inner join ratescorelanguage rsl on l.language = rsl.target  inner join languagepair lp on lp.id_languagepair=rsl.id_languagepair " +
+                    "where score<>0 and lp.id_resource=? and specialty=?  " +
+                    "group by lp.id_resource, rsl.target");
 
             st.setString(1, "" + r.getResourceId());
             st.setString(2, specialty);
             rs =st.executeQuery();
 
-           // System.out.println("rsssssssssssssssssssssss"+rs);
-            if
-
-(rs.next()) {
-                result += "| <b>ISA "+ specialty +":</b> " + StandardCode.getInstance().formatMoney(rs.getDouble("ISAME")) ;
+           // //System.out.println("rsssssssssssssssssssssss"+rs);
+           String isaScore="";
+            while(rs.next()) {
+                if(!isaScore.isEmpty())
+                    isaScore += ",";
+                isaScore += " "+StandardCode.getInstance().formatMoney(rs.getDouble("totalScore")/rs.getDouble("numOfScores")) + " " + rs.getString("abr");
             }
-
+            if(!isaScore.isEmpty())
+                result += "| <b>ISA "+ specialty +":</b> " +  isaScore;
+            else
+                result += "| <b>ISA "+ specialty +":</b> 0.00" ;
 st.close();
 }
             st =
@@ -3044,6 +3804,7 @@ if(r.isHumanResource()==true)service+="HR, ";
 if(r.isAccounting()==true)service+="Acc, ";
 if(r.isSales()==true)service+="SM, ";
 if(r.isPartner()==true)service+="Prtnr, ";
+if(r.isPostEditing()==true)service+="Pe, ";
 //if(r.is==true)service+=", ";
 //if(r.is==true)service+=", ";
 //if(r.is==true)service+=", ";
@@ -3059,6 +3820,208 @@ result +="</td> </tr></table><hr>";
             return
 
 result;
+        }
+
+catch (Exception e) {
+
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw
+
+new RuntimeException(e);
+        } /*
+ * Regardless of whether the above processing resulted in an Exception
+ * or proceeded normally, we want to close the Hibernate session.  When
+ * closing the session, we must allow for the possibility of a Hibernate
+ * Exception.
+ *
+ */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                }
+
+catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw
+
+new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+public static Integer getResourceTaskCount(int resourceId, int clientId, String taskname, String language) {
+        //get resource to edit
+        Session session = ConnectionFactory.getInstance().getSession();
+
+                 if(taskname.equalsIgnoreCase("Translator"))taskname = "Translation";
+                 if(taskname.equalsIgnoreCase("Editor"))taskname = "Editing";
+                 if(taskname.equalsIgnoreCase("Proofreader"))taskname = "Proofreading";
+                 if(taskname.equalsIgnoreCase("DTP"))taskname = "DTP";
+                 if(taskname.equalsIgnoreCase("FQA"))taskname = "FQA";
+                 if(taskname.equalsIgnoreCase("LQA"))taskname = "LQA";
+                 if(taskname.equalsIgnoreCase("T&E"))taskname = "T&E";
+                 if(taskname.equalsIgnoreCase("E&P"))taskname = "E&P";
+                 if(taskname.equalsIgnoreCase("T&P"))taskname = "T&P";
+                 
+                 
+                 String langQuery = "";
+                 if(!StandardCode.getInstance().noNull(language).equalsIgnoreCase("")){
+                     String[] languages  = language.split("-");
+                                                 
+                     langQuery = " and (sourcedoc.language = '"+(String) LanguageAbs.getInstance().getAbs().get(languages[0])+"' and targetdoc.language = '"+ (String) LanguageAbs.getInstance().getAbs().get(languages[1])+"') "; 
+                 }
+                 
+         PreparedStatement st=null;
+        
+         try{
+             if(taskname.equalsIgnoreCase("T&E")||taskname.equalsIgnoreCase("E&P")||taskname.equalsIgnoreCase("T&P")){
+                 String query =  "  select count(project.id_project) AS projects " +
+                    "  from lintask, targetdoc, sourcedoc, project " +
+                    "              where " +
+                    "              personname= " +resourceId+
+                    "              and project.ID_Client= "+clientId+
+                    "              and multi='" +taskname+"'"+langQuery+
+                    "              and lintask.id_targetDoc=targetdoc.id_targetDoc  " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    "              and sourcedoc.id_project = project.id_project ";
+           st = session.connection().prepareStatement(query);
+//           st = session.connection().prepareStatement(
+//                    "  select count(project.id_project) AS projects " +
+//                    "  from lintask, targetdoc, sourcedoc, project " +
+//                    "              where " +
+//                    "              personname=? " +
+//                    "              and project.ID_Client=?     "+
+//                    "              and multi=? ?" +
+//                    "              and lintask.id_targetDoc=targetdoc.id_targetDoc  " +
+//                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+//                    "              and sourcedoc.id_project = project.id_project ") ;
+//
+//        st.setInt(1, resourceId);st.setInt(2, clientId);st.setString(3, taskname);st.setString(4, langQuery);
+
+             }else{
+                 
+                 String query = "   select  count(id_project) AS projects  from " +
+                    "  ( " +
+                    "  select * from (  " +
+                    "  select project.id_project " +
+                    "  from lintask, targetdoc, sourcedoc, project " +
+                    "              where " +
+                    "              personname= " +resourceId+
+                    "              and project.ID_Client= "+clientId+
+                    "              and taskname='" +taskname+"'"+langQuery+
+                    "              and (multi is null or multi ='') " +
+                    "              and lintask.id_targetDoc=targetdoc.id_targetDoc  " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    "              and sourcedoc.id_project = project.id_project " +
+                    "  ) AS T1  " +
+                    "  union  " +
+                    "  select * from (  " +
+                    "  select project.id_project  " +
+                    "  from dtptask, targetdoc, sourcedoc , project " +
+                    "              where  " +
+                    "              personname= " +resourceId+
+                    "              and project.ID_Client= "+clientId+
+                    "              and taskname='" +taskname+"'"+langQuery+                 
+                    "              and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " and sourcedoc.id_project = project.id_project " +
+                    "  ) AS T2  " +
+                    "  union  " +
+                    "  select * from (  " +
+                    "  select project.id_project  " +
+                    "  from engtask, targetdoc, sourcedoc , project " +
+                    "              where " +
+                    "              personname= " +resourceId+
+                    "              and project.ID_Client= "+clientId+
+                    "              and taskname='" +taskname+"'"+langQuery+
+                    "              and engtask.id_targetDoc=targetdoc.id_targetDoc " +
+                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+                    " and sourcedoc.id_project = project.id_project " +
+                    "  ) AS T3  " +
+//                    "  union  " +
+//                    "  select * from (  " +
+//                    "  select project.id_project " +
+//                    "  from othtask, targetdoc, sourcedoc , project " +
+//                    "              where " +
+//                    "              personname=? " +
+//                    "              and taskname=? " +
+//                    "              and project.ID_Client=?     "+
+//                    "              and othtask.id_targetDoc=targetdoc.id_targetDoc " +
+//                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+//                    " and sourcedoc.id_project = project.id_project " +
+//                    "  ) AS T4  " +
+                    "  ) AS MAINTABLE ";
+st = session.connection().prepareStatement(query);
+//            //GET OSA SCORE and # OF PROJECTS FIRST
+//             st = session.connection().prepareStatement(
+//                    "   select  count(id_project) AS projects  from " +
+//                    "  ( " +
+//                    "  select * from (  " +
+//                    "  select project.id_project " +
+//                    "  from lintask, targetdoc, sourcedoc, project " +
+//                    "              where " +
+//                    "              personname=? " +
+//                    "              and project.ID_Client=?     "+
+//                    "              and taskname=? ?" +
+//                    "              and (multi is null or multi ='') " +
+//                    "              and lintask.id_targetDoc=targetdoc.id_targetDoc  " +
+//                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+//                    "              and sourcedoc.id_project = project.id_project " +
+//                    "  ) AS T1  " +
+//                    "  union  " +
+//                    "  select * from (  " +
+//                    "  select project.id_project  " +
+//                    "  from dtptask, targetdoc, sourcedoc , project " +
+//                    "              where  " +
+//                    "              personname=? " +
+//                    "              and project.ID_Client=?     "+
+//                    "              and taskname=? ?" +                    
+//                    "              and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
+//                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+//                    " and sourcedoc.id_project = project.id_project " +
+//                    "  ) AS T2  " +
+//                    "  union  " +
+//                    "  select * from (  " +
+//                    "  select project.id_project  " +
+//                    "  from engtask, targetdoc, sourcedoc , project " +
+//                    "              where " +
+//                    "              personname=? " +
+//                    "              and project.ID_Client=?     "+
+//                    "              and taskname=? ?" +
+//                    "              and engtask.id_targetDoc=targetdoc.id_targetDoc " +
+//                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+//                    " and sourcedoc.id_project = project.id_project " +
+//                    "  ) AS T3  " +
+////                    "  union  " +
+////                    "  select * from (  " +
+////                    "  select project.id_project " +
+////                    "  from othtask, targetdoc, sourcedoc , project " +
+////                    "              where " +
+////                    "              personname=? " +
+////                    "              and taskname=? " +
+////                    "              and project.ID_Client=?     "+
+////                    "              and othtask.id_targetDoc=targetdoc.id_targetDoc " +
+////                    "              and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
+////                    " and sourcedoc.id_project = project.id_project " +
+////                    "  ) AS T4  " +
+//                    "  ) AS MAINTABLE ");
+
+
+//            st.setInt(1, resourceId);st.setInt(2, clientId);st.setString(3, taskname);st.setString(4, langQuery);
+//            st.setInt(5, resourceId);st.setInt(6, clientId);st.setString(7, taskname);st.setString(8, langQuery);
+//            st.setInt(9, resourceId);st.setInt(10, clientId);st.setString(11, taskname);st.setString(12, langQuery);
+//            st.setInt(10, resourceId);st.setInt(11, clientId);st.setString(12, taskname);
+             }
+            ResultSet rs= st.executeQuery();
+            int totalProjects = 0;
+            while(rs.next()) {
+                 totalProjects += rs.getInt("projects");
+            }
+
+  
+            return totalProjects;
         }
 
 catch (Exception e) {
@@ -3205,12 +4168,12 @@ try{
             PreparedStatement st = session.connection().prepareStatement(
                     "select sum(totalScore)/sum(numOfScores) as ISA from " +
                     " (select * from " +
-                    " (select count(*) as numOfScores,sum(score) as totalScore from rateScoredtp " +
+                    " (select count(*) as numOfScores,sum(score) as totalScore from ratescoredtp " +
                     " where id_resource=? and score <>0) AS T1 " +
                     " union " +
                     " select * from " +
                     " (select count(*) as numOfScores,sum(score) as totalScore from " +
-                    " rateScoreLanguage rsl, languagepair lp " +
+                    " ratescorelanguage rsl, languagepair lp " +
                     " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair " +
                     " and score<>0) AS T2 " +
                     " ) AS MAIN_TABLE ");
@@ -3348,12 +4311,12 @@ st.close();
             st =session.connection().prepareStatement(
                     "select sum(totalScore)/sum(numOfScores) as ISA from " +
                     " (select * from " +
-                    " (select count(*) as numOfScores,sum(score) as totalScore from rateScoredtp " +
+                    " (select count(*) as numOfScores,sum(score) as totalScore from ratescoredtp " +
                     " where id_resource=? and score <>0) AS T1 " +
                     " union " +
                     " select * from " +
                     " (select count(*) as numOfScores,sum(score) as totalScore from " +
-                    " rateScoreLanguage rsl, languagepair lp " +
+                    " ratescorelanguage rsl, languagepair lp " +
                     " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair " +
                     " and score<>0) AS T2 " +
                     " ) AS MAIN_TABLE ");
@@ -3518,12 +4481,12 @@ new RuntimeException(e);
             st =session.connection().prepareStatement(
                     "select sum(totalScore)/sum(numOfScores) as ISA from " +
                     " (select * from " +
-                    " (select count(*) as numOfScores,sum(score) as totalScore from rateScoredtp " +
+                    " (select count(*) as numOfScores,sum(score) as totalScore from ratescoredtp " +
                     " where id_resource=? and score <>0 and source =? and target = ?) AS T1 " +
                     " union " +
                     " select * from " +
                     " (select count(*) as numOfScores,sum(score) as totalScore from " +
-                    " rateScoreLanguage rsl, languagepair lp " +
+                    " ratescorelanguage rsl, languagepair lp " +
                     " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair and rsl.source = ? and rsl.target = ? " +
                     " and score<>0) AS T2 " +
                     " ) AS MAIN_TABLE ");
@@ -3607,7 +4570,7 @@ new RuntimeException(e);
                     else
                         pmString = aryPM[0][i]+ "("+aryPM[0][2] +") \n";
                 }
-               System.out.println(r.getResourceId()+"isa"+isa+"   "+osa +"   "+projectCount +"  "+pmString);
+               //System.out.println(r.getResourceId()+"isa"+isa+"   "+osa +"   "+projectCount +"  "+pmString);
             if(reportType.equalsIgnoreCase("High")){
                 if(isa>20){
                     try {
@@ -3673,32 +4636,32 @@ new RuntimeException(e);
         try
         {
             PreparedStatement st = session.connection().prepareStatement(
-                    " select id_lintask as taskId, score, scoreDescription, deliveryDate, taskName, pm, project.number, company_code, units, project.id_project, year(deliveryDate) as dYear, 'LIN' as taskType " +
+                    " select id_lintask as taskId, score, scoreDescription, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, receivedDateDate, year(deliveryDate) as dYear, 'LIN' as taskType " +
                     " from lintask, targetdoc, sourcedoc, project, client_information " +
                     "             where " +
                     "             personname=? " +
                     "            and lintask.id_targetDoc=targetdoc.id_targetDoc " +
                     "           and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
                     "            and sourcedoc.id_project = project.id_project " +
-                    "            and project.id_client = client_information.id_client and score<>35" +
+                    "            and project.id_client = client_information.id_client and score<>0 and score <> 35" +
                     " union " +
-                    " select id_dtptask as taskId, score, scoreDescription, deliveryDate, taskName, pm, project.number, company_code, units, project.id_project, year(deliveryDate) as dYear, 'DTP' as taskType   " +
+                    " select id_dtptask as taskId, score, scoreDescription, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, receivedDateDate, year(deliveryDate) as dYear, 'DTP' as taskType   " +
                     " from dtptask, targetdoc, sourcedoc, project, client_information " +
                     "             where " +
                     "             personname=? " +
                     "            and dtptask.id_targetDoc=targetdoc.id_targetDoc " +
                     "           and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
                     "            and sourcedoc.id_project = project.id_project " +
-                    "            and project.id_client = client_information.id_client  and score<>35" +
+                    "            and project.id_client = client_information.id_client  and score<>0 and score <> 35" +
                     " union " +
-                    " select id_engtask as taskId, score, scoreDescription, deliveryDate, taskName, pm, project.number, company_code, units, project.id_project, year(deliveryDate) as dYear, 'DTP' as taskType   " +
+                    " select id_engtask as taskId, score, scoreDescription, deliveryDate,project.startDate, taskName, pm, project.number, company_code, units, project.id_project, receivedDateDate, year(deliveryDate) as dYear, 'DTP' as taskType   " +
                     " from engtask, targetdoc, sourcedoc, project, client_information " +
                     "             where " +
                     "             personname=? " +
                     "            and engtask.id_targetDoc=targetdoc.id_targetDoc " +
                     "           and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc " +
                     "            and sourcedoc.id_project = project.id_project " +
-                    "            and project.id_client = client_information.id_client  and score<>35" +
+                    "            and project.id_client = client_information.id_client  and score<>0 and score <> 35" +
                     " order by deliveryDate desc  ");
 
 
@@ -3717,10 +4680,15 @@ new RuntimeException(e);
             int totalLinProjects = 0;
 
             while(rs.next()) {
-                if (rs.getDate("deliveryDate") != null) {
+                String delDate="";
+                
+           
+                if (rs.getDate("deliveryDate") != null) {delDate = sdf.format(rs.getDate("deliveryDate"));}
+                if (rs.getString("startDate") != null && rs.getInt("score")!=35) {
+                    
                     result += "<tr><td>" +
                             "<a " + HrHelper.LINK_STYLE + " href=\"javascript:parent.openSingleProjectWindow('" + rs.getString("number") + rs.getString("company_code") + "','" + rs.getString("id_project") + "')\">" + rs.getString("number") + rs.getString("company_code") + "</a>" +
-                            "</td><td>" + sdf.format(rs.getDate("deliveryDate")) + "</td><td>" + rs.getString("taskName") + "</td><td>" + rs.getInt("score") + "</td><td>" + rs.getString("pm") + "</td><td width='25%'>" + noNull(rs.getString("scoreDescription"))  + "</td></tr>";
+                            "</td><td>" + delDate + "</td><td>" + rs.getString("taskName") + "</td><td>" + rs.getInt("score") + "</td><td>" + rs.getString("pm") + "</td><td width='25%'>" + noNull(rs.getString("scoreDescription"))  + "</td></tr>";
 
                     if("LIN".equals(rs.getString("taskType"))) {
                         totalDtpEngOsa += rs.getInt("score");
@@ -3886,14 +4854,14 @@ String maScore[]={"nativeSpeaker","ft","pt","nativeLocation","profession","medic
 
          PreparedStatement pstmt = session.connection().prepareStatement("select * from mechanical where id_ma=1");
          ResultSet rs = pstmt.executeQuery();
-          //  System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
+          //  //System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
             String dropdownJSArray = "";
             int leng=maScore.length;
           while(rs.next())
             {
             for(int i=0; i<leng;i++){
                // Dropdown pr = (Dropdown)dropdowns.get(i);
-//System.out.println("Ma Ma AMaaaaaa "+rs.getInt(maScore[i]));
+////System.out.println("Ma Ma AMaaaaaa "+rs.getInt(maScore[i]));
                 dropdownJSArray+= "[\""+i+"\",";
                 dropdownJSArray+= "\""+HrHelper.jsSafe(maScore[i])+"\",";
                 dropdownJSArray+= "\""+ rs.getString(maScore[i])+"\"]";
@@ -3954,7 +4922,7 @@ tx = session.beginTransaction();
 PreparedStatement st =session.connection().prepareStatement(
                     "select sum(totalScore)/sum(numOfScores) as ISAME from " +
                     " (select count(*) as numOfScores,sum(score) as totalScore from " +
-                    " rateScoreLanguage rsl, languagepair lp " +
+                    " ratescorelanguage rsl, languagepair lp " +
                     " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair " +
                     " and score<>0 and specialty=?) AS T2 ");
 
@@ -3967,7 +4935,7 @@ PreparedStatement st =session.connection().prepareStatement(
             result = rs.getDouble("ISAME");
         }
           
-    System.out.println("rsssssssssssssss"+rs.getDouble("ISAME"));
+    //System.out.println("rsssssssssssssss"+rs.getDouble("ISAME"));
 
            return result;
 

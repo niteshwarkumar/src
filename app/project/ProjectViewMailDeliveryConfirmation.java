@@ -82,7 +82,7 @@ public class ProjectViewMailDeliveryConfirmation extends Action {
       } finally {
           reader.close();
       }
-//System.out.println(buffer.toString());
+////System.out.println(buffer.toString());
 String msg=buffer.toString();
 //String pnumber= "110001Levi";
 String emailMsgTxt=msg;
@@ -120,24 +120,25 @@ String projectId = null;
 
         //get user (project manager)
      //   User u = UserService.getInstance().getSingleUserRealName(StandardCode.getInstance().getFirstName(p.getPm()), StandardCode.getInstance().getLastName(p.getPm()));
-     StringBuffer sources = new StringBuffer("");
-                StringBuffer targets = new StringBuffer("");
+     StringBuilder sources = new StringBuilder("");
+                StringBuilder targets = new StringBuilder("");
                 if(p.getSourceDocs() != null) {
                     for(Iterator iterSource = p.getSourceDocs().iterator(); iterSource.hasNext();) {
                         SourceDoc sd = (SourceDoc) iterSource.next();
-                        sources.append(sd.getLanguage() + " ");
+                        sources.append(sd.getLanguage()).append(", ");
                         if(sd.getTargetDocs() != null) {
                             for(Iterator iterTarget = sd.getTargetDocs().iterator(); iterTarget.hasNext();) {
                                 TargetDoc td = (TargetDoc) iterTarget.next();
                                 if(!td.getLanguage().equals("All"))
-                                    targets.append(td.getLanguage() + " ");
+                                    targets.append(td.getLanguage()).append(", ");
                             }
                         }
                     }
                 }
 
 
-
+//targets=targets.toString()).substring(0, targets.length()-1);
+//sources=sources.toString().substring(0, sources.length()-2);
 
  //emailMsgTxt.
 
@@ -146,8 +147,8 @@ String projectId = null;
  emailMsgTxt = emailMsgTxt.replace("_PROJECT_MANAGER_", StandardCode.getInstance().noNull(p.getPm()));
  emailMsgTxt = emailMsgTxt.replace("_PRODUCT_", StandardCode.getInstance().noNull(p.getProduct()));
  emailMsgTxt = emailMsgTxt.replace("_PRODUCTDESCRIPTION_", StandardCode.getInstance().noNull(p.getProductDescription()));
- emailMsgTxt = emailMsgTxt.replace("_SOURCE_", sources.toString());
- emailMsgTxt = emailMsgTxt.replace("_TARGET_", targets.toString());
+ emailMsgTxt = emailMsgTxt.replace("_SOURCE_", sources.toString().substring(0, sources.length()-2));
+ emailMsgTxt = emailMsgTxt.replace("_TARGET_", targets.toString().substring(0, targets.length()-2));
 // emailMsgTxt = emailMsgTxt.replace("_START_DATE_",(p.getStartDate() != null) ? DateFormat.getDateInstance(DateFormat.SHORT).format(p.getStartDate()) : "");
 // emailMsgTxt = emailMsgTxt.replace("_DUE_DATE_", (p.getDueDate() != null) ? DateFormat.getDateInstance(DateFormat.SHORT).format(p.getDueDate()) : "");
 // emailMsgTxt = emailMsgTxt.replace("_CURRENCY_", p.getCompany().getCcurrency());
@@ -155,7 +156,7 @@ String projectId = null;
  emailMsgTxt = emailMsgTxt.replace("_DELIVERY_METHOD_", StandardCode.getInstance().noNull(p.getDeliveryMethod()));
 
 
-        System.out.println(emailMsgTxt);
+        //System.out.println(emailMsgTxt);
 
  String userEmailId="niteshwarkumar@gmail.com";
      String adminEmail="rdecortie@xltrans.com";
@@ -164,8 +165,8 @@ String projectId = null;
          try{
     String[] emailList = {userEmailId,adminEmail};
        ProjectViewMailOrderConfirmation smtpMailSender = new ProjectViewMailOrderConfirmation();
-   smtpMailSender.postMail( emailList, emailSubjectTxt, emailMsgTxt, emailFromAddress);
-             System.out.println("mail send ");
+   smtpMailSender.postMail( emailList, emailSubjectTxt, emailMsgTxt, StandardCode.emailFromAddress);
+             //System.out.println("mail send ");
 }catch(Exception e){
 
     }
@@ -178,11 +179,6 @@ return null;
 
 }
 
- private static final String SMTP_HOST_NAME = "xltrans.com";
- private static final String SMTP_AUTH_USER = "excelnet@xltrans.com";
- private static final String SMTP_AUTH_PWD  = "3vB@zMsp";
- //private static final String emailSubjectTxt  = "Request for Quote Analysis :"+newQ1.;
- private static final String emailFromAddress = "excelnet@xltrans.com";
 
   // Add List of Email address to who email needs to be sent to
  // private static final String[] emailList = {"niteshwar.kumar@spatialideas.com"};
@@ -191,25 +187,13 @@ return null;
      public void postMail( String recipients[ ], String subject,
                             String message , String from) throws MessagingException
   {
-    boolean debug = false;
-
-     //Set the host smtp address
-     Properties props = new Properties();
-     props.put("mail.smtp.host", SMTP_HOST_NAME);
-     props.put("mail.smtp.auth", "true");
-     props.put("mail.smtp.timeout", 60000);
-
-    Authenticator auth = new SMTPAuthenticator();
-    Session session = Session.getDefaultInstance(props, auth);
-
-    session.setDebug(debug);
-
+    
     // create a message
-    Message msg = new MimeMessage(session);
+    Message msg = StandardCode.getInstance().getMimeMessage();
 
     // set the from and to address
-    InternetAddress addressFrom = new InternetAddress(from);
-    msg.setFrom(addressFrom);
+    //InternetAddress addressFrom = new InternetAddress(from);
+    //msg.setFrom(addressFrom);
 
     InternetAddress[] addressTo = new InternetAddress[recipients.length];
     for (int i = 0; i < recipients.length; i++)
@@ -225,14 +209,5 @@ return null;
     Transport.send(msg);
  }
 
-        private class SMTPAuthenticator extends javax.mail.Authenticator
-{
 
-    public PasswordAuthentication getPasswordAuthentication()
-    {
-        String username = SMTP_AUTH_USER;
-        String password = SMTP_AUTH_PWD;
-        return new PasswordAuthentication(username, password);
-    }
-}
     }

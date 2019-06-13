@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
-    <class name="app.project.Project_Technical" table="Project_Technical">
+    <class name="app.project.Project_Technical" table="project_technical">
         <id name="id" type="int" column="id">
             <generator class="identity"/>
         </id>
@@ -16,6 +16,7 @@
         <property name="targetapp" type="string"/>
         <property name="targetver" type="string"/>
         <property name="projectid" type="int"/>
+        <property name="unitCount" type="double"/>
 
     </class>
 

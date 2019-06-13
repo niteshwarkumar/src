@@ -99,26 +99,26 @@ public final class ResourceViewRatesScoresAction extends Action {
         //get this resources language pairs
         Set languagePairs = r.getLanguagePairs();
         
-        //the list for display (load all rateScoreLanguage entries)
-        List rateScoreLanguages = new ArrayList();
+        //the list for display (load all ratescorelanguage entries)
+        List ratescorelanguages = new ArrayList();
         for(Iterator iter = languagePairs.iterator(); iter.hasNext();) {
             LanguagePair lp = (LanguagePair) iter.next();
             for(Iterator rateScoreIter = lp.getRateScoreLanguages().iterator(); rateScoreIter.hasNext();) {
                 RateScoreLanguage rsl = (RateScoreLanguage) rateScoreIter.next();
-                rateScoreLanguages.add(rsl);
+                ratescorelanguages.add(rsl);
             }
                 
         }
         
         
-	//prepare the rateScoreLanguages and rateScoreDtps for display
-        RateScoreLanguage[] rateScoreLanguagesArray = (RateScoreLanguage[]) rateScoreLanguages.toArray(new RateScoreLanguage[0]);
+	//prepare the ratescorelanguages and rateScoreDtps for display
+        RateScoreLanguage[] ratescorelanguagesArray = (RateScoreLanguage[]) ratescorelanguages.toArray(new RateScoreLanguage[0]);
         RateScoreDtp[] rateScoreDtpsArray = (RateScoreDtp[]) r.getRateScoreDtps().toArray(new RateScoreDtp[0]);
         
         //load resource info for editing
         DynaValidatorForm rvrs = (DynaValidatorForm) form;
         rvrs.set("resourceFromForm", r);
-        rvrs.set("rateScoreLanguages", rateScoreLanguagesArray);
+        rvrs.set("rateScoreLanguages", ratescorelanguagesArray);
         rvrs.set("rateScoreDtps", rateScoreDtpsArray);
         
         //place linguistic rate scaling into form

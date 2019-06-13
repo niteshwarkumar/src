@@ -101,7 +101,7 @@ public class HrInitialTrainingViewAction extends Action {
                 jo.put("id", rs.getInt("id"));
                 jo.put("department", rs.getString("department"));
                 jo.put("trainingitem", rs.getString("trainingitem"));
-                jo.put("trainer", rs.getString("trainer"));
+                jo.put("trainer", StandardCode.getInstance().noNull(rs.getString("trainer")));
                 jo.put("prevexp", rs.getString("prevexp"));
                 jo.put("traindate", rs.getDate("traindate"));
 
@@ -149,7 +149,7 @@ public class HrInitialTrainingViewAction extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(result.toArray()));

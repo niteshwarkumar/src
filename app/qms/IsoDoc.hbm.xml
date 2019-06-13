@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.IsoDoc" table="iso_doc">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="isoStandard" type="int"/>
+        <property name="docId" type="int"/>
+    </class>
+</hibernate-mapping>

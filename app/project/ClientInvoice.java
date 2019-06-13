@@ -28,6 +28,10 @@ public class ClientInvoice implements Serializable {
 
     /** nullable persistent field */
     private app.project.Project Project;
+    
+    /** nullable persistent field */
+    private String invoicePeriod;
+
 
     /** full constructor */
     public ClientInvoice(String number, Date invoiceRequestDate, String amount, String description, Date invoicePaidDate, app.project.Project Project) {
@@ -104,5 +108,15 @@ public class ClientInvoice implements Serializable {
             .append("clientInvoiceId", getClientInvoiceId())
             .toString();
     }
+
+    public String getInvoicePeriod() {
+        return invoicePeriod;
+    }
+
+    public void setInvoicePeriod(String invoicePeriod) {
+        this.invoicePeriod = invoicePeriod;
+    }
+    
+    
 
 }

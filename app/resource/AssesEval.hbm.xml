@@ -15,6 +15,7 @@
       <property name="approved" type="string"/>
       <property name="rejected" type="string"/>
       <property name="resourceId" type="java.lang.Integer"/>
+      <property name="preferred" type="string"/>
 
 
    </class>

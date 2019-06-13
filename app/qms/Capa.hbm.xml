@@ -29,7 +29,10 @@
   <property name="source" type="string"/>
   <property name="status" type="string"/>
   <property name="ncr" type="string"/>
-
+  <property name="reportedbydesc" type="string"/>
+  <property name="isLocked" type="boolean"/>
+  <property name="lockedby" type="string"/>
+  <property name="admin_lock_date" type="date"/>
 
     </class>
 </hibernate-mapping>

@@ -130,7 +130,7 @@ public final class ProjectViewAccountingGenerateInvoiceAction extends Action {
 
 
 //            content = content.replaceAll("INSERT_CONTACTNAME_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getFirst_name()) + " " + StandardCode.getInstance().noNull(q.getProject().getContact().getLast_name()));
-//            System.out.println("hereeeeee3");
+//            //System.out.println("hereeeeee3");
 //            content = content.replaceAll("INSERT_CONTACTTITLE_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getTitle()));
 //String comma=", ";
 //if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getContact().getDivision()))){comma="";}
@@ -187,7 +187,7 @@ public final class ProjectViewAccountingGenerateInvoiceAction extends Action {
 //                //START add images
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 54, 0,0, 65, 47, 493);
@@ -197,7 +197,7 @@ public final class ProjectViewAccountingGenerateInvoiceAction extends Action {
 //                form1.setField("project", p.getNumber() + p.getCompany().getCompany_code());
 //                form1.setField("description", p.getProjectDescription());
 //                form1.setField("additional", p.getProjectRequirements());
-                //System.out.println("alexxxx=");
+                ////System.out.println("alexxxx=");
                 //get sources and targets
                 StringBuffer sources = new StringBuffer("");
                 StringBuffer targets = new StringBuffer("");
@@ -360,7 +360,7 @@ public final class ProjectViewAccountingGenerateInvoiceAction extends Action {
 
                 //team (fee) TOTAL
                 double teamTotal = 0;
-                //System.out.println("p.getProjectAmount()="+p.getProjectAmount());
+                ////System.out.println("p.getProjectAmount()="+p.getProjectAmount());
                 if(p.getProjectAmount() != null && !"".equals(p.getProjectAmount())) {
                     teamTotal = p.getProjectAmount().doubleValue();
                 }
@@ -408,7 +408,7 @@ public final class ProjectViewAccountingGenerateInvoiceAction extends Action {
                 }
                 }catch(Exception e){}
 
-                // System.out.println("subtotal="+subtotal);
+                // //System.out.println("subtotal="+subtotal);
                 form1.setField("Total_grandtotal", StandardCode.getInstance().formatDouble(new Double(subtotal)));
                 int taskNameCounter = 2;
 
@@ -435,7 +435,7 @@ public final class ProjectViewAccountingGenerateInvoiceAction extends Action {
                         }
                     }
                 }
-                //System.out.println("changeTotal="+changeTotal);
+                ////System.out.println("changeTotal="+changeTotal);
                 if(changeCount > 1) { //changes were made, so show change total
                     form1.setField("changeTotal", StandardCode.getInstance().formatDouble(new Double(changeTotal)));
                 }

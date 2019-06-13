@@ -98,6 +98,7 @@ public class GenerateCapaPdf extends Action {
 //            form1.setField("date", "" + capaId.getRca_t_date());
             form1.setField("owner", capaId.getOwner());
             form1.setField("2-1", capaId.getRca());
+            form1.setField("imact", capaId.getImact());
             form1.setField("approval1", capaId.getActionplan_approve());
             form1.setField("approval2", capaId.getActionplan_approve2());
             form1.setField("approval3", capaId.getVerify_approve());
@@ -144,7 +145,7 @@ public class GenerateCapaPdf extends Action {
             }
              if(u.getSignature() != null && u.getSignature().length() > 0) {
                     PdfContentByte over;
-                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getSignature());
+                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getSignature());
                     img.setAbsolutePosition(200, 400);
                     over = stamp.getOverContent(1);
                     over.addImage(img, 190, 0,0, 60, 391,63);

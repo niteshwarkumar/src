@@ -106,7 +106,7 @@ public final class QuoteViewGeneralGenerateMedicalAction extends Action {
         content = content.replaceAll("INSERT_COMPANYNAME_INSERT", q.getProject().getCompany().getCompany_name());
         try {
             content = content.replaceAll("INSERT_CONTACTNAME_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getFirst_name()) + " " + StandardCode.getInstance().noNull(q.getProject().getContact().getLast_name()));
-            System.out.println("hereeeeee3");
+            //System.out.println("hereeeeee3");
             content = content.replaceAll("INSERT_CONTACTTITLE_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getTitle()));
             String comma = ", ";
             if ("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getContact().getDivision()))) {
@@ -216,7 +216,7 @@ public final class QuoteViewGeneralGenerateMedicalAction extends Action {
                 category += ",";
             }
         }
-        System.out.println("ddddddddddddddddddddd" + category + med);
+        //System.out.println("ddddddddddddddddddddd" + category + med);
         Upload_Doc ud1 = QuoteService.getInstance().getUploadDoc(id);
         List pname = QuoteService.getInstance().getUploadDocList(id);
         String uDoc = null;
@@ -669,7 +669,7 @@ public final class QuoteViewGeneralGenerateMedicalAction extends Action {
 
         //write to client (web browser)
         response.setHeader("Content-Type", "Application/msword");
-        response.setHeader("Content-disposition", "attachment; filename=" + q.getNumber() + "-" + q.getProject().getCompany().getCompany_name() + "_quote.doc");
+        response.setHeader("Content-disposition", "attachment; filename=" + q.getNumber() + "-" + q.getProject().getCompany().getCompany_name().replaceAll(" ", "_").replaceAll(",", "_") + "_quote.doc");
 
         OutputStream os = response.getOutputStream();
         os.write(content.getBytes());

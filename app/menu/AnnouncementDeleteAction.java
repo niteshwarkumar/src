@@ -61,7 +61,7 @@ public class AnnouncementDeleteAction extends Action{
 
         Integer announce=Integer.parseInt(request.getParameter("announce"));
 
-        System.out.println(announce);
+        //System.out.println(announce);
         Announcement a=MenuService.getInstance().getSingleAnnouncement(announce);
         MenuService.getInstance().unlinkAnnouncement(a);
 

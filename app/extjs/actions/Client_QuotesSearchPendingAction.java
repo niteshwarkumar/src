@@ -105,7 +105,7 @@ public final class Client_QuotesSearchPendingAction extends Action {
         //add tab location to cookies; this will remember which tab we are at
         response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
         // long end1 = System.currentTimeMillis();
-        //System.out.println("old way:"+(end1-start1));
+        ////System.out.println("old way:"+(end1-start1));
         // long start2 = System.currentTimeMillis();
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
@@ -126,19 +126,21 @@ public final class Client_QuotesSearchPendingAction extends Action {
             Quote1 q = (Quote1) iter.next();
             JSONObject jo = QuoteHelper.ClientQuoteToJson2(q);
 try{
-                System.out.println("jooooooooooooooooooooooooooooooooooooooooooooooooo"+jo.getString("year"));
+                //System.out.println("jooooooooooooooooooooooooooooooooooooooooooooooooo"+jo.getString("year"));
                 //if(jo.)
 
                 quoteHistory.add(jo);
-            }catch(Exception e){System.out.println("Exceptionnnnnnnnnnnnnnnnnnnnnnn");}
+            }catch(Exception e){//System.out.println("Exceptionnnnnnnnnnnnnnnnnnnnnnn");
+                
+            }
 
             }
-            // System.out.println(actResponse.toXML());
+            // //System.out.println(actResponse.toXML());
             PrintWriter out = response.getWriter();
             out.println(new JSONArray(quoteHistory.toArray()));
             out.flush();
             // long end2 = System.currentTimeMillis();
-            // System.out.println("new way:"+(end2-start2));
+            // //System.out.println("new way:"+(end2-start2));
             // Forward control to the specified success URI
             //return (mapping.findForward("Success"));
             return null;

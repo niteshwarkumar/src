@@ -72,7 +72,7 @@ public final class HrAdminEmployeeMaintenanceChangeUsernamePasswordPreAction ext
         
         //get the employee to edit from the request
         String hrAdminUserId = request.getParameter("hrAdminUserId");
-        System.out.println("Adminnnnnnnnnnnnnnnnnnnnnn"+hrAdminUserId);
+        //System.out.println("Adminnnnnnnnnnnnnnnnnnnnnn"+hrAdminUserId);
         User u = UserService.getInstance().getSingleUser(Integer.valueOf(hrAdminUserId));
         
         request.setAttribute("user", u); //for display

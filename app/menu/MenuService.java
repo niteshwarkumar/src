@@ -17,7 +17,7 @@ import app.user.*;
 import app.resource.*;
 import net.sf.hibernate.Criteria;
 import net.sf.hibernate.expression.*;
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument;
+
                        
 public class MenuService
 {
@@ -473,7 +473,7 @@ public class MenuService
                 return lp;
         }
         
-        //update an existing rateScoreLanguage in database
+        //update an existing ratescorelanguage in database
 	public RateScoreLanguage updateRateScoreLanguage(RateScoreLanguage rsl)
 	{
 		Session session = ConnectionFactory.getInstance().getSession();
@@ -1059,10 +1059,10 @@ public class MenuService
                         Criteria subCriteriaRateScoreLanguages = null;  
                         boolean sourceSet = false;
                         boolean targetSet = false;
-                        boolean rateScoreLanguagesCon = false;
+                        boolean ratescorelanguagesCon = false;
                         if(TRate.length() >= 1 || ERate.length() >= 1 || TERate.length() >= 1 || PRate.length() >= 1) {
                             subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-                            rateScoreLanguagesCon = true;
+                            ratescorelanguagesCon = true;
                             if(source != null) {
                                 subCriteriaRateScoreLanguages.add(Expression.eq("source", source));
                                 sourceSet = true;
@@ -1164,9 +1164,9 @@ public class MenuService
                         
                         boolean rateScoreScore = false;
                         for(int i = 0; i < ScoresLin.length; i++) {
-                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && rateScoreLanguagesCon == false) {
+                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && ratescorelanguagesCon == false) {
                                 subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-                                rateScoreLanguagesCon = true;
+                                ratescorelanguagesCon = true;
                                 rateScoreScore = true;
                             }                                
                         }                          
@@ -1374,7 +1374,7 @@ public class MenuService
                         Criteria subCriteriaRateScoreLanguages = null;  
                         boolean sourceSet = false;
                         boolean targetSet = false;
-                        boolean rateScoreLanguagesCon = false;
+                        boolean ratescorelanguagesCon = false;
                     
                         if(RateOldDb != null) {
                             Disjunction any = Expression.disjunction();
@@ -1425,9 +1425,9 @@ public class MenuService
                         
 //                        boolean rateScoreScore = false;
 //                        for(int i = 0; i < ScoresLin.length; i++) {
-//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && rateScoreLanguagesCon == false) {
+//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && ratescorelanguagesCon == false) {
 //                                subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-//                                rateScoreLanguagesCon = true;
+//                                ratescorelanguagesCon = true;
 //                                rateScoreScore = true;
 //                            }                                
 //                        }                          
@@ -1618,10 +1618,10 @@ public class MenuService
 //                        Criteria subCriteriaRateScoreLanguages = null;  
 //                        boolean sourceSet = false;
 //                        boolean targetSet = false;
-//                        boolean rateScoreLanguagesCon = false;
+//                        boolean ratescorelanguagesCon = false;
 //                        if(TRate.length() >= 1 || ERate.length() >= 1 || TERate.length() >= 1 || PRate.length() >= 1) {
 //                            subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-//                            rateScoreLanguagesCon = true;
+//                            ratescorelanguagesCon = true;
 //                            if(source != null) {
 //                                subCriteriaRateScoreLanguages.add(Expression.eq("source", source));
 //                                sourceSet = true;
@@ -1893,7 +1893,7 @@ public class MenuService
                         Criteria subCriteriaRateScoreLanguages = null;  
                         boolean sourceSet = false;
                         boolean targetSet = false;
-                        boolean rateScoreLanguagesCon = false;
+                        boolean ratescorelanguagesCon = false;
                     
                         if(RateOldDb != null) {
                             Disjunction any = Expression.disjunction();
@@ -1944,9 +1944,9 @@ public class MenuService
                         
 //                        boolean rateScoreScore = false;
 //                        for(int i = 0; i < ScoresLin.length; i++) {
-//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && rateScoreLanguagesCon == false) {
+//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && ratescorelanguagesCon == false) {
 //                                subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-//                                rateScoreLanguagesCon = true;
+//                                ratescorelanguagesCon = true;
 //                                rateScoreScore = true;
 //                            }                                
 //                        }                          
@@ -3197,7 +3197,7 @@ public class MenuService
         }
     }
         
-    //build the link between languagePair and rateScoreLanguage
+    //build the link between languagePair and ratescorelanguage
     public Integer linkLanguagePairRateScoreLanguage(LanguagePair lp, RateScoreLanguage rsl) {
         Session session = ConnectionFactory.getInstance().getSession();
         Integer id = null;
@@ -3207,7 +3207,7 @@ public class MenuService
             
             tx = session.beginTransaction();
             
-            //link languagePair and rateScoreLanguage
+            //link languagePair and ratescorelanguage
             lp.getRateScoreLanguages().add(rsl);
             rsl.setLanguagePair(lp);
             

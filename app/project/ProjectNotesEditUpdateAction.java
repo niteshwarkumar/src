@@ -3,25 +3,18 @@
 
 package app.project;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
 import app.user.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 
 
@@ -76,8 +69,11 @@ public final class ProjectNotesEditUpdateAction extends Action {
         //the project's id of this note
         String id = request.getParameter("projectId");
 
-        //the new note data from the form
+        //the new note data fromShould be saved in ANSI the form
         String note = request.getParameter("note");
+         
+        byte ptext[] = note.getBytes();
+        String value = new String(ptext, "UTF-8");
         
         //get the project to be updated
         Project p = ProjectService.getInstance().getSingleProject(Integer.valueOf(id));

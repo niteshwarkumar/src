@@ -37,12 +37,12 @@ public class TechnicalEvaluationSaveAction extends Action{
 String resource=request.getParameter("resourceViewId");
 
 
-              System.out.println("resourceeeeeeeeeeeeeeee"+resource);
+              //System.out.println("resourceeeeeeeeeeeeeeee"+resource);
             if(resource==null)
                        resource= request.getSession(false).getAttribute("resource").toString();
 
            //   resource=request.getAttribute(resource).toString();
-              System.out.println("resourceeBBBBBBBBBBBBBBBBBB"+resource);
+              //System.out.println("resourceeBBBBBBBBBBBBBBBBBB"+resource);
 
 ResourceService.getInstance().unlinkEval(resource);
        // List eval=ResourceService.getInstance().getEvaluationList()
@@ -52,7 +52,7 @@ ResourceService.getInstance().unlinkEval(resource);
         for(int i=0;i< products.length();i++){
             JSONObject j = (JSONObject)products.get(i);
             Evaluation pr=null;
-            System.out.println("Alert ID"+j.getString("id"));
+            //System.out.println("Alert ID"+j.getString("id"));
             if(j.getString("id").equalsIgnoreCase("new")){
             pr = new Evaluation();
             }else{

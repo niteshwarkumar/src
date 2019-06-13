@@ -1,7 +1,7 @@
 //QuoteService contains the db code related to quotes to actually read/write
 //to/from db 
 package app.quote;
-
+ 
 import app.admin.PmFee;
 import net.sf.hibernate.*;
 import net.sf.hibernate.HibernateException;
@@ -12,12 +12,16 @@ import net.sf.hibernate.type.*;
 import net.sf.hibernate.Hibernate;
 import app.db.*;
 import app.client.*;
+import app.extjs.actions.DocService;
+import app.extjs.helpers.HrHelper;
+import static app.extjs.helpers.QuoteHelper.sdf;
 import app.extjs.vo.Product;
 import app.project.*;
 import net.sf.hibernate.Criteria;
 import net.sf.hibernate.expression.*;
 import java.util.*;
 import app.extjs.vo.Upload_Doc;
+import app.standardCode.StandardCode;
 import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,7 +56,7 @@ public class QuoteService {
         try {
 
             tx = session.beginTransaction();
-            PreparedStatement st = session.connection().prepareStatement("delete from technical where clientQuote_Id = "+id);
+            PreparedStatement st = session.connection().prepareStatement("delete from technical where ID_Technical = "+id);
 
             st.executeUpdate();
             tx.commit();
@@ -184,7 +188,7 @@ public class QuoteService {
         try {
 
             tx = session.beginTransaction();
-            System.out.println(p.getId());
+            //System.out.println(p.getId());
             session.saveOrUpdate(p);
 
             tx.commit();
@@ -273,7 +277,7 @@ public class QuoteService {
         try {
 
             tx = session.beginTransaction();
-            session.save(p);
+            session.saveOrUpdate(p);
 
             tx.commit();
 
@@ -401,7 +405,7 @@ public class QuoteService {
          String nd=dateFormat.format(date);
       //   sout
 
-        System.out.println("Datrrrrrrrrrrrrrrrrr"+nd);
+        //System.out.println("Datrrrrrrrrrrrrrrrrr"+nd);
 
         try {
             /*
@@ -480,6 +484,53 @@ public class QuoteService {
     }
 
     //update an existing quote in database
+    public Quote1 updateQuote(Quote1 q,String username) {
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean tf = true;
+
+        Transaction tx = null;
+
+        try {
+             q.setLastModifiedById(username);
+           //  QuoteHelper.setQuoteUpdateInfo(q,(String)request.getSession(false).getAttribute("username")); 
+             q.setLastModifiedByTS(new Date());
+
+            tx = session.beginTransaction();
+
+            session.saveOrUpdate(q);
+
+            tx.commit();
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return q;
+    }
+    
+    //update an existing quote in database
     public Quote1 updateQuote(Quote1 q) {
         Session session = ConnectionFactory.getInstance().getSession();
         boolean tf = true;
@@ -487,6 +538,9 @@ public class QuoteService {
         Transaction tx = null;
 
         try {
+            
+           //  QuoteHelper.setQuoteUpdateInfo(q,(String)request.getSession(false).getAttribute("username")); 
+//             q.setLastModifiedByTS(new Date());
 
             tx = session.beginTransaction();
 
@@ -913,7 +967,7 @@ public class QuoteService {
              * of all the items currently stored by Hibernate.
              */
             query = session.createQuery("select sourcedoc from app.project.SourceDoc sourcedoc where sourcedoc.Quote=" + t + " and sourcedoc.Client_Quote=" + id);
-            System.out.println("Queryyyyyyyyyyyyyyyyyyyyy" + query.list());
+            //System.out.println("Queryyyyyyyyyyyyyyyyyyyyy" + query.list());
             return query.list();
 
         } catch (HibernateException e) {
@@ -956,7 +1010,7 @@ public class QuoteService {
              * of all the items currently stored by Hibernate.
              */
             query = session.createQuery("select sourcedoc from app.project.SourceDoc sourcedoc where sourcedoc.Quote=" + t );
-            System.out.println("Queryyyyyyyyyyyyyyyyyyyyy" + query.list());
+            //System.out.println("Queryyyyyyyyyyyyyyyyyyyyy" + query.list());
             return query.list();
 
         } catch (HibernateException e) {
@@ -980,6 +1034,8 @@ public class QuoteService {
             }
         }
     }
+     
+     
 
     public List getTargetLang(Integer id) {
         /*
@@ -1267,7 +1323,7 @@ public class QuoteService {
              * Build HQL (Hibernate Query Language) query to retrieve a list
              * of all the items currently stored by Hibernate.
              */
-            query = session.createQuery("Select * from Quote1 q inner join Project p on p.ID_Project=q.ID_Project  inner join Client_Information c on c.ID_Client=p.ID_Client inner join User u on  u.ID_Client=c.ID_Client where u.ID_Client=101");
+            query = session.createQuery("Select * from Quote1 q inner join Project p on p.ID_Project=q.ID_Project  inner join client_information c on c.ID_Client=p.ID_Client inner join User u on  u.ID_Client=c.ID_Client where u.ID_Client=101");
             return query.list();
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -1290,20 +1346,21 @@ public class QuoteService {
             }
         }
     }
-
-    //Integer clientID,
-    //search for quotes given the criteria
+    
+    
+        //Integer clientID,
+    //search for ea given the criteria
     public List getClientQuoteSearch(String status, Integer clientID, Project project, String productDescription, String quoteNum, Date startQuoteDate, Date endQuoteDate, Double startQuoteTotal, Double endQuoteTotal) {
 //                    QuoteService.getInstance().getClientQuoteSearch(status,id, project,productDescription,quoteNum, startQuoteDateDate, endQuoteDateDate, startQuoteTotalDouble, endQuoteTotalDouble);
         String product = project.getProduct();
-        System.out.println("product>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + product);
+        //System.out.println("product>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + product);
         String productDescription12 = project.getProductDescription();
 
         Session session = ConnectionFactory.getInstance().getSession();
         Query query;
         //Integer clientID=100;
         List results = null;
-        //System.out.println("alexxxx:quoteNum="+quoteNum);
+        ////System.out.println("alexxxx:quoteNum="+quoteNum);
 
         try {
             //retreive quotes from database
@@ -1343,11 +1400,11 @@ public class QuoteService {
             //add search on status if status from form does not equal "All"
             if (!status.equals("All")) {
                 criteria.add(Expression.eq("status", status));
-                System.out.println("Status==============>" + status);
+                //System.out.println("Status==============>" + status);
                 //Criteria subCriteria2 = subCriteria.createCriteria("Company");
                 //    subCriteria2.add(Expression.eq("clientId", clientID  ));
             }
-            System.out.println("status of quote>>>>>>>>>>>>>>>>>>>>>" + status);
+            //System.out.println("status of quote>>>>>>>>>>>>>>>>>>>>>" + status);
 
 
 
@@ -1372,9 +1429,9 @@ public class QuoteService {
 
             //remove duplicates
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-            System.out.println("               jhnjklkljnkjkjkl        " + criteria.list());
+            //System.out.println("               jhnjklkljnkjkjkl        " + criteria.list());
             results = criteria.list();
-            System.out.println("               jhnjklkljnkjkjkl        " + results);
+            //System.out.println("               jhnjklkljnkjkjkl        " + results);
 
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -1400,24 +1457,83 @@ public class QuoteService {
         if (results.isEmpty()) {
             return null;
         } else {
-            System.out.println("Resultsssssss      " + results);
+            //System.out.println("Resultsssssss      " + results);
+        }
+        return results;
+    }
+
+    //Integer clientID,
+    //search for ea given the criteria
+    public List getClientQuoteSearch(Integer clientID) {
+        
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+        //Integer clientID=100;
+        List results = null;
+        ////System.out.println("alexxxx:quoteNum="+quoteNum);
+
+        try {
+            //retreive quotes from database
+
+            //the main criteria
+            Criteria criteria = session.createCriteria(Quote1.class);
+            Criteria subCriteria = criteria.createCriteria("Project");
+            Criteria subCriteria2 = subCriteria.createCriteria("Company");
+
+            subCriteria2.add(Expression.eq("clientId", clientID));
+
+
+
+            criteria.addOrder(Order.desc("number"));
+            //  criteria.addOrder(Order.desc("quoteNum"));
+
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+            results = criteria.list();
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            //System.out.println("Resultsssssss      " + results);
         }
         return results;
     }
 
     //clent search criteria 17 feb 2010
-    public List getQuoteSearch(String status, String companyName, Project project, String productDescription, String quoteNum, Date startQuoteDate, Date endQuoteDate, Double startQuoteTotal, Double endQuoteTotal) {
+    public List getQuoteSearch(String status, String companyName, Project project, String productDescription, String quoteNum, Date startQuoteDate, Date endQuoteDate, Double startQuoteTotal, Double endQuoteTotal, String pm, String ae,String sales) {
 
         String product = project.getProduct();
         //String id_client=User.getid_client();
         //String  Client_ID=User.getProduct();
-        System.out.println("product>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + product);
+        //System.out.println("product>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + product);
         String productDescription12 = project.getProductDescription();
 
         Session session = ConnectionFactory.getInstance().getSession();
         Query query;
         List results = null;
-        //System.out.println("alexxxx:quoteNum="+quoteNum);
+        ////System.out.println("alexxxx:quoteNum="+quoteNum);
 
         try {
             //retreive quotes from database
@@ -1425,11 +1541,13 @@ public class QuoteService {
             //the main criteria
 
             Criteria criteria = session.createCriteria(Quote1.class);
+            Hibernate.initialize(Quote1.class);
  try{
             //if subcriteria values are present from the form,
             //then include subcriteria search values in main search
+            Criteria subCriteria = criteria.createCriteria("Project");
             if (companyName.length() >= 1) {
-                Criteria subCriteria = criteria.createCriteria("Project");
+//                Criteria subCriteria = criteria.createCriteria("Project");
                 Criteria subCriteria2 = subCriteria.createCriteria("Company");
                 subCriteria2.add(Expression.like("Company_name", "%" + companyName + "%").ignoreCase());
             }
@@ -1437,12 +1555,27 @@ public class QuoteService {
 
 
             if (product.length() >= 1) {
-                Criteria subCriteria = criteria.createCriteria("Project");
+//                Criteria subCriteria = criteria.createCriteria("Project");
                 subCriteria.add(Expression.like("product", "%" + product + "%").ignoreCase());
+            }
+            
+            if (pm.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                subCriteria.add(Expression.like("pm", "%" + pm + "%").ignoreCase());
+            }
+            if (ae.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                subCriteria.add(Expression.like("ae", "%" + ae + "%").ignoreCase());
+            }
+            
+            if (sales.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                Criteria subCriteria2 = subCriteria.createCriteria("Company");
+                subCriteria2.add(Expression.like("Sales", "%" + sales + "%").ignoreCase());
             }
 
             if (productDescription12.length() >= 1) {
-                Criteria subCriteria = criteria.createCriteria("Project");
+//                Criteria subCriteria = criteria.createCriteria("Project");
                 Criteria subCriteria2 = subCriteria.createCriteria("Product");
                 subCriteria2.add(Expression.like("product", "%" + productDescription12 + "%").ignoreCase());
             }
@@ -1451,7 +1584,7 @@ public class QuoteService {
             if (!status.equals("All")) {
                 criteria.add(Expression.eq("status", status));
             }
-            System.out.println("status of quote>>>>>>>>>>>>>>>>>>>>>" + status);
+            //System.out.println("status of quote>>>>>>>>>>>>>>>>>>>>>" + status);
 
 
 
@@ -1485,9 +1618,11 @@ public class QuoteService {
 
             //remove duplicates
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-         }catch(Exception e){}
+         }catch(Exception e){
+           //System.out.println(e.toString());
+         }
             results = criteria.list();
-
+//            Hibernate.initialize(results);
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
             throw new RuntimeException(e);
@@ -1513,7 +1648,7 @@ public class QuoteService {
             return null;
         } else {
 
-             System.out.println("resultsssssss"+results.toString());
+             //System.out.println("resultsssssss"+results.toString());
             return results;
         }
     }
@@ -1533,6 +1668,67 @@ public class QuoteService {
             results = session.find("from Quote1 as quote1 where quote1.quote1Id = ?",
                     new Object[]{id},
                     new Type[]{Hibernate.INTEGER});
+
+            if (results.isEmpty()) {
+                return null;
+            } else {
+                Quote1 q = (Quote1) results.get(0);
+                try {
+                    Hibernate.initialize(q.getSourceDocs());
+                } catch (Exception e) {
+                }
+                
+                Hibernate.initialize(q.getFiles());
+
+                return q;
+            }
+
+        } catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
+     //return one quote with id given in argument
+    public Quote1 getSingleQuote(String number) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from Quote1 as quote1 where quote1.number = ?",
+                    new Object[]{number},
+                    new Type[]{Hibernate.STRING});
 
             if (results.isEmpty()) {
                 return null;
@@ -1653,7 +1849,7 @@ public class QuoteService {
             // return query.list();
             //              query =	session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType='"+dropdownType+"'");
             query = session.createQuery("select client_quote from app.quote.Client_Quote client_quote where client_quote.Quote_ID = " + id);
-            //  System.out.println("");
+            //  //System.out.println("");
 
             //if(results.isEmpty()){
             //       return null;
@@ -2443,9 +2639,9 @@ public class QuoteService {
         Quote1 resultQuote = null;
         /*while(iterScroll.hasNext()){
         Quote1 q = (Quote1) iterScroll.next();
-        //System.out.println("alexxx:q.getApprovalDate()="+q.getApprovalDate());
-        //System.out.println("alexxx:q.getApprovalDate().getTime()="+q.getApprovalDate().getTime());
-        // System.out.println("alexxx:q.getQuote1Id()="+q.getQuote1Id());
+        ////System.out.println("alexxx:q.getApprovalDate()="+q.getApprovalDate());
+        ////System.out.println("alexxx:q.getApprovalDate().getTime()="+q.getApprovalDate().getTime());
+        // //System.out.println("alexxx:q.getQuote1Id()="+q.getQuote1Id());
         if(resultQuote == null){
         resultQuote = q;
         }else{
@@ -2456,9 +2652,14 @@ public class QuoteService {
         }
         }*/
 
-
-        Quote1 q = (Quote1) iterScroll.next();
-
+        while(iterScroll.hasNext()){
+            Quote1 q = (Quote1) iterScroll.next();
+            if(q.getStatus().equalsIgnoreCase("approved")){
+                return q;
+            }
+        }
+        Iterator iterScroll1 = quotes.iterator();
+        Quote1 q = (Quote1) iterScroll1.next();
         return (q == null) ? null : q;
         //return resultQuote;
         }
@@ -2525,7 +2726,7 @@ public class QuoteService {
         }
 
         newQuoteNumber = lastQuoteNumber; //e.g., Q000009
-        System.out.println("newQuoteNumbernewQuoteNumbernewQuoteNumbernewQuoteNumber"+newQuoteNumber);
+        //System.out.println("newQuoteNumbernewQuoteNumbernewQuoteNumbernewQuoteNumber"+newQuoteNumber);
 
         //build new quote number
         int old = Integer.valueOf(lastQuoteNumber.substring(1, 7)).intValue();  //e.g., 9
@@ -2648,7 +2849,7 @@ public class QuoteService {
         //  }
 
         //  newQuoteNumber = String.valueOf(newChar); //covert new quote number to string
-        System.out.println("id+lastQuoteid+newQuoteNumber" + lastQuoteid + "          " + newQuoteNumber);
+        //System.out.println("id+lastQuoteid+newQuoteNumber" + lastQuoteid + "          " + newQuoteNumber);
 
 
         return newQuoteNumber;
@@ -2936,7 +3137,12 @@ public class QuoteService {
             tx = session.beginTransaction();
 
             //build relationship
-            q.getSourceDocs().add(sd);
+            try {
+                q.getSourceDocs().add(sd);
+            } catch (Exception e) {
+//                q.getProject().getSourceDocs().add(sd);
+            }
+            
             sd.setQuote(q);
             sd.setClient_Quote(Client_QuoteId);
 
@@ -3139,7 +3345,7 @@ public class QuoteService {
     //   }
     //provide a list of eng Tasks for the quote
     public String[] getEngTaskOptions() {
-        String engTaskOptions[] = {"TM Management/Processing", "In-Process QA", "Preparation / Analysis / Verification", "Testing / Troubleshooting", "Functionality Testing", "Compilation", "Final QA", "Other"};
+        String engTaskOptions[] = {"TM Management/Processing", "In-Process QA", "Preparation / Analysis / Verification", "Testing / Troubleshooting", "Functionality Testing", "Compilation", "Final QA", "Other","Generate Target"};
 
         return engTaskOptions;
     }
@@ -3566,57 +3772,24 @@ public class QuoteService {
     }
 
     public Upload_Doc getUploadDoc(int CQuote) {
-        /*
-         * Use the ConnectionFactory to retrieve an open
-         * Hibernate Session.
-         *
-         */
-        Session session = ConnectionFactory.getInstance().getSession();
-        List results = null;
-        try {
-
-            results = session.find("from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID = ? ",
-                    new Object[]{CQuote},
-                    new Type[]{Hibernate.INTEGER});
-
-            System.out.println("results");
-        } catch (ObjectNotFoundException onfe) {
-            return null;
-        } catch (HibernateException e) {
-            /*
-             * All Hibernate Exceptions are transformed into an unchecked
-             * RuntimeException.  This will have the effect of causing the
-             * user's request to return an error.
-             *
-             */
-            System.err.println("Hibernate Exception" + e.getMessage());
-            throw new RuntimeException(e);
-        } /*
-         * Regardless of whether the above processing resulted in an Exception
-         * or proceeded normally, we want to close the Hibernate session.  When
-         * closing the session, we must allow for the possibility of a Hibernate
-         * Exception.
-         *
-         */ finally {
-            if (session != null) {
-                try {
-                    session.close();
-                } catch (HibernateException e) {
-                    System.err.println("Hibernate Exception" + e.getMessage());
-                    throw new RuntimeException(e);
-                }
-
-            }
-        }
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return (Upload_Doc) results.get(0);
-        }
+        return DocService.getInstance().getUploadDoc(CQuote);
 
     }
-
+    
     public List getUploadDocList(int CQuote) {
+      return DocService.getInstance().getUploadDocList(CQuote); 
+    }
+
+    public List getUploadDocList(int pid, String category) {
+        return DocService.getInstance().getUploadDocList(pid, category);
+    }
+    
+    public List getUploadDocList(int id, String category, String identifier) {
+        return DocService.getInstance().getUploadDocList(id, category, identifier);
+        
+    }
+    
+    public List getClientProfileList() {
         /*
          * Use the ConnectionFactory to retrieve an open
          * Hibernate Session.
@@ -3629,9 +3802,8 @@ public class QuoteService {
             /*
              * Build HQL (Hibernate Query Language) query to retrieve a list
              * of all the items currently stored by Hibernate.
-             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
-            query = session.createQuery("select uload from app.extjs.vo.Upload_Doc uload where QuoteID =" + CQuote);
-            // "select quote from app.quote.Quote1 quote where quote.status = 'pending' order by quote.number"
+             */
+            query = session.createQuery("select uload from app.extjs.vo.Upload_Doc uload where type ='Profile'");
             return query.list();
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -4160,5 +4332,375 @@ public class QuoteService {
 
     }
 
+  public List getPMPendingQuotes(String pmName) {
+      Session session = ConnectionFactory.getInstance().getSession();
+      Query query;
+        List temp =  new ArrayList();
+        List results =  new ArrayList();
+        List<Integer> qNumber = new ArrayList<Integer>();
+
+        
+        try {
+          
+            Criteria criteria = session.createCriteria(Quote1.class);
+            Hibernate.initialize(Quote1.class);
+ try{
+           
+                 Criteria subCriteria = criteria.createCriteria("Project");
+                 subCriteria.add(Expression.like("pm", "%" + pmName + "%").ignoreCase());
+                 criteria.add(Expression.eq("status", "pending"));
+                 criteria.addOrder(Order.desc("number"));
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+         }catch(Exception e){
+           //System.out.println(e.toString());
+         }
+             List criteriaResult = criteria.list();
+            for(int i =0; i<criteriaResult.size();i++){
+              Quote1 q = (Quote1) criteriaResult.get(i);
+              if(!qNumber.contains(q.getQuote1Id())){
+                  
+                  //System.out.println("app.quote.QuoteService.getPMPendingQuotes()"+q.getQuote1Id());
+                try{ Hibernate.initialize(q.getSourceDocs());}catch(Exception he){}
+                temp.add(q);
+                qNumber.add(q.getQuote1Id());
+              }
+            }
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+        
+        /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        
+           session = ConnectionFactory.getInstance().getSession();
+        try {
+          
+            Criteria criteria = session.createCriteria(Quote1.class);
+            Hibernate.initialize(Quote1.class);
+ try{
+           
+                 Criteria subCriteria = criteria.createCriteria("Project");
+                 Criteria subCriteria2 = subCriteria.createCriteria("Company");
+                 subCriteria2.add(Expression.or(Expression.like("Sales", "%" + pmName + "%").ignoreCase(), Expression.like("Sales_rep", "%" + pmName + "%").ignoreCase()));
+                 criteria.add(Expression.eq("status", "pending"));
+                 criteria.addOrder(Order.desc("number"));
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+         }catch(Exception e){
+          // //System.out.println(e.toString());
+         }
+             List criteriaResult = criteria.list();
+            for(int i =0; i<criteriaResult.size();i++){
+              Quote1 q = (Quote1) criteriaResult.get(i);
+              try{
+              if(!qNumber.contains(q.getQuote1Id())){
+                 Hibernate.initialize(q.getSourceDocs());
+                temp.add(q);
+                qNumber.add(q.getQuote1Id());
+              }
+              }catch(Exception e){
+//                  //System.out.println(q.getNumber());
+//                  e.printStackTrace();
+              }
+            }
+            
+            for (int i = 0; i < temp.size(); i++) {
+                Quote1 q = (Quote1) temp.get(i);
+                Project p = q.getProject();
+                Quote1 recentQ = QuoteService.getInstance().getLastQuote(p.getQuotes());
+
+
+
+                if (q.getNumber().equals(recentQ.getNumber())) { //only add most recent quote
+
+                    //if(pmName.equals(q.getProject().getPm()) || pmName.equals(q.getProject().getCompany().getSales_rep())) {
+                    try {
+                        Hibernate.initialize(q.getSourceDocs());
+                    } catch (Exception e) {
+                    }
+                    results.add(q);
+                    q.setSubquotes("");
+                    try {
+                        Set subQuotes = p.getQuotes();
+
+                        for (Iterator iter = subQuotes.iterator(); iter.hasNext();) {
+                            Quote1 subQ = (Quote1) iter.next();
+                            if (subQ != null) {
+                                if (subQ.getQuote1Id().compareTo(q.getQuote1Id()) != 0) {
+                                    q.setSubquotes(q.getSubquotes() + "<a " + HrHelper.LINK_STYLE + " href=\"javascript:openQuoteWindow('" + q.getQuote1Id() + "','" + subQ.getNumber() + q.getProject().getCompany().getCompany_code() + "')\">" + subQ.getNumber() + q.getProject().getCompany().getCompany_code() + " / " + StandardCode.getInstance().formatMoney(subQ.getQuoteDollarTotal().doubleValue()) + " / " + sdf.format(subQ.getQuoteDate()) + "</a>" + "<br>");
+                                    //System.out.println("Project no and Quote No" + p.getNumber() + "       " + q.getNumber());
+                                }
+                            }
+
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+              
+//            Hibernate.initialize(results);
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+       
+        /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+//        results = new ArrayList(set);
+        if (results.isEmpty()) {
+            return null;
+        } else {
+
+             //System.out.println("resultsssssss"+results.toString());
+            return results;
+        }
+  }
+  
+  public List getPMBackupQuotes(String pmName) {
+      Query query;
+        List temp =  new ArrayList();
+        List results =  new ArrayList();
+        List<Integer> qNumber = new ArrayList<Integer>();
+
+        Session session = ConnectionFactory.getInstance().getSession();
+ 
+        try {
+          
+            Criteria criteria = session.createCriteria(Quote1.class);
+            Hibernate.initialize(Quote1.class);
+ try{
+           
+                 Criteria subCriteria = criteria.createCriteria("Project");
+                 Criteria subCriteria2 = subCriteria.createCriteria("Company");
+                 subCriteria2.add(Expression.like("Backup_pm", "%" + pmName + "%").ignoreCase());
+                 criteria.add(Expression.eq("status", "pending"));
+                 criteria.addOrder(Order.desc("number"));
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+         }catch(Exception e){
+           //System.out.println(e.toString());
+         }
+             List criteriaResult = criteria.list();
+            for(int i =0; i<criteriaResult.size();i++){
+              Quote1 q = (Quote1) criteriaResult.get(i);
+              if(!qNumber.contains(q.getQuote1Id())){
+                 Hibernate.initialize(q.getSourceDocs());
+                temp.add(q);
+                qNumber.add(q.getQuote1Id());
+              }
+            }
+            
+            for (int i = 0; i < temp.size(); i++) {
+                Quote1 q = (Quote1) temp.get(i);
+                Project p = q.getProject();
+                Quote1 recentQ = QuoteService.getInstance().getLastQuote(p.getQuotes());
+
+
+
+                if (q.getNumber().equals(recentQ.getNumber())) { //only add most recent quote
+
+                    //if(pmName.equals(q.getProject().getPm()) || pmName.equals(q.getProject().getCompany().getSales_rep())) {
+                    try {
+                        Hibernate.initialize(q.getSourceDocs());
+                    } catch (Exception e) {
+                    }
+                    results.add(q);
+                    q.setSubquotes("");
+                    try {
+                        Set subQuotes = p.getQuotes();
+
+                        for (Iterator iter = subQuotes.iterator(); iter.hasNext();) {
+                            Quote1 subQ = (Quote1) iter.next();
+                            if (subQ != null) {
+                                if (subQ.getQuote1Id().compareTo(q.getQuote1Id()) != 0) {
+                                    q.setSubquotes(q.getSubquotes() + "<a " + HrHelper.LINK_STYLE + " href=\"javascript:openQuoteWindow('" + q.getQuote1Id() + "','" + subQ.getNumber() + q.getProject().getCompany().getCompany_code() + "')\">" + subQ.getNumber() + q.getProject().getCompany().getCompany_code() + " / " + StandardCode.getInstance().formatMoney(subQ.getQuoteDollarTotal().doubleValue()) + " / " + sdf.format(subQ.getQuoteDate()) + "</a>" + "<br>");
+                                    //System.out.println("Project no and Quote No" + p.getNumber() + "       " + q.getNumber());
+                                }
+                            }
+
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+              
+//            Hibernate.initialize(results);
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+       
+        /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+//        results = new ArrayList(set);
+        if (results.isEmpty()) {
+            return null;
+        } else {
+
+             //System.out.println("resultsssssss"+results.toString());
+            return results;
+        }
+  }
+
+    public List getQuoteSearch(String status, String companyName, String quoteNum, String product, String productDescription, String notes, String srcLang, String targetLang, String pm, String ae, String sales) {
+        
+//        String product = project.getProduct();
+//        //String id_client=User.getid_client();
+//        //String  Client_ID=User.getProduct();
+//        //System.out.println("product>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + product);
+//        String productDescription12 = project.getProductDescription();
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+        List results = null;
+        ////System.out.println("alexxxx:quoteNum="+quoteNum);
+
+        try {
+            //retreive quotes from database
+
+            //the main criteria
+
+            Criteria criteria = session.createCriteria(Quote1.class);
+            Hibernate.initialize(Quote1.class);
+ try{
+            //if subcriteria values are present from the form,
+            //then include subcriteria search values in main search
+            Criteria subCriteria = criteria.createCriteria("Project");
+            if (companyName.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                Criteria subCriteria2 = subCriteria.createCriteria("Company");
+                subCriteria2.add(Expression.like("Company_name", "%" + companyName + "%").ignoreCase());
+            }
+
+
+
+            if (product.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                subCriteria.add(Expression.like("product", "%" + product + "%").ignoreCase());
+            }
+            
+            if (pm.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                subCriteria.add(Expression.like("pm", "%" + pm + "%").ignoreCase());
+            }
+            if (ae.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                subCriteria.add(Expression.like("ae", "%" + ae + "%").ignoreCase());
+            }
+            
+            if (sales.length() >= 1) {
+//                Criteria subCriteria = criteria.createCriteria("Project");
+                Criteria subCriteria2 = subCriteria.createCriteria("Company");
+                subCriteria2.add(Expression.like("Sales", "%" + sales + "%").ignoreCase());
+            }
+
+            
+
+            //add search on status if status from form does not equal "All"
+            if (!status.equals("All")&&!status.equalsIgnoreCase("")) {
+                criteria.add(Expression.eq("status", status));
+            }
+            //System.out.println("status of quote>>>>>>>>>>>>>>>>>>>>>" + status);
+
+
+
+
+
+
+
+            if (quoteNum.length() > 0) { //if quoteNum is desired
+                quoteNum = quoteNum.replaceAll("[a-zA-Z]", "");
+                quoteNum = quoteNum.trim();
+                criteria.add(Expression.like("number", "%" + quoteNum + "%").ignoreCase());
+            }
+
+            criteria.addOrder(Order.desc("approvalDate"));
+            criteria.addOrder(Order.desc("number"));
+
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+         }catch(Exception e){
+           //System.out.println(e.toString());
+         }
+            results = criteria.list();
+//            Hibernate.initialize(results);
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+        if (results.isEmpty()) {
+            return null;
+        } else {
+
+             //System.out.println("resultsssssss"+results.toString());
+            return results;
+        }
+    }
 }
 

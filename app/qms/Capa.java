@@ -5,6 +5,7 @@
 
 package app.qms;
 
+import app.standardCode.StandardCode;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,15 +28,20 @@ public class Capa implements Serializable{
   private String source;
   private String status;
   private String ncr;
- 
-
-    public Capa() {
+  private String reportedbydesc;
+  private Boolean isLocked;
+  private String lockedby;
+  private Date admin_lock_date;
+   
+  public Capa() {
     }
 
-    public Capa(Integer capa_id, String number, Date cdate, String location, String description, String reportedby, String fromc, String issueId, String source, String status, String ncr, Date vofe) {
+    public Capa(Integer capa_id, String number, Date cdate, Date vofe, String employee, String location, String description, String reportedby, String fromc, String issueId, String source, String status, String ncr, String reportedbydesc, Boolean isLocked, String lockedby, Date admin_lock_date) {
         this.capa_id = capa_id;
         this.number = number;
         this.cdate = cdate;
+        this.vofe = vofe;
+        this.employee = employee;
         this.location = location;
         this.description = description;
         this.reportedby = reportedby;
@@ -44,10 +50,12 @@ public class Capa implements Serializable{
         this.source = source;
         this.status = status;
         this.ncr = ncr;
-        this.vofe = vofe;
+        this.reportedbydesc = reportedbydesc;
+        this.isLocked = isLocked;
+        this.lockedby = lockedby;
+        this.admin_lock_date = admin_lock_date;
     }
 
-    
 
     public Integer getCapa_id() {
         return capa_id;
@@ -70,7 +78,7 @@ public class Capa implements Serializable{
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = StandardCode.getInstance().convertTextToUTF(description);
     }
 
     public String getFromc() {
@@ -151,6 +159,38 @@ public class Capa implements Serializable{
 
     public void setVofe(Date vofe) {
         this.vofe = vofe;
+    }
+
+  public String getReportedbydesc() {
+    return reportedbydesc;
+  }
+
+  public void setReportedbydesc(String reportedbydesc) {
+    this.reportedbydesc = reportedbydesc;
+  }
+
+    public Boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+
+    public String getLockedby() {
+        return lockedby;
+    }
+
+    public void setLockedby(String lockedby) {
+        this.lockedby = lockedby;
+    }
+
+    public Date getAdmin_lock_date() {
+        return admin_lock_date;
+    }
+
+    public void setAdmin_lock_date(Date admin_lock_date) {
+        this.admin_lock_date = admin_lock_date;
     }
     
 

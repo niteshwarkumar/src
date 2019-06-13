@@ -17,6 +17,7 @@ import java.text.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
+import org.json.JSONObject;
 
 
 public final class ProjectViewTeamAction extends Action {
@@ -103,13 +104,24 @@ public final class ProjectViewTeamAction extends Action {
         
         //get this project's sources
         Set sources = p.getSourceDocs();
+        Set changesLst = p.getChange1s();
+        JSONObject changeObj = new JSONObject();
+        String verifymsg ="<font color=\"red\">Verification was not performed yet. Please check and try again.</font>";
+        for(Iterator chg = changesLst.iterator(); chg.hasNext();) {
+            Change1 change1 = (Change1) chg.next();
+            
+            JSONObject jo = new JSONObject();
+            jo.put("name", change1.getName());
+            jo.put("number", change1.getNumber());
+            changeObj.put(change1.getNumber(), jo);
+        }
         
         //for each source add each sources' Tasks
         List totalLinTasks = new ArrayList();
         List totalEngTasks = new ArrayList();
         List totalDtpTasks = new ArrayList();
         List totalOthTasks = new ArrayList();
-        
+         TreeSet<String> changes = new TreeSet();
         //for each source
         for(Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
             SourceDoc sd = (SourceDoc) sourceIter.next();
@@ -122,7 +134,12 @@ public final class ProjectViewTeamAction extends Action {
                 for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
                     LinTask lt = (LinTask) linTaskIter.next();
                     totalLinTasks.add(lt);
-System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.getTaskName());
+//System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.getTaskName());
+
+                    String change = StandardCode.getInstance().noNull(lt.getChangeDesc());
+                    if(!changes.contains(change)){
+                        changes.add(change);
+                    }
 
                 }
                 
@@ -161,52 +178,52 @@ System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.g
         //START set up lin dates
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
+                request.setAttribute("linTasksProjectSentArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectSentArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
 
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getIcrSentDate() != null) {
-                request.setAttribute("linTasksProjectICRSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrSentDate()));
+                request.setAttribute("linTasksProjectICRSentArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrSentDate()));
             }
             else {
-                request.setAttribute("linTasksProjectICRSentArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectICRSentArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
 
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
+                request.setAttribute("linTasksProjectDueArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectDueArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("linTasksProjectReceivedArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectReceivedArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
          for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getIcrRecievedDate() != null) {
-                request.setAttribute("linTasksProjectICRReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrRecievedDate()));
+                request.setAttribute("linTasksProjectICRReceivedArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrRecievedDate()));
             }
             else {
-                request.setAttribute("linTasksProjectICRReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectICRReceivedArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("linTasksProjectInvoiceArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectInvoiceArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         //END set up lin dates
@@ -214,34 +231,34 @@ System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.g
         //START set up eng dates
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
+                request.setAttribute("engTasksProjectSentArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectSentArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
+                request.setAttribute("engTasksProjectDueArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectDueArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("engTasksProjectReceivedArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectReceivedArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("engTasksProjectInvoiceArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectInvoiceArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         //END set up eng dates
@@ -249,34 +266,34 @@ System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.g
         //START set up dtp dates
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
+                request.setAttribute("dtpTasksProjectSentArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectSentArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
+                request.setAttribute("dtpTasksProjectDueArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectDueArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("dtpTasksProjectReceivedArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectReceivedArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("dtpTasksProjectInvoiceArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectInvoiceArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         //END set up dtp dates
@@ -317,8 +334,14 @@ System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.g
         //END set up oth dates
         
         //find total of LinTasks
+        
         double linTaskTotal = 0;
+        for(String change : changes){
+            
+          double changeTotal = 0; 
         for(int i = 0; i < linTasksArray.length; i++) {
+          if(StandardCode.getInstance().noNull(linTasksArray[i].getChangeDesc()).equalsIgnoreCase(change)){
+
             if(linTasksArray[i].getInternalDollarTotal() != null) {
                 //remove comma's
                 String linTotal = linTasksArray[i].getInternalDollarTotal();
@@ -335,11 +358,20 @@ System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.g
                         total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
                 }
 
-
-                linTaskTotal += total.doubleValue();
+                changeTotal += total;
+                linTaskTotal += total;
             }
         }     
-        
+        }
+         JSONObject jo = new JSONObject();
+        if(!change.equalsIgnoreCase("")){
+            if(changeObj.has(change))
+             jo = changeObj.getJSONObject(change);
+        } 
+        jo.put("usd", StandardCode.getInstance().formatDouble(changeTotal));
+        jo.put("euro", StandardCode.getInstance().formatDouble(changeTotal/p.getEuroToUsdExchangeRate().doubleValue()));
+        changeObj.put(change, jo);
+        }
         //find total of EngTasks
         double engTaskTotal = 0;
         for(int i = 0; i < engTasksArray.length; i++) {
@@ -412,6 +444,8 @@ System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.g
         //HERE down is standard and does not need to change when adding task blocks
         //place this project into request for further display in jsp page
         request.setAttribute("project", p);
+        request.setAttribute("changes", changes);
+        request.setAttribute("changesFee", changeObj);
         
         //add this project id to cookies; this will remember the last project
         response.addCookie(StandardCode.getInstance().setCookie("projectViewId", projectId));

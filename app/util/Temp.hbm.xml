@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+    <class name="app.util.Temp" table="temp">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+     
+        <property name="content" type="string"/>
+        <property name="comment" type="string"/>
+            
+    </class>
+   
+</hibernate-mapping>

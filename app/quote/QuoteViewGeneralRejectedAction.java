@@ -68,8 +68,8 @@ public final class QuoteViewGeneralRejectedAction extends Action {
         //id of quote from request
 	String quoteId = null;
 	quoteId = request.getParameter("id");
-        System.out.println("VVVVVVVVVVVVVVVVVV "+ quoteId);
-        System.out.println("IDIDIDIDDIDIDI "+  request.getParameter("id"));
+        //System.out.println("VVVVVVVVVVVVVVVVVV "+ quoteId);
+        //System.out.println("IDIDIDIDDIDIDI "+  request.getParameter("id"));
         String rejectReason = request.getParameter("rejectReason");
         
         //check attribute in request
@@ -78,7 +78,7 @@ public final class QuoteViewGeneralRejectedAction extends Action {
         }
         if(quoteId == null){
             quoteId=(String)request.getParameter("quoteViewId");
-            System.out.println("quoteId"+quoteId);
+            //System.out.println("quoteId"+quoteId);
         }
 
         
@@ -87,7 +87,7 @@ public final class QuoteViewGeneralRejectedAction extends Action {
             quoteId = StandardCode.getInstance().getCookie("quoteViewId", request.getCookies());
         }
         
-        System.out.println(" FFFFFFFFFFFF "+ quoteId);
+        //System.out.println(" FFFFFFFFFFFF "+ quoteId);
         Integer id = Integer.valueOf(quoteId);
         request.getSession(true).setAttribute("RejectedQuote", quoteId);
         //END get id of current quote from either request, attribute, or cookie               
@@ -104,7 +104,7 @@ public final class QuoteViewGeneralRejectedAction extends Action {
                            
         //update quote as rejected
         q.setStatus("rejected");
-        System.out.println("q.setStatus(rejected)."+q.getNumber()+"       "+q.getQuote1Id()+"         " +q.getStatus());
+        //System.out.println("q.setStatus(rejected)."+q.getNumber()+"       "+q.getQuote1Id()+"         " +q.getStatus());
         q.setApprovalDate(new Date());
         //q.setRejectReason(rejectReason);
        
@@ -113,7 +113,7 @@ public final class QuoteViewGeneralRejectedAction extends Action {
              q.setLastModifiedByTS(new Date());
         }
 
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
         request.setAttribute("quote", q);
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));

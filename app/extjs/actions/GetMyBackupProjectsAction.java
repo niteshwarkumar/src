@@ -93,14 +93,14 @@ public final class GetMyBackupProjectsAction extends Action {
             
            
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyBackupProjectsAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetMyBackupProjectsAction took:"+ ((endProjects-startProjects)/1000.0));
         
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
-        System.out.println(myProjects.size());
+        //System.out.println(myProjects.size());
         out.println(new JSONArray(myProjects.toArray()));
         out.flush();
         

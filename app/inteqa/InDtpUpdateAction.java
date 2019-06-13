@@ -113,106 +113,71 @@ public class InDtpUpdateAction extends Action {
         String tVersion = "";
 
         String jsonTechnical = request.getParameter("technicalJSON");
+        
+        
+         String oper = request.getParameter("oper");
+         
 
         if (porq.equalsIgnoreCase("p")) {
 
             try {
-                boolean unlinkProjectTechnical = ProjectService.unlinkProjectTechnical(p.getProjectId());
-                JSONArray technical = new JSONArray(jsonTechnical);
-                for (int i = 0; i < technical.length(); i++) {
-                    JSONObject j = (JSONObject) technical.get(i);
-                    Project_Technical tech = new Project_Technical();
-                    tech.setSourceapp((j.getString("sourceApplication")));
-                    sApp = j.getString("sourceApplication");
-                    tech.setSourceos((j.getString("sourceOs")));
-                    sOs = j.getString("sourceOs");
-                    tech.setSourcever((j.getString("sourceVersion")));
-                    sVersion = j.getString("sourceVersion");
-                    tech.setTargetos((j.getString("targetOs")));
-                    dOs = j.getString("targetOs");
-                    tech.setTargetapp((j.getString("targetApplication")));
-                    dApp = j.getString("targetApplication");
-                    tech.setTargetver(j.getString("targetVersion"));
-                    tVersion = j.getString("targetVersion");
-                    tech.setProjectid(p.getProjectId());
-                    ProjectService.getInstance().addUpdateProjectTechnical(tech);
-                    if (i < technical.length() - 1) {
-                        sApp += " , ";
-                        dApp += " , ";
-                        sOs += " , ";
-                        dOs += " , ";
-                        sVersion += " , ";
-                        tVersion += " , ";
-
+                if(null!=oper){
+                    if(oper.equalsIgnoreCase("del")) {
+                        int reqid = Integer.parseInt(request.getParameter("id"));
+                        ProjectService.unlinkProjectTechnical(reqid);
+                    }else{
+                        Project_Technical tech = new Project_Technical();
+                        if (oper.equalsIgnoreCase("edit")) {
+                             int reqid = Integer.parseInt(request.getParameter("id"));
+                             tech = ProjectService.getInstance().getSingleTechnical(reqid);
+                        } 
+                            tech.setSourceapp((request.getParameter("sourceApplication")));
+                            tech.setSourceos((request.getParameter("sourceOs")));
+                            tech.setSourcever((request.getParameter("sourceVersion")));
+                            tech.setTargetos((request.getParameter("targetOs")));
+                            tech.setTargetapp((request.getParameter("targetApplication")));
+                            tech.setTargetver(request.getParameter("targetVersion"));
+                            if(!"".equalsIgnoreCase(request.getParameter("unitCount")))
+                                tech.setUnitCount(Double.parseDouble(request.getParameter("unitCount")));
+                            tech.setProjectid(p.getProjectId());
+                            ProjectService.getInstance().addUpdateProjectTechnical(tech);
+                    
                     }
                 }
-
-                p.setSourceOS(sOs);
-                p.setSourceApplication(sApp);
-                p.setSourceVersion(sVersion);
-                p.setDeliverableOS(dOs);
-                p.setDeliverableApplication(dApp);
-                p.setDeliverableVersion(tVersion);
 
             } catch (Exception e) {
             }
 
         } else {
-
-            Quote1 q = QuoteService.getInstance().getSingleQuoteFromProject(p.getProjectId());
-            try {
-
-                List clq = QuoteService.getInstance().getClient_Quote(q.getQuote1Id());
-                Client_Quote cq = (Client_Quote) clq.get(0);
-                QuoteService.unlinkTechnical(cq.getId());
-                JSONArray technical = new JSONArray(jsonTechnical);
-                for (int i = 0; i < technical.length(); i++) {
-                    JSONObject j = (JSONObject) technical.get(i);
-                    Technical tech = new Technical();
-
-                    tech.setClientQuote_ID(cq.getId());
-                    tech.setSourceApplication((j.getString("sourceApplication")));
-                    sApp = j.getString("sourceApplication");
-                    tech.setSourceOs((j.getString("sourceOs")));
-                    sOs = j.getString("sourceOs");
-                    tech.setSourceVersion((j.getString("sourceVersion")));
-                    sVersion = j.getString("sourceVersion");
-                    tech.setTargetOs((j.getString("targetOs")));
-                    dOs = j.getString("targetOs");
-                    tech.setTargetApplication((j.getString("targetApplication")));
-                    dApp = j.getString("targetApplication");
-                    tech.setTargetVersion(j.getString("targetVersion"));
-                    tVersion = j.getString("targetVersion");
-                    // tech.setTechnicalId((j.getString("ID_Technical")));
-                    QuoteService.getInstance().saveTechnical(tech);
-                    if (i < technical.length() - 1) {
-                        sApp += " , ";
-                        dApp += " , ";
-                        sOs += " , ";
-                        dOs += " , ";
-                        sVersion += " , ";
-                        tVersion += " , ";
-
+             Quote1 q = QuoteService.getInstance().getSingleQuoteFromProject(p.getProjectId());
+            if(null!=oper){
+                    if(oper.equalsIgnoreCase("del")) {
+                        int reqid = Integer.parseInt(request.getParameter("id"));
+                        QuoteService.unlinkTechnical(reqid);
+                    }else{
+                        Technical tech = new Technical();
+                        if (oper.equalsIgnoreCase("edit")) {
+                             int reqid = Integer.parseInt(request.getParameter("id"));
+                             tech = QuoteService.getInstance().getSingleTechnical(reqid);
+                        } 
+                            List clq = QuoteService.getInstance().getClient_Quote(q.getQuote1Id());
+                            Client_Quote cq = (Client_Quote) clq.get(0);    
+                            tech.setClientQuote_ID(cq.getId());
+                            tech.setSourceApplication((request.getParameter("sourceApplication")));
+                            tech.setSourceOs((request.getParameter("sourceOs")));
+                            tech.setSourceVersion((request.getParameter("sourceVersion")));
+                            tech.setTargetOs((request.getParameter("targetOs")));
+                            tech.setTargetApplication((request.getParameter("targetApplication")));
+                            tech.setTargetVersion(request.getParameter("targetVersion"));
+                            if(!"".equalsIgnoreCase(request.getParameter("unitCount")))
+                                tech.setUnitCount(Double.parseDouble(request.getParameter("unitCount")));
+                             QuoteService.getInstance().saveTechnical(tech);
+                    
                     }
-                    number = q.getNumber();
-                    porqid = q.getQuote1Id();
                 }
 
-
-                cq.setApplication(sApp);
-                cq.setOs(sOs);
-                cq.setVersion(sVersion);
-                cq.setTarget_application(dApp);
-                cq.setTarget_os(dOs);
-                cq.setTarget_version(tVersion);
-                ProjectService.getInstance().updateProject(p);
-                QuoteService.getInstance().saveClientQuote(cq);
-                //place quote into attribute for display
-
-            } catch (Exception e) {
-            }
         }
-
+        request.setAttribute("porq", porq);
         Integer id = Integer.valueOf(projectId);
 
         DynaValidatorForm upd = (DynaValidatorForm) form;
@@ -322,9 +287,11 @@ public class InDtpUpdateAction extends Action {
         try {
             if (verifiedDate.length() > 0) { //if present
                 iDtp.setVerifiedDate(DateService.getInstance().convertDate(verifiedDate).getTime());
+            }else{
+                iDtp.setVerifiedDate(null);
             }
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         iDtp.setVerifiedText(verifiedText);
 
@@ -535,10 +502,10 @@ public class InDtpUpdateAction extends Action {
         iqf.setOthEnteredBy(othEnteredBy);
         iqf.setOthExplain(othExplain);
         iqf.setOthScore(othScore);
-
-        if (qualityFeedback.equalsIgnoreCase("y")) {
-            InteqaService.getInstance().updateInQualityFeedback(iqf);
-        }
+        if (null!=qualityFeedback) {
+            if (qualityFeedback.equalsIgnoreCase("y")) {
+                InteqaService.getInstance().updateInQualityFeedback(iqf);
+        }}
 
         // Forward control to the specified success URI
         return (mapping.findForward("Success"));

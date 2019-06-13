@@ -45,13 +45,13 @@ public class DBOperation
 			dBConnection = new DBConnection();
 			conn =  dBConnection.getConnection();
 		}
-		////System.out.println("Calling DB Operator Class");
+		//////System.out.println("Calling DB Operator Class");
 		
 	}
 
 	public DBOperation(Connection conn)	{
 	    DBOperation.conn = conn;
-		////System.out.println("here in dboperation 1");
+		//////System.out.println("here in dboperation 1");
 		//if(dBConnection==null)
 		//{
 			//dBConnection = new DBConnection();
@@ -215,9 +215,9 @@ public class DBOperation
 	 * @return ResultSet
 	 */
 	public ResultSet executeSelectQuery(String queryString){
-	     //System.out.println(queryString);
+	     ////System.out.println(queryString);
 	     try{
-		     	////System.out.println("query : " + queryString);
+		     	//////System.out.println("query : " + queryString);
 			statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 		     	resultset = statement.executeQuery(queryString);
 	     } catch(SQLException ex){
@@ -265,7 +265,7 @@ public class DBOperation
              try{		
 			conn.setAutoCommit(status);
 		 }catch(SQLException err){
-			//System.out.println("SQLException in DBOPERATION"+err);
+			////System.out.println("SQLException in DBOPERATION"+err);
 			//err.printStackTrace();
 		 }
 	}
@@ -279,7 +279,7 @@ public class DBOperation
 		try{
 			conn.commit();
 		}catch(SQLException err){
-			//System.out.println("SQLException in DBOPERATION"+err);
+			////System.out.println("SQLException in DBOPERATION"+err);
 			//err.printStackTrace();
 		}
 	}
@@ -293,7 +293,7 @@ public class DBOperation
 		try{
 			conn.rollback();
 		}catch(SQLException err){
-			//System.out.println("SQLException in DBOPERATION"+err);
+			////System.out.println("SQLException in DBOPERATION"+err);
 			//err.printStackTrace();
 		}
 	}

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -37,7 +37,7 @@ public final class ProjectViewNavigationAction extends Action {
 
     public ProjectViewNavigationAction()
     {
-        System.out.println("ProjectViewNavigationAction constructor is calling***************************************");
+        //System.out.println("ProjectViewNavigationAction constructor is calling***************************************");
     }
     // ----------------------------------------------------- Instance Variables
 
@@ -87,7 +87,7 @@ public final class ProjectViewNavigationAction extends Action {
         //id of current project
         String projectId = StandardCode.getInstance().getCookie("projectViewId", request.getCookies());
         Integer currentId = Integer.valueOf(projectId);
-        System.out.println("currentId****************************************"+currentId);
+        //System.out.println("currentId****************************************"+currentId);
                         
         //get where to move: <code>previous, stay, next</code>
         //where to move from request

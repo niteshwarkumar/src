@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<hibernate-mapping>
+   <class name="app.reports.Kpi" table="kpi">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+  <property name="type" type="string"/>
+  <property name="goal" type="string"/>
+  <property name="referancevalue" type="string"/>
+  <property name="responsibility" type="string"/>
+  <property name="source" type="string"/>
+  <property name="action" type="string"/>
+  <property name="year" type="int"/>
+  <property name="referanceDate" type="date"/>
+   <property name="referancevalue2" type="string"/>
+  <property name="referanceDate2" type="date"/>
+ 
+ </class>
+</hibernate-mapping>
+
+

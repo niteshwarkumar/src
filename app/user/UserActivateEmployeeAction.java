@@ -4,30 +4,23 @@
 
 package app.user;
 
-import java.util.Locale;
+import app.admin.AdminService;
+import app.client.Client;
+import app.client.ClientService;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.struts.upload.FormFile;
-import org.apache.struts.validator.*;
-import java.io.*;
-import java.util.*;
 import app.user.*;
-import app.client.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
+import app.standardCode.StringCleaner;
+import java.util.List;
 
 
 public final class UserActivateEmployeeAction extends Action {
@@ -90,7 +83,32 @@ public final class UserActivateEmployeeAction extends Action {
             u.setDropDown(activateFlag);
        
         //set updated values to db
+        StringCleaner sc = new StringCleaner();
         UserService.getInstance().updateUser(u);
+        if(activateFlag.equalsIgnoreCase("false")){
+            String userFullName = sc.convertToAscii(u.getFirstName()+" "+u.getLastName(),false);
+            AdminService as = new  AdminService();
+            as.deleteTicker(Integer.valueOf(id));
+            ClientService cs = new ClientService();
+            List clientList  = cs.getClientList();
+            for(int i = 0; i< clientList.size();i++){
+            Client c = new Client();
+                boolean update=false;
+            if(sc.convertToAscii(c.getProject_mngr(), false).equalsIgnoreCase(userFullName)){c.setProject_mngr("House");update=true;}
+            if(sc.convertToAscii(c.getBackup_pm(), false).equalsIgnoreCase(userFullName)){c.setBackup_pm("House");update=true;}
+            if(sc.convertToAscii(c.getSales(), false).equalsIgnoreCase(userFullName)){c.setSales("House");update=true;}
+            if(sc.convertToAscii(c.getSales_rep(), false).equalsIgnoreCase(userFullName)){c.setSales_rep("House");update=true;}
+            if(sc.convertToAscii(c.getMain_dtp(), false).equalsIgnoreCase(userFullName)){c.setMain_dtp("House");update=true;}
+            if(sc.convertToAscii(c.getMain_engineer(), false).equalsIgnoreCase(userFullName)){c.setMain_engineer("House");update=true;}
+            if(sc.convertToAscii(c.getOther_engineer(), false).equalsIgnoreCase(userFullName)){c.setOther_engineer("House");update=true;}
+            if(sc.convertToAscii(c.getOther_dtp(), false).equalsIgnoreCase(userFullName)){c.setOther_dtp("House");update=true;}
+            if(update)
+            {cs.updateClient(c);}
+            }
+            
+        
+        
+        }
         
         //place user id into request for display
         //request.setAttribute("user", u);

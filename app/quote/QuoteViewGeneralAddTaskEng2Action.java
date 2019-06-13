@@ -83,7 +83,8 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
         String eng5 = (String) (qvgate1.get("eng5"));  
         String eng6 = (String) (qvgate1.get("eng6"));  
         String eng7 = (String) (qvgate1.get("eng7"));  
-        String eng8 = (String) (qvgate1.get("eng8"));  
+        String eng8 = (String) (qvgate1.get("eng8")); 
+        String eng9 = (String) (qvgate1.get("eng9"));
         String[] engTaskOptions = QuoteService.getInstance().getEngTaskOptions();
         
         //get the user's chosen source array for later use in case new target "new" needs to be created
@@ -98,12 +99,14 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                 //need target doc and source doc to add tasks to it
                 TargetDoc td = ProjectService.getInstance().getSingleTargetDoc(Integer.valueOf(targets[i]));
                 SourceDoc sd = td.getSourceDoc();
+                Project p = sd.getQuote().getProject();
 
                 if(eng1.equals("on")) { //if checked in form, then add this task to target Doc
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
                     et.setTargetDoc(td);
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTaskName(engTaskOptions[1-1]);
                     et.setOrderNum(new Integer(1));
                     engTasks.add(et);
@@ -114,6 +117,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
                     et.setTargetDoc(td);
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTaskName(engTaskOptions[2-1]);
                     et.setOrderNum(new Integer(2));
                     engTasks.add(et);
@@ -123,6 +127,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[3-1]);
                     et.setOrderNum(new Integer(3));
@@ -133,6 +138,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[4-1]);
                     et.setOrderNum(new Integer(4));
@@ -143,6 +149,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[5-1]);
                     et.setOrderNum(new Integer(5));
@@ -153,6 +160,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[6-1]);
                     et.setOrderNum(new Integer(6));
@@ -163,9 +171,20 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[7-1]);
                     et.setOrderNum(new Integer(7));
+                    engTasks.add(et);
+                }
+                if(eng9.equals("on")) { //if checked in form, then add this task to target Doc
+                    EngTask et = new EngTask();
+                    et.setSourceLanguage(sd.getLanguage());
+                    et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
+                    et.setTargetDoc(td);
+                    et.setTaskName(engTaskOptions[9-1]);
+                    et.setOrderNum(new Integer(9));
                     engTasks.add(et);
                 }
                 
@@ -174,6 +193,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     et.setNotes((String) (qvgate1.get("engOtherText")));
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[8-1]);
                     et.setOrderNum(new Integer(8));
@@ -199,7 +219,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
             td.setLanguage("All");
             SourceDoc sd = sources[i];
-            
+             Project p = sd.getQuote().getProject();
             //link this target Doc to the source Doc; add new target Doc to db
             Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td); 
             
@@ -207,6 +227,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[1-1]);
                     et.setOrderNum(new Integer(1));
@@ -217,6 +238,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[2-1]);
                     et.setOrderNum(new Integer(2));
@@ -227,6 +249,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[3-1]);
                     et.setOrderNum(new Integer(3));
@@ -237,6 +260,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[4-1]);
                     et.setOrderNum(new Integer(4));
@@ -247,6 +271,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[5-1]);
                     et.setOrderNum(new Integer(5));
@@ -257,6 +282,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[6-1]);
                     et.setOrderNum(new Integer(6));
@@ -267,9 +293,20 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     EngTask et = new EngTask();
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                    et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[7-1]);
                     et.setOrderNum(new Integer(7));
+                    engTasks.add(et);
+                }
+                if(eng9.equals("on")) { //if checked in form, then add this task to target Doc
+                    EngTask et = new EngTask();
+                    et.setSourceLanguage(sd.getLanguage());
+                    et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
+                    et.setTargetDoc(td);
+                    et.setTaskName(engTaskOptions[9-1]);
+                    et.setOrderNum(new Integer(9));
                     engTasks.add(et);
                 }
                 
@@ -278,6 +315,7 @@ public final class QuoteViewGeneralAddTaskEng2Action extends Action {
                     et.setNotes((String) (qvgate1.get("engOtherText")));
                     et.setSourceLanguage(sd.getLanguage());
                     et.setTargetLanguage(td.getLanguage());
+                     et.setCurrency(p.getCompany().getCcurrency());
                     et.setTargetDoc(td);
                     et.setTaskName(engTaskOptions[8-1]);
                     et.setOrderNum(new Integer(8));

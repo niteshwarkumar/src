@@ -95,7 +95,7 @@ public final class QuoteAdd1Action extends Action {
                 newQ.setEnteredById((String)request.getSession(false).getAttribute("username"));
                 newQ.setEnteredByTS(new Date());
                }
-                QuoteService.getInstance().updateQuote(newQ);
+                QuoteService.getInstance().updateQuote(newQ,(String)request.getSession(false).getAttribute("username"));
                 
         }else{
            
@@ -120,15 +120,13 @@ public final class QuoteAdd1Action extends Action {
         //p.setProductDescription(request.getParameter("productDescription") );
         p.setPm(request.getParameter("projectManager"));
              try{
-        String[] fname = request.getParameter("projectManager").split(" ");
-         User pm = null;
-            if (fname.length == 2) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1]);
-            } else if (fname.length == 3) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
-            } else if (fname.length == 4) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
-            }
+        String fname = request.getParameter("projectManager");
+         User pm = UserService.getInstance().getSingleUserRealName(fname);
+//            } else if (fname.length == 3) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
+//            } else if (fname.length == 4) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
+//            }
          p.setPm_id(pm.getUserId());
         }catch(Exception e){ p.setPm_id(0); }
         p.setAe(c.getSales_rep());
@@ -172,7 +170,7 @@ public final class QuoteAdd1Action extends Action {
         response.addCookie(StandardCode.getInstance().setCookie("projectViewId", String.valueOf(projectId)));
         request.setAttribute("projectViewId", String.valueOf(projectId));    
         request.setAttribute("quoteViewId", String.valueOf(newQ.getQuote1Id())); 
-        //System.out.println("quoteViewId="+newQ.getQuote1Id());
+        ////System.out.println("quoteViewId="+newQ.getQuote1Id());
         //place client into cookie; this will be used later in wizard
         response.addCookie(StandardCode.getInstance().setCookie("projectAddClientId", String.valueOf(c.getClientId())));
         request.setAttribute("projectAddClientId", String.valueOf(c.getClientId()));

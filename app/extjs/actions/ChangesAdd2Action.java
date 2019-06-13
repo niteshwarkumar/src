@@ -16,6 +16,7 @@ import java.util.*;
 import app.project.*;
 import app.quote.QuoteService;
 import app.security.*;
+import app.standardCode.StandardCode;
 
 public final class ChangesAdd2Action extends Action {
 
@@ -86,7 +87,34 @@ public final class ChangesAdd2Action extends Action {
            changeNo=changeNo-1;
 
         }
-               Integer flag1=0;
+//        String changeId = request.getParameter("changeId");
+        String changes = request.getParameter("changes");
+        String changeId = request.getParameter("changeId");
+        
+        Change1 change = new Change1();
+        if (!StandardCode.getInstance().noNull(changeId).equalsIgnoreCase("-1")) {
+            if (!StandardCode.getInstance().noNull(changeId).isEmpty()) {
+                change = ProjectService.getInstance().getSingleChange(Integer.parseInt(changeId));
+                changeNo = Integer.parseInt(change.getNumber().replaceAll("[A-Za-z]", ""));
+                if (StandardCode.getInstance().noNull(changes).isEmpty()) {
+                    change.setName(StandardCode.getInstance().noNull("C" + changeNo));
+                } else {
+                    change.setName(changes);
+                }
+            } else {
+                change.setNumber("C" + changeNo);
+                if (StandardCode.getInstance().noNull(changes).isEmpty()) {
+                    change.setName(StandardCode.getInstance().noNull("C" + changeNo));
+                } else {
+                    change.setName(changes);
+                }
+                ProjectService.getInstance().addChangeWithProject(p, change);
+            }
+            request.setAttribute("changeNo", "" + changeNo);
+        } else {
+            request.setAttribute("changeNo", "-1");
+        }
+        Integer flag1=0;
         Set sources = p.getSourceDocs();
         for(Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
             flag1=0;
@@ -136,7 +164,7 @@ public final class ChangesAdd2Action extends Action {
          }else{flag=0;}}
  }catch(Exception e){
 
-            System.out.println("Exception"+ e.getMessage());
+            //System.out.println("Exception"+ e.getMessage());
  }
 
         if(flag==0){
@@ -176,23 +204,24 @@ public final class ChangesAdd2Action extends Action {
 
         
        SourceDoc sd =null;
-       // System.out.println("mainTarget="+mainTarget);
+       // //System.out.println("mainTarget="+mainTarget);
 //update values
 
-        //System.out.println("new changeNo="+changeNo+" for p.getProjectId().intValue()="+p.getProjectId().intValue());
+        ////System.out.println("new changeNo="+changeNo+" for p.getProjectId().intValue()="+p.getProjectId().intValue());
         try{
         for(int i=0; i<mainSrc.length;i++){
             Integer sdId=0;
             sd=ProjectService.getInstance().getSingleSourceDoc(p.getProjectId(),mainSrc[i]);
             if(sd!=null){
-            sd.setChangeNo(new Integer(changeNo));
+            sd.setChangeNo(changeNo);
             sdId= sd.getSourceDocId();
 
             ProjectService.getInstance().UpdateSource(sd);
             }else{
                 sd = new SourceDoc(new HashSet());
             sd.setLanguage(mainSrc[i]);
-            sd.setChangeNo(new Integer(changeNo));
+            sd.setChangeNo(changeNo);
+            
 
             //Integer sdId=ProjectService.getInstance().ge
             //add SourceDoc to db building one-to-many relationship between project and source
@@ -203,12 +232,12 @@ public final class ChangesAdd2Action extends Action {
                         Integer x = 0;
                         TargetDoc tgtDoc = ProjectService.getInstance().getSingleTargetDoc(targetLanguage[j], sdId);
                         if (tgtDoc != null) {
-                            tgtDoc.setChangeNo(new Integer(changeNo));
+                            tgtDoc.setChangeNo(changeNo);
                             ProjectService.getInstance().UpdateTarget(tgtDoc);
                         } else {
                             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                             td.setLanguage(targetLanguage[j]);
-                            td.setChangeNo(new Integer(changeNo));
+                            td.setChangeNo(changeNo);
                             x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
                         }
                     }
@@ -218,12 +247,12 @@ public final class ChangesAdd2Action extends Action {
                         Integer x = 0;
                         TargetDoc tgtDoc = ProjectService.getInstance().getSingleTargetDoc(mainTarget[j], sdId);
                         if (tgtDoc != null) {
-                            tgtDoc.setChangeNo(new Integer(changeNo));
+                            tgtDoc.setChangeNo(changeNo);
                            ProjectService.getInstance().UpdateTarget(tgtDoc);
                         } else {
                             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                             td.setLanguage(mainTarget[j]);
-                            td.setChangeNo(new Integer(changeNo));
+                            td.setChangeNo(changeNo);
                             x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
                         }
                     }
@@ -239,12 +268,13 @@ public final class ChangesAdd2Action extends Action {
                 Integer sdId = 0;
                  sd = ProjectService.getInstance().getSingleSourceDoc(p.getProjectId(), sourceLanguage[i]);
                 if (sd != null) {
-                    sd.setChangeNo(new Integer(changeNo));
+                    sd.setChangeNo(changeNo);
                     sdId= sd.getSourceDocId();
                     //sdId= sdId = ProjectService.getInstance().addSourceWithProject(p, sd);
                     ProjectService.getInstance().UpdateSource(sd);
                 } else {
                      sd = new SourceDoc(new HashSet());
+                     sd.setChangeNo(changeNo);
                     sd.setLanguage(sourceLanguage[i]);
                     sdId = ProjectService.getInstance().addSourceWithProject(p, sd);
                 }
@@ -253,11 +283,11 @@ public final class ChangesAdd2Action extends Action {
                         Integer x = 0;
                         TargetDoc tgtDoc = ProjectService.getInstance().getSingleTargetDoc(targetLanguage[j], sdId);
                         if (tgtDoc != null) {
-                            tgtDoc.setChangeNo(new Integer(changeNo));
+                            tgtDoc.setChangeNo(changeNo);
                             ProjectService.getInstance().UpdateTarget(tgtDoc);
                         } else {
                             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
-                            td.setLanguage(targetLanguage[j]);td.setChangeNo(new Integer(changeNo));
+                            td.setLanguage(targetLanguage[j]);td.setChangeNo(changeNo);
 
                             x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
                         }
@@ -268,12 +298,12 @@ public final class ChangesAdd2Action extends Action {
                         Integer x = 0;
                         TargetDoc tgtDoc = ProjectService.getInstance().getSingleTargetDoc(mainTarget[j], sdId);
                         if (tgtDoc != null) {
-                            tgtDoc.setChangeNo(new Integer(changeNo));
+                            tgtDoc.setChangeNo(changeNo);
                             ProjectService.getInstance().UpdateTarget(tgtDoc);
                         } else {
                             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                             td.setLanguage(mainTarget[j]);
-                            td.setChangeNo(new Integer(changeNo));
+                            td.setChangeNo(changeNo);
                             x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
                         }
                     }

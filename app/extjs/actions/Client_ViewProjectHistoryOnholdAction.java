@@ -97,7 +97,7 @@ String username = StandardCode.getInstance().getCookie("storedUsername", request
 User user = UserService.getInstance().getSingleUser(username);
 clientId = user.getID_Client().toString();
 }
-System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
+//System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
 
 //Integer id = Integer.parseInt(clientId);
 
@@ -117,7 +117,7 @@ System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>
 //add tab location to cookies; this will remember which tab we are at
 response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
 // long end1 = System.currentTimeMillis();
-//System.out.println("old way:"+(end1-start1));
+////System.out.println("old way:"+(end1-start1));
 // long start2 = System.currentTimeMillis();
 response.setContentType("text/html");
 response.setHeader("Cache-Control", "no-cache");
@@ -139,13 +139,13 @@ Project p = (Project) iter.next();
 JSONObject jo = ProjectHelper.ClientProjectToJson2(p);
 projectHistory.add(jo);
 }
-System.out.println("projectHistory"+projectHistory);
-// System.out.println(actResponse.toXML());
+//System.out.println("projectHistory"+projectHistory);
+// //System.out.println(actResponse.toXML());
 PrintWriter out = response.getWriter();
 out.println(new JSONArray(projectHistory.toArray()));
 out.flush();
 // long end2 = System.currentTimeMillis();
-//System.out.println("Finnished ClientViewProjectHistoryAction!");
+////System.out.println("Finnished ClientViewProjectHistoryAction!");
 // Forward control to the specified success URI
 //return (mapping.findForward("Success"));
 return null;

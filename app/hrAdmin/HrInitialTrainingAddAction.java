@@ -31,7 +31,7 @@ public class HrInitialTrainingAddAction extends Action {
             HttpServletRequest request,
             HttpServletResponse response)
             throws Exception {
-        String jsonData = request.getParameter("trainingJSON");
+        String jsonData = new String(request.getParameter("trainingJSON").getBytes(), "UTF-8");
 
 
         String userId = null;
@@ -74,7 +74,7 @@ public class HrInitialTrainingAddAction extends Action {
             UserService.getInstance().unlinkInitialTraining(id);
             for (int i = 0; i < training.length(); i++) {
                 JSONObject j = (JSONObject) training.get(i);
-                System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
+                //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
                 TrainingInitial td = new TrainingInitial();
                 td = new TrainingInitial();
                 String datestarted = j.getString("traindate");

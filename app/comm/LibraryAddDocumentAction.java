@@ -72,10 +72,10 @@ public class LibraryAddDocumentAction extends Action {
         
 //        String desc=request.getParameter("desc");
 
-//           java.io.File dBDir = new java.io.File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab);
+//           java.io.File dBDir = new java.io.File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab);
 //        boolean exists = dBDir.exists();
 //        if (!exists) {
-//            String strDirectoy = "C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab;
+//            String strDirectoy = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab;
 //            // Create one directory
 //            boolean success = (new java.io.File(strDirectoy)).mkdir();
 //        } else {
@@ -96,7 +96,7 @@ public class LibraryAddDocumentAction extends Action {
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
 //            java.io.File saveFile = new java.io.File("D:/Library/"+mainTab+"/" + saveFileName);
-            java.io.File saveFile = new java.io.File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab+"/" + saveFileName);
+            java.io.File saveFile = new java.io.File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab+"/" + saveFileName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();

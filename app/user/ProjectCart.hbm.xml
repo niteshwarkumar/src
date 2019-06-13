@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.user.ProjectCart" table="ProjectCart">
+   <class name="app.user.ProjectCart" table="projectcart">
       <id name="projectCartId" type="int" column="ID_ProjectCart">
          <generator class="identity"/>
       </id>

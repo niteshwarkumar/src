@@ -30,7 +30,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 //import org.apache.poi.xssf.*;
-import org.apache.poi.xssf.usermodel.*;
 
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -38,7 +37,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 //import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -122,19 +120,33 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
         Set sources = p.getSourceDocs();
         //get the lin task to update
         //String linTaskId = StandardCode.getInstance().getCookie("quoteViewGeneralTradosUploadId", request.getCookies());
-        System.out.println(sources.size());
+        //System.out.println(sources.size());
+        
+        String change ="";
+        change = request.getParameter("change");
+        //check attribute in request
+        if (change == null) {
+            change = (String) request.getAttribute("change");
+        }
+        if (change == null) {
+            change = "";
+        }
 
-        File folder = new File("C:/log");
+        String filePath = "C:/log/";
+//        filePath="/Users/abhisheksingh/Project/log/";
+        File folder = new File(filePath);
+        try{
         File[] listOfFiles = folder.listFiles();
         for (int ij = 0; ij < listOfFiles.length; ij++) {
-            if (listOfFiles[ij].isFile() && (listOfFiles[ij].getName().endsWith(".log")) || listOfFiles[ij].getName().endsWith(".xls") || listOfFiles[ij].getName().endsWith(".xlsx") || listOfFiles[ij].getName().endsWith(".xml")) {
+            try{
+            if (listOfFiles[ij].isFile() && (listOfFiles[ij].getName().toLowerCase().toLowerCase().endsWith(".log")) || listOfFiles[ij].getName().toLowerCase().endsWith(".xls") || listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx") || listOfFiles[ij].getName().toLowerCase().endsWith(".xml")) {
                 String lang = "";
-                System.out.println("File " + listOfFiles[ij].getName());
+                //System.out.println("File " + listOfFiles[ij].getName());
                 String myFile = listOfFiles[ij].getName();
                 Integer leng = myFile.length();
-                if (listOfFiles[ij].getName().endsWith(".log")) {
+                if (listOfFiles[ij].getName().toLowerCase().endsWith(".log")) {
                     lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 6, leng - 4));
-                } else if (listOfFiles[ij].getName().endsWith(".xlsx")) {
+                } else if (listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx")) {
                     lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 7, leng - 5));
                 } else {
                     lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 6, leng - 4));
@@ -154,13 +166,14 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                             for (int k = 0; k < linTasklist.size(); k++) {
 
                                 LinTask lt = (LinTask) linTasklist.get(k);
+                                if(StandardCode.getInstance().noNull(lt.getChangeDesc()).equalsIgnoreCase(change)){
 
 
 
                                 //get input stream
                                 //InputStream in = listOfFiles[ij].getInputStream();
 
-                                if (listOfFiles[ij].getName().endsWith(".log")) {
+                                if (listOfFiles[ij].getName().toLowerCase().endsWith(".log")) {
 
                                     FileInputStream in = new FileInputStream(listOfFiles[ij]);
                                     //byte[] fileData = listOfFiles[ij].getFileData(); //byte array of entire file
@@ -339,7 +352,7 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                             lt.setWord95(num95);
                                             lt.setWord85(num85);
                                             lt.setWord75(num75);
-                                            lt.setWordNew(new Integer(numNew));
+                                            lt.setWordNew(new Double(numNew));
                                             lt.setWord8599(new Integer(num8599));
                                             lt.setWordNew4(new Double(numNew4));
                                             lt.setWordTotal(numTotal);
@@ -348,7 +361,17 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                             lt.setWordNew4(numTotal);
                                             lt.setWordTotal(numTotal);
 
-                                        }
+                                        }else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep);
+                                            lt.setWord100(num100);
+                                            lt.setWord95(num95);
+                                            lt.setWord85(num85);
+                                            lt.setWord75(num75);
+                                            lt.setWordNew(new Double(numNew));
+                                            lt.setWord8599(new Integer(num8599));
+                                            lt.setWordNew4(new Double(numNew4));
+                                            lt.setWordTotal(numTotal);
+                                    }
                                         //upload the new trados values to db
                                         ProjectService.getInstance().updateLinTask(lt);
 
@@ -373,7 +396,7 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                     }
                                     in.close();
 
-                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xls")) {
+                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xls")) {
 
                                     POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/" + listOfFiles[ij].getName()));
 
@@ -400,7 +423,7 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                                 if (count == 4 && flag.equalsIgnoreCase("true")) {
                                                     dataValue[i++] = cell.toString();
 
-                                                    System.out.println("cel value---------->  " + cell.toString());
+                                                    //System.out.println("cel value---------->  " + cell.toString());
 
                                                     if (i > 10) {
                                                         flag = "false";
@@ -408,7 +431,7 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
 
                                                 }
                                             } catch (Exception e) {
-                                                System.out.println("Integer Value" + count++);
+                                                //System.out.println("Integer Value" + count++);
                                             }
                                         }
                                     }
@@ -435,109 +458,123 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordContext(numContext);
                                         lt.setWordPerfect(numPerfect);
                                         lt.setWordTotal(numTotal);
+                                        
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
 
                                         lt.setWordNew4(numTotal);
                                         lt.setWordTotal(numTotal);
 
-                                    }
-                                    //upload the new trados values to db
-                                    ProjectService.getInstance().updateLinTask(lt);
-
-
-                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xlsx")) {
-//                                      POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/" + listOfFiles[ij].getName()));
-//                                    File file = new File("C:/log/" + listOfFiles[ij].getName());
-//                                   OPCPackage pkg = OPCPackage.open(new FileInputStream(file.getAbsolutePath()));
-//                                    XSSFWorkbook wb = new XSSFWorkbook(pkg);
-                                    InputStream fs = new FileInputStream("C:/log/" + listOfFiles[ij].getName());
-                                    XSSFWorkbook wb = new XSSFWorkbook(fs);
-
-//                                    XSSFWorkbook wb = new XSSFWorkbook(fs);
-                                    XSSFSheet sheet = wb.getSheetAt(0);
-                                    XSSFRow row;
-                                    XSSFCell cell;
-                                    int count = 0, i = 0;
-                                    String flag = "true";
-
-                                    Iterator rows = sheet.rowIterator();
-
-                                    while (rows.hasNext()) {
-                                        row = (XSSFRow) rows.next();
-                                        count = 0;
-                                        Iterator cells = row.cellIterator();
-                                        while (cells.hasNext()) {
-
-
-                                            cell = (XSSFCell) cells.next();
-
-                                            count++;
-                                            try {
-                                                if (count == 4 && flag.equalsIgnoreCase("true")) {
-                                                    dataValue[i++] = cell.toString();
-
-                                                    System.out.println("cel value---------->  " + cell.toString());
-
-                                                    if (i > 10) {
-                                                        flag = "false";
-                                                    }
-
-                                                }
-                                            } catch (Exception e) {
-                                                System.out.println("Integer Value" + count++);
-                                            }
-                                        }
-                                    }
-
-                                    Integer numRep = Math.round(Float.parseFloat(dataValue[2]));
-                                    Integer num100 = Math.round(Float.parseFloat(dataValue[4]));
-                                    Integer num95 = Math.round(Float.parseFloat(dataValue[5]));
-                                    Integer num85 = Math.round(Float.parseFloat(dataValue[6]));
-                                    Integer num75 = Math.round(Float.parseFloat(dataValue[7]));
-                                    Integer num50 = Math.round(Float.parseFloat(dataValue[8]));
-                                    Integer numNo = Math.round(Float.parseFloat(dataValue[9]));
-                                    Double numTotal = Double.valueOf(dataValue[10]);
-                                    // numRep = Integer.parseInt(dataValue[1]);
-
-                                    int numNew = num50.intValue() + numNo.intValue();
-                                    int num8599 = num95.intValue() + num85.intValue();
-                                    int numNew4 = num75.intValue() + numNew;
-                                    if (lt.getTaskName().equalsIgnoreCase("Translation")) {
-                                        //set new trados values for the lin task
+                                    }else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
                                         lt.setWordRep(numRep);
                                         lt.setWord100(num100);
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordContext(numContext);
+                                        lt.setWordPerfect(numPerfect);
                                         lt.setWordTotal(numTotal);
-                                    } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-
-                                        lt.setWordNew4(numTotal);
-                                        lt.setWordTotal(numTotal);
-
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
-                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xml")) {
 
-                                    InputStream in = new FileInputStream("C:/log/" + listOfFiles[ij].getName());
+//                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx")) {
+////                                      POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/" + listOfFiles[ij].getName()));
+////                                    File file = new File("C:/log/" + listOfFiles[ij].getName());
+////                                   OPCPackage pkg = OPCPackage.open(new FileInputStream(file.getAbsolutePath()));
+////                                    XSSFWorkbook wb = new XSSFWorkbook(pkg);
+//                                    InputStream fs = new FileInputStream("C:/log/" + listOfFiles[ij].getName());
+//                                    XSSFWorkbook wb = new XSSFWorkbook(fs);
+//
+////                                    XSSFWorkbook wb = new XSSFWorkbook(fs);
+//                                    XSSFSheet sheet = wb.getSheetAt(0);
+//                                    XSSFRow row;
+//                                    XSSFCell cell;
+//                                    int count = 0, i = 0;
+//                                    String flag = "true";
+//
+//                                    Iterator rows = sheet.rowIterator();
+//
+//                                    while (rows.hasNext()) {
+//                                        row = (XSSFRow) rows.next();
+//                                        count = 0;
+//                                        Iterator cells = row.cellIterator();
+//                                        while (cells.hasNext()) {
+//
+//
+//                                            cell = (XSSFCell) cells.next();
+//
+//                                            count++;
+//                                            try {
+//                                                if (count == 4 && flag.equalsIgnoreCase("true")) {
+//                                                    dataValue[i++] = cell.toString();
+//
+//                                                    //System.out.println("cel value---------->  " + cell.toString());
+//
+//                                                    if (i > 10) {
+//                                                        flag = "false";
+//                                                    }
+//
+//                                                }
+//                                            } catch (Exception e) {
+//                                                //System.out.println("Integer Value" + count++);
+//                                            }
+//                                        }
+//                                    }
+//
+//                                    Integer numRep = Math.round(Float.parseFloat(dataValue[2]));
+//                                    Integer num100 = Math.round(Float.parseFloat(dataValue[4]));
+//                                    Integer num95 = Math.round(Float.parseFloat(dataValue[5]));
+//                                    Integer num85 = Math.round(Float.parseFloat(dataValue[6]));
+//                                    Integer num75 = Math.round(Float.parseFloat(dataValue[7]));
+//                                    Integer num50 = Math.round(Float.parseFloat(dataValue[8]));
+//                                    Integer numNo = Math.round(Float.parseFloat(dataValue[9]));
+//                                    Double numTotal = Double.valueOf(dataValue[10]);
+//                                    // numRep = Integer.parseInt(dataValue[1]);
+//
+//                                    int numNew = num50.intValue() + numNo.intValue();
+//                                    int num8599 = num95.intValue() + num85.intValue();
+//                                    int numNew4 = num75.intValue() + numNew;
+//                                    if (lt.getTaskName().equalsIgnoreCase("Translation")) {
+//                                        //set new trados values for the lin task
+//                                        lt.setWordRep(numRep);
+//                                        lt.setWord100(num100);
+//                                        lt.setWord95(num95);
+//                                        lt.setWord85(num85);
+//                                        lt.setWord75(num75);
+//                                        lt.setWordNew(new Integer(numNew));
+//                                        lt.setWord8599(new Integer(num8599));
+//                                        lt.setWordNew4(new Double(numNew4));
+//                                        lt.setWordTotal(numTotal);
+//                                    } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
+//
+//                                        lt.setWordNew4(numTotal);
+//                                        lt.setWordTotal(numTotal);
+//
+//                                    }
+//                                    //upload the new trados values to db
+//                                    ProjectService.getInstance().updateLinTask(lt);
+
+                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xml")) {
+
+                                    InputStream in = new FileInputStream(filePath+"/" + listOfFiles[ij].getName());
                                     System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
                                     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                                     Document doc = dBuilder.parse(in);
                                     doc.getDocumentElement().normalize();
-                                    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+                                    //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
                                     Integer numRep = 0;
+                                    Integer numCrossFileRepeated = 0;
                                     Integer num100 = 0;
                                     Integer num95 = 0;
                                     Integer num85 = 0;
@@ -569,7 +606,7 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
 
                                                         Node nNode = fuzzy.item(temp);
 
-                                                        System.out.println("\nCurrent Element :" + nNode.getNodeName());
+                                                        //System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
                                                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -647,7 +684,7 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                                         Node nNode = crossFileRepeated.item(temp);
                                                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                                                             Element eElement2 = (Element) nNode;
-                                                            numRep += Integer.parseInt(eElement2.getAttribute("words"));
+                                                            numCrossFileRepeated = Integer.parseInt(eElement2.getAttribute("words"));
                                                         }
                                                     }
                                                     } catch (Exception e) {
@@ -675,32 +712,44 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                                     int numNew4 = num75.intValue() + numNew;
                                     if (lt.getTaskName().equalsIgnoreCase("Translation")) {
                                         //set new trados values for the lin task
-                                        lt.setWordRep(numRep);
+                                        lt.setWordRep(numRep+numCrossFileRepeated);
                                         lt.setWord100(num100);
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordTotal(new Double(numTotal));
                                         lt.setWordContext(numContext);
                                         lt.setWordPerfect(numPerfect);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-                                        lt.setWordNew(new Integer(numTotal));
+                                        lt.setWordNew(new Double(numTotal));
                                         lt.setWordNew4(new Double(numTotal));
                                         lt.setWordTotal(new Double(numTotal));
+                                    }else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep+numCrossFileRepeated);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordTotal(new Double(numTotal));
+                                        lt.setWordContext(numContext);
+                                        lt.setWordPerfect(numPerfect);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
                                 } else {
-                                     System.out.println("no Match");
+                                     //System.out.println("no Match");
                                      request.setAttribute("isError", "error");
                                      return (mapping.findForward("Error"));
                                     
                                 }
-
+                                    }
                             }
                         }
                     }
@@ -708,11 +757,15 @@ public final class ProjectViewTeamTradosAllUploadAction extends Action {
                 }
 
             } else if (listOfFiles[ij].isDirectory()) {
-                System.out.println("Directory " + listOfFiles[ij].getName());
+                //System.out.println("Directory " + listOfFiles[ij].getName());
             }
+            }catch(Exception e){}
+        }
+        }finally{
+            deleteFile(filePath);
         }
 
-        deleteFile("C:/log");
+        
         //END get file list
 
         // Forward control to the specified success URI

@@ -38,6 +38,7 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.w3c.dom.DOMException;
 
 //import java.io.*;
 /**
@@ -122,21 +123,25 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
 
         //get the lin task to update
         //String linTaskId = StandardCode.getInstance().getCookie("quoteViewGeneralTradosUploadId", request.getCookies());
-
-        File folder = new File("C:/log");
+        String filePath = "C:/log";
+//        filePath="/Users/abhisheksingh/Project/log";
+        
+        File folder = new File(filePath);
         File[] listOfFiles = folder.listFiles();
         for (int ij = 0; ij < listOfFiles.length; ij++) {
-            if (listOfFiles[ij].isFile() && (listOfFiles[ij].getName().endsWith(".log")) || listOfFiles[ij].getName().endsWith(".xls") || listOfFiles[ij].getName().endsWith(".xlsx") || listOfFiles[ij].getName().endsWith(".xml")) {
-                String lang="";
-                System.out.println("File " + listOfFiles[ij].getName());
-                String myFile = listOfFiles[ij].getName();
-                Integer leng = myFile.length();
-                if(listOfFiles[ij].getName().endsWith(".xlsx")){
-                lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 7, leng - 5).toUpperCase(Locale.ENGLISH));
-                }else{
-
-                lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 6, leng - 4).toUpperCase(Locale.ENGLISH));
-                }
+            if (listOfFiles[ij].isFile() && (listOfFiles[ij].getName().toLowerCase().endsWith(".log")) || listOfFiles[ij].getName().toLowerCase().endsWith(".xls") || listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx") || listOfFiles[ij].getName().toLowerCase().endsWith(".xml")) {
+                String tgtlang="",srcLang="";
+                //System.out.println("File " + listOfFiles[ij].getName());
+                String[] lang = listOfFiles[ij].getName().split("\\.")[0].split("-");
+//                listOfFiles[ij].getName().split("\\.")[0].split("-")
+//                Integer leng = myFile.length();
+//                if(listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx")){
+                tgtlang = (String) LanguageAbs.getInstance().getAbs().get(lang[1].toUpperCase(Locale.ENGLISH));
+                srcLang = (String) LanguageAbs.getInstance().getAbs().get(lang[0].toUpperCase(Locale.ENGLISH));
+//                }else{
+//                  
+//                lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 6, leng - 4).toUpperCase(Locale.ENGLISH));
+//                }
                 List sourceLang = QuoteService.getInstance().getSourceLang1(q);
                 for (int ii = 0; ii < sourceLang.size(); ii++) {
                     SourceDoc sd = (SourceDoc) sourceLang.get(ii);
@@ -146,7 +151,7 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
 
 
                         TargetDoc td = (TargetDoc) targetLang.get(jj);
-                        if (td.getLanguage().equalsIgnoreCase(lang)) {
+                        if (td.getLanguage().equalsIgnoreCase(tgtlang)&&sd.getLanguage().equalsIgnoreCase(srcLang)) {
 
                             List linTasklist = QuoteService.getInstance().getLinTask(td.getTargetDocId());
                             for (int k = 0; k < linTasklist.size(); k++) {
@@ -158,7 +163,7 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                 //get input stream
                                 //InputStream in = listOfFiles[ij].getInputStream();
 
-                                if(listOfFiles[ij].getName().endsWith(".log")){
+                                if(listOfFiles[ij].getName().toLowerCase().endsWith(".log")){
 
                                 FileInputStream in = new FileInputStream(listOfFiles[ij]);
                                 //byte[] fileData = listOfFiles[ij].getFileData(); //byte array of entire file
@@ -337,15 +342,26 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordTotal(numTotal);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-
+                                        lt.setWordNew(numTotal);
                                         lt.setWordNew4(numTotal);
                                         lt.setWordTotal(numTotal);
 
+                                    }
+                                    if(Objects.equals(q.getProject().getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordTotal(numTotal);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
@@ -392,9 +408,9 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                 }
                                 in.close();
 
-                        } else if(listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xls")){
+                        } else if(listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xls")){
 
-                POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/"+listOfFiles[ij].getName()));
+                POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filePath+"/"+listOfFiles[ij].getName()));
 
                  HSSFWorkbook wb = new HSSFWorkbook(fs);
                  HSSFSheet sheet = wb.getSheetAt(0);
@@ -420,13 +436,13 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                         {
                             dataValue[i++]=cell.toString();
 
-                            System.out.println("cel value---------->  "+cell.toString());
+                            //System.out.println("cel value---------->  "+cell.toString());
 
                             if(i>10){flag="false";}
 
                         }
-                   }catch(Exception e){System.out.println("Integer Value"+count++);}
-
+                   }catch(Exception e){//System.out.println("Integer Value"+count++);}
+                   }
                    }
                 }
 
@@ -452,24 +468,37 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordContext(numContext);
                                         lt.setWordPerfect(numPerfect);
                                         lt.setWordTotal(numTotal);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-
+                                        lt.setWordNew(numTotal);
                                         lt.setWordNew4(numTotal);
                                         lt.setWordTotal(numTotal);
 
+                                    }
+                                    if(Objects.equals(q.getProject().getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordContext(numContext);
+                                        lt.setWordPerfect(numPerfect);
+                                        lt.setWordTotal(numTotal);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
 
-                              }else if(listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xlsx")){
-                               POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/"+listOfFiles[ij].getName()));
+                              }else if(listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx")){
+                               POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filePath+"/"+listOfFiles[ij].getName()));
 
 
                                XSSFWorkbook wb = new XSSFWorkbook();
@@ -496,13 +525,13 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                         {
                             dataValue[i++]=cell.toString();
 
-                            System.out.println("cel value---------->  "+cell.toString());
+                            //System.out.println("cel value---------->  "+cell.toString());
 
                             if(i>10){flag="false";}
 
                         }
-                   }catch(Exception e){System.out.println("Integer Value"+count++);}
-
+                   }catch(Exception e){//System.out.println("Integer Value"+count++);}
+                   }
                    }
                 }
 
@@ -516,9 +545,9 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                     Double numTotal = Double.valueOf(dataValue[10]);
                                    // numRep = Integer.parseInt(dataValue[1]);
 
-                                    int numNew = num50.intValue() + numNo.intValue();
-                                    int num8599 = num95.intValue() + num85.intValue();
-                                    int numNew4 = num75.intValue() + numNew;
+                                    int numNew = num50 + numNo;
+                                    int num8599 = num95 + num85;
+                                    int numNew4 = num75 + numNew;
                                     if (lt.getTaskName().equalsIgnoreCase("Translation")) {
                                         //set new trados values for the lin task
                                         lt.setWordRep(numRep);
@@ -526,28 +555,39 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
-                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(num8599);
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordTotal(numTotal);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-
+                                        lt.setWordNew(numTotal);
                                         lt.setWordNew4(numTotal);
                                         lt.setWordTotal(numTotal);
 
                                     }
+                                    if(Objects.equals(q.getProject().getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(num8599);
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordTotal(numTotal);
+                                    }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
-                              }  else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xml")) {
+                              }  else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xml")) {
 
-                                    InputStream in = new FileInputStream("C:/log/" + listOfFiles[ij].getName());
+                                    InputStream in = new FileInputStream(filePath+"/" + listOfFiles[ij].getName());
                                     System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
                                     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                                     Document doc = dBuilder.parse(in);
                                     doc.getDocumentElement().normalize();
-                                    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+                                    //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
                                     Integer numRep = 0;
                                     
                                     Integer numRepCross = 0;
@@ -583,7 +623,7 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
 
                                                         Node nNode = fuzzy.item(temp);
 
-                                                        System.out.println("\nCurrent Element :" + nNode.getNodeName());
+                                                        //System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
                                                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -674,7 +714,7 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                                             numRepCross = Integer.parseInt(eElement2.getAttribute("words"));
                                                         }
                                                     }
-                                                    } catch (Exception e) {
+                                                    } catch (DOMException | NumberFormatException e) {
                                                     }
                                                     
                                                     
@@ -686,11 +726,11 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                     }
 
 
-                                    int numNew = num50.intValue() + numNo.intValue();
-                                    int num8599 = num95.intValue() + num85.intValue();
-                                    int numNew4 = num75.intValue() + numNew;
+                                    int numNew = num50 + numNo;
+                                    int num8599 = num95 + num85;
+                                    int numNew4 = num75 + numNew;
                                    // numRep+=numRep1;
-                                    numTotal=numRep+num100+num95+num85+num75+num50+numNo+numContext+numPerfect;
+//                                    numTotal=numRep+numRepCross+num100+num95+num85+num75+num50+numNo+numContext+numPerfect;
                                     if (lt.getTaskName().equalsIgnoreCase("Translation")) {
                                         //set new trados values for the lin task
                                         lt.setWordRep(numRep+numRepCross);
@@ -698,21 +738,34 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
-                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(num8599);
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordTotal(new Double(numTotal));
                                         lt.setWordContext(numContext);
                                         lt.setWordPerfect(numPerfect);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
+                                        lt.setWordNew(new Double(numTotal));
                                         lt.setWordNew4(new Double(numTotal));
                                         lt.setWordTotal(new Double(numTotal));
+                                    }else if(Objects.equals(q.getProject().getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                         lt.setWordRep(numRep+numRepCross);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(num8599);
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordTotal(new Double(numTotal));
+                                        lt.setWordContext(numContext);
+                                        lt.setWordPerfect(numPerfect);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
                                 }else {
-                            System.out.println("no Match");
+                            //System.out.println("no Match");
                         }
 
                             }}
@@ -721,11 +774,11 @@ public final class QuoteViewGeneralTradosAllUploadAction extends Action {
                 }
 
             } else if (listOfFiles[ij].isDirectory()) {
-                System.out.println("Directory " + listOfFiles[ij].getName());
+                //System.out.println("Directory " + listOfFiles[ij].getName());
             }
         }
 
-        deleteFile("C:/log");
+        deleteFile(filePath);
         //END get file list
 
         // Forward control to the specified success URI

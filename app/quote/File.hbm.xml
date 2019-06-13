@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.quote.File" table="File">
+   <class name="app.quote.File" table="file">
       <id name="fileId" type="int" column="ID_File">
          <generator class="identity"/>
       </id>

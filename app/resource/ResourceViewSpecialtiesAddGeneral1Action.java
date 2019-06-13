@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -111,7 +111,7 @@ public final class ResourceViewSpecialtiesAddGeneral1Action extends Action {
         DynaValidatorForm rvs = (DynaValidatorForm) form;
         
         String[] generalId = (String[]) rvs.get("generalId");
-        //System.out.println("before alexxxx:generalId="+generalId);
+        ////System.out.println("before alexxxx:generalId="+generalId);
          //build link (many-to-many) between resource and specialty for each specialty (specificIndustry)
         for(int j = 0; j < generalId.length; j++) {
            

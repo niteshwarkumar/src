@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -107,11 +107,13 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                 //need target doc and source doc to add tasks to it
                 TargetDoc td = ProjectService.getInstance().getSingleTargetDoc(Integer.valueOf(targets[i]));
                 SourceDoc sd = td.getSourceDoc();
+                Project p = sd.getQuote().getProject();
 
                 if(dtp1.equals("on")) { //if checked in form, then add this task to target Doc
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[1-1]);
                     dt.setOrderNum(new Integer(1));
@@ -122,6 +124,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[2-1]);
                     dt.setOrderNum(new Integer(2));
@@ -132,6 +135,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[3-1]);
                     dt.setOrderNum(new Integer(3));
@@ -142,6 +146,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[4-1]);
                     dt.setOrderNum(new Integer(4));
@@ -152,6 +157,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[5-1]);
                     dt.setOrderNum(new Integer(5));
@@ -162,6 +168,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[6-1]);
                     dt.setOrderNum(new Integer(6));
@@ -173,6 +180,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     dt.setNotes((String) (qvgate1.get("dtpOtherText")));
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[7-1]);
                     dt.setOrderNum(new Integer(7));
@@ -198,6 +206,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
             td.setLanguage("All");
             SourceDoc sd = sources[i];
+            Project p = sd.getQuote().getProject();
             
             //link this target Doc to the source Doc; add new target Doc to db
             Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td); 
@@ -206,6 +215,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[1-1]);
                     dt.setOrderNum(new Integer(1));
@@ -216,6 +226,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[2-1]);
                     dt.setOrderNum(new Integer(2));
@@ -226,6 +237,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[3-1]);
                     dt.setOrderNum(new Integer(3));
@@ -236,6 +248,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[4-1]);
                     dt.setOrderNum(new Integer(4));
@@ -246,6 +259,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[5-1]);
                     dt.setOrderNum(new Integer(5));
@@ -256,6 +270,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     DtpTask dt = new DtpTask();
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[6-1]);
                     dt.setOrderNum(new Integer(6));
@@ -267,6 +282,7 @@ public final class QuoteViewGeneralAddTaskDtp2Action extends Action {
                     dt.setNotes((String) (qvgate1.get("dtpOtherText")));
                     dt.setSourceLanguage(sd.getLanguage());
                     dt.setTargetLanguage(td.getLanguage());
+                    dt.setCurrency(p.getCompany().getCcurrency());
                     dt.setTargetDoc(td);
                     dt.setTaskName(dtpTaskOptions[7-1]);
                     dt.setOrderNum(new Integer(7));

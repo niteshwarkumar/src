@@ -65,7 +65,7 @@ public class QMSLibraryUpdateDocumentAction extends Action {
         String doAction = request.getParameter("doAction");
         QMSLibrary uDoc = QMSService.getInstance().getSingleQMSLibraryDocument(Integer.parseInt(libId));
         if (doAction.equalsIgnoreCase("delete")) {
-            QMSService.getInstance().deleteDocument(uDoc);
+            QMSServiceDelete.getInstance().deleteDocument(uDoc);
             return (mapping.findForward(uDoc.getMainTab()));
         }
 
@@ -81,12 +81,12 @@ public class QMSLibraryUpdateDocumentAction extends Action {
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
 //            java.io.File saveFile = new java.io.File("D:/Library/QMS/" + saveFileName);
-            java.io.File saveFile = new java.io.File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/QMS/" + saveFileName);
+            java.io.File saveFile = new java.io.File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/QMS/" + saveFileName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
             out.close();
-            boolean success = (new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/QMS/" + uDoc.getFileSaveName())).delete();
+            boolean success = (new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/QMS/" + uDoc.getFileSaveName())).delete();
             //Update Old Lib HIstory 
 
 
@@ -108,7 +108,7 @@ public class QMSLibraryUpdateDocumentAction extends Action {
               for(int i = 0; i < tlist.size();i++)
               {
                 TrainingNotify tn=(TrainingNotify) tlist.get(i);
-                QMSService.getInstance().deletetTraininNotify(tn);
+                QMSServiceDelete.getInstance().deletetTraininNotify(tn);
               }
 
         }
@@ -126,7 +126,8 @@ public class QMSLibraryUpdateDocumentAction extends Action {
         String releaseDate = (String) uvg.get("release");
         uDoc.setIsoreference((String) uvg.get("isoreference"));
         if(uDoc.getMainTab().equalsIgnoreCase("Review")){
-            uDoc.setOwner(currentUser.getFirstName());
+            uDoc.setOwner(currentUser.getFirstName()+" "+currentUser.getLastName());
+            uDoc.setOwnerid(u.getUserId());
         }
  uDoc.setAffectedBox((String) uvg.get("affectedBox"));
 
@@ -145,9 +146,9 @@ public class QMSLibraryUpdateDocumentAction extends Action {
                 uDoc.setReleaseDate(DateService.getInstance().convertDate(releaseDate).getTime());
             }
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
-        Integer id = QMSService.getInstance().addLibrary(uDoc);
+        Integer id = QMSServiceAddUpdate.getInstance().addLibrary(uDoc);
         if (Upload.getFileName().length() > 0) {
 
             uDoc = QMSService.getInstance().getSingleQMSLibraryDocument(id);
@@ -160,7 +161,7 @@ public class QMSLibraryUpdateDocumentAction extends Action {
             libHistory.setQMSLibId(uDoc.getId());
             libHistory.setChanges((String) uvg.get("changes"));
 
-            QMSService.getInstance().addHistory(libHistory);
+            QMSServiceAddUpdate.getInstance().addHistory(libHistory);
 
         }
 

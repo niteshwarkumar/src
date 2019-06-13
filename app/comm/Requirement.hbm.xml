@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<!--
+    Document   : LibraryUpload.hbm.xml
+    Created on : February 1, 2012, 2:56 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<hibernate-mapping>
+   <class name="app.comm.Requirement" table="requirement">
+      <id name="id" type="int">
+         <generator class="identity"/>
+      </id>
+  <property name="requirement" type="string"/>
+  <property name="type" type="string"/>
+  <property name="clientId" type="int"/>
+  <property name="projectId" type="int"/>
+  <property name="userId" type="int"/>
+  <property name="tab" type="string"/>
+  <property name="compDt" type="date"/>
+
+   </class>
+</hibernate-mapping>

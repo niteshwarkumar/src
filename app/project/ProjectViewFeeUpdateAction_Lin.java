@@ -122,6 +122,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
         double othTotal = 0;
         double pmTotal = 0;
         double linCurrencyTotal=0;
+        Map<String, Double> linRates = new HashMap<>();
         //START LIN TASKS
         //get the updated list of lin Tasks for this project
         LinTask[] linTasks = (LinTask[]) qvg.get("linTasksProject");
@@ -138,41 +139,41 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
                 int word95 = 0;
                 int word85 = 0;
                 int word75 = 0;
-                int wordNew = 0;
+                double wordNew = 0;
                 int word8599 = 0;
                 int wordContext=0;
                 int wordPerfect=0;
                 double wordNew4 = 0;
 
                 if(lt.getWord100() != null) {
-                    word100 = lt.getWord100().intValue();
+                    word100 = lt.getWord100();
                 }
                 if(lt.getWordRep() != null) {
-                    wordRep = lt.getWordRep().intValue();
+                    wordRep = lt.getWordRep();
                 }
                 if(lt.getWord95() != null) {
-                    word95 = lt.getWord95().intValue();
+                    word95 = lt.getWord95();
                 }
                 if(lt.getWord85() != null) {
-                    word85 = lt.getWord85().intValue();
+                    word85 = lt.getWord85();
                 }
                 if(lt.getWord75() != null) {
-                    word75 = lt.getWord75().intValue();
+                    word75 = lt.getWord75();
                 }
                 if(lt.getWordNew() != null) {
-                    wordNew = lt.getWordNew().intValue();
+                    wordNew = lt.getWordNew();
                 }
                 if(lt.getWord8599() != null) {
-                    word8599 = lt.getWord8599().intValue();
+                    word8599 = lt.getWord8599();
                 }
                 if(lt.getWordNew4() != null) {
-                    wordNew4 = lt.getWordNew4().doubleValue();
+                    wordNew4 = lt.getWordNew4();
                 }
                 if(lt.getWordContext() != null) {
-                    wordContext = lt.getWordContext().intValue();
+                    wordContext = lt.getWordContext();
                 }
                 if(lt.getWordPerfect() != null) {
-                    wordPerfect = lt.getWordPerfect().intValue();
+                    wordPerfect = lt.getWordPerfect();
                 }
 
 
@@ -180,36 +181,43 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
                 double rate = 0;
                 try{
                 try {
-                    rate = Double.valueOf(lt.getRate()).doubleValue();
+                    rate = Double.valueOf(lt.getRate());
                 } catch(java.lang.NumberFormatException nfe) {
                     rate = 0;
                 }}catch(Exception e){
                 rate=0;
+                }
+                
+                if(lt.getTaskName().contains("Translation")){
+                    linRates.put(lt.getTargetDoc().getName(), rate);
+                }
+                if(ProjectHelper.isProcessRate(p.getCompany().getClientId(),lt)){
+                    rate = linRates.getOrDefault(lt.getTargetDoc().getName(), 0.00)*ExcelConstants.CLIENT_BBS_PROOFREADING_RATE;
                 }
 
                 double wordTotal = word100 + wordRep + word8599 + wordNew4 + wordContext + wordPerfect;
 
                 double thisTotal = 0.0;
                 //scale the rates (either default or custom)
-                if(p.getCompany().isScaleDefault()) {
-                    double scale100 = new Double(p.getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(p.getCompany().getScaleRep()).doubleValue();
-                    double scale8599 = new Double(p.getCompany().getScale8599()).doubleValue();
-                    double scaleNew4 = new Double(p.getCompany().getScaleNew4()).doubleValue();
-                    double scalePerfect = new Double(p.getCompany().getScalePerfect()).doubleValue();
-                    double scaleContext = new Double(p.getCompany().getScaleContext()).doubleValue();
+                if(p.getCompany().isScaleDefault(p.getProjectId())) {
+                    double scale100 = new Double(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleRep = new Double(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale8599 = new Double(p.getCompany().getScale8599());
+                    double scaleNew4 = new Double(p.getCompany().getScaleNew4());
+                    double scalePerfect = Double.parseDouble(p.getCompany().getScalePerfect(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleContext = new Double(p.getCompany().getScaleContext(p.getProjectId(),p.getCompany().getClientId()));
                    // double scaleContext = new Double(p.getCompany().getS)
                     thisTotal = word100*scale100*rate + wordRep*scaleRep*rate + word8599*scale8599*rate + wordNew4*scaleNew4*rate +wordContext*scaleContext*rate+wordPerfect*scalePerfect*rate;
                     wordTotal = word100 + wordRep + word8599 + wordNew4+wordContext+wordPerfect;
                 } else {
-                    double scale100 = new Double(p.getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(p.getCompany().getScaleRep()).doubleValue();
-                    double scale95 = new Double(p.getCompany().getScale95()).doubleValue();
-                    double scale85 = new Double(p.getCompany().getScale85()).doubleValue();
-                    double scale75 = new Double(p.getCompany().getScale75()).doubleValue();
-                    double scaleNew = new Double(p.getCompany().getScaleNew()).doubleValue();
-                    double scalePerfect = new Double(p.getCompany().getScalePerfect()).doubleValue();
-                    double scaleContext=new Double(p.getCompany().getScaleContext()).doubleValue();
+                    double scale100 = new Double(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleRep = new Double(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale95 = new Double(p.getCompany().getScale95(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale85 = new Double(p.getCompany().getScale85(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale75 = new Double(p.getCompany().getScale75(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleNew = new Double(p.getCompany().getScaleNew(p.getProjectId(),p.getCompany().getClientId()));
+                    double scalePerfect = new Double(p.getCompany().getScalePerfect(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleContext=new Double(p.getCompany().getScaleContext(p.getProjectId(),p.getCompany().getClientId()));
                     thisTotal = word100*scale100*rate + wordRep*scaleRep*rate + word95*scale95*rate + word85*scale85*rate + word75*scale75*rate + wordNew*scaleNew*rate+wordContext*scaleContext*rate+wordPerfect*scalePerfect*rate;
                     wordTotal = word100 + wordRep + word95 + word85 + word75 +wordNew +wordContext+wordPerfect;
                 }
@@ -218,7 +226,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
                 lt.setWordTotal(new Double(wordTotal));
                 lt.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                lt.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                lt.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
                // lt.setICRcheck(new Boolean(ICRcheck));
 
 
@@ -230,7 +238,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
                 int word95 = 0;
                 int word85 = 0;
                 int word75 = 0;
-                int wordNew = 0;
+                double wordNew = 0;
                 int word8599 = 0;
                 double wordNew4 = 0;
                 double minFeeRsf = 0;
@@ -238,75 +246,78 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
                 int wordPerfect=0;
 
                 if(lt.getWord100Fee() != null) {
-                    word100 = lt.getWord100Fee().intValue();
+                    word100 = lt.getWord100Fee();
                 }
                 if(lt.getWordRepFee() != null) {
-                    wordRep = lt.getWordRepFee().intValue();
+                    wordRep = lt.getWordRepFee();
                 }
                 if(lt.getWord95Fee() != null) {
-                    word95 = lt.getWord95Fee().intValue();
+                    word95 = lt.getWord95Fee();
                 }
                 if(lt.getWord85Fee() != null) {
-                    word85 = lt.getWord85Fee().intValue();
+                    word85 = lt.getWord85Fee();
                 }
                 if(lt.getWord75Fee() != null) {
-                    word75 = lt.getWord75Fee().intValue();
+                    word75 = lt.getWord75Fee();
                 }
                 if(lt.getWordNewFee() != null) {
-                    wordNew = lt.getWordNewFee().intValue();
+                    wordNew = lt.getWordNewFee();
                 }
                 if(lt.getWord8599Fee() != null) {
-                    word8599 = lt.getWord8599Fee().intValue();
+                    word8599 = lt.getWord8599Fee();
                 }
                 if(lt.getWordNew4Fee() != null) {
-                    wordNew4 = lt.getWordNew4Fee().doubleValue();
+                    wordNew4 = lt.getWordNew4Fee();
                 }
                 if(lt.getMinFeeRsf() != null) {
-                    minFeeRsf = lt.getMinFeeRsf().doubleValue();
+                    minFeeRsf = lt.getMinFeeRsf();
                 }
                 if(lt.getWordContextFee() != null) {
-                    wordContext = lt.getWordContextFee().intValue();
+                    wordContext = lt.getWordContextFee();
                 }
                 if(lt.getWordPerfectFee() != null) {
-                    wordPerfect = lt.getWordPerfectFee().intValue();
+                    wordPerfect = lt.getWordPerfectFee();
                 }
 
                 double rate = 0;
                 try {
                     String unformattedRate = lt.getRateFee().replaceAll(",", "");
-                    rate = Double.valueOf(unformattedRate).doubleValue();
+                    rate = Double.valueOf(unformattedRate);
                 } catch(java.lang.NumberFormatException nfe) {
                     rate = 0;
+                }
+                if(lt.getTaskName().contains("Translation")){
+                    linRates.put(lt.getTargetDoc().getName(), rate);
                 }
 
                 double wordTotal = word100 + wordRep + word8599 + wordNew4+wordContext+wordPerfect;
 
                 double thisTotal = 0.0;
                 //scale the rates (either default or custom)
-                if(p.getCompany().isScaleDefault()) {
-                    double scale100 = new Double(p.getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(p.getCompany().getScaleRep()).doubleValue();
-                    double scale8599 = new Double(p.getCompany().getScale8599()).doubleValue();
-                    double scaleNew4 = new Double(p.getCompany().getScaleNew4()).doubleValue();
-                    double scalePerfect = new Double(p.getCompany().getScalePerfect()).doubleValue();
-                    double scaleContext=new Double(p.getCompany().getScaleContext()).doubleValue();
+                if(p.getCompany().isScaleDefault(p.getProjectId())) {
+                    double scale100 = new Double(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleRep = new Double(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale8599 = new Double(p.getCompany().getScale8599());
+                    double scaleNew4 = new Double(p.getCompany().getScaleNew4());
+                    double scalePerfect = new Double(p.getCompany().getScalePerfect(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleContext=new Double(p.getCompany().getScaleContext(p.getProjectId(),p.getCompany().getClientId()));
                     thisTotal = word100*scale100*rate + wordRep*scaleRep*rate + word8599*scale8599*rate + wordNew4*scaleNew4*rate+wordContext*scaleContext*rate+wordPerfect*scalePerfect*rate;
                     wordTotal = word100 + wordRep + word8599 + wordNew4 + wordContext + wordPerfect;
                 } else {
-                    double scale100 = new Double(p.getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(p.getCompany().getScaleRep()).doubleValue();
-                    double scale95 = new Double(p.getCompany().getScale95()).doubleValue();
-                    double scale85 = new Double(p.getCompany().getScale85()).doubleValue();
-                    double scale75 = new Double(p.getCompany().getScale75()).doubleValue();
-                    double scaleNew = new Double(p.getCompany().getScaleNew()).doubleValue();
-                    double scalePerfect = new Double(p.getCompany().getScalePerfect()).doubleValue();
-                    double scaleContext=new Double(p.getCompany().getScaleContext()).doubleValue();
+                    double scale100 = Double.parseDouble(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleRep = Double.parseDouble(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale95 = Double.parseDouble(p.getCompany().getScale95(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale85 = new Double(p.getCompany().getScale85(p.getProjectId(),p.getCompany().getClientId()));
+                    double scale75 = new Double(p.getCompany().getScale75(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleNew = new Double(p.getCompany().getScaleNew(p.getProjectId(),p.getCompany().getClientId()));
+                    double scalePerfect = new Double(p.getCompany().getScalePerfect(p.getProjectId(),p.getCompany().getClientId()));
+                    double scaleContext=new Double(p.getCompany().getScaleContext(p.getProjectId(),p.getCompany().getClientId()));
                     thisTotal = word100*scale100*rate + wordRep*scaleRep*rate + word95*scale95*rate + word85*scale85*rate + word75*scale75*rate + wordNew*scaleNew*rate+wordContext*scaleContext*rate+wordPerfect*scalePerfect*rate;
                     wordTotal = word100 + wordRep + word95 + word85 + word75 + wordNew + wordContext + wordPerfect;
                 }
                 thisTotal+=minFeeRsf;
                try{
-                      System.out.println("Currencyyyyyyyy"+lt.getCurrencyFee());
+                      //System.out.println("Currencyyyyyyyy"+lt.getCurrencyFee());
                       if (lt.getCurrencyFee().equalsIgnoreCase("EURO")){
                         //linCurrencyTotal=thisTotal;
                       linCurrencyTotal+=thisTotal*p.getEuroToUsdExchangeRate();
@@ -317,14 +328,14 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
                linCurrencyTotal+=thisTotal;
            }
                        linTotal += thisTotal; //update lin block
-                lt.setWordTotalFee(new Double(wordTotal));
+                lt.setWordTotalFee(wordTotal);
 
                 //Let user overwrite automatic calculations
                 //if(lt.getDollarTotalFee()==null || "".equals(lt.getDollarTotalFee())){
-                    lt.setDollarTotalFee(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
+                    lt.setDollarTotalFee(StandardCode.getInstance().formatDouble(thisTotal));
                 //}
 
-                lt.setRateFee(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                lt.setRateFee(StandardCode.getInstance().formatDouble4(rate));
 
 
             }//END process FEE values
@@ -339,15 +350,13 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
         EngTask[] engTasks = (EngTask[]) qvg.get("engTasksProject");
 
         //process each eng Task to db
-        for(int i = 0; i < engTasks.length; i++) {
-            EngTask et = engTasks[i];
-
+        for (EngTask et : engTasks) {
             //START process new TOTAL value
             if(et.getTotal() != null) { //if from delete then make sure it is not null
-                double total = et.getTotal().doubleValue();
+                double total = et.getTotal();
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(et.getRate()).doubleValue();
+                    rate = Double.valueOf(et.getRate());
                 } catch(java.lang.NumberFormatException nfe) {
                     rate = 0;
                 }
@@ -356,11 +365,11 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
                 try{
                     if(et.getCurrency().equalsIgnoreCase("EURO")){
-                    engTotal+=thisTotal*p.getEuroToUsdExchangeRate();
+                        engTotal+=thisTotal*p.getEuroToUsdExchangeRate();
                     }else{engTotal+=thisTotal;}
 
                 }catch(Exception e){
-                engTotal += thisTotal;
+                    engTotal += thisTotal;
                 }
 
                 //engTotal += thisTotal; //update eng block
@@ -372,8 +381,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
             //update to db
 //            ProjectService.getInstance().updateEngTask(et);
-
-        }//END ENG TASKS
+        } //END ENG TASKS
 
         //START DTP TASKS
         //get the updated list of dtp Tasks for this project
@@ -385,10 +393,10 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
             //START process new TOTAL value
             if(dt.getTotal() != null) { //if from delete then make sure it is not null
-                double total = dt.getTotal().doubleValue();
+                double total = dt.getTotal();
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(dt.getRate()).doubleValue();
+                    rate = Double.valueOf(dt.getRate());
                 } catch(java.lang.NumberFormatException nfe) {
                     rate = 0;
                 }
@@ -426,10 +434,10 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
             //START process new TOTAL value
             if(ot.getTotal() != null) { //if from delete then make sure it is not null
-                double total = ot.getTotal().doubleValue();
+                double total = ot.getTotal();
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(ot.getRate()).doubleValue();
+                    rate = Double.valueOf(ot.getRate());
                 } catch(java.lang.NumberFormatException nfe) {
                     rate = 0;
                 }
@@ -463,14 +471,14 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
         double pmPercentDollarTotalDouble = 0;
         if(pmPercent != null && !pmPercent.equals("") && !pmPercent.equals("0.00")) { //if pmPercent is present
             try {
-                pmRate = Double.valueOf(pmPercent).doubleValue();
+                pmRate = Double.valueOf(pmPercent);
             } catch(java.lang.NumberFormatException nfe) {
                 pmRate = 0;
             }
             pmPercentDollarTotalDouble = (pmRate / 100) * subTotal;
         }else if(pmPercentDollarTotal != null && !pmPercentDollarTotal.equals("") && !pmPercentDollarTotal.equals("0.00")) { //if rushPercent is present
             try {
-                pmPercentDollarTotalDouble = Double.valueOf(pmPercentDollarTotal.replaceAll(",","")).doubleValue();
+                pmPercentDollarTotalDouble = Double.valueOf(pmPercentDollarTotal.replaceAll(",",""));
             } catch(java.lang.NumberFormatException nfe) {
                 pmRate = 0;
             }
@@ -485,7 +493,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
         //START sub total with pm block
         double subPmTotal = subTotal + pmPercentDollarTotalDouble;
-        p.setSubPmDollarTotal(StandardCode.getInstance().formatDouble(new Double(subPmTotal)));
+//        p.setSubPmDollarTotal(StandardCode.getInstance().formatDouble(new Double(subPmTotal)));
         //END sub total with pm block
 
 
@@ -497,14 +505,14 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
         double rushPercentDollarTotalDouble = 0;
         if(rushPercent != null && !rushPercent.equals("") && !rushPercent.equals("0.00")) { //if rushPercent is present
             try {
-                rushRate = Double.valueOf(rushPercent).doubleValue();
+                rushRate = Double.valueOf(rushPercent);
             } catch(java.lang.NumberFormatException nfe) {
                 rushRate = 0;
             }
             rushPercentDollarTotalDouble = (rushRate / 100) * subPmTotal;
         }else if(rushPercentDollarTotal != null && !rushPercentDollarTotal.equals("") && !rushPercentDollarTotal.equals("0.00")) { //if rushPercent is present
             try {
-                rushPercentDollarTotalDouble = Double.valueOf(rushPercentDollarTotal.replaceAll(",","")).doubleValue();
+                rushPercentDollarTotalDouble = Double.valueOf(rushPercentDollarTotal.replaceAll(",",""));
             } catch(java.lang.NumberFormatException nfe) {
                 rushRate = 0;
             }
@@ -526,7 +534,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
         double discountPercentDollarTotal=0;
         if(discountPercent != null && !discountPercent.equals("") && !discountPercent.equals("0.00")) { //if rushPercent is present
             try {
-                discountRate = Double.valueOf(discountPercent.replaceAll(",","")).doubleValue();
+                discountRate = Double.valueOf(discountPercent.replaceAll(",",""));
             } catch(java.lang.NumberFormatException nfe) {
                 discountRate = 0;
             }
@@ -534,7 +542,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
             projectTotal = projectTotal - (discountRate / 100) * projectTotal;
         }else if(discountDollarTotal != null && !discountDollarTotal.equals("") && !discountDollarTotal.equals("0.00")) { //if rushPercent is present
             try {
-                discountPercentDollarTotal = Double.valueOf(discountDollarTotal.replaceAll(",","")).doubleValue();
+                discountPercentDollarTotal = Double.valueOf(discountDollarTotal.replaceAll(",",""));
             } catch(java.lang.NumberFormatException nfe) {
                 discountRate = 0;
             }
@@ -545,6 +553,33 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
         p.setDiscountDollarTotal(discountDollarTotal);
         p.setDiscountPercent(discountPercent);
         p.setSubDiscountDollarTotal(""+projectTotal);
+        
+        
+        String otherText=p.getOtherText();
+        String otherPercent=p.getOtherPercent();
+        String otherDollarTotal=p.getOtherDollarTotal();
+
+        
+        double otherPercentRate = 0;
+        double otherPercentDollarTotal = 0;
+
+        if (otherPercent != null && !otherPercent.equals("") && !otherPercent.equals("0.00")) { //if rushPercent is present
+            try {
+                otherPercentRate = Double.valueOf(otherPercent.replaceAll(",", ""));
+            } catch (java.lang.NumberFormatException nfe) {
+                otherPercentRate = 0;
+            }
+            //discountDollarTotal = ;
+            projectTotal =projectTotal+((otherPercentRate / 100) * projectTotal);
+        } else if (otherDollarTotal != null && !otherDollarTotal.equals("") && !otherDollarTotal.equals("0.00")) { //if rushPercent is present
+            try {
+                otherPercentDollarTotal = Double.valueOf(otherDollarTotal.replaceAll(",", ""));
+            } catch (java.lang.NumberFormatException nfe) {
+                otherPercentDollarTotal = 0;
+            }
+            projectTotal = projectTotal + otherPercentDollarTotal;
+
+        }
 //END DISCOUNT block
 
 
@@ -555,7 +590,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 //        double otherPercentDollarTotal=0;
 //        if(otherPercent != null && !otherPercent.equals("") && !otherPercent.equals("0.00")) { //if rushPercent is present
 //            try {
-//                otherRate = Double.valueOf(otherPercent.replaceAll(",","")).doubleValue();
+//                otherRate = Double.valueOf(otherPercent.replaceAll(",",""));
 //            } catch(java.lang.NumberFormatException nfe) {
 //                otherRate = 0;
 //            }
@@ -563,7 +598,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 //            projectTotal = projectTotal - (otherRate / 100) * projectTotal;
 //        }else if(otherDollarTotal != null && !otherPercent.equals("") && !otherPercent.equals("0.00")) { //if rushPercent is present
 //            try {
-//                otherPercentDollarTotal = Double.valueOf(otherDollarTotal.replaceAll(",","")).doubleValue();
+//                otherPercentDollarTotal = Double.valueOf(otherDollarTotal.replaceAll(",",""));
 //            } catch(java.lang.NumberFormatException nfe) {
 //                otherPercentDollarTotal = 0;
 //            }
@@ -579,7 +614,7 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 
 
 
-        p.setProjectAmount(new Double(projectTotal));
+//        p.setProjectAmount(new Double(projectTotal));
         //END total value
         User u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
         p.setLastModifiedBy(u.getFirstName() + " " + u.getLastName());
@@ -591,10 +626,11 @@ public final class ProjectViewFeeUpdateAction_Lin extends Action {
 //        }
 
         ProjectService.getInstance().updateProject(p);
-
+        ProjectHelper.updateLanguageCount(p);
+        ProjectService1.getInstance().updateProjectAmount(p, u);
         //mark AutoUpdate as true
         if(autoUpdate != null) {
-            Integer newAutoUpdate = new Integer(autoUpdate.intValue() + 1);
+            Integer newAutoUpdate = new Integer(autoUpdate + 1);
             request.setAttribute("AutoUpdate", newAutoUpdate); //place true value (1) into request
         }
 

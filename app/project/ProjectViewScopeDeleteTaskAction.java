@@ -67,7 +67,7 @@ public class ProjectViewScopeDeleteTaskAction extends Action {
 
         //get id of source
         String id = request.getParameter("id");
-        String taskName = request.getParameter("task");
+        String taskName = request.getParameter("task").trim();
         Project p = ProjectService.getInstance().getSingleProject(Integer.parseInt(id));
         String task="";
 
@@ -91,19 +91,19 @@ public class ProjectViewScopeDeleteTaskAction extends Action {
                 }
                 for (Iterator iter3 = dtpTasks.iterator(); iter3.hasNext();) {
                     DtpTask lt = (DtpTask) iter3.next();
-                    if(taskName.equalsIgnoreCase(lt.getTaskName())){
+                    if(taskName.equalsIgnoreCase(lt.getTaskName().trim())){
                         ProjectService.getInstance().deleteDtpTask(lt);
                     }
                 }
                 for (Iterator iter3 = engTasks.iterator(); iter3.hasNext();) {
                     EngTask lt = (EngTask) iter3.next();
-                    if(taskName.equalsIgnoreCase(lt.getTaskName())) {
+                    if(taskName.equalsIgnoreCase(lt.getTaskName().trim())) {
                         ProjectService.getInstance().deleteEngTask(lt);
                     }
                 }
                 for (Iterator iter3 = othTasks.iterator(); iter3.hasNext();) {
                     OthTask lt = (OthTask) iter3.next();
-                    if(taskName.equalsIgnoreCase(lt.getTaskName())) {
+                    if(taskName.equalsIgnoreCase(lt.getTaskName().trim())) {
                         ProjectService.getInstance().deleteOthTask(lt);
                     }
                 }

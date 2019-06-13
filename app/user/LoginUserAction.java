@@ -61,8 +61,8 @@ public final class LoginUserAction extends Action {
         String username = (String) request.getParameter("username");
         String password = (String) request.getParameter("password");
       
-//        System.out.println("user name@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+username);
-//        System.out.println("password@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+password);
+//        //System.out.println("user name@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+username);
+//        //System.out.println("password@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+password);
        
         //check for insert, update, delete, select, drop statements in public login fields (SQL injection)
         String usernameCheck = username.toLowerCase();
@@ -97,9 +97,9 @@ public final class LoginUserAction extends Action {
             request.setAttribute("failed", "true");
             return (mapping.getInputForward());
         }
-            System.out.println("getCurrentEmployee()"+u.getCurrentEmployee());
-            System.out.println("getID_Client Id"+u.getID_Client() );
-            System.out.println("getid_client"+u);
+            //System.out.println("getCurrentEmployee()"+u.getCurrentEmployee());
+            //System.out.println("getID_Client Id"+u.getID_Client() );
+            //System.out.println("getid_client"+u);
         }
         catch(java.lang.NullPointerException e) {
             errors.add("login", new ActionMessage("login.failed"));
@@ -166,7 +166,7 @@ public final class LoginUserAction extends Action {
 
          
 	// Forward control to the specified Success URI
-         System.out.println("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUser Typeeeeeeeeeeeeeeeeeeeeeeeeeee"+ u.getuserType());
+         ////System.out.println("UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUser Typeeeeeeeeeeeeeeeeeeeeeeeeeee"+ u.getuserType());
 
          if(u.getuserType() != null){
       if(u.getuserType().equalsIgnoreCase("client"))

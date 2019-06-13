@@ -109,8 +109,11 @@ public class AdminMiscLocationUpdateAction extends Action {
 
 
         try {
+           
             location = request.getParameter("location1");
+            if(location ==null) location = officeLocation.getLocation();
         } catch (Exception e) {
+            location = "";
         }
         try {
             friendlyName = request.getParameter("friendlyName");

@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.client.ClientLanguagePair" table="ClientLanguagePair">
+   <class name="app.client.ClientLanguagePair" table="clientlanguagepair">
       <id name="clientlanguagePairId" type="int" column="ID_ClientLanguagePair">
          <generator class="identity"/>
       </id>
@@ -14,6 +14,7 @@
       <property name="rate" type="string"/>      
       <property name="units" type="string"/>  
        <property name="task" type="string"/>
+       <property name="typeOfText" type="string"/>
       <many-to-one name="Company" class="app.client.Client" column="ID_Client"/>
       
       </class>

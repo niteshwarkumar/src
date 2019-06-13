@@ -88,6 +88,7 @@ public final class ResourceSearchGetSaved1Action extends Action {
         
         rs.set("resourceSearchStatus", ss.getStatus());
         rs.set("resourceSearchIncludeDoNot", ss.getIncludeDoNot());
+        rs.set("resourceSearchisAgency", ss.getIsagency());
         
         rs.set("resourceSearchTranslator", ss.getTranslator());
         rs.set("resourceSearchEditor", ss.getEditor());
@@ -158,6 +159,7 @@ public final class ResourceSearchGetSaved1Action extends Action {
         rs.set("resourceSearchCountry", ss.getCountry());
 
         rs.set("resourceSearchResume", ss.getResume());
+        //rs.set("resourceSearchNote", ss.get);
 //        
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));

@@ -15,7 +15,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
-   <class name="app.menu.Sw" table="Sw">
+   <class name="app.menu.Sw" table="sw">
       <id name="software_no" type="int">
          <generator class="identity"/>
       </id>

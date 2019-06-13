@@ -78,13 +78,13 @@ public final class ClientQuoteViewProjectRequirementsAction extends Action {
 
         Integer id = Integer.valueOf(quoteId);
 
-        System.out.println("------------------------------------------------"+id);
+        //System.out.println("------------------------------------------------"+id);
         //END get id of current quote from either request, attribute, or cookie
 
         //get quote to and then its sources
         Quote1 q = QuoteService.getInstance().getSingleQuote(id);
         Project p = q.getProject();
-        System.out.println("product Namemmmmmmmmmmmmmmmmmmmmm" + q.getProject().getProduct());
+        //System.out.println("product Namemmmmmmmmmmmmmmmmmmmmm" + q.getProject().getProduct());
         //values of the project
         DynaValidatorForm qvpr = (DynaValidatorForm) form;
         // qvpr.set("product", q.getProject().getProduct());

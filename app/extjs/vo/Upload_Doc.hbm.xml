@@ -9,11 +9,19 @@
          <generator class="identity"/>
       </id>
        <property name="ClientID" type="int"/>
+       <property name="projectID" type="int"/>
        <property name="QuoteID" type="int"/>
+       <property name="resourceId" type="int"/>
        <property name="pathname" type="string"/>
        <property name="path" type="string"/>
        <property name="uploadedBy" type="string"/>
        <property name="uploadDate" type="date"/>
+       <property name="type" type="string"/>
+       <property name="owner" type="string"/>
+       <property name="title" type="string"/>
+       <property name="description" type="string"/>
+       <property name="docFormat" type="string"/>
+       <property name="othId" type="int"/>
 
    </class>
 </hibernate-mapping>

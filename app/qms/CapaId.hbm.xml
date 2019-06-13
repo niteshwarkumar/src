@@ -19,6 +19,9 @@
         </id>
         <property name="capa_number" type="string"/>
         <property name="rca" type="string"/>
+        <property name="imact" type="string"/>
+        <property name="imact_t_date" type="date"/>
+        <property name="imact_a_date" type="date"/>
         <property name="rca_t_date" type="date"/>
         <property name="rca_a_date" type="date"/>
         <property name="nc" type="string"/>

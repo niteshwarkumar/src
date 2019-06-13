@@ -5,7 +5,6 @@ package app.client;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -73,6 +72,9 @@ public class ClientAddEditForm extends ActionForm
 
     /** nullable persistent field */
     private String Sales_rep;
+    
+    /** nullable persistent field */
+    private String Sales;
 
     /** nullable persistent field */
     private String Satisfaction_score;
@@ -117,6 +119,7 @@ public class ClientAddEditForm extends ActionForm
     private String otherContact3;
     private String otherContact4;
     private String otherContact5;
+    private String specialNotes; 
 
 
      public ActionErrors validate(
@@ -228,6 +231,9 @@ public class ClientAddEditForm extends ActionForm
                 this.Sales_rep = null;
 
                 /** nullable persistent field */
+                this.Sales = null;
+                
+                /** nullable persistent field */
                 this.Satisfaction_score = null;
 
                 /** nullable persistent field */
@@ -244,6 +250,8 @@ public class ClientAddEditForm extends ActionForm
                 this.Ftp_user_id_client = null;
 
                 this.Ftp_password_client = null;
+                
+                this.specialNotes = null;
 	}
 
     public String getCompany_name() {
@@ -398,6 +406,14 @@ public class ClientAddEditForm extends ActionForm
         this.Sales_rep = Sales_rep;
     }
 
+    public String getSales() {
+        return Sales;
+    }
+
+    public void setSales(String Sales) {
+        this.Sales = Sales;
+    }
+    
     public String getSatisfaction_score() {
         return this.Satisfaction_score;
     }
@@ -548,6 +564,14 @@ public class ClientAddEditForm extends ActionForm
 
     public void setOtherContact5(String otherContact5) {
         this.otherContact5 = otherContact5;
+    }
+
+    public String getSpecialNotes() {
+        return specialNotes;
+    }
+
+    public void setSpecialNotes(String specialNotes) {
+        this.specialNotes = specialNotes;
     }
 
 

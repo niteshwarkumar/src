@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -25,8 +25,11 @@ import java.util.*;
 import app.user.*;
 import app.client.*;
 import app.db.*;
+import app.extjs.helpers.ProjectHelper;
 import app.workspace.*;
 import app.security.*;
+import app.standardCode.StandardCode;
+import org.json.JSONObject;
 
 /**
  *
@@ -172,9 +175,47 @@ public class Client_ProjectSearchCompleteAction extends Action{
 //        else {
 //            request.setAttribute("projectSearchResults", "0");
 //        }
+        
+        //get current client ID
+
+//id from request attribute
+String clientId = (String) request.getAttribute("clientViewId");
+
+//id from cookie
+if(clientId == null) {
+// clientId = StandardCode.getInstance().getCookie("clientViewId", request.getCookies());
+String username = StandardCode.getInstance().getCookie("storedUsername", request.getCookies());
+User user = UserService.getInstance().getSingleUser(username);
+clientId = user.getID_Client().toString();
+}
+//System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
+        
+//        List temp =null;
+//Calendar cal = new GregorianCalendar();
+//        String year = request.getParameter("projectYear");
+//        if (year.equalsIgnoreCase("")) {
+//            year = "" + cal.get(Calendar.YEAR);
+//        }
+//        if (year.equalsIgnoreCase("all")) {
+//            temp = ProjectHelper.getProjectListForClientComplete(clientId);
+//        } else {
+//            temp = ProjectHelper.getProjectListForClientComplete(clientId, year);
+//        }
+//        Integer nk=1;    
+//            ArrayList projectHistory = new ArrayList();
+//for(ListIterator iter = temp.listIterator(); iter.hasNext();) {
+//Project p = (Project) iter.next();
+//  //System.out.println(nk +"       "+p.getNumber());
+//            nk++;
+//JSONObject jo = ProjectHelper.ClientProjectToJson2(p);
+//projectHistory.add(jo);
+//}
+
+
+        
         String projectYear=request.getParameter("projectYear");
         request.setAttribute("projectYear", projectYear);
-
+//        request.setAttribute("project", projectHistory.toArray());
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));
     }

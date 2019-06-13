@@ -4,6 +4,7 @@
 //It then updates its tab location into a cookie.
 
 package app.extjs.actions;
+import app.extjs.helpers.ClientHelper;
 import app.extjs.helpers.QuoteHelper;
 import app.quote.Quote1;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,9 @@ import app.security.*;
 import app.standardCode.*;
 import app.user.User;
 import app.user.UserService;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import org.json.CDL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -103,12 +106,43 @@ public final class Client_ViewQuotesHistoryAction extends Action {
 
         //add tab location to cookies; this will remember which tab we are at
         response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
+        
        // long end1 = System.currentTimeMillis();
-        //System.out.println("old way:"+(end1-start1));
+        ////System.out.println("old way:"+(end1-start1));
        // long start2 = System.currentTimeMillis();
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
         List temp = null;
+        
+        String print = request.getParameter("print");
+        if (print != null) {
+            if (print.equalsIgnoreCase("yes")) {
+                response.setContentType("text/csv");
+                response.setHeader("Content-Disposition", "attachment; filename=\"QuoteList.csv\"");
+                try {
+                    List quotes = QuoteHelper.getClientQuoteListForClient(clientId);
+                    JSONArray quoteHistory = new JSONArray();
+                    for (ListIterator iter = quotes.listIterator(); iter.hasNext();) {
+                        Quote1 q = (Quote1) iter.next();
+                        //Client Quote cq=QuoteService.getInstance().getS
+                        JSONObject jo = QuoteHelper.ClientQuoteToJsonPrint(q);
+                        //System.out.println(q.getQuote1Id() + "-----|----" + jo);
+                        quoteHistory.put(jo);
+                        ///  //System.out.println(jo.getString("year")+"     ");
+                    }
+
+                    String csv = CDL.toString(quoteHistory);
+                    ////System.out.println(csv);
+                    OutputStream outputStream = response.getOutputStream();
+                    outputStream.write(csv.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (Exception e) {
+                    //System.out.println(e.toString());
+                }
+                return (null);
+            }
+        }
         Calendar cal = new GregorianCalendar();
         String year = request.getParameter("projectYear");
         if (year.equalsIgnoreCase("")) {
@@ -125,14 +159,14 @@ public final class Client_ViewQuotesHistoryAction extends Action {
                 //Client Quote cq=QuoteService.getInstance().getS
                 JSONObject jo = QuoteHelper.ClientQuoteToJson2(q);
                 quoteHistory.add(jo);
-              ///  System.out.println(jo.getString("year")+"     ");
+              ///  //System.out.println(jo.getString("year")+"     ");
             }
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         out.println(new JSONArray(quoteHistory.toArray()));
         out.flush();
        // long end2 = System.currentTimeMillis();
-      // System.out.println("new way:"+(end2-start2));
+      // //System.out.println("new way:"+(end2-start2));
 	// Forward control to the specified success URI
 	//return (mapping.findForward("Success"));
             return null;

@@ -75,14 +75,16 @@ public final class AdminQuoteDeleteAction extends Action {
         
         //get object to delete
         String id = request.getParameter("id");
-        Quote1 obj = QuoteService.getInstance().getSingleQuote(Integer.valueOf(id));
-        List cq=QuoteService.getInstance().getClient_Quote(Integer.valueOf(id));
+        Quote1 obj = QuoteService.getInstance().getSingleQuote(id);
+        List cq=QuoteService.getInstance().getClient_Quote(obj.getQuote1Id());
       
         //delete one-to-many mappings first, then delete main (or top) object
         AdminService.getInstance().deleteCollection(obj.getFiles());
         Project pLazy = ProjectService.getInstance().getSingleProject(obj.getProject().getProjectId());
         
         AdminService.getInstance().deleteCollection(pLazy.getInspections());
+       
+        try{
         //delete sources, targets, tasks
         for(Iterator iter = obj.getSourceDocs().iterator(); iter.hasNext();) {
             SourceDoc sd = (SourceDoc) iter.next();
@@ -96,7 +98,23 @@ public final class AdminQuoteDeleteAction extends Action {
             AdminService.getInstance().deleteCollection(sd.getTargetDocs());        
         }
         AdminService.getInstance().deleteCollection(obj.getSourceDocs());
-        
+        }catch(Exception e){
+            try{
+        List sdDocs = QuoteService.getInstance().getSourceLang1(obj);
+        for(Iterator iter = sdDocs.iterator(); iter.hasNext();) {
+            SourceDoc sd = (SourceDoc) iter.next();
+            for(Iterator iterT = sd.getTargetDocs().iterator(); iterT.hasNext();) {
+                TargetDoc td = (TargetDoc) iterT.next();
+                AdminService.getInstance().deleteCollection(td.getLinTasks());
+                AdminService.getInstance().deleteCollection(td.getEngTasks());
+                AdminService.getInstance().deleteCollection(td.getDtpTasks());
+                AdminService.getInstance().deleteCollection(td.getOthTasks());
+            }
+            AdminService.getInstance().deleteCollection(sd.getTargetDocs());        
+        }
+        AdminService.getInstance().deleteCollection(obj.getSourceDocs());
+            }catch(Exception e1){}
+        }
         try{
         for(int i=0;i<cq.size();i++){
             Client_Quote q1=(Client_Quote) cq.get(i);

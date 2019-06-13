@@ -82,7 +82,7 @@ public final class ProjectAdd2Action extends Action {
         SourceDoc sd = new SourceDoc(new HashSet());
         ProjectHelper.unlinkSourcesAndTargets(p);
         
-       // System.out.println("mainTarget="+mainTarget);
+       // //System.out.println("mainTarget="+mainTarget);
 //update values
         
         if(mainSrc!=null)

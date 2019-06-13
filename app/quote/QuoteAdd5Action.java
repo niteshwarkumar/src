@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -104,7 +104,7 @@ public final class QuoteAdd5Action extends Action {
         //need the source to add the target(s)
         String sourceDocId = StandardCode.getInstance().getCookie("quoteAddSourceDocId", request.getCookies());
         SourceDoc sd = ProjectService.getInstance().getSingleSourceDoc(Integer.valueOf(sourceDocId)); 
-        
+        Project p = sd.getProject();
         String clientViewId = StandardCode.getInstance().getCookie("quoteAddClientId", request.getCookies());
         Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(clientViewId));
         ClientLanguagePair[] clp = null;
@@ -145,10 +145,10 @@ public final class QuoteAdd5Action extends Action {
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage()) 
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                
+                                if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -171,10 +171,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                             //   System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
-                                lt.setRate(clp[z].getRate());
+                             //   //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                             if(clp[z].getTypeOfText().equals(p.getTypeOfText())){  
+                             lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -197,10 +198,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
-                                lt.setRate(clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
+                               lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -222,10 +224,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
-                                lt.setRate(clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
+                               lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -247,10 +250,12 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
-                                lt.setRate(clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){ 
+                               lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                               }
                             }
                         }
                       }
@@ -272,10 +277,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -297,10 +303,12 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                               }
                             }
                         }
                       }
@@ -323,10 +331,12 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                                }
                             }
                         }
                       }
@@ -349,10 +359,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
-                                lt.setRate(clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){ 
+                               lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -375,10 +386,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                               // System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
-                                lt.setRate(clp[z].getRate());
+                               // //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){ 
+                               lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }
@@ -402,10 +414,11 @@ public final class QuoteAdd5Action extends Action {
                         
                     
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                               if(clp[z].getTypeOfText().equals(p.getTypeOfText())){
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
-                                break;
+                                break;}
                             }
                         }
                       }

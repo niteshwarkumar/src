@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package app.resource; 
+package app.resource;
 
 import java.io.Serializable;
 
@@ -10,95 +10,103 @@ import java.io.Serializable;
  *
  * @author Nishika
  */
-public class ResourceClient implements Serializable{
-  
-      private Integer id;
-      private String client;
-      private String level;
-      private String primary;
-      private String primaryCount;
-      private String secondry;
-      private String secondryCount;
-      private Integer resourceId;
+public class ResourceClient implements Serializable {
 
-  public ResourceClient() {
-  }
+    private Integer id;
+    private String client;
+    private String level;
+    private String primry;
+    private Integer primaryCount;
+    private String secondry;
+    private Integer secondryCount;
+    private Integer resourceId;
+    private String language;
 
-  public ResourceClient(Integer id, String client, String level, String primary, String primaryCount, String secondry, String secondryCount, Integer resourceId) {
-    this.id = id;
-    this.client = client;
-    this.level = level;
-    this.primary = primary;
-    this.primaryCount = primaryCount;
-    this.secondry = secondry;
-    this.secondryCount = secondryCount;
-    this.resourceId = resourceId;
-  }
+    public ResourceClient() {
+    }
 
-  public Integer getId() {
-    return id;
-  }
+    public ResourceClient(String client, String level, String primry, Integer primaryCount, String secondry, Integer secondryCount, Integer resourceId, String language) {
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+        this.client = client;
+        this.level = level;
+        this.primry = primry;
+        this.primaryCount = primaryCount;
+        this.secondry = secondry;
+        this.secondryCount = secondryCount;
+        this.resourceId = resourceId;
+        this.language = language;
+    }
 
-  public String getClient() {
-    return client;
-  }
+    public Integer getId() {
+        return id;
+    }
 
-  public void setClient(String client) {
-    this.client = client;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public String getLevel() {
-    return level;
-  }
+    public String getClient() {
+        return client;
+    }
 
-  public void setLevel(String level) {
-    this.level = level;
-  }
+    public void setClient(String client) {
+        this.client = client;
+    }
 
-  public String getPrimary() {
-    return primary;
-  }
+    public String getLevel() {
+        return level;
+    }
 
-  public void setPrimary(String primary) {
-    this.primary = primary;
-  }
+    public void setLevel(String level) {
+        this.level = level;
+    }
 
-  public String getPrimaryCount() {
-    return primaryCount;
-  }
+    public String getPrimry() {
+        return primry;
+    }
 
-  public void setPrimaryCount(String primaryCount) {
-    this.primaryCount = primaryCount;
-  }
+    public void setPrimry(String primry) {
+        this.primry = primry;
+    }
 
-  public String getSecondry() {
-    return secondry;
-  }
+    public Integer getPrimaryCount() {
+        return primaryCount;
+    }
 
-  public void setSecondry(String secondry) {
-    this.secondry = secondry;
-  }
+    public void setPrimaryCount(Integer primaryCount) {
+        this.primaryCount = primaryCount;
+    }
 
-  public String getSecondryCount() {
-    return secondryCount;
-  }
+    public String getSecondry() {
+        return secondry;
+    }
 
-  public void setSecondryCount(String secondryCount) {
-    this.secondryCount = secondryCount;
-  }
+    public void setSecondry(String secondry) {
+        this.secondry = secondry;
+    }
 
-  public Integer getResourceId() {
-    return resourceId;
-  }
+    public Integer getSecondryCount() {
+        return secondryCount;
+    }
 
-  public void setResourceId(Integer resourceId) {
-    this.resourceId = resourceId;
-  }
-      
-      
-  
+    public void setSecondryCount(Integer secondryCount) {
+        this.secondryCount = secondryCount;
+    }
+
+    public Integer getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(Integer resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
 }

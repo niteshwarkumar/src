@@ -24,21 +24,12 @@ public class QMSLibraryHistory implements Serializable {
     private String changes;
     private String fileName;
     private String fileSaveName;
+    private String trained;
 
     public QMSLibraryHistory() {
     }
 
-    public QMSLibraryHistory(Integer id, Integer QMSLibId, String title, String docId, String version, Date releaseDate, String changes, String fileName, String fileSaveName) {
-        this.id = id;
-        this.QMSLibId = QMSLibId;
-        this.title = title;
-        this.docId = docId;
-        this.version = version;
-        this.releaseDate = releaseDate;
-        this.changes = changes;
-        this.fileName = fileName;
-        this.fileSaveName = fileSaveName;
-    }
+
 
     public Integer getQMSLibId() {
         return QMSLibId;
@@ -111,6 +102,14 @@ public class QMSLibraryHistory implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getTrained() {
+        return trained;
+    }
+
+    public void setTrained(String trained) {
+        this.trained = trained;
     }
 
     

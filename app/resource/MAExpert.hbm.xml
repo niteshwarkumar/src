@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.MAExpert" table="expertMA">
+   <class name="app.resource.MAExpert" table="expertma">
       <id name="id_ma" type="int" column="id_ma">
          <generator class="identity"/>
       </id>

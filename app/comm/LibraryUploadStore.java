@@ -57,7 +57,7 @@ public class LibraryUploadStore extends Action {
 
         String mainTab = request.getParameter("mainTab");
         String subTab = request.getParameter("subTab");
-        System.out.println("subTab--->"+subTab);
+        //System.out.println("subTab--->"+subTab);
          String clientViewId=request.getParameter("clientViewId"); 
          List docList=null;
          
@@ -103,7 +103,7 @@ public class LibraryUploadStore extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

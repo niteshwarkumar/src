@@ -171,6 +171,7 @@ Integer porqid=p.getProjectId();
         String lpr3 = (String) upd.get("lpr3");
         String lpr4 = (String) upd.get("lpr4");
         String lpr5 = (String) upd.get("lpr5");
+        String lpr3Text = (String) upd.get("lpr3Text");
         String lpr5Text = (String) upd.get("lpr5Text");
         String lpr6Text = (String) upd.get("lpr6Text");
         String lprInfo = (String) upd.get("lprInfo");
@@ -204,7 +205,7 @@ Integer porqid=p.getProjectId();
         String tmNotes = (String) upd.get("tmNotes");    
         
 
-        iNEngineering.setEnggNotes(engnotes);
+        iNEngineering.setEnggNotes(engnotes.replaceAll("\\\\", "\\\\\\\\"));
         try {
             iNEngineering.setDeliveryTime(Float.parseFloat(deliveryTime));
         } catch (Exception e) {
@@ -229,6 +230,7 @@ Integer porqid=p.getProjectId();
         iNEngineering.setPrepLang(prepLang);
         iNEngineering.setTextBox1(textBox1);
         iNEngineering.setLpr6Text(lpr6Text);
+        iNEngineering.setLpr3Text(lpr3Text);
         iNEngineering.setLpr5Text(lpr5Text);
         iNEngineering.setLprInfo(lprInfo);
 
@@ -241,9 +243,11 @@ Integer porqid=p.getProjectId();
         try {
             if (verifiedDate.length() > 0) { //if present
                 iNEngineering.setVerifiedDate(DateService.getInstance().convertDate(verifiedDate).getTime());
+            }else{
+                iNEngineering.setVerifiedDate(null);
             }
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         iNEngineering.setVerifiedBy(verifiedBy);
 

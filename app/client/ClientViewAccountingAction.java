@@ -4,25 +4,17 @@
 
 package app.client;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
-import app.user.*;
-import app.db.*;
-import app.workspace.*;
 import app.project.*;
 import app.security.*;
 import app.standardCode.*;

@@ -74,12 +74,12 @@ public class ClientNewQuote extends Action {
 
             // String quoteViewId =request.getParameter("quoteViewId");
 
-            System.out.println("quoteViewId" + quoteId + "         " + request.getParameter("quoteViewId"));
+            //System.out.println("quoteViewId" + quoteId + "         " + request.getParameter("quoteViewId"));
             Integer CQuote = Integer.parseInt(quoteId);
-            System.out.println("getNewClientQuoteNumber" + CQuote);
+            //System.out.println("getNewClientQuoteNumber" + CQuote);
               HttpSession session1 = request.getSession(false);
                  session1.setAttribute("quoteViewId", request.getParameter("quoteViewId"));
-                 System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"+request.getSession(false).getAttribute("quoteViewId").toString());
+                 //System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"+request.getSession(false).getAttribute("quoteViewId").toString());
            // session.s
             PreparedStatement pstmt = session.connection().prepareStatement("select Product_ID,medical,component,Type from client_quote where Quote_ID = " + CQuote);
             ResultSet rs = pstmt.executeQuery();
@@ -87,12 +87,12 @@ public class ClientNewQuote extends Action {
 
 
 
-            System.out.println("                  working                     ");
+            //System.out.println("                  working                     ");
 
 //int id=Integer.parseInt(rs.getString("Product_ID"));
             List newQA = QuoteService.getInstance().getSingleClientQuote(CQuote);
             int i = 0;
-            //System.out.println("Product_IDProduct_ID"+rs.getInt(Product_ID));
+            ////System.out.println("Product_IDProduct_ID"+rs.getInt(Product_ID));
 // Product pr=app.client.ClientService.getInstance().getSingleProduct(id);
 
             if (u.getuserType() != null && u.getuserType().equalsIgnoreCase("client")) {
@@ -118,7 +118,7 @@ public class ClientNewQuote extends Action {
 
                     i++;
 
-                    System.out.println("Type.............." + rs.getString("Type"));
+                    //System.out.println("Type.............." + rs.getString("Type"));
                     results.add(jo);
                 }
                 tx.commit();
@@ -157,7 +157,7 @@ public class ClientNewQuote extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

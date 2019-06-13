@@ -82,7 +82,7 @@ public class AssesEvalAction extends Action {
                 tx = session.beginTransaction();
 
 
-                PreparedStatement pstmt = session.connection().prepareStatement("select eval_id,test,enteredBy,assessmentDate,score,approved,rejected from asseseval where asseseval.resourceId='"+resource+"'");
+                PreparedStatement pstmt = session.connection().prepareStatement("select eval_id,test,enteredBy,assessmentDate,score,approved,rejected,preferred from asseseval where asseseval.resourceId='"+resource+"'");
                 ResultSet rs = pstmt.executeQuery();
                 // ClientService.getInstance().getBlogList();
                 Integer result = null;
@@ -107,6 +107,10 @@ public class AssesEvalAction extends Action {
                     }
                     try {
                         jo.put("score", rs.getInt("score"));
+                    } catch (Exception e) {
+                    }
+                    try {
+                        jo.put("preferred", rs.getString("preferred"));
                     } catch (Exception e) {
                     }
                     try {
@@ -154,7 +158,7 @@ public class AssesEvalAction extends Action {
 
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");
-            // System.out.println(actResponse.toXML());
+            // //System.out.println(actResponse.toXML());
             PrintWriter out = response.getWriter();
 
             out.println(new JSONArray(results.toArray()));

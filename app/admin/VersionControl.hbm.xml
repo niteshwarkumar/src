@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
-   <class name="app.admin.VersionControl" table="VersionControl">
+   <class name="app.admin.VersionControl" table="versioncontrol">
       <id name="vcId" type="int" column="vcId">
          <generator class="identity"/>
       </id>

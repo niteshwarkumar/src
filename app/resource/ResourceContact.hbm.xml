@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.ResourceContact" table="ResourceContact">
+   <class name="app.resource.ResourceContact" table="resourcecontact">
       <id name="resourceContactId" type="int" column="ID_ResourceContact">
          <generator class="identity"/>
       </id>

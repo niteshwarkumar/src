@@ -40,9 +40,9 @@ public class BlogEditAction extends Action {
 
         for(int i=0;i< products.length();i++){
             JSONObject j = (JSONObject)products.get(i);
-            System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>"+j);
+            //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>"+j);
             Blog pr = new Blog();
-            System.out.println("blog author...................."+(j.getString("author")));
+            //System.out.println("blog author...................."+(j.getString("author")));
             pr.setAuthor(j.getString("author"));
             pr.setTopic(j.getString("topic"));
             //SimpleDateFormat sdf = new SimpleDateFormat("");
@@ -57,7 +57,7 @@ public class BlogEditAction extends Action {
               try {
             java.sql.Date d2 = new java.sql.Date(df.parse(j.getString("firstDraft")).getTime());
             pr.setFirstDraft(d2);
-            System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
+            //System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
             } catch (Exception ex){}
             try {
             java.sql.Date d3 = new java.sql.Date(df.parse(j.getString("finalDraft")).getTime());

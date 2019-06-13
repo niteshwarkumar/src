@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class ClientOtherRate implements Serializable {
     public ClientOtherRate()
     {
-        System.out.println("ClientOtherRate constructor*******************************");
+        //System.out.println("ClientOtherRate constructor*******************************");
     }
 
     /** identifier field */

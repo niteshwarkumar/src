@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.RateScoreLanguage" table="RateScoreLanguage">
+   <class name="app.resource.RateScoreLanguage" table="ratescorelanguage">
       <id name="RateScoreLanguageId" type="int" column="ID_RateScoreLanguage">
          <generator class="identity"/>
       </id>

@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.resource.Unavail" table="Unavail">
+   <class name="app.resource.Unavail" table="unavail">
       <id name="unavailId" type="int" column="ID_Unavail">
          <generator class="identity"/>
       </id>

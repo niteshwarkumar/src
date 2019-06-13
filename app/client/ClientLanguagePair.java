@@ -1,5 +1,6 @@
 package app.client;
 
+import app.standardCode.StandardCode;
 import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -22,17 +23,21 @@ public class ClientLanguagePair implements Serializable {
 
     /** nullable persistent field */
     private String units;
+    
+    /** nullable persistent field */
+    private String typeOfText;
 
     /** nullable persistent field */
     private app.client.Client Company;
 
     /** full constructor */
-    public ClientLanguagePair(String source, String target, String rate, String units, app.client.Client Company) {
+    public ClientLanguagePair(String source, String target, String rate, String units, String typeOfText, app.client.Client Company) {
         this.source = source;
         this.target = target;
         this.rate = rate;
         this.units = units;
         this.Company = Company;
+        this.typeOfText = typeOfText;
     }
 
     /** default constructor */
@@ -101,5 +106,15 @@ public class ClientLanguagePair implements Serializable {
     public void setTask(String task) {
         this.task = task;
     }
+
+    public String getTypeOfText() {
+        return StandardCode.getInstance().noNull(typeOfText);
+    }
+
+    public void setTypeOfText(String typeOfText) {
+        this.typeOfText = typeOfText;
+    }
+    
+    
 
 }

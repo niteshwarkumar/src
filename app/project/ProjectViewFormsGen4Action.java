@@ -102,10 +102,13 @@ public final class ProjectViewFormsGen4Action extends Action {
         
         //get resource to create form
         String linId = request.getParameter("linId");
+        String dtpId = request.getParameter("dtpId");
         Resource r;
         
-        if(request.getParameter("fromTeam") != null||request.getParameter("linId") != null) {
+        if(request.getParameter("fromTeam") != null&&request.getParameter("linId") != null) {
             r = ResourceService.getInstance().getSingleResource(Integer.valueOf(linId));
+        }else if(request.getParameter("fromTeam") != null&&request.getParameter("dtpId") != null) {
+            r = ResourceService.getInstance().getSingleResource(Integer.valueOf(StandardCode.getInstance().noNull(dtpId)));
         }
         else {
             LinTask lt = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linId));
@@ -114,7 +117,8 @@ public final class ProjectViewFormsGen4Action extends Action {
         
             //START process pdf
             try {
-                PdfReader reader = new PdfReader("C:/templates/PM01_001.pdf"); //the template
+//                PdfReader reader = new PdfReader("C:/templates/PM01_001.pdf"); //the template
+                PdfReader reader = new PdfReader("C:/templates/PM01_002_04Apr2017.pdf"); //the template
                 
                 //save the pdf in memory
                 ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
@@ -127,7 +131,7 @@ public final class ProjectViewFormsGen4Action extends Action {
 
                 //set the field values in the pdf form
                 if(r!=null){
-                if((r.getFirstName().length() >= 1 && r.getFirstName() != null) && (r.getLastName().length() >= 1 && r.getLastName() != null)) {
+                if(( r.getFirstName() != null) && (r.getLastName() != null) && !(r.getFirstName().equalsIgnoreCase(""))) {
                     form1.setField("Name", StandardCode.getInstance().noNull(r.getFirstName()) + " " + StandardCode.getInstance().noNull(r.getLastName()));
                 }
                 else {
@@ -137,7 +141,7 @@ public final class ProjectViewFormsGen4Action extends Action {
 //                //START add images
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 45, 0,0, 45, 300,100);
@@ -150,13 +154,13 @@ public final class ProjectViewFormsGen4Action extends Action {
                 //write to client (web browser)
 
                 if(r!=null){
-                if((r.getFirstName().length() >= 1 && r.getFirstName() != null) && (r.getLastName().length() >= 1 && r.getLastName() != null)) {
-                    response.setHeader("Content-disposition", "attachment; filename=" + StandardCode.getInstance().noNull(r.getFirstName()) + "_" + StandardCode.getInstance().noNull(r.getLastName()) + "-PaymentDirective" + ".pdf");
+                if((r.getFirstName() != null) && (r.getLastName() != null) && !(r.getFirstName().equalsIgnoreCase(""))) {
+                    response.setHeader("Content-disposition", "attachment; filename=" + StandardCode.getInstance().noNull(r.getFirstName()) + "_" + StandardCode.getInstance().noNull(r.getLastName()) + "-payment-rates" + ".pdf");
                 }
                 else {
-                    response.setHeader("Content-disposition", "attachment; filename=" + StandardCode.getInstance().noNull(r.getCompanyName()) + "-PaymentDirective" + ".pdf");
+                    response.setHeader("Content-disposition", "attachment; filename=" + StandardCode.getInstance().noNull(r.getCompanyName()).replaceAll(" ", "_").replaceAll(",", "_") + "-payment-rates" + ".pdf");
                 }}else{
-                                 response.setHeader("Content-disposition", "attachment; filename=PaymentDirective" + ".pdf");
+                                 response.setHeader("Content-disposition", "attachment; filename=Payment & Rates Agreement" + ".pdf");
 
                 }
                 

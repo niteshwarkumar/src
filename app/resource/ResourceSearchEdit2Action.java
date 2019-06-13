@@ -73,7 +73,7 @@ public final class ResourceSearchEdit2Action extends Action {
         //load resource info for searching
         DynaValidatorForm rs = (DynaValidatorForm) form;  
                
-        //START prepare the rateScoreLanguage Array with the number of categories from the db
+        //START prepare the ratescorelanguage Array with the number of categories from the db
         List rscs = ResourceService.getInstance().getRateScoreCategoryList();
         
         String[] fromFormRsc = (String[]) rs.get("resourceSearchScoresLin");
@@ -84,16 +84,16 @@ public final class ResourceSearchEdit2Action extends Action {
             }
         }
         if(reset) {
-            String[] rateScoreLanguagesArray = new String[rscs.size()];
+            String[] ratescorelanguagesArray = new String[rscs.size()];
             ListIterator iter = rscs.listIterator();
-            for(int i = 0; i < rateScoreLanguagesArray.length; i++) {
+            for(int i = 0; i < ratescorelanguagesArray.length; i++) {
                 RateScoreCategory rsc = (RateScoreCategory) iter.next(); 
-                rateScoreLanguagesArray[i] = new String("");
+                ratescorelanguagesArray[i] = new String("");
 
 
-                rs.set("resourceSearchScoresLin", rateScoreLanguagesArray);
+                rs.set("resourceSearchScoresLin", ratescorelanguagesArray);
             }
-        }//END prepare the rateScoreLanguage Array with the number of categories from the db
+        }//END prepare the ratescorelanguage Array with the number of categories from the db
         
         
         //START from project, so load search criteria for the task
@@ -114,7 +114,7 @@ public final class ResourceSearchEdit2Action extends Action {
             }            
         }    
         
-            if(linId != null) {
+            if(!StandardCode.getInstance().noNull(linId).equalsIgnoreCase("")) {
             //get the lin task for entering search criteria (source and target)
             LinTask t = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linId));
             
@@ -132,6 +132,7 @@ public final class ResourceSearchEdit2Action extends Action {
 
             rs.set("resourceSearchStatus", "0");
             rs.set("resourceSearchIncludeDoNot", "off");
+            rs.set("resourceSearchisAgency", "off");
 
             rs.set("resourceSearchTranslator", "off");
             rs.set("resourceSearchEditor", "off");
@@ -148,10 +149,12 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchBusinesssuport", "off");
 
             rs.set("resourceSearchInformationTechnology", "off");
+            rs.set("resourceSearchPostEditing","off");
             rs.set("resourceSearchHumanResource", "off");
             rs.set("resourceSearchOffice", "off");
             rs.set("resourceSearchSales", "off");
             rs.set("resourceSearchAccounting", "off");
+            
 
             rs.set("resourceSearchFqa", "off");
         
@@ -165,17 +168,17 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchSpecific", new String[0]);     
             rs.set("resourceSearchGeneral", new String[0]);  
 
-            List rateScoreLanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
-            String[] rateScoreLanguagesArray = new String[rateScoreLanguages2.size()];
+            List ratescorelanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
+            String[] ratescorelanguagesArray = new String[ratescorelanguages2.size()];
 
                 int i = 0;
-                for(ListIterator iter = rateScoreLanguages2.listIterator(); iter.hasNext(); i++) {
+                for(ListIterator iter = ratescorelanguages2.listIterator(); iter.hasNext(); i++) {
                     RateScoreCategory rsc = (RateScoreCategory) iter.next();
-                    rateScoreLanguagesArray[i] = new String("");
+                    ratescorelanguagesArray[i] = new String("");
                 }
 
                  //save values in form
-                 rs.set("resourceSearchScoresLin", rateScoreLanguagesArray);
+                 rs.set("resourceSearchScoresLin", ratescorelanguagesArray);
 
             rs.set("resourceSearchScoreOldDb", "off");   
 
@@ -193,6 +196,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchCountry", "0");
 
             rs.set("resourceSearchResume", "");
+            rs.set("resourceSearchNote", "");
             
             //set the id into session for later use (binding team to project's task)
             request.getSession(false).setAttribute("projectViewTeamBindLinId", linId);
@@ -200,7 +204,7 @@ public final class ResourceSearchEdit2Action extends Action {
             request.getSession(false).setAttribute("projectViewTeamBindDtpId", null);
             request.getSession(false).setAttribute("projectViewTeamBindOthId", null);
         }
-        else if(engId != null) {
+        else if(!StandardCode.getInstance().noNull(engId).equalsIgnoreCase("")) {
             //get the eng task for entering search criteria (source and target)
             EngTask t = ProjectService.getInstance().getSingleEngTask(Integer.valueOf(engId));
             
@@ -218,6 +222,7 @@ public final class ResourceSearchEdit2Action extends Action {
 
             rs.set("resourceSearchStatus", "0");
             rs.set("resourceSearchIncludeDoNot", "off");
+            rs.set("resourceSearchisAgency", "off");
 
             rs.set("resourceSearchTranslator", "off");
             rs.set("resourceSearchEditor", "off");
@@ -235,6 +240,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchFqa", "off");
 
              rs.set("resourceSearchInformationTechnology", "off");
+             rs.set("resourceSearchPostEditing","off");
             rs.set("resourceSearchHumanResource", "off");
             rs.set("resourceSearchOffice", "off");
             rs.set("resourceSearchSales", "off");
@@ -250,17 +256,17 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchSpecific", new String[0]);     
             rs.set("resourceSearchGeneral", new String[0]);  
 
-            List rateScoreLanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
-            String[] rateScoreLanguagesArray = new String[rateScoreLanguages2.size()];
+            List ratescorelanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
+            String[] ratescorelanguagesArray = new String[ratescorelanguages2.size()];
 
                 int i = 0;
-                for(ListIterator iter = rateScoreLanguages2.listIterator(); iter.hasNext(); i++) {
+                for(ListIterator iter = ratescorelanguages2.listIterator(); iter.hasNext(); i++) {
                     RateScoreCategory rsc = (RateScoreCategory) iter.next();
-                    rateScoreLanguagesArray[i] = new String("");
+                    ratescorelanguagesArray[i] = new String("");
                 }
 
                  //save values in form
-                 rs.set("resourceSearchScoresLin", rateScoreLanguagesArray);
+                 rs.set("resourceSearchScoresLin", ratescorelanguagesArray);
 
             rs.set("resourceSearchScoreOldDb", "off");   
 
@@ -278,6 +284,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchCountry", "0");
 
             rs.set("resourceSearchResume", "");
+            rs.set("resourceSearchNote", "");
             
             //set the id into session for later use (binding team to project's task)
             request.getSession(false).setAttribute("projectViewTeamBindLinId", null);
@@ -286,7 +293,7 @@ public final class ResourceSearchEdit2Action extends Action {
             request.getSession(false).setAttribute("projectViewTeamBindOthId", null);
 
         }
-        else if(dtpId != null) {
+        else if(!StandardCode.getInstance().noNull(dtpId).equalsIgnoreCase("")) {
             //get the dtp task for entering search criteria (source and target)
             DtpTask t = ProjectService.getInstance().getSingleDtpTask(Integer.valueOf(dtpId));
             
@@ -304,6 +311,7 @@ public final class ResourceSearchEdit2Action extends Action {
 
             rs.set("resourceSearchStatus", "0");
             rs.set("resourceSearchIncludeDoNot", "off");
+            rs.set("resourceSearchisAgency", "off");
 
             rs.set("resourceSearchTranslator", "off");
             rs.set("resourceSearchEditor", "off");
@@ -321,6 +329,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchFqa", "off");
 
              rs.set("resourceSearchInformationTechnology", "off");
+             rs.set("resourceSearchPostEditing","off");
             rs.set("resourceSearchHumanResource", "off");
             rs.set("resourceSearchOffice", "off");
             rs.set("resourceSearchSales", "off");
@@ -336,17 +345,17 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchSpecific", new String[0]);     
             rs.set("resourceSearchGeneral", new String[0]);  
 
-            List rateScoreLanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
-            String[] rateScoreLanguagesArray = new String[rateScoreLanguages2.size()];
+            List ratescorelanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
+            String[] ratescorelanguagesArray = new String[ratescorelanguages2.size()];
 
                 int i = 0;
-                for(ListIterator iter = rateScoreLanguages2.listIterator(); iter.hasNext(); i++) {
+                for(ListIterator iter = ratescorelanguages2.listIterator(); iter.hasNext(); i++) {
                     RateScoreCategory rsc = (RateScoreCategory) iter.next();
-                    rateScoreLanguagesArray[i] = new String("");
+                    ratescorelanguagesArray[i] = new String("");
                 }
 
                  //save values in form
-                 rs.set("resourceSearchScoresLin", rateScoreLanguagesArray);
+                 rs.set("resourceSearchScoresLin", ratescorelanguagesArray);
 
             rs.set("resourceSearchScoreOldDb", "off");   
 
@@ -364,6 +373,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchCountry", "0");
 
             rs.set("resourceSearchResume", "");
+            rs.set("resourceSearchNote", "");
             
             //set the id into session for later use (binding team to project's task)
             request.getSession(false).setAttribute("projectViewTeamBindLinId", null);
@@ -371,7 +381,7 @@ public final class ResourceSearchEdit2Action extends Action {
             request.getSession(false).setAttribute("projectViewTeamBindDtpId", dtpId);
             request.getSession(false).setAttribute("projectViewTeamBindOthId", null);
         }
-        else if(othId != null) {
+        else if(!StandardCode.getInstance().noNull(othId).equalsIgnoreCase("")) {
             //get the oth task for entering search criteria (source and target)
             OthTask t = ProjectService.getInstance().getSingleOthTask(Integer.valueOf(othId));
             
@@ -389,6 +399,7 @@ public final class ResourceSearchEdit2Action extends Action {
 
             rs.set("resourceSearchStatus", "0");
             rs.set("resourceSearchIncludeDoNot", "off");
+            rs.set("resourceSearchisAgency", "off");
 
             rs.set("resourceSearchTranslator", "off");
             rs.set("resourceSearchEditor", "off");
@@ -406,6 +417,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchFqa", "off");
 
              rs.set("resourceSearchInformationTechnology", "off");
+             rs.set("resourceSearchPostEditing","off");
             rs.set("resourceSearchHumanResource", "off");
             rs.set("resourceSearchOffice", "off");
             rs.set("resourceSearchSales", "off");
@@ -421,17 +433,17 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchSpecific", new String[0]);     
             rs.set("resourceSearchGeneral", new String[0]);  
 
-            List rateScoreLanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
-            String[] rateScoreLanguagesArray = new String[rateScoreLanguages2.size()];
+            List ratescorelanguages2 = ResourceService.getInstance().getRateScoreCategoryList();
+            String[] ratescorelanguagesArray = new String[ratescorelanguages2.size()];
 
                 int i = 0;
-                for(ListIterator iter = rateScoreLanguages2.listIterator(); iter.hasNext(); i++) {
+                for(ListIterator iter = ratescorelanguages2.listIterator(); iter.hasNext(); i++) {
                     RateScoreCategory rsc = (RateScoreCategory) iter.next();
-                    rateScoreLanguagesArray[i] = new String("");
+                    ratescorelanguagesArray[i] = new String("");
                 }
 
                  //save values in form
-                 rs.set("resourceSearchScoresLin", rateScoreLanguagesArray);
+                 rs.set("resourceSearchScoresLin", ratescorelanguagesArray);
 
             rs.set("resourceSearchScoreOldDb", "off");   
 
@@ -449,6 +461,7 @@ public final class ResourceSearchEdit2Action extends Action {
             rs.set("resourceSearchCountry", "0");
 
             rs.set("resourceSearchResume", "");
+            rs.set("resourceSearchNote", "");
             
             //set the id into session for later use (binding team to project's task)
             request.getSession(false).setAttribute("projectViewTeamBindLinId", null);

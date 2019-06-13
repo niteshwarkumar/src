@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.Competence" table="competence">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="userId" type="int"/>
+        <property name="competence" type="int"/>
+        <property name="required" type="int"/>
+        <property name="actual" type="int"/>
+        <property name="cyear" type="int"/>
+        <property name="isTrainingReq" type="boolean"/>
+        <property name="role" type="int"/>
+
+    </class>
+</hibernate-mapping>

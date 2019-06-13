@@ -100,6 +100,9 @@ public final class GeneratePoPre extends Action {
 
         //get this project's sources
         Set sources = p.getSourceDocs();
+        
+        String change = request.getParameter("change");
+        request.setAttribute("change", StandardCode.getInstance().noNull(change));
 
         //for each source add each sources' Tasks
         List totalLinTasks = new ArrayList();
@@ -115,10 +118,11 @@ public final class GeneratePoPre extends Action {
                 //for each lin Task of this target
                 for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
                     LinTask lt = (LinTask) linTaskIter.next();
+                     if(StandardCode.getInstance().noNull(change).equalsIgnoreCase(StandardCode.getInstance().noNull(lt.getChangeDesc()))){
                     if(lt.getPersonName()!=null&&lt.getDueDateDate()!=null&&(lt.getTaskName().equalsIgnoreCase("Translation")||lt.getTaskName().equalsIgnoreCase("Editing")||lt.getTaskName().trim().equalsIgnoreCase("Proofreading")||lt.getTaskName().equalsIgnoreCase("Proofreading / Linguistic QA"))){
                     totalLinTasks.add(lt);
-                    }
-                    System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.getTaskName());
+                    }}
+                    //System.out.println(sd.getLanguage()+"--------"+td.getLanguage()+"---------"+lt.getTaskName());
                 }
 
 
@@ -134,7 +138,7 @@ public final class GeneratePoPre extends Action {
         LinTask[] linTasksArray = (LinTask[]) totalLinTasks.toArray(new LinTask[0]);
 
 for(int i=0;i<totalLinTasks.size();i++){
-request.setAttribute(projectId, log);
+request.setAttribute(projectId, projectId);
 }
 
         //place all Tasks for this project into the form for display

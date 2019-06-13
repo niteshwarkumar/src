@@ -97,7 +97,7 @@ String username = StandardCode.getInstance().getCookie("storedUsername", request
 User user = UserService.getInstance().getSingleUser(username);
 clientId = user.getID_Client().toString();
 }
-System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
+//System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>>>>>>"+clientId);
 
 //Integer id = Integer.parseInt(clientId);
 
@@ -118,7 +118,7 @@ System.out.println("clinrt id of ClientViewProjectHistoryAction>>>>>>>>>>>>>>>>>
 response.addCookie(StandardCode.getInstance().setCookie("clientViewTab", "Project History"));
  Integer nk=1;
 // long end1 = System.currentTimeMillis();
-//System.out.println("old way:"+(end1-start1));
+////System.out.println("old way:"+(end1-start1));
 // long start2 = System.currentTimeMillis();
 response.setContentType("text/html");
 response.setHeader("Cache-Control", "no-cache");
@@ -134,22 +134,23 @@ Calendar cal = new GregorianCalendar();
             temp = ProjectHelper.getProjectListForClientComplete(clientId, year);
         }
 
+String projectList = request.getParameter("projectList");
 
 ArrayList projectHistory = new ArrayList();
 for(ListIterator iter = temp.listIterator(); iter.hasNext();) {
 Project p = (Project) iter.next();
-  System.out.println(nk +"       "+p.getNumber());
+  //System.out.println(nk +"       "+p.getNumber());
             nk++;
 JSONObject jo = ProjectHelper.ClientProjectToJson2(p);
 projectHistory.add(jo);
 }
-System.out.println("projectHistory"+projectHistory);
-// System.out.println(actResponse.toXML());
+//System.out.println("projectHistory"+projectHistory);
+// //System.out.println(actResponse.toXML());
 PrintWriter out = response.getWriter();
-out.println(new JSONArray(projectHistory.toArray()));
+out.println(new JSONArray(projectHistory));
 out.flush();
 // long end2 = System.currentTimeMillis();
-//System.out.println("Finnished ClientViewProjectHistoryAction!");
+////System.out.println("Finnished ClientViewProjectHistoryAction!");
 // Forward control to the specified success URI
 //return (mapping.findForward("Success"));
 return null;

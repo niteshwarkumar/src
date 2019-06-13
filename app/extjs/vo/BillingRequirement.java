@@ -34,7 +34,7 @@ public class BillingRequirement {
     }
 
     public String getRequirement() {
-        return requirement;
+        return requirement.replaceAll("/\\\\\\\\/g", "\\\\");
     }
 
     public void setRequirement(String requirement) {

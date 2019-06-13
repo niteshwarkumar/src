@@ -71,7 +71,9 @@ public class QMSAddAction  extends Action {
         if (!SecurityService.getInstance().checkForLogin(request.getSession(false))) {
             return (mapping.findForward("welcome"));
         }
-
+        List qmsActionList = QMSService.getInstance().getQMSActionList();
+        List qmsActionListId = new ArrayList();
+        
         String mrmJSON = request.getParameter("MRMJSON");
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         if (mrmJSON != null && !"".equals(mrmJSON)) {
@@ -81,6 +83,7 @@ public class QMSAddAction  extends Action {
                  QMSAction ei = new QMSAction();
                 if(!j.getString("id").equalsIgnoreCase("new")){
                    ei = QMSService.getInstance().getSingleQMSAction(Integer.parseInt(j.getString("id"))); 
+                   qmsActionListId.add(j.getString("id"));
                 }
                
                     ei.setActionItem(j.getString("actionItem"));
@@ -99,10 +102,15 @@ public class QMSAddAction  extends Action {
                         ei.setTarget(d2);
                     } catch (Exception ex) {
                     }
-                QMSService.getInstance().saveOrUpdateQMSAction(ei);
+                QMSServiceAddUpdate.getInstance().saveOrUpdateQMSAction(ei);
             }
         }
-
+        for(int i = 0; i< qmsActionList.size(); i++){
+            QMSAction qma = (QMSAction) qmsActionList.get(i);
+            if(!qmsActionListId.contains(qma.getId().toString()))
+                QMSServiceAddUpdate.getInstance().deleteQMSAction(qma);
+        
+        }
 
 
         // Forward control to the specified success URI

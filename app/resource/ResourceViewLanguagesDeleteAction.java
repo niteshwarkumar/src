@@ -1,33 +1,20 @@
 //ResourceViewLanguagesDeleteAction.java deletes a language
-//pair and its associated rateScoreLanguages
+//pair and its associated ratescorelanguages
 
 package app.resource;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
-import java.util.*;
-import java.text.*;
-import app.user.*;
 import app.admin.*;
-import app.resource.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
-import app.standardCode.*;
-import org.apache.struts.validator.*;
 
 
 public final class ResourceViewLanguagesDeleteAction extends Action {
@@ -79,8 +66,11 @@ public final class ResourceViewLanguagesDeleteAction extends Action {
         //END check for login (security)
         
         //START get id of languagePair
-	String id = null;
-	id = request.getParameter("id");
+//	String id = null;
+	String id = request.getParameter("id");
+        request.getParameter("lpid");
+        request.getAttribute("projectViewTeamBindLinId");
+   
         
         Integer intId = Integer.valueOf(id);
         

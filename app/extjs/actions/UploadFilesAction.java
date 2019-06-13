@@ -6,6 +6,7 @@ package app.extjs.actions;
 
 import app.extjs.vo.Upload_Doc;
 import app.quote.QuoteService;
+import app.resource.ResourceService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -20,6 +21,7 @@ import org.apache.struts.validator.*;
 import java.io.*;
 import java.util.*;
 import app.security.*;
+import app.standardCode.StandardCode;
 import app.user.*;
 import java.util.Date;
 import java.util.zip.*;
@@ -37,8 +39,8 @@ public class UploadFilesAction extends Action {
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
@@ -73,93 +75,79 @@ public class UploadFilesAction extends Action {
             return (mapping.findForward("welcome"));
         }
         //END check for login (security)
-
-        (new File("C:/log")).mkdir();
-        DynaValidatorForm uvg = (DynaValidatorForm) form;
-        FormFile Upload = (FormFile) uvg.get("Upload");
-        User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));      
+        String folderPath  = StandardCode.getInstance().getPropertyValue("mac.fileUpload.path");
+        String docId = request.getParameter("docId");
         Upload_Doc newDoc = new Upload_Doc();
-        System.out.println("Upload File Name" + Upload);
+        if(null!=docId){
+        if(Integer.parseInt(docId)>0){
+            newDoc = UserService.getInstance().getDocList(Integer.parseInt(docId));
+        }
+        }
+        (new File(folderPath)).mkdir();
+        DynaValidatorForm uvg = (DynaValidatorForm) form;
+        FormFile Upload = (FormFile) uvg.get("uploadFile");
+        User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));        
+        
+        //System.out.println("Upload File Name" + Upload);
         String saveFileName = null;
         if (Upload.getFileName().length() > 0) {
             String fileName = Upload.getFileName();
             byte[] fileData = Upload.getFileData(); //byte array of file data
             //random number in image name to prevent repeats
-            Random gen = new Random(new Date().getSeconds());
+            Random gen = new Random(new Date().getTime());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
-            File saveFile = new File("C:/log/" + Upload);
+            File saveFile = new File(folderPath + saveFileName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
             out.close();
-           
-            System.out.println("Filename=====================>>>>>>>" + saveFileName);
-        }
-
-        newDoc.setPathname(Upload.getFileName());
-        newDoc.setClientID(0);
-        newDoc.setQuoteID(0);
-        if (saveFileName != null) { //was a new picture uploaded
+             newDoc.setPathname(Upload.getFileName());
+             if (saveFileName != null) { //was a new picture uploaded
             newDoc.setPath(saveFileName);
-
-        }
-      //  QuoteService.getInstance().addUpload_Doc(newDoc);
-      
-        try
-        {
-            String destinationname = "C:/log/";
-            byte[] buf = new byte[1024];
-            ZipInputStream zipinputstream = null;
-            ZipEntry zipentry;
-            File newFile=null;
-
-            zipinputstream = new ZipInputStream(new FileInputStream("C:/log/"+Upload.getFileName()));
-
-            zipentry = zipinputstream.getNextEntry();
-            while (zipentry != null)
-            {
-                //for each entry to be extracted
-                String entryName = zipentry.getName();
-                System.out.println("entryname "+entryName);
-                int n;
-                FileOutputStream fileoutputstream;
-                newFile = new File(entryName);
-                String directory = newFile.getParent();
-
-                if(directory == null)
-                {
-                    if(newFile.isDirectory())
-                        break;
-                }
-
-                fileoutputstream = new FileOutputStream(
-                   destinationname+entryName);
-
-                while ((n = zipinputstream.read(buf, 0, 1024)) > -1)
-                    fileoutputstream.write(buf, 0, n);
-
-                fileoutputstream.close();
-                zipinputstream.closeEntry();
-                zipentry = zipinputstream.getNextEntry();
-
-            }//while
-
-            zipinputstream.close();
             
         }
-        catch (Exception e)
-        {
-//            e.printStackTrace();
-            request.setAttribute("isError", "error");
-            return (mapping.findForward("Error"));
+            
+            //System.out.println("Filename=====================>>>>>>>" + saveFileName);
         }
-
-
-
-
-
-
+        
+       
+        newDoc.setClientID(0);
+      
+        
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        String category = request.getParameter("category");
+        String owner = request.getParameter("owner");
+        String docFormat = request.getParameter("docFormat");
+        String resourceViewId = request.getParameter("resourceViewId");
+        String pId = request.getParameter("pId");
+        String oId = request.getParameter("oId");
+        newDoc.setType(category);
+        try {
+            newDoc.setResourceId(Integer.parseInt(resourceViewId));
+        } catch (Exception e) {
+        }
+        try {
+            newDoc.setProjectID(Integer.parseInt(pId));
+        } catch (Exception e) {
+        }
+        try {
+            newDoc.setOthId(Integer.parseInt(oId));
+        } catch (Exception e) {
+        }
+        newDoc.setUploadDate(new Date());
+        newDoc.setUploadedBy(u.getFirstName() + " " + u.getLastName());
+        newDoc.setTitle(title);
+        newDoc.setOwner(owner);
+        newDoc.setDescription(description);
+        newDoc.setDocFormat(docFormat);
+        
+        QuoteService.getInstance().addUpload_Doc(newDoc);
+        request.setAttribute("SuccessMessage", "File uploaded successfully.");
         // Forward control to the specified success URI
-        return (mapping.findForward("Success"));
+        String doAction = request.getParameter("doAction");
+        request.setAttribute("projectId", pId);
+        
+        return (mapping.findForward(doAction));
     }
 }

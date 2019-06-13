@@ -106,19 +106,35 @@ public final class QuoteViewProjectRequirementsAction extends Action {
         Product pr=ClientService.getSingleProduct(cq.getProduct_ID());
         prod=pr.getProduct();
         product+=prod;
-        
-        type+=prod+"-"+cq.getType();
-        typeOfText+=prod+"-"+cq.getTypeOfText();
-        component+=prod+"-"+cq.getComponent();
-        projectRequirements+=prod+"-"+cq.getRequirement();
-        ProjectDescription+=prod+"-"+cq.getInstruction();
+        if(cQuote.size()==1){
+            type+=cq.getType();
+            typeOfText+=StandardCode.getInstance().noNull(cq.getTypeOfText());
+            component+=cq.getComponent();
+            projectRequirements+=cq.getRequirement();
+            ProjectDescription+=cq.getInstruction();
             try {
                  if(p.getProjectDescription().length()>0)
                  type=p.getProjectDescription();
             } catch (Exception e) {
             }
        
+        Task+=cq.getClientTask()+"\n"+cq.getOtherTask()+"\n";
+        }else{
+            type+=prod+"-"+cq.getType();
+            typeOfText+=prod+"-"+StandardCode.getInstance().noNull(cq.getTypeOfText());
+            component+=prod+"-"+cq.getComponent();
+            projectRequirements+=prod+"-"+cq.getRequirement();
+            ProjectDescription+=prod+"-"+cq.getInstruction();
+            try {
+                 if(p.getProjectDescription().length()>0)
+                 type=prod+(p.getProjectDescription().replaceAll(p.getProjectDescription().split("-")[0], ""));
+            } catch (Exception e) {
+            }
+       
         Task+=prod+"-"+cq.getClientTask()+"\n"+cq.getOtherTask()+"\n";
+        }
+        
+            
 
         if(i < cQuote.size()-1 ){
          product +=",";
@@ -156,6 +172,8 @@ public final class QuoteViewProjectRequirementsAction extends Action {
         qvpr.set("afterWorkTurn", q.getProject().getAfterWorkTurn());
         qvpr.set("afterWorkTurnUnits", q.getProject().getAfterWorkTurnUnits());
         qvpr.set("afterWorkTurnReason", q.getProject().getAfterWorkTurnReason());
+        if(q.getProject().getReqProjDelDate()!=null)
+        qvpr.set("reqProjDelDate", q.getProject().getReqProjDelDate().toString());
         qvpr.set("sourceOs", p.getSourceOS());
         qvpr.set("sourceApplication", p.getSourceApplication());
         qvpr.set("sourceVersion", p.getSourceVersion());
@@ -165,6 +183,16 @@ public final class QuoteViewProjectRequirementsAction extends Action {
         qvpr.set("deliverableVersion", p.getDeliverableVersion());
         qvpr.set("deliverableTechNotes", p.getDeliverableTechNotes());
         qvpr.set("productFeeUnit", p.getFee());
+        qvpr.set("orderReqNum", p.getOrderReqNum());
+        if(p.getContact()!=null)
+            qvpr.set("clientContact", ""+p.getContact().getClientContactId());
+        else
+            qvpr.set("clientContact", "");
+        
+        if(p.getCareTaker()!=null)
+            qvpr.set("caretaker", ""+p.getCareTaker().getClientContactId());
+        else
+            qvpr.set("caretaker", "");
         
         //place quote into attribute for display
         request.setAttribute("quote", q);
@@ -175,12 +203,16 @@ public final class QuoteViewProjectRequirementsAction extends Action {
 
 
         //place sources into request for display
-        SourceDoc[] sources = new SourceDoc[q.getSourceDocs().size()];
-        Iterator iter = q.getSourceDocs().iterator();
+         List sdList = QuoteService.getInstance().getSourceLang1(q);
+        SourceDoc[] sources = new SourceDoc[sdList.size()];
+       
+        
+//        Iterator iter = q.getSourceDocs().iterator();
         for(int j = 0; j < sources.length; j++) {
-            SourceDoc sd = (SourceDoc) iter.next();
+            SourceDoc sd = (SourceDoc) sdList.get(j);
             sources[j] = sd;
         }
+      
 
         request.setAttribute("sourceArray", sources); 
         

@@ -93,19 +93,19 @@ public class QuoteWizard5Action extends Action {
         }
 
         try {
-            String[] pmname = c.getProject_mngr().split(" ");
-            String pmFname = pmname[0];
-            String pmLname = c.getProject_mngr().replace(pmname[0] + " ", "");
-            pm = UserService.getInstance().getSingleUserRealName(pmFname, pmLname);
+//            String[] pmname = c.getProject_mngr().split(" ");
+//            String pmFname = pmname[0];
+//            String pmLname = c.getProject_mngr().replace(pmname[0] + " ", "");
+            pm = UserService.getInstance().getSingleUserRealName(c.getProject_mngr());
             toAddress += "," + pm.getWorkEmail1();
         } catch (Exception e) {
         }
         try {
-            String[] aename = c.getSales_rep().split(" ");
-            String aeFname = aename[0];
-            String aeLname = c.getSales_rep().replace(aename[0] + " ", "");
+//            String[] aename = c.getSales_rep().split(" ");
+//            String aeFname = aename[0];
+//            String aeLname = c.getSales_rep().replace(aename[0] + " ", "");
             //String aeLname=c.getProject_mngr().replace(aename[0]+" ", "");
-            ae = UserService.getInstance().getSingleUserRealName(aeFname, aeLname);
+            ae = UserService.getInstance().getSingleUserRealName(c.getSales_rep());
 
             toAddress += "," + ae.getWorkEmail1();
         } catch (Exception e) {
@@ -157,7 +157,7 @@ public class QuoteWizard5Action extends Action {
                                                 }
 
                                                 idTask1 = td1.getTargetDocId();
-                                            }//System.out.println("targets"+targets);
+                                            }////System.out.println("targets"+targets);
                                             if (targets11.endsWith(", ")) {
                                                 targets11 = targets11.substring(0, targets11.length() - 2);
                                             }
@@ -184,49 +184,33 @@ public class QuoteWizard5Action extends Action {
                 + "<div>Target: " + targett + "</div>"
                 + fName
                 + "<br><br><div>Best regards,</div><div><br></div><div>ExcelNet Administrator</div>"
-                + "<div><img src='http://excelnet.xltrans.com/logo/images/-1168566039logoExcel.gif'></div>";
+                + "<div><img src='https://excelnet.xltrans.com/logo/images/excel-logo-blue.jpg'></div>";
 
 
         try {
             String[] emailList = toAddress.split(",");
             QuoteWizard5Action smtpMailSender = new QuoteWizard5Action();
 
-            smtpMailSender.postMail(emailList, subject, body, emailFromAddress);
+            smtpMailSender.postMail(emailList, subject, body, StandardCode.emailFromAddress);
             //smtpMailSender.postMail(emailList, subject, body, emailFromAddress);
 
-            //System.out.println("mail send ");
+            ////System.out.println("mail send ");
         } catch (Exception e) {
         }
 // Forward control to the specified success URI
         return (mapping.findForward("Success"));
 
     }
-    private static final String SMTP_HOST_NAME = "xltrans.com";
-    private static final String SMTP_AUTH_USER = "excelnet@xltrans.com";
-    private static final String SMTP_AUTH_PWD = "3vB@zMsp";
-    private static final String emailFromAddress = "excelnet@xltrans.com";
 
     public void postMail(String recipients[], String subject,
             String message, String from) throws MessagingException {
-        boolean debug = false;
-
-        //Set the host smtp address
-        Properties props = new Properties();
-        props.put("mail.smtp.host", SMTP_HOST_NAME);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.timeout", 60000);
-
-        Authenticator auth = new SMTPAuthenticator();
-        Session session = Session.getDefaultInstance(props, auth);
-
-        session.setDebug(debug);
-
+       
         // create a message
-        Message msg = new MimeMessage(session);
+        Message msg = StandardCode.getInstance().getMimeMessage();
 
         // set the from and to address
-        InternetAddress addressFrom = new InternetAddress(from);
-        msg.setFrom(addressFrom);
+        //InternetAddress addressFrom = new InternetAddress(from);
+        //msg.setFrom(addressFrom);
 
 
 
@@ -250,12 +234,5 @@ public class QuoteWizard5Action extends Action {
         Transport.send(msg);
     }
 
-    private class SMTPAuthenticator extends javax.mail.Authenticator {
 
-        public PasswordAuthentication getPasswordAuthentication() {
-            String username = SMTP_AUTH_USER;
-            String password = SMTP_AUTH_PWD;
-            return new PasswordAuthentication(username, password);
-        }
-    }
 }

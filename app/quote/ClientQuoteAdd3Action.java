@@ -59,15 +59,12 @@ public class ClientQuoteAdd3Action extends Action{
         //String projectId = StandardCode.getInstance().getCookie("projectAddId", request.getCookies());
         String projectId = request.getParameter("projectViewId");
         Integer productId=Integer.parseInt(request.getParameter("productId"));
-         System.out.println("productIdproductIdproductId"+productId);
 
 
         Quote1 newQ = QuoteService.getInstance().getSingleQuote(new Integer(request.getParameter("quoteViewId")));
-         System.out.println("nnnnnnnnnnnnnnneeeeeeeeeeeeeeeeeeeeeqqqqqqqqqqqqqqqqqqq"+newQ.getNumber());
         Project p = ProjectService.getInstance().getSingleProject(newQ.getProject().getProjectId());
 //int qnum=newQ.getQuote1Id();
           int qnum= Integer.parseInt(request.getSession(false).getAttribute("ClientQuoteId").toString());
-         System.out.println(qnum);
 
          // getSingleClient_Quote(Integer id)
         Client_Quote newQA = QuoteService.getInstance().getSingleClient_Quote(qnum);
@@ -83,13 +80,13 @@ int z=0;
         QuoteHelper.clientUnlinkSourcesAndTargets(newQ,newQA.getId());
   //JSONObject jo = new JSONObject();
   //   Client_Quote ur = (Client_Quote) newQA.get(z);
-  // System.out.println("mainTarget="+mainTarget);
+  // //System.out.println("mainTarget="+mainTarget);
   //update values
-        //System.out.println("project id="+p.getProjectId());
+        ////System.out.println("project id="+p.getProjectId());
         if(mainSrc!=null) {
             for (int i = 0; i < mainSrc.length; i++) {
                 sd.setLanguage(mainSrc[i]);
-                System.out.println("   sd.setLanguage(mainSrc[i]);" + mainSrc[i]);
+                //System.out.println("   sd.setLanguage(mainSrc[i]);" + mainSrc[i]);
                 Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd, newQA, newQ);
                 if (targetLanguage != null) {
                     for (int j = 0; j < targetLanguage.length; j++) {
@@ -101,7 +98,7 @@ int z=0;
                 if (mainTarget != null) {
                     for (int j = 0; j < mainTarget.length; j++) {
                         if (!mainTarget[j].equalsIgnoreCase("t")) {
-                            System.out.println("main Targetttttttttt::::" + mainTarget[j]);
+                            //System.out.println("main Targetttttttttt::::" + mainTarget[j]);
                             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                             td.setLanguage(mainTarget[j]);
                             Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
@@ -114,7 +111,7 @@ int z=0;
     if(sourceLanguage!=null) {
             for (int i = 0; i < sourceLanguage.length; i++) {
                 sd.setLanguage(sourceLanguage[i]);
-                System.out.println("   sd.setLanguage(mainSrc[i]);" + sourceLanguage[i]);
+                //System.out.println("   sd.setLanguage(mainSrc[i]);" + sourceLanguage[i]);
                 Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd, newQA, newQ);
                 if (targetLanguage != null) {
                     for (int j = 0; j < targetLanguage.length; j++) {

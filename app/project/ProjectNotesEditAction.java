@@ -3,27 +3,20 @@
 
 package app.project;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
-import app.user.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 import app.standardCode.*;
+import org.apache.struts.validator.DynaValidatorForm;
 
 public final class ProjectNotesEditAction extends Action {
 
@@ -91,6 +84,25 @@ public final class ProjectNotesEditAction extends Action {
         
         //put this client into the request; in ClientViewNotesEdit.jsp, get <code>note</code> for display
         request.setAttribute("project", p);
+        
+        List noteList = ProjectService.getInstance().getNotesList(id);
+              
+        String noteId = request.getParameter("noteId");
+        Notes note = null;
+        
+        //values of the note
+        DynaValidatorForm qvn = (DynaValidatorForm) form;
+        qvn.set("note", p.getNotes());
+        
+        if(null != noteId)
+            note = ProjectService.getInstance().getSingleNotes(Integer.parseInt(noteId));
+        
+        
+        //place quote into attribute for display
+        
+        request.setAttribute("notes", noteList);
+        request.setAttribute("note", note);
+        
         
         //add this project id to cookies for display
         response.addCookie(StandardCode.getInstance().setCookie("projectViewId", projectId));

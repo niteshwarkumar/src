@@ -5,7 +5,6 @@
 
 package app.client;
 
-import app.extjs.helpers.ClientHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -16,6 +15,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import app.security.*;
+import app.standardCode.StandardCode;
 
 /**
  *
@@ -66,7 +66,7 @@ public class ClientUpdateConstants extends Action {
 
         //which client to update from hidden value in form
         String clientId = request.getParameter("clientViewId");
-        System.out.println("Client id of client updaterate***********************" + clientId);
+        //System.out.println("Client id of client updaterate***********************" + clientId);
 
         //get the client to be updated from db
         Client c = null;
@@ -77,15 +77,29 @@ public class ClientUpdateConstants extends Action {
             c.setClientId(0);
         }
         //Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(clientId));
-        System.out.println("client id value of client update rate*********************************");
+        //System.out.println("client id value of client update rate*********************************");
              c.setCcurrency(request.getParameter("currency"));
         if(request.getParameter("mainSource")!=null){
                           if(!request.getParameter("mainSource").equalsIgnoreCase("")){
-            c.setMainSource(request.getParameter("mainSource"));}}
+            c.setMainSource(request.getParameter("mainSource"));
+                          }else{
+                             c.setMainSource(null);
+                          }}
         if(request.getParameter("mainTarget")!=null){
               if(!request.getParameter("mainTarget").equalsIgnoreCase("")){
-            c.setMainTarget(request.getParameter("mainTarget"));}}
+            c.setMainTarget(request.getParameter("mainTarget"));
+              }else{
+                             c.setMainTarget(null);
+                          }}
         try{c.setPmfeePercentage(Double.parseDouble(request.getParameter("pmFeePercentage")));}catch(Exception e){} 
+        try{c.setTargetProfitability(Double.parseDouble(request.getParameter("targetProfitability")));}catch(Exception e){} 
+        
+        String autoPmFee = request.getParameter("autoPmFee");
+        if(StandardCode.getInstance().noNull(autoPmFee).equalsIgnoreCase("on")){
+            c.setAutoPmFee(Boolean.TRUE);
+        }else{
+            c.setAutoPmFee(Boolean.FALSE);
+        }
 
 
 

@@ -15,6 +15,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import app.security.*;
 import app.standardCode.DateService;
+import app.user.User;
+import app.user.UserService;
+import java.util.Date;
 import org.apache.struts.validator.DynaValidatorForm;
 
 /**
@@ -40,12 +43,20 @@ public class CapaIdUpdateAction extends Action {
         if (!SecurityService.getInstance().checkForLogin(request.getSession(false))) {
             return (mapping.findForward("welcome"));
         }
+        
+        User u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
         //END check for login (security)
         DynaValidatorForm upd = (DynaValidatorForm) form;
+        
+        String reportedbydesc = (String) upd.get("reportedbydesc");
+        String locked = (String) upd.get("admin_locked");
+//        String lockedby = (String) upd.get("lockedby");
+        
 
         String number=request.getParameter("number");
         //String capa_number = (String) upd.get("prepTime");
         String rca = (String) upd.get("rca");
+        String imact = (String) upd.get("imact");
 
         String nc = (String) upd.get("nc");
         String ncyesno = (String) upd.get("ncyesno");
@@ -75,6 +86,9 @@ public class CapaIdUpdateAction extends Action {
         String rca_t_date = (String) upd.get("rca_t_date");
         String rca_a_date = (String) upd.get("rca_a_date");
 
+        String imact_t_date = (String) upd.get("imact_t_date");
+        String imact_a_date = (String) upd.get("imact_a_date");
+        
         String actionimp_t_date = (String) upd.get("actionimp_t_date");
         String actionimp_a_date = (String) upd.get("actionimp_a_date");
 
@@ -84,6 +98,7 @@ public class CapaIdUpdateAction extends Action {
         String admin_rec_date = (String) upd.get("admin_rec_date");
         String admin_own_date = (String) upd.get("admin_own_date");
         String admin_disp_date = (String) upd.get("admin_disp_date");
+        String admin_lock_date = (String) upd.get("admin_lock_date");
         String capaid_description = (String) upd.get("capaid_description");
 
         try{
@@ -91,8 +106,23 @@ public class CapaIdUpdateAction extends Action {
        
         Capa capa=QMSService.getInstance().getSingleCapa(number);
         capa.setSource(source);
-        QMSService.getInstance().saveCapa(capa);
-
+        capa.setReportedbydesc(reportedbydesc);
+        if(locked.equalsIgnoreCase("true")){
+        capa.setIsLocked(Boolean.TRUE);
+        }
+        try {
+            if (admin_lock_date.length() > 0) { //if present
+                capa.setAdmin_lock_date(DateService.getInstance().convertDate(admin_lock_date).getTime());
+            }else{
+             capa.setAdmin_lock_date(new Date());
+            }
+        } catch (Exception e) {
+            ////System.out.println("Date Errooooorr " + e.getMessage());
+        }
+        
+        capa.setLockedby(u.getUsername());
+        QMSServiceAddUpdate.getInstance().saveCapa(capa);
+//QMSService.getInstance().getCapa()
 
         }catch(Exception e){}
 
@@ -108,14 +138,14 @@ public class CapaIdUpdateAction extends Action {
                 cid.setActionimp_a_date(DateService.getInstance().convertDate(actionimp_a_date).getTime());
             }
         } catch (Exception e) {
-//            System.out.println("Date Errooooorr " + e.getMessage());
+//            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         try {
             if (actionimp_t_date.length() > 0) { //if present
                 cid.setActionimp_t_date(DateService.getInstance().convertDate(actionimp_t_date).getTime());
             }
         } catch (Exception e) {
-//            System.out.println("Date Errooooorr " + e.getMessage());
+//            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         cid.setActionplan(actionplan);
         cid.setActionplan_approve(actionplan_approve);
@@ -125,7 +155,7 @@ public class CapaIdUpdateAction extends Action {
                 cid.setAdmin_own_date(DateService.getInstance().convertDate(admin_own_date).getTime());
             }
         } catch (Exception e) {
-//            System.out.println("Date Errooooorr " + e.getMessage());
+//            //System.out.println("Date Errooooorr " + e.getMessage());
         }
 
         cid.setAdmin_own_person(admin_own_person);
@@ -134,7 +164,7 @@ public class CapaIdUpdateAction extends Action {
                 cid.setAdmin_rec_date(DateService.getInstance().convertDate(admin_rec_date).getTime());
             }
         } catch (Exception e) {
-            //System.out.println("Date Errooooorr " + e.getMessage());
+            ////System.out.println("Date Errooooorr " + e.getMessage());
         }
         cid.setAdmin_rec_person(admin_rec_person);
         cid.setComments(comments);
@@ -146,19 +176,34 @@ public class CapaIdUpdateAction extends Action {
         cid.setOwner3(owner3);
         cid.setCapaid_description(capaid_description);
         cid.setRca(rca);
+        cid.setImact(imact);
         try {
             if (rca_a_date.length() > 0) { //if present
                 cid.setRca_a_date(DateService.getInstance().convertDate(rca_a_date).getTime());
             }
         } catch (Exception e) {
-            //System.out.println("Date Errooooorr " + e.getMessage());
+            ////System.out.println("Date Errooooorr " + e.getMessage());
         }
         try {
             if (rca_t_date.length() > 0) { //if present
                 cid.setRca_t_date(DateService.getInstance().convertDate(rca_t_date).getTime());
             }
         } catch (Exception e) {
-            //System.out.println("Date Errooooorr " + e.getMessage());
+            ////System.out.println("Date Errooooorr " + e.getMessage());
+        }
+        try {
+            if (imact_a_date.length() > 0) { //if present
+                cid.setImact_a_date(DateService.getInstance().convertDate(imact_a_date).getTime());
+            }
+        } catch (Exception e) {
+            ////System.out.println("Date Errooooorr " + e.getMessage());
+        }
+        try {
+            if (imact_t_date.length() > 0) { //if present
+                cid.setImact_t_date(DateService.getInstance().convertDate(imact_t_date).getTime());
+            }
+        } catch (Exception e) {
+            ////System.out.println("Date Errooooorr " + e.getMessage());
         }
         cid.setVerify(verify);
         try {
@@ -166,7 +211,7 @@ public class CapaIdUpdateAction extends Action {
                 cid.setVerify_a_date(DateService.getInstance().convertDate(verify_a_date).getTime());
             }
         } catch (Exception e) {
-            //System.out.println("Date Errooooorr " + e.getMessage());
+            ////System.out.println("Date Errooooorr " + e.getMessage());
         }
         cid.setVerify_approve(verify_approve);
         try {
@@ -174,14 +219,14 @@ public class CapaIdUpdateAction extends Action {
                 cid.setVerify_t_date(DateService.getInstance().convertDate(verify_t_date).getTime());
             }
         } catch (Exception e) {
-            //System.out.println("Date Errooooorr " + e.getMessage());
+            ////System.out.println("Date Errooooorr " + e.getMessage());
         }
         try {
             if (admin_disp_date.length() > 0) { //if present
                 cid.setAdmin_disp_date(DateService.getInstance().convertDate(admin_disp_date).getTime());
             }
         } catch (Exception e) {
-            //System.out.println("Date Errooooorr " + e.getMessage());
+            ////System.out.println("Date Errooooorr " + e.getMessage());
         }
 
         cid.setAdmin_disp_person(admin_disp_person);
@@ -190,7 +235,7 @@ public class CapaIdUpdateAction extends Action {
         cid.setActionimp_status(actionimp_status);
         cid.setVerify_approve2(verify_approve2);
 
-        QMSService.getInstance().saveCapaId(cid);
+        QMSServiceAddUpdate.getInstance().saveCapaId(cid);
 
         return (mapping.findForward("Success"));
 

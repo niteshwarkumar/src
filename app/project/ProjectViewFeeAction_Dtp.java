@@ -17,6 +17,7 @@ import java.text.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
+import org.json.JSONObject;
 
 
 public final class ProjectViewFeeAction_Dtp extends Action {
@@ -103,9 +104,42 @@ public final class ProjectViewFeeAction_Dtp extends Action {
         
         //get this project's sources
         Set sources = p.getSourceDocs();
+           Set changesLst = p.getChange1s();
+        JSONObject changeObj = new JSONObject();
+        String verifymsg ="<font color=\"red\">Verification was not performed yet. Please check and try again.</font>";
+        for(Iterator chg = changesLst.iterator(); chg.hasNext();) {
+            Change1 change1 = (Change1) chg.next();
+            
+            JSONObject jo = new JSONObject();
+            jo.put("name", change1.getName());
+            jo.put("desc", change1.getDescription());
+            
+            if(change1.isFinalVerification()){
+                jo.put("finalVerify",  "Final verification done by "+change1.getFinalVerificationBy()+ " on "+StandardCode.getInstance().noNull(change1.getFinalVerificationDate(), ""));
+            }
+            else{
+                jo.put("finalVerify", verifymsg);
+            }
+            if(change1.isEngVerification()){
+                jo.put("engVerify",  "<br>Eng verification done by "+change1.getEngVerificationBy()+ " on "+StandardCode.getInstance().noNull(change1.getEngVerificationDate(), ""));
+            }
+            else{
+                jo.put("engVerify", "");
+            }
+            if(change1.isDtpVerification()){
+                jo.put("dtpVerify",  "<br>Dtp verification done by "+change1.getDtpVerificationBy()+ " on "+StandardCode.getInstance().noNull(change1.getDtpVerificationDate(), ""));
+            }
+            else{
+                jo.put("dtpVerify", "");
+            }
+            jo.put("number", change1.getNumber());
+            jo.put("changeId", change1.getChange1Id());
+            changeObj.put(change1.getNumber(), jo);
+        }
         
         //for each source add each sources' Tasks
         List totalLinTasks = new ArrayList();
+        TreeSet<String> changes = new TreeSet();
         List totalEngTasks = new ArrayList();
         List totalDtpTasks = new ArrayList();
         List totalOthTasks = new ArrayList();
@@ -118,114 +152,27 @@ public final class ProjectViewFeeAction_Dtp extends Action {
             for(Iterator linTargetIter = sd.getTargetDocs().iterator(); linTargetIter.hasNext();) {
                 TargetDoc td = (TargetDoc) linTargetIter.next();
                 
-                //for each lin Task of this target
-                for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
-                    LinTask lt = (LinTask) linTaskIter.next();
-                    totalLinTasks.add(lt);
-                }
-                
-                //for each eng Task of this target
-                for(Iterator engTaskIter = td.getEngTasks().iterator(); engTaskIter.hasNext();) {
-                    EngTask et = (EngTask) engTaskIter.next();
-                    totalEngTasks.add(et);
-                }
-                
                 //for each dtp Task of this target
                 for(Iterator dtpTaskIter = td.getDtpTasks().iterator(); dtpTaskIter.hasNext();) {
                     DtpTask dt = (DtpTask) dtpTaskIter.next();
                     totalDtpTasks.add(dt);
+                    String change = StandardCode.getInstance().noNull(dt.getChangeDesc());
+                    if(!changes.contains(change)){
+                        changes.add(change);
+                    }
                 }
-                
-                //for each oth Task of this target
-                for(Iterator othTaskIter = td.getOthTasks().iterator(); othTaskIter.hasNext();) {
-                    OthTask ot = (OthTask) othTaskIter.next();
-                    totalOthTasks.add(ot);
-                }             
+           
             }   
         }       
         
         //Sort by task (orderNum), then source (language), then target (language)
-        Collections.sort(totalLinTasks, CompareTaskLin.getInstance());
-        Collections.sort(totalEngTasks, CompareTaskEng.getInstance());
+
         Collections.sort(totalDtpTasks, CompareTaskDtp.getInstance());
         Collections.sort(totalDtpTasks, CompareTaskLanguages.getInstance());
-        Collections.sort(totalOthTasks, CompareTaskOth.getInstance());
         
         //array for display in jsp
-        LinTask[] linTasksArray = (LinTask[]) totalLinTasks.toArray(new LinTask[0]);
-        EngTask[] engTasksArray = (EngTask[]) totalEngTasks.toArray(new EngTask[0]);
         DtpTask[] dtpTasksArray = (DtpTask[]) totalDtpTasks.toArray(new DtpTask[0]);
-        OthTask[] othTasksArray = (OthTask[]) totalOthTasks.toArray(new OthTask[0]);
-        
-        //START set up lin dates
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), "");
-            }
-        }
-        //END set up lin dates
-        
-        //START set up eng dates
-        for(int i = 0; i < totalEngTasks.size(); i++) {
-            if(engTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
-            }
-            else {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalEngTasks.size(); i++) {
-            if(engTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
-            }
-            else {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalEngTasks.size(); i++) {
-            if(engTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
-            }
-            else {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalEngTasks.size(); i++) {
-            if(engTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
-            }
-            else {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), "");
-            }
-        }
-        //END set up eng dates
+     
         
         //START set up dtp dates
         for(int i = 0; i < totalDtpTasks.size(); i++) {
@@ -262,93 +209,16 @@ public final class ProjectViewFeeAction_Dtp extends Action {
         }
         //END set up dtp dates
         
-        //START set up oth dates
-        for(int i = 0; i < totalOthTasks.size(); i++) {
-            if(othTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("othTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getSentDateDate()));
-            }
-            else {
-                request.setAttribute("othTasksProjectSentArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalOthTasks.size(); i++) {
-            if(othTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("othTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getDueDateDate()));
-            }
-            else {
-                request.setAttribute("othTasksProjectDueArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalOthTasks.size(); i++) {
-            if(othTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("othTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getReceivedDateDate()));
-            }
-            else {
-                request.setAttribute("othTasksProjectReceivedArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalOthTasks.size(); i++) {
-            if(othTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("othTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getInvoiceDateDate()));
-            }
-            else {
-                request.setAttribute("othTasksProjectInvoiceArray" + String.valueOf(i), "");
-            }
-        }
-        //END set up oth dates
         
-        //find total of LinTasks
-        double linTaskTotal = 0;
-        for(int i = 0; i < linTasksArray.length; i++) {
-            if(linTasksArray[i].getDollarTotalFee() != null) {
-                //remove comma's
-                String linTotal = linTasksArray[i].getDollarTotalFee();
-                linTotal = linTotal.replaceAll(",","");
-                if("".equals(linTotal)){
-                    linTotal = "0";
-                }
-                Double total = Double.valueOf(linTotal);
-                
-                if("EURO".equals(linTasksArray[i].getCurrencyFee())){
-if(p.getEuroToUsdExchangeRate()==null)
-                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-                    else
-                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-                   // total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-                }
-                
-                
-                linTaskTotal += total.doubleValue();
-            }
-        }     
         
-        //find total of EngTasks
-        double engTaskTotal = 0;
-        for(int i = 0; i < engTasksArray.length; i++) {
-            if(engTasksArray[i].getDollarTotal() != null) {
-                //remove comma's
-                String engTotal = engTasksArray[i].getDollarTotal();
-                engTotal = engTotal.replaceAll(",","");
-                if("".equals(engTotal)){
-                    engTotal = "0";
-                }
-                Double total = Double.valueOf(engTotal);
-                
-                if("EURO".equals(engTasksArray[i].getCurrency())){
-                                       if(p.getEuroToUsdExchangeRate()==null)
-                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-                    else
-                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-
-                  //  total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-                }
-                engTaskTotal += total.doubleValue();
-            }
-        }    
         
         //find total of DtpTasks
         double dtpTaskTotal = 0;
+         
+        for(String change : changes){
+            double changeTotal = 0;
         for(int i = 0; i < dtpTasksArray.length; i++) {
+             if(StandardCode.getInstance().noNull(dtpTasksArray[i].getChangeDesc()).equalsIgnoreCase(change)){
             if(dtpTasksArray[i].getDollarTotal() != null) {
                 //remove comma's
                 String dtpTotal = dtpTasksArray[i].getDollarTotal();
@@ -365,34 +235,27 @@ if(p.getEuroToUsdExchangeRate()==null)
                    // total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
                 }
                 
-                
-                dtpTaskTotal += total.doubleValue();
+                changeTotal += total;
+                dtpTaskTotal += total;
             }
-        }    
+        }  }
+       
+        JSONObject jo = new JSONObject();
+        if(!change.equalsIgnoreCase("")){
+            if(changeObj.has(change))
+             jo = changeObj.getJSONObject(change);
+        } 
+        jo.put("usd", StandardCode.getInstance().formatDouble(changeTotal));
+        jo.put("euro", StandardCode.getInstance().formatDouble(changeTotal/p.getEuroToUsdExchangeRate().doubleValue()));
+//     if(change.equalsIgnoreCase(""))   
+        changeObj.put(change, jo);
+//        changesFeeArray.put(changeObj);
+        }
+        request.setAttribute("changes", changes);
+        //System.out.println(changeObj);
+        request.setAttribute("changesFee", changeObj);
         
-        //find total of OthTasks
-        double othTaskTotal = 0;
-        for(int i = 0; i < othTasksArray.length; i++) {
-            if(othTasksArray[i].getDollarTotal() != null) {
-                //remove comma's
-                String othTotal = othTasksArray[i].getDollarTotal();
-                othTotal = othTotal.replaceAll(",","");
-                if("".equals(othTotal)){
-                    othTotal = "0";
-                }
-                Double total = Double.valueOf(othTotal);
-                if("EURO".equals(othTasksArray[i].getCurrency())){
-                   if(p.getEuroToUsdExchangeRate()==null)
-                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-                    else
-                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-                   // total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-                }
-                
-                
-                othTaskTotal += total.doubleValue();
-            }
-        }    
+      
               
         //team (fee) TOTAL
         double teamTotal = 0;
@@ -401,34 +264,36 @@ if(p.getEuroToUsdExchangeRate()==null)
         }
         double dtpTaskTotalEuro=dtpTaskTotal/p.getEuroToUsdExchangeRate().doubleValue();
         //place TaskTotals in request as formated string
-        request.setAttribute("linTaskTotal", StandardCode.getInstance().formatDouble(new Double(linTaskTotal)));
-        request.setAttribute("engTaskTotal", StandardCode.getInstance().formatDouble(new Double(engTaskTotal)));
+//        request.setAttribute("linTaskTotal", StandardCode.getInstance().formatDouble(new Double(linTaskTotal)));
+//        request.setAttribute("engTaskTotal", StandardCode.getInstance().formatDouble(new Double(engTaskTotal)));
         request.setAttribute("dtpTaskTotal", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)));
         request.setAttribute("dtpTaskTotalEuro", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotalEuro)));
-        request.setAttribute("othTaskTotal", StandardCode.getInstance().formatDouble(new Double(othTaskTotal)));
+//        request.setAttribute("othTaskTotal", StandardCode.getInstance().formatDouble(new Double(othTaskTotal)));
         request.setAttribute("teamTotal", StandardCode.getInstance().formatDouble(new Double(teamTotal)));
             
         
         //place all Tasks for this project into the form for display
         DynaValidatorForm qvg = (DynaValidatorForm) form;
-        qvg.set("linTasksProject", linTasksArray);        
-        qvg.set("engTasksProject", engTasksArray);
-        qvg.set("dtpTasksProject", dtpTasksArray);
-        qvg.set("othTasksProject", othTasksArray);
         
-        //place pm and rush block into form for display
-        qvg.set("pmPercent", p.getPmPercent()); 
-        qvg.set("pmPercentDollarTotal", p.getPmPercentDollarTotal()); 
-        qvg.set("rushPercent", p.getRushPercent()); 
-        qvg.set("rushPercentDollarTotal", p.getRushPercentDollarTotal()); 
-        qvg.set("sourceOs",p.getSourceOS());
-        qvg.set("sourceApplication", p.getSourceApplication());
-        qvg.set("sourceVersion", p.getSourceVersion());
-        qvg.set("deliverableApplication", p.getDeliverableApplication());
-        qvg.set("deliverableOs", p.getDeliverableOS());
-        qvg.set("deliverableVersion", p.getDeliverableVersion());
-        qvg.set("sourceTechNotes",p.getSourceTechNotes());
-        qvg.set("deliverableTechNotes",p.getDeliverableTechNotes());
+       
+
+        
+
+        qvg.set("dtpTasksProject", dtpTasksArray);
+        
+//        //place pm and rush block into form for display
+//        qvg.set("pmPercent", p.getPmPercent()); 
+//        qvg.set("pmPercentDollarTotal", p.getPmPercentDollarTotal()); 
+//        qvg.set("rushPercent", p.getRushPercent()); 
+//        qvg.set("rushPercentDollarTotal", p.getRushPercentDollarTotal()); 
+//        qvg.set("sourceOs",p.getSourceOS());
+//        qvg.set("sourceApplication", p.getSourceApplication());
+//        qvg.set("sourceVersion", p.getSourceVersion());
+//        qvg.set("deliverableApplication", p.getDeliverableApplication());
+//        qvg.set("deliverableOs", p.getDeliverableOS());
+//        qvg.set("deliverableVersion", p.getDeliverableVersion());
+//        qvg.set("sourceTechNotes",p.getSourceTechNotes());
+//        qvg.set("deliverableTechNotes",p.getDeliverableTechNotes());
 
 
 qvg.set("deliverableSame","off");

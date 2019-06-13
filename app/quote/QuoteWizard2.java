@@ -30,7 +30,6 @@ public class QuoteWizard2 extends Action {
             HttpServletResponse response)
             throws Exception {
 
-
         String jsonProducts = request.getParameter("clientQuoteJSON");
 
         User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
@@ -40,7 +39,6 @@ public class QuoteWizard2 extends Action {
         String productname = "";
         String productdesc = "";
         Integer quoteId;
-
 
         //     if (jsonProducts != null && !"".equals(jsonProducts)) {
         //  JSONArray products = new JSONArray(jsonProducts);
@@ -53,71 +51,64 @@ public class QuoteWizard2 extends Action {
             clientId = Integer.parseInt(StandardCode.getInstance().getCookie("clientViewId", request.getCookies()));
             //requestClientId=getA
             String requestClientId = request.getParameter("clientViewId");
-            System.out.println("Client Id" + clientId + "          " + requestClientId);
+            //System.out.println("Client Id" + clientId + "          " + requestClientId);
         }
 
         Client c = ClientService.getInstance().getSingleClient(clientId);
-        System.out.println("u.getId_client()" + clientId);
+        //System.out.println("u.getId_client()" + clientId);
         Quote1 newQ = null;
-        System.out.println(request.getSession(false).getAttribute("quoteViewId").toString());
-
-
+        //System.out.println(request.getSession(false).getAttribute("quoteViewId").toString());
 
         if (Integer.parseInt(request.getSession(false).getAttribute("quoteViewId").toString()) == 0) {
-            System.out.println("new quote main enter hua hai");
+            //System.out.println("new quote main enter hua hai");
             quoteId = QuoteService.getInstance().addQuoteWithNewProject(c, "000000");
-            System.out.println("new quote                      " + quoteId);
+            //System.out.println("new quote                      " + quoteId);
             newQ = QuoteService.getInstance().getSingleQuote(quoteId);
             if (request.getSession(false).getAttribute("username") != null) {
                 newQ.setEnteredById((String) request.getSession(false).getAttribute("username"));
                 newQ.setEnteredByTS(new Date());
                 newQ.setPublish(false);
             }
-            if(c.getPmfeePercentage()>0.0) {
-                newQ.setPmPercent("" + c.getPmfeePercentage());
+            if (!StandardCode.getInstance().noNull(c.getAutoPmFee())) {
                 newQ.setManualPMFee("1");
-            }            
-            QuoteService.getInstance().updateQuote(newQ);
+            }
+            newQ.setPmPercent("" + StandardCode.getInstance().noNull(c.getPmfeePercentage()));
+
+            QuoteService.getInstance().updateQuote(newQ, (String) request.getSession(false).getAttribute("username"));
 
         } else {
             quoteId = Integer.parseInt(request.getSession(false).getAttribute("quoteViewId").toString());
             newQ = QuoteService.getInstance().getSingleQuote(quoteId);
-            System.out.println("newQ" + newQ.getNumber());
+            //System.out.println("newQ" + newQ.getNumber());
             // quoteId = Integer.parseInt(request.getSession(false).getAttribute("quoteViewId").toString());
         }
 
-
-        System.out.println("quoteIdquoteIdquoteIdquoteIdquoteId" + quoteId);
-
-
-
+        //System.out.println("quoteIdquoteIdquoteIdquoteIdquoteId" + quoteId);
         Project p = QuoteService.getInstance().getSingleQuote(quoteId).getProject();
         Project pLazyLoad = ProjectService.getInstance().getSingleProject(p.getProjectId());
 
-
-
         Project proj = ProjectService.getInstance().getSingleProject(newQ.getProject().getProjectId());
 
-        String[] defaultInspections = ProjectService.getInstance().getDefaultInspectionOptions();
-        String[] inspections = ProjectService.getInstance().getInspectionOptions();
+//        String[] defaultInspections = ProjectService.getInstance().getDefaultInspectionOptions();
+//        String[] inspections = ProjectService.getInstance().getInspectionOptions();
 
         int k = 0;
-        for (int i = 0; i < inspections.length; i++) {
-            Inspection i2 = new Inspection();
-            if (k < 7 && defaultInspections[k].equals(inspections[i])) { //if default inspection
-                i2.setInDefault(true);
-                i2.setApplicable(true);
-                k++;
-            } else {
-                i2.setInDefault(false);
-                i2.setApplicable(false);
-            }
-            i2.setOrderNum(new Integer(i + 1));
-            i2.setMilestone(inspections[i]);
-
-            //upload to db
-            ProjectService.getInstance().addInspectionWithProject(pLazyLoad, i2);
-        }
+//        for (int i = 0; i < inspections.length; i++) {
+//            Inspection i2 = new Inspection();
+//            if (k < 7 && defaultInspections[k].equals(inspections[i])) { //if default inspection
+//                i2.setInDefault(true);
+//                i2.setApplicable(true);
+//                k++;
+//            } else {
+//                i2.setInDefault(false);
+//                i2.setApplicable(false);
+//            }
+//            i2.setOrderNum(new Integer(i + 1));
+//            i2.setMilestone(inspections[i]);
+//
+//            //upload to db
+//            ProjectService.getInstance().addInspectionWithProject(pLazyLoad, i2);
+//        }
         //END add Inspection list to this project
 
         //add this quote id to cookies; this will remember the last quote
@@ -125,32 +116,30 @@ public class QuoteWizard2 extends Action {
         response.addCookie(StandardCode.getInstance().setCookie("quoteViewId", String.valueOf(quoteId)));
         request.setAttribute("quoteViewId", String.valueOf(quoteId));
         //place client into cookie; this will be used later in wizard
-        System.out.println("quoteAddId" + StandardCode.getInstance().getCookie("quoteViewId", request.getCookies()));
+        //System.out.println("quoteAddId" + StandardCode.getInstance().getCookie("quoteViewId", request.getCookies()));
         response.addCookie(StandardCode.getInstance().setCookie("quoteAddClientId", String.valueOf(c.getClientId())));
 
         request.setAttribute("quoteAddClientId", String.valueOf(c.getClientId()));
         HttpSession session = request.getSession(false);
         session.setAttribute("quoteViewId", String.valueOf(quoteId));
 
-        System.out.println("Quote View ID kitna hai" + String.valueOf(quoteId));
-
-        System.out.println("cookie value  " + request.getParameter("quoteViewId"));
-        System.out.println("cookie value  " + request.getAttribute("quoteViewId"));
-        //  System.out.println("cookie value  " + StandardCode.getInstance().getCookie("quoteAddId", request.getCookies()));
-
-
-
+        //System.out.println("Quote View ID kitna hai" + String.valueOf(quoteId));
+        //System.out.println("cookie value  " + request.getParameter("quoteViewId"));
+        //System.out.println("cookie value  " + request.getAttribute("quoteViewId"));
+        //  //System.out.println("cookie value  " + StandardCode.getInstance().getCookie("quoteAddId", request.getCookies()));
         List QC = QuoteService.getInstance().getSingleClientQuote(newQ.getQuote1Id());
         try {
+            Product prod = ClientService.getSingleProduct(clientId, request.getParameter("product"));
 
+            Client_Quote pr = null;
 
-            Client_Quote pr = new Client_Quote();
-
-
+            pr = QuoteService.getInstance().getSingleClientQuoteFromProduct(quoteId, prod.getID_Product());
+            if (pr == null) {
+                pr = new Client_Quote();
+            }
 
             pr.setQuote_ID(quoteId);
             pr.setID_Client(clientId);
-            Product prod = ClientService.getSingleProduct(clientId, request.getParameter("product"));
 
             String mComponent = "";
             String[] mainComponent = request.getParameterValues("mainComponent");
@@ -165,9 +154,10 @@ public class QuoteWizard2 extends Action {
             }
 
             pr.setProduct_ID(prod.getID_Product());
-            System.out.println(request.getParameter("product"));
+//            //System.out.println(request.getParameter("product"));
             pr.setType((String) (qvg.get("Type")));
             String Type = (String) (qvg.get("Type"));
+            pr.setTypeOfText(request.getParameter("tot"));
 
             pr.setComponent(mComponent);
 
@@ -176,30 +166,26 @@ public class QuoteWizard2 extends Action {
             pr.setVersion(" ");
             // pr.setComponent(j.getString("component"));
 
-
             productname += request.getParameter("product") + "";
             productdesc += Type + "";
             //  Integer quoteId = QuoteService.getInstance().NaddQuoteWithNewProject(c, "000000");
 
             QuoteService.getInstance().saveClientQuote(pr);
-            Client_Quote ccq = QuoteService.getInstance().getSingleClientQuoteFromProduct(quoteId, prod.getID_Product());
+//            Client_Quote ccq = QuoteService.getInstance().getSingleClientQuoteFromProduct(quoteId, prod.getID_Product());
 
-            System.out.println("Client Quote Idddddd " + ccq.getId());
+            //System.out.println("Client Quote Idddddd " + ccq.getId());
             session = request.getSession(false);
-            session.setAttribute("ClientQuoteId", String.valueOf(ccq.getId()));
-            System.out.println("Client Quote Idddddd " + ccq.getId());
-
+            session.setAttribute("ClientQuoteId", String.valueOf(pr.getId()));
+            //System.out.println("Client Quote Idddddd " + ccq.getId());
 
             //  }
         } catch (Exception e) {
-            System.out.println("Errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
-
+            //System.out.println("Errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
 
         }
-        //  System.out.println("Client Quote Idddddd "+ccq.getId());
+        //  //System.out.println("Client Quote Idddddd "+ccq.getId());
         try {
             if (proj.getProduct() == null) {
-
 
                 proj.setProduct(productname);
                 proj.setProductDescription(productdesc);
@@ -232,7 +218,6 @@ public class QuoteWizard2 extends Action {
         if (u.getuserType() != null && u.getuserType().equalsIgnoreCase("client")) {
             proj.setPm(c.getProject_mngr());
 
-
         } else {
 
             proj.setPm(request.getSession(false).getAttribute("projectManager").toString());
@@ -253,9 +238,6 @@ public class QuoteWizard2 extends Action {
         Integer projectId = ProjectService.getInstance().addProjectWithClient(proj, c);
 
         //insert into db, building link between contact and project
-
-
-
         //Set PM RATE
         ClientLanguagePair[] clp = null;
         if (c != null) {

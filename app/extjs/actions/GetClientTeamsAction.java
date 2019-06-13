@@ -82,17 +82,17 @@ public final class GetClientTeamsAction extends Action {
         List myteams =  TeamHelper.getClientTeams(request.getParameter("clientViewId"),year);
             
         
-        System.out.println(myteams.size());
+        //System.out.println(myteams.size());
             
            
         long endProjects = System.currentTimeMillis();
-       // System.out.println("GetClientTeamsAction took:"+ ((endProjects-startProjects)/1000.0));
+       // //System.out.println("GetClientTeamsAction took:"+ ((endProjects-startProjects)/1000.0));
         
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Keep-Alive","6000");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         
         out.println(new JSONArray(myteams.toArray()));

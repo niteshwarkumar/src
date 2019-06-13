@@ -39,6 +39,7 @@ public class Excelnetissue {
     private String testTested;
     private String liveTested;
     private String liveIssue;
+    private String risk;
     
     public Excelnetissue() {
     }
@@ -284,9 +285,18 @@ public class Excelnetissue {
         return liveIssue;
     }
 
+    public String getRisk() {
+        return risk;
+    }
+
+    public void setRisk(String risk) {
+        this.risk = risk;
+    }
+
     public void setLiveIssue(String liveIssue) {
         this.liveIssue = liveIssue;
     }
+    
     
     
 }

@@ -4,6 +4,7 @@
 //cookies
 package app.project;
 
+import app.extjs.helpers.HrHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -19,11 +20,11 @@ import app.security.*;
 import app.quote.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
-
+ 
 public final class ProjectViewOverviewAction extends Action {
 
     public ProjectViewOverviewAction() {
-        System.out.println("ProjectViewOverviewAction constructor**************************");
+        //System.out.println("ProjectViewOverviewAction constructor**************************");
     }
     // ----------------------------------------------------- Instance Variables
     /**
@@ -137,8 +138,22 @@ public final class ProjectViewOverviewAction extends Action {
         } else {
             pvo.set("contactId", "0");
         }
+         if (p.getCareTaker() != null) {
+            pvo.set("caretaker", String.valueOf(p.getCareTaker().getClientContactId()));
+        } else {
+            pvo.set("caretaker", "0");
+        }
+        if(p.getCompany().getClientId()==ExcelConstants.CLIENT_BBS && null ==p.getOrderReqNum()){
+            pvo.set("clientPO", HrHelper.getAdminDefaultValues("PO_BBS") );
+            p.setClientPO(HrHelper.getAdminDefaultValues("PO_BBS"));
+            ProjectService.getInstance().updateProject(p);
+
+        }else{
+            pvo.set("clientPO", p.getClientPO());
+        }
+         pvo.set("orderReqNum", p.getOrderReqNum() );
         pvo.set("PM", p.getPm());
-        pvo.set("clientPO", p.getClientPO());
+        
         if (q != null && q.getApprovalDate() != null) {
             pvo.set("approvalDate", DateFormat.getDateInstance(DateFormat.SHORT).format(q.getApprovalDate()));
         }
@@ -189,18 +204,22 @@ public final class ProjectViewOverviewAction extends Action {
         } else {
             request.setAttribute("clientSatisfaction95", "");
         }
-        if (clientSatisfaction == 50.0) {
+        if (clientSatisfaction == 75.0) {
             request.setAttribute("clientSatisfaction50", "checked");
         } else {
             request.setAttribute("clientSatisfaction50", "");
         }
-        if (clientSatisfaction == 0.0) {
+        if (clientSatisfaction == 50.0) {
             request.setAttribute("clientSatisfaction0", "checked");
         } else {
             request.setAttribute("clientSatisfaction0", "");
+        }if (clientSatisfaction == null) {
+            request.setAttribute("clientSatisfactionNull", "checked");
+        } else {
+            request.setAttribute("clientSatisfactionNull", "");
         }
         } catch (Exception e) {
-            request.setAttribute("clientSatisfaction95", "checked");
+            request.setAttribute("clientSatisfactionNull", "checked");
         }
 
 

@@ -90,9 +90,9 @@ public final class QuoteAdd2Action extends Action {
         ProjectHelper.unlinkSourcesAndTargets(p);
         QuoteHelper.unlinkSourcesAndTargets(newQ);
         
-       // System.out.println("mainTarget="+mainTarget);
+       // //System.out.println("mainTarget="+mainTarget);
 //update values
-        //System.out.println("project id="+p.getProjectId());
+        ////System.out.println("project id="+p.getProjectId());
         if(mainSrc!=null)
         for(int i=0; i<mainSrc.length;i++){
             sd.setLanguage(mainSrc[i]);
@@ -101,13 +101,13 @@ public final class QuoteAdd2Action extends Action {
             //Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd);
             QuoteService.getInstance().addSourceWithQuote(newQ, sd) ;
 
-            //System.out.println("linking source id="+sd.getSourceDocId());
+            ////System.out.println("linking source id="+sd.getSourceDocId());
         if(targetLanguage!=null)
             for(int j = 0; j < targetLanguage.length; j++) {
                 //target language's new object
                 TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                 td.setLanguage(targetLanguage[j]);
-                //System.out.println("linking target id="+td.getTargetDocId());
+                ////System.out.println("linking target id="+td.getTargetDocId());
                 //link this target Doc to the source Doc; add new target Doc to db
                 Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td); 
             }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Capa.hbm.xml
+    Created on : September 6, 2011, 7:30 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.RiskSeverity" table="riskseverity">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+    <property name ="description" type="string"/>
+    <property name ="category" type="string"/>
+    <property name ="hazard" type="string"/>
+
+ <set name="Mitigation" lazy="true" inverse="true">
+      	<key column="id"/>
+      	<one-to-many class="app.qms.RiskMitigation"/>
+   </set>
+
+    </class>
+</hibernate-mapping>

@@ -5,6 +5,7 @@
 
 package app.quote;
 
+import app.project.LinTask;
 import app.project.ProjectService;
 import app.project.Project_Technical;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +64,10 @@ public class TechnicalData extends Action{
     {
     List results = new ArrayList();
     Integer id=Integer.parseInt(request.getParameter("ClientQuoteId"));
+    double count = 0.00;
     if(id==0){
+      
+        
     Integer projectid=Integer.parseInt(request.getParameter("projectid"));
     List technicalList=ProjectService.getInstance().getProjectTechnicalList(projectid);
     for(int i=0;i<technicalList.size();i++){
@@ -76,6 +80,8 @@ public class TechnicalData extends Action{
     jo.put("targetApplication",t.getTargetapp() );
     jo.put("sourceVersion",t.getSourcever() );
     jo.put("targetVersion",t.getTargetver() );
+    jo.put("unitCount",t.getUnitCount() );
+    count+=t.getUnitCount();
     results.add(jo);
     }
     }else{
@@ -92,14 +98,17 @@ public class TechnicalData extends Action{
     jo.put("targetApplication",t.getTargetApplication() );
     jo.put("sourceVersion",t.getSourceVersion() );
     jo.put("targetVersion",t.getTargetVersion() );
+    jo.put("unitCount",t.getUnitCount() );
+    count+=t.getUnitCount();
     results.add(jo);
     }
+    }
+    
 
-        }
 
     response.setContentType("text/json");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

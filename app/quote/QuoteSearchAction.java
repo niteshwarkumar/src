@@ -75,6 +75,9 @@ public final class QuoteSearchAction extends Action {
         String companyName = (String) qs.get("companyName");
         String quoteNum = (String) qs.get("quoteNum");
         String product1 = (String) qs.get("productQuoteSearch");
+        String pm = (String) qs.get("projectManager");
+        String ae = (String) qs.get("accountManager");
+        String sales = (String) qs.get("sales");
 
 
        
@@ -109,10 +112,10 @@ public final class QuoteSearchAction extends Action {
         project.setProductDescription(productDescription);
         List results=null;
      //  try{
-        results = QuoteService.getInstance().getQuoteSearch(status, companyName,project,productDescription,quoteNum, startQuoteDateDate, endQuoteDateDate, startQuoteTotalDouble, endQuoteTotalDouble);
+        results = QuoteService.getInstance().getQuoteSearch(status, companyName,project,productDescription,quoteNum, startQuoteDateDate, endQuoteDateDate, startQuoteTotalDouble, endQuoteTotalDouble,pm,ae,sales);
     //   }catch(Exception e){}
 
-      //  System.out.println("Result size of Quote >>>>>>>>>>>>>>>"+results.size());
+      //  //System.out.println("Result size of Quote >>>>>>>>>>>>>>>"+results.size());
         ArrayList finalResults = new ArrayList();
         
         //remove all sub quotes (only display the most recent quote per parent object (project))
@@ -120,7 +123,7 @@ public final class QuoteSearchAction extends Action {
             for(ListIterator iter = results.listIterator(); iter.hasNext();) {
                 Quote1 q = (Quote1) iter.next();
                 Project p = q.getProject();
-                //System.out.println("p.getProjectId()="+p.getProjectId());
+                ////System.out.println("p.getProjectId()="+p.getProjectId());
                 Project pLazyLoad = null;
                 try{
                     pLazyLoad = ProjectService.getInstance().getSingleProject(p.getProjectId());
@@ -136,7 +139,7 @@ public final class QuoteSearchAction extends Action {
                 }
                          
             }
-        }else System.out.println("No Result");
+        }//else //System.out.println("No Result");
         
         //place final results in attribute for displaying in jsp
         request.setAttribute("results", finalResults);

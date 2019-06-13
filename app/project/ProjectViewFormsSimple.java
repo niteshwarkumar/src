@@ -2,6 +2,8 @@
 //Client Invoice pdf
 package app.project;
 
+import app.comm.CommService;
+import app.comm.Requirement;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -20,6 +22,8 @@ import app.user.*;
 import app.resource.*;
 import app.security.*;
 import app.standardCode.*;
+import app.util.GeneratePOTemplate;
+import org.jsoup.Jsoup;
 
 public final class ProjectViewFormsSimple extends Action {
 
@@ -178,7 +182,8 @@ public final class ProjectViewFormsSimple extends Action {
             //"C:/templates/QUA01_001.pdf"
 
             PdfReader reader = new PdfReader("C:/templates/" + formFileName + ".pdf"); //the template
-            //System.out.println("filenameeeeeeeeeeeeeeee"+reader.toString());
+//            PdfReader reader = new PdfReader("/Users/abhisheksingh/Project/templates/"+formFileName+ ".pdf");
+            ////System.out.println("filenameeeeeeeeeeeeeeee"+reader.toString());
             //save the pdf in memory
             ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
@@ -190,7 +195,7 @@ public final class ProjectViewFormsSimple extends Action {
             /* HashMap hm = form1.getFields();
             for(Iterator iterSource = hm.keySet().iterator(); iterSource.hasNext();) {
 
-            System.out.println("hm="+(String)iterSource.next());
+            //System.out.println("hm="+(String)iterSource.next());
             }*/
 
 
@@ -270,7 +275,7 @@ public final class ProjectViewFormsSimple extends Action {
                 try {
                     if (p.getCompany().getLogo() != null && p.getCompany().getLogo().length() > 0) {
                         PdfContentByte over = null;
-                        Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + p.getCompany().getLogo());
+                        Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + p.getCompany().getLogo());
                         img.setAbsolutePosition(0, 0);
                         over = stamp.getOverContent(1);
                         //To position an image at (x,y) use addImage(image, image_width, 0, 0, image_height, x, y).
@@ -290,7 +295,7 @@ public final class ProjectViewFormsSimple extends Action {
                 //get resource to create form
                 String linId = request.getParameter("linId");
                 LinTask lt = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linId));
-                //System.out.println("alexxxx:inside LI01_thru_LI04.pdf:lt.getPersonName()="+lt.getPersonName()+"linId="+linId);
+                ////System.out.println("alexxxx:inside LI01_thru_LI04.pdf:lt.getPersonName()="+lt.getPersonName()+"linId="+linId);
                 pdfNameLng = lt.getTargetDoc().getLanguage();
                 pdfNamePoNo = lt.getPoNumber();
                 if (lt.getPersonName() != null && lt.getPersonName().length() > 0) {
@@ -361,7 +366,7 @@ public final class ProjectViewFormsSimple extends Action {
                     double word100Cost = 0.0;
                     if (lt.getWord100() != null) {
                         form1.setField("Volume_100", lt.getWord100().toString());
-                        word100Cost = rate * Double.parseDouble(p.getCompany().getScale100()) * lt.getWord100().intValue();
+                        word100Cost = rate * Double.parseDouble(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId())) * lt.getWord100().intValue();
                         totalWords += lt.getWord100().intValue();
                     }
 
@@ -369,7 +374,7 @@ public final class ProjectViewFormsSimple extends Action {
                     double wordRepCost = 0.0;
                     if (lt.getWordRep() != null) {
                         form1.setField("Volume_rep", lt.getWordRep().toString());
-                        wordRepCost = rate * Double.parseDouble(p.getCompany().getScaleRep()) * lt.getWordRep().intValue();
+                        wordRepCost = rate * Double.parseDouble(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId())) * lt.getWordRep().intValue();
                         totalWords += lt.getWordRep().intValue();
                     }
 
@@ -387,9 +392,9 @@ public final class ProjectViewFormsSimple extends Action {
 
                         if (lt.getWord85() != null) {
                             form1.setField("Volume_8594", lt.getWord85().toString());
-                            wordRep8594 = rate * Double.parseDouble(p.getCompany().getScale85()) * lt.getWord85().intValue();
+                            wordRep8594 = rate * Double.parseDouble(p.getCompany().getScale85(p.getProjectId(),p.getCompany().getClientId())) * lt.getWord85().intValue();
                             totalWords += lt.getWord85().intValue();
-                            form1.setField("Rate_8594", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScale85()))));
+                            form1.setField("Rate_8594", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScale85(p.getProjectId(),p.getCompany().getClientId())))));
                             form1.setField("Cost_8594", "" + StandardCode.getInstance().formatDouble(new Double(wordRep8594)));
                         }
                     }
@@ -399,9 +404,9 @@ public final class ProjectViewFormsSimple extends Action {
 
                         if (lt.getWord75() != null) {
                             form1.setField("Volume_7584", lt.getWord75().toString());
-                            wordRep7584 = rate * Double.parseDouble(p.getCompany().getScale75()) * lt.getWord75().intValue();
+                            wordRep7584 = rate * Double.parseDouble(p.getCompany().getScale75(p.getProjectId(),p.getCompany().getClientId())) * lt.getWord75().intValue();
                             totalWords += lt.getWord75().intValue();
-                            form1.setField("Rate_7584", StandardCode.getInstance().formatDouble3(new Double(rate * (Double.parseDouble(p.getCompany().getScale75())))));
+                            form1.setField("Rate_7584", StandardCode.getInstance().formatDouble3(new Double(rate * (Double.parseDouble(p.getCompany().getScale75(p.getProjectId(),p.getCompany().getClientId()))))));
                             form1.setField("Cost_7584", "" + StandardCode.getInstance().formatDouble(new Double(wordRep7584)));
                         }
                     }
@@ -420,16 +425,16 @@ public final class ProjectViewFormsSimple extends Action {
                     } else {
                         if (lt.getWord95() != null) {
                             form1.setField("Volume_9599", lt.getWord95().toString());
-                            wordRep9599 = rate * Double.parseDouble(p.getCompany().getScale95()) * lt.getWord95().intValue();
+                            wordRep9599 = rate * Double.parseDouble(p.getCompany().getScale95(p.getProjectId(),p.getCompany().getClientId())) * lt.getWord95().intValue();
                             totalWords += lt.getWord95().intValue();
-                            form1.setField("Rate_9599", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScale95()))));
+                            form1.setField("Rate_9599", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScale95(p.getProjectId(),p.getCompany().getClientId())))));
                             form1.setField("Cost_9599", "" + StandardCode.getInstance().formatDouble(new Double(wordRep9599)));
                         }
                     }
 
                     //SET Rate Fields
-                    form1.setField("Rate_100", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScale100()))));
-                    form1.setField("Rate_rep", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScaleRep()))));
+                    form1.setField("Rate_100", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId())))));
+                    form1.setField("Rate_rep", StandardCode.getInstance().formatDouble3(new Double(rate * Double.parseDouble(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId())))));
 
 
                     //Set Cost
@@ -451,12 +456,32 @@ public final class ProjectViewFormsSimple extends Action {
 
 
             } else if ("DTP02_001".equals(formFileName)) {
+                 reader = new PdfReader("C:/templates/" + formFileName + GeneratePOTemplate.ext + ".pdf"); //the template
+//                 reader = new PdfReader("/Users/abhisheksingh/Project/templates/"+ formFileName+ GeneratePOTemplate.ext + ".pdf");
+            ////System.out.println("filenameeeeeeeeeeeeeeee"+reader.toString());
+            //save the pdf in memory
+             pdfStream = new ByteArrayOutputStream();
+
+            //the filled-in pdf
+             stamp = new PdfStamper(reader, pdfStream);
+
+            //stamp.setEncryption(true, "pass", "pass", PdfWriter.AllowCopy | PdfWriter.AllowPrinting);
+             form1 = stamp.getAcroFields();
+                
                 //List dtpTasks = (List) request.getAttribute("dtpTasks");
                 String dtpt = (String) request.getAttribute("dtpT");
                 String dtp1 = request.getParameter("dtpT");
-                System.out.println(request.getParameter("dtpT"));
-                System.out.println(request.getParameter("dtp1"));
+                //System.out.println(request.getParameter("dtpT"));
+                 java.util.List<Requirement> generalReq = new ArrayList();
+                 java.util.List<Requirement> clientReq = new ArrayList();
+                 java.util.List<Requirement> projectReq = new ArrayList();
+              
+                //System.out.println(request.getParameter("dtp1"));
                 if (request.getParameter("dtpId") != null && !request.getParameter("dtpId").equals("-1")) {
+                    generalReq = CommService.getInstance().getRequirement("G", "D", 0, 0);
+                    clientReq = CommService.getInstance().getRequirement("C", "D", p.getCompany().getClientId(), 0);
+                    projectReq = CommService.getInstance().getRequirement("P", "D", 0, Integer.parseInt(projectId));
+       
                     String dtpId = request.getParameter("dtpId");
                     //get resource to create form
                     //  String dtpId = "9101";
@@ -499,9 +524,14 @@ public final class ProjectViewFormsSimple extends Action {
                     }
                     form1.setField("PO", p.getNumber() + p.getCompany().getCompany_code() + "-PO-" + dtp.getPoNumber());
                     poNumber = dtp.getPoNumber();
+                    
 
                 } else if (request.getParameter("engId") != null) {
                     //get resource to create form
+                generalReq = CommService.getInstance().getRequirement("G", "E", 0, 0);
+                clientReq = CommService.getInstance().getRequirement("C", "E", p.getCompany().getClientId(), 0);
+                projectReq = CommService.getInstance().getRequirement("P", "E", 0, Integer.parseInt(projectId));
+       
                     String engId = request.getParameter("engId");
                     EngTask dtp = ProjectService.getInstance().getSingleEngTask(Integer.valueOf(engId));
                     pdfNameLng = dtp.getTargetDoc().getLanguage();
@@ -575,6 +605,39 @@ public final class ProjectViewFormsSimple extends Action {
                     form1.setField("PO", p.getNumber() + p.getCompany().getCompany_code() + "-PO-" + dtp.getPoNumber());
                     poNumber = dtp.getPoNumber();
                 }
+                
+                     java.util.List<Integer> poList = CommService.getInstance().getReqPoList(Integer.parseInt(projectId));
+       String reqGenStr="";
+        String reqClientStr="";
+        String reqProjectStr="";
+        for(Requirement req : generalReq){
+            if(poList.contains(req.getId())){
+                if(!reqGenStr.isEmpty()){
+                reqGenStr += ", ";
+                }
+                reqGenStr += Jsoup.parse(req.getRequirement()).text().replaceAll("&nbsp;", "");
+            }
+        }
+        for(Requirement req : clientReq){
+            if(poList.contains(req.getId())){
+                if(!reqClientStr.isEmpty()){
+                reqClientStr += ", ";
+                }
+                reqClientStr += Jsoup.parse(req.getRequirement()).text().replaceAll("&nbsp;", "");
+            }
+        }
+        for(Requirement req : projectReq){
+            if(poList.contains(req.getId())){
+                if(!reqProjectStr.isEmpty()){
+                reqProjectStr += ", ";
+                }
+                reqProjectStr += Jsoup.parse(req.getRequirement()).text().replaceAll("&nbsp;", "");
+            }
+        }
+        
+        form1.setField("gen-reqs", reqGenStr);
+        form1.setField("client-reqs", reqClientStr);
+        form1.setField("project-reqs", reqProjectStr);
 
 
                 form1.setField("Project", p.getNumber() + p.getCompany().getCompany_code());
@@ -610,8 +673,8 @@ public final class ProjectViewFormsSimple extends Action {
                 //List dtpTasks = (List) request.getAttribute("dtpTasks");
                 String dtpt = (String) request.getAttribute("dtpT");
                 String dtp1 = request.getParameter("dtpT");
-                System.out.println(request.getParameter("dtpT"));
-                System.out.println(request.getParameter("dtp1"));
+                //System.out.println(request.getParameter("dtpT"));
+                //System.out.println(request.getParameter("dtp1"));
                 if (request.getParameter("dtpId") != null && !request.getParameter("dtpId").equals("-1")) {
                     String dtpId = request.getParameter("dtpId");
                     //get resource to create form

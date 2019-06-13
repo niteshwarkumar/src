@@ -92,7 +92,7 @@ public final class ClientUpdateStylesheets extends Action {
         }*/
 
                Client c  = ClientService.getInstance().getSingleClient(clientId);
-               System.out.println("clinet id............................"+c);
+               //System.out.println("clinet id............................"+c);
 
           
 

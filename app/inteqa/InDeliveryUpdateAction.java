@@ -31,8 +31,8 @@ public class InDeliveryUpdateAction extends Action {
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
@@ -109,7 +109,7 @@ public class InDeliveryUpdateAction extends Action {
         String verifiedDate = (String) upd.get("verifiedDate");
         String verifiedText = (String) upd.get("verifiedText");
 
-          String engverified = (String) upd.get("engverified");
+        String engverified = (String) upd.get("engverified");
         String engverifiedBy = (String) upd.get("engverifiedBy");
         String engverifiedDate = (String) upd.get("engverifiedDate");
         String engverifiedText = (String) upd.get("engverifiedText");
@@ -122,20 +122,18 @@ public class InDeliveryUpdateAction extends Action {
         iDelivery.setCaveats(caveats);
         iDelivery.setNotes(notes);
 
- ///verification
-
-
+        ///verification
         iDelivery.setVerifiedBy(verifiedBy);
         try {
             if (verifiedDate.length() > 0) { //if present
                 iDelivery.setVerifiedDate(DateService.getInstance().convertDate(verifiedDate).getTime());
+            }else{
+                iDelivery.setVerifiedDate(null);
             }
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         iDelivery.setVerifiedText(verifiedText);
-
-
 
         if (verified.equalsIgnoreCase("on")) {
             iDelivery.setVerified(true);
@@ -148,19 +146,18 @@ public class InDeliveryUpdateAction extends Action {
         try {
             if (verifiedDate.length() > 0) { //if present
                 iDelivery.setEngverifiedDate(DateService.getInstance().convertDate(engverifiedDate).getTime());
-            }
+            }else{iDelivery.setEngverifiedDate(null);}
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         iDelivery.setEngverifiedText(engverifiedText);
-
 
         if (engverified.equalsIgnoreCase("on")) {
             iDelivery.setEngverified(true);
         } else {
             iDelivery.setEngverified(false);
         }
-  if (vendor.equalsIgnoreCase("on")) {
+        if (vendor.equalsIgnoreCase("on")) {
             iDelivery.setVendor(true);
         } else {
             iDelivery.setVendor(false);
@@ -171,9 +168,9 @@ public class InDeliveryUpdateAction extends Action {
         try {
             if (dtpverifiedDate.length() > 0) { //if present
                 iDelivery.setDtpverifiedDate(DateService.getInstance().convertDate(dtpverifiedDate).getTime());
-            }
+            }else{iDelivery.setDtpverifiedDate(null);}
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
         iDelivery.setDtpverifiedText(dtpverifiedText);
 
@@ -182,62 +179,107 @@ public class InDeliveryUpdateAction extends Action {
         } else {
             iDelivery.setDtpverified(false);
         }
-
-
-
-        String delJson = request.getParameter("DelData");
-
-          try{
-          JSONArray delJsonArray = new JSONArray(delJson);
-          for(int i=0;i<delJson.length();i++){
-                JSONObject j=(JSONObject)delJsonArray.get(i);
-                InteqaService.getInstance().unlinkInDelReq(Integer.parseInt(j.getString("id")));
-          }
-        }catch(Exception e){}
-
-        String fromPorQ = request.getParameter("fromPorQ");
+        
         InteqaService.getInstance().updateInDelivery(iDelivery);
         iDelivery = InteqaService.getInstance().getINDelivery(id);
-        INDeliveryReq idr=null;
-        if (jsonProducts != null && !"".equals(jsonProducts)) {
-            JSONArray products = new JSONArray(jsonProducts);
-            for (int i = 0; i < products.length(); i++) {
-                JSONObject j = (JSONObject) products.get(i);
-                System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
-                //INDeliveryReq idr = new INDeliveryReq();
-                try{
-                idr=InteqaService.getInstance().getINDeliveryReq(Integer.parseInt(j.getString("id")));
-                }catch(Exception e){
-                    idr = new INDeliveryReq();
-                }
-                idr.setClientReqBy(j.getString("reqBy"));
 
-                try {
-                    if(j.getString("reqCheck").equalsIgnoreCase("true")) {
-                        idr.setClientReqCheck(true);
-                    }else{
-                        idr.setClientReqCheck(false);
-                    }
-                } catch (Exception e) {
-                }
+//        String delJson = request.getParameter("DelData");
+//          try{
+//          JSONArray delJsonArray = new JSONArray(delJson);
+//          for(int i=0;i<delJson.length();i++){
+//                JSONObject j=(JSONObject)delJsonArray.get(i);
+//                InteqaService.getInstance().unlinkInDelReq(Integer.parseInt(j.getString("id")));
+//          }
+//        }catch(Exception e){}
 
-                idr.setClientReqText(j.getString("requirement"));
-                idr.setInDeliveryId(iDelivery.getId());
-                try {
-                    if (idr.getFromPorQ() == null) {
-                        idr.setFromPorQ(fromPorQ);
-                    }
-                } catch (Exception e) {
-                }
+String fromPorQ = request.getParameter("fromPorQ");
 
-                InteqaService.getInstance().updateInDeliveryReq(idr);
+        String oper = request.getParameter("oper");
+         String type=request.getParameter("type");
+        if(null!=oper){
+        if (oper.equalsIgnoreCase("edit")) {
+            int reqid = Integer.parseInt(request.getParameter("id"));
+            INDeliveryReq idr = InteqaService.getInstance().getINDeliveryReq(reqid);
+            idr.setClientReqBy(request.getParameter("reqBy"));
+            idr.setClientReqText(request.getParameter("requirement"));
+            String verification = request.getParameter("reqCheck");
+            idr.setType(type);
+            idr.setNotes(request.getParameter("notes"));
+            idr.setInstructionsFor(request.getParameter("instructionsFor")); 
+            if (verification.equalsIgnoreCase("yes")) {
+                idr.setClientReqCheck(true);
+            } else {
+                idr.setClientReqCheck(false);
             }
+            InteqaService.getInstance().updateInDeliveryReq(idr);
+        } else if (oper.equalsIgnoreCase("add")) {
+           
+            INDeliveryReq idr = new INDeliveryReq();
+
+            idr.setClientReqBy(request.getParameter("reqBy"));
+            idr.setClientReqText(request.getParameter("requirement"));
+            String verification = request.getParameter("reqCheck");
+            if (verification.equalsIgnoreCase("yes")) {
+                idr.setClientReqCheck(true);
+            } else {
+                idr.setClientReqCheck(false);
+            }
+            idr.setInDeliveryId(iDelivery.getId());
+            idr.setFromPorQ(fromPorQ);
+            idr.setType(type);
+            idr.setNotes(request.getParameter("notes"));
+            idr.setInstructionsFor(request.getParameter("instructionsFor")); 
+            
+            InteqaService.getInstance().updateInDeliveryReq(idr);
+
+        }else if (oper.equalsIgnoreCase("del")) {
+            int reqid = Integer.parseInt(request.getParameter("id"));
+            InteqaService.getInstance().unlinkInDelReq(reqid);
+            
+
         }
+    }
+        
+        
+//        INDeliveryReq idr=null;
+//        if (jsonProducts != null && !"".equals(jsonProducts)) {
+//            JSONArray products = new JSONArray(jsonProducts);
+//            for (int i = 0; i < products.length(); i++) {
+//                JSONObject j = (JSONObject) products.get(i);
+//                //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
+//                //INDeliveryReq idr = new INDeliveryReq();
+//                try{
+//                idr=InteqaService.getInstance().getINDeliveryReq(Integer.parseInt(j.getString("id")));
+//                }catch(Exception e){
+//                    idr = new INDeliveryReq();
+//                }
+//                idr.setClientReqBy(j.getString("reqBy"));
+//
+//                try {
+//                    if(j.getString("reqCheck").equalsIgnoreCase("true")) {
+//                        idr.setClientReqCheck(true);
+//                    }else{
+//                        idr.setClientReqCheck(false);
+//                    }
+//                } catch (Exception e) {
+//                }
+//
+//                idr.setClientReqText(j.getString("requirement"));
+//                idr.setInDeliveryId(iDelivery.getId());
+//                try {
+//                    if (idr.getFromPorQ() == null) {
+//                        idr.setFromPorQ(fromPorQ);
+//                    }
+//                } catch (Exception e) {
+//                }
+//
+//                InteqaService.getInstance().updateInDeliveryReq(idr);
+//            }
+//        }
         request.setAttribute("fromPorQ", fromPorQ);
 
         // Forward control to the specified success URI
-
-        if(fromPorQ.equalsIgnoreCase("Q")) {
+        if (fromPorQ.equalsIgnoreCase("Q")) {
             return mapping.findForward("QuoteSuccess");
         }
         return (mapping.findForward("Success"));

@@ -150,6 +150,14 @@ public final class ResourceAddEditFreelanceAction extends Action {
             r.setInformationTechnology(false);
         }
 
+        if(!"".equals(request.getParameter("resourceNew.postEditing")) && request.getParameter("resourceNew.postEditing")!=null ) {
+            r.setPostEditing(true);
+        }
+        else {
+            r.setPostEditing(false);
+        }
+        
+        
         if(!"".equals(request.getParameter("resourceNew.humanResource")) && request.getParameter("resourceNew.humanResource")!=null ) {
             r.setHumanResource(true);
         }

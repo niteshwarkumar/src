@@ -83,7 +83,7 @@ public final class GetRelatedProjectsAction extends Action {
    
         List pmProjects = ProjectHelper.getRelatedProjectList(request.getParameter("clientId"), request.getParameter("product"));
 
-        //System.out.println(request.getParameter("product"));
+        ////System.out.println(request.getParameter("product"));
         Project p = null;
         
         for(ListIterator iter = pmProjects.listIterator(); iter.hasNext();) {
@@ -96,14 +96,14 @@ public final class GetRelatedProjectsAction extends Action {
        
            
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetRelatedProjectsAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetRelatedProjectsAction took:"+ ((endProjects-startProjects)/1000.0));
         
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
-        //System.out.println(myProjects.size());
+        ////System.out.println(myProjects.size());
         out.println(new JSONArray(myProjects.toArray()));
         out.flush();
         

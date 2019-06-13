@@ -3,30 +3,22 @@
 
 package app.project;
 
-import java.util.Locale;
+import app.extjs.global.LanguageAbs;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
 import java.text.*;
 import java.io.*;
-import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import app.user.*;
-import app.resource.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 import app.standardCode.*;
 
@@ -110,7 +102,8 @@ public final class ProjectViewFormsGenChangeAction extends Action {
         
         //get change1 object and project
         Project p = ProjectService.getInstance().getSingleProject(id);
-        
+        String change = request.getParameter("change");
+        change = StandardCode.getInstance().noNull(change);
         //get user (project manager)
         User u = UserService.getInstance().getSingleUserRealName(StandardCode.getInstance().getFirstName(p.getPm()), StandardCode.getInstance().getLastName(p.getPm()));
          
@@ -139,25 +132,102 @@ public final class ProjectViewFormsGenChangeAction extends Action {
                 form1.setField("faxpm", StandardCode.getInstance().noNull(u.getLocation().getFax_number()));
                 form1.setField("postalpm", StandardCode.getInstance().printLocation(u.getLocation()));              
                 form1.setField("pm", p.getPm()); 
+                if(change.equalsIgnoreCase("All")||change.equalsIgnoreCase("")){}else{
+                    Change1 chg = ProjectService.getInstance().getSingleChange(p.getProjectId(),change);
+                    if(chg !=null)
+                        form1.setField("description", StandardCode.getInstance().noNull(chg.getDescription()));
+                }
+        
                 
                 form1.setField("project", p.getNumber() + p.getCompany().getCompany_code());
                 
                 //get sources and targets
                 StringBuffer sources = new StringBuffer("");
                 StringBuffer targets = new StringBuffer("");
-                if(p.getSourceDocs() != null) {
-                    for(Iterator iterSource = p.getSourceDocs().iterator(); iterSource.hasNext();) {
-                        SourceDoc sd = (SourceDoc) iterSource.next();
-                        sources.append(sd.getLanguage() + " ");
-                        if(sd.getTargetDocs() != null) {
-                            for(Iterator iterTarget = sd.getTargetDocs().iterator(); iterTarget.hasNext();) {
-                                TargetDoc td = (TargetDoc) iterTarget.next();
-                                if(!td.getLanguage().equals("All"))
-                                    targets.append(td.getLanguage() + " ");
-                            }
+                List<String> tgtLst = new ArrayList();
+                Set sourcelang1 = p.getSourceDocs();
+        List<String> srcLst = new ArrayList();
+        List targetList = new ArrayList();
+        String taskString = "";
+        String taskName = "";
+        String linTaskName = "", dtpTaskName = "", engTaskName = "", othTaskName = "";
+         List<String> linTaskNameLst = new ArrayList(), dtpTaskNameLst = new ArrayList(), engTaskNameLst = new ArrayList(), othTaskNameLst = new ArrayList();
+        if (p.getSourceDocs() != null) {
+            for (Iterator iterSource = sourcelang1.iterator(); iterSource.hasNext();) {
+                SourceDoc sd = (SourceDoc) iterSource.next();
+//                sources.append(sd.getLanguage() + "  ");
+                if (sd.getTargetDocs() != null) {
+                    for (Iterator iterTarget = sd.getTargetDocs().iterator(); iterTarget.hasNext();) {
+                        TargetDoc td = (TargetDoc) iterTarget.next();
+                        if (!td.getLanguage().equals("All")) {
+//                            targets.append(td.getLanguage() + "  ");
+//                            targetList.add((String) LanguageAbs.getInstance().getAbs().get(td.getLanguage()));
+                            
+                                Set<LinTask> linTask = td.getLinTasks();
+                                Set<DtpTask> dtpTask = td.getDtpTasks();
+                                Set<EngTask> engTask = td.getEngTasks();
+                                Set<OthTask> othTask = td.getOthTasks();
+                                for (LinTask lt : linTask) {
+                                    //System.out.println("&&&"+lt.getTaskName()+lt.getChangeDesc()+td.getLanguage()+sd.getLanguage());
+                                    if (StandardCode.getInstance().noNull(lt.getChangeDesc()).equalsIgnoreCase(change)) {
+                                        if (!tgtLst.contains(td.getLanguage())) {
+                                            tgtLst.add(td.getLanguage());
+                                            targets.append(td.getLanguage()).append("  ");
+                                            targetList.add((String) LanguageAbs.getInstance().getAbs().get(td.getLanguage()));
+                                        }
+                                        if (!srcLst.contains(sd.getLanguage())) {
+                                            srcLst.add(sd.getLanguage());
+                                            sources.append(sd.getLanguage()).append("  ");
+                                        }
+                                        if(!linTaskNameLst.contains(lt.getTaskName())){
+                                            linTaskNameLst.add(lt.getTaskName());
+                                        }
+
+                                    }
+                                }
+                                for (DtpTask lt : dtpTask) {
+                                    //System.out.println("&&&"+lt.getTaskName()+lt.getChangeDesc()+td.getLanguage()+sd.getLanguage());
+                                    if (StandardCode.getInstance().noNull(lt.getChangeDesc()).equalsIgnoreCase(change)) {
+                                        if (!tgtLst.contains(td.getLanguage())) {
+                                            tgtLst.add(td.getLanguage());
+                                            targets.append(td.getLanguage()).append("  ");
+                                            targetList.add((String) LanguageAbs.getInstance().getAbs().get(td.getLanguage()));
+                                        }
+                                        if (!srcLst.contains(sd.getLanguage())) {
+                                            srcLst.add(sd.getLanguage());
+                                            sources.append(sd.getLanguage()).append("  ");
+                                        }
+                                        if(!dtpTaskNameLst.contains(lt.getTaskName())){
+                                            dtpTaskNameLst.add(lt.getTaskName());
+                                        }
+
+                                    }
+                                }
+                                for (EngTask lt : engTask) {
+                                    //System.out.println("&&&"+lt.getTaskName()+lt.getChangeDesc()+td.getLanguage()+sd.getLanguage());
+                                    if (StandardCode.getInstance().noNull(lt.getChangeDesc()).equalsIgnoreCase(change)) {
+                                        if (!tgtLst.contains(td.getLanguage())) {
+                                            tgtLst.add(td.getLanguage());
+                                            targets.append(td.getLanguage()).append("  ");
+                                            targetList.add((String) LanguageAbs.getInstance().getAbs().get(td.getLanguage()));
+                                        }
+                                        if (!srcLst.contains(sd.getLanguage())) {
+                                            srcLst.add(sd.getLanguage());
+                                            sources.append(sd.getLanguage()).append("  ");
+                                        }
+                                        if(!engTaskNameLst.contains(lt.getTaskName())){
+                                            engTaskNameLst.add(lt.getTaskName());
+                                        }
+
+                                    }
+                                }
                         }
                     }
                 }
+            }
+        }
+       
+
                 
                 form1.setField("source", sources.toString());
                 form1.setField("target", targets.toString());
@@ -174,7 +244,7 @@ public final class ProjectViewFormsGenChangeAction extends Action {
                 //START add images
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 60, 0,0, 70, 451,563);

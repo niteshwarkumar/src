@@ -31,11 +31,13 @@ public class ProjectInformal {
     private String department;
     private String language;
     private String details;
+    private String textType;
     private String rate;
     private Integer satisfaction;
     private String disposition;
     private String cause;
     private String notes;
+    private String nc;
    
 
     public Integer getInformalId() {
@@ -149,5 +151,23 @@ public class ProjectInformal {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public String getTextType() {
+        return textType;
+    }
+
+    public void setTextType(String textType) {
+        this.textType = textType;
+    }
+
+    public String getNc() {
+        return nc;
+    }
+
+    public void setNc(String nc) {
+        this.nc = nc;
+    }
+
+   
     
 }

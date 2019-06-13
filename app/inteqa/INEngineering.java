@@ -52,6 +52,7 @@ public class INEngineering implements Serializable {
     private boolean lpr4;
     private boolean lpr5;
     private boolean lpr6;
+    private String lpr3Text;
     private String lpr5Text;
     private String lpr6Text;
     private String lprInfo;
@@ -414,7 +415,11 @@ public class INEngineering implements Serializable {
     }
 
     public String getEnggNotes() {
-        return enggNotes;
+        if(null!=enggNotes)
+            return enggNotes.replaceAll("/\\\\\\\\/g", "\\\\");
+        else
+            return "";
+        
     }
 
     public void setEnggNotes(String enggNotes) {
@@ -499,6 +504,14 @@ public class INEngineering implements Serializable {
 
     public void setTmNotes(String tmNotes) {
         this.tmNotes = tmNotes;
+    }
+
+    public String getLpr3Text() {
+        return lpr3Text;
+    }
+
+    public void setLpr3Text(String lpr3Text) {
+        this.lpr3Text = lpr3Text;
     }
 
   

@@ -136,7 +136,7 @@ public final class HrViewGeneralUpdateAction extends Action {
             //random number in image name to prevent repeats
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
-            File saveFile = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName);        
+            File saveFile = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName);        
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
@@ -151,7 +151,7 @@ public final class HrViewGeneralUpdateAction extends Action {
             //random number in image name to prevent repeats
             Random gen = new Random(new Date().getSeconds());
             saveFileName1 = String.valueOf(gen.nextInt()) + fileName1;
-            File saveFile1 = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName1);
+            File saveFile1 = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName1);
             FileOutputStream out = new FileOutputStream(saveFile1);
             out.write(fileData1);
             out.flush();

@@ -152,7 +152,7 @@ public final class HrViewGeneralAction extends Action {
         uvg.set("workEmail1", u.getWorkEmail1());
         uvg.set("workEmail2", u.getWorkEmail2());
         uvg.set("skypeId",u.getSkypeId());
-        System.out.println(u.getSkypeId());
+        //System.out.println(u.getSkypeId());
         uvg.set("emergencyContactName", u.getEmergencyContactName());
         uvg.set("emergencyContactRelation", u.getEmergencyContactRelation());
         uvg.set("emergencyContactPhone", u.getEmergencyContactPhone());

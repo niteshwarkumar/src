@@ -117,8 +117,8 @@ public class ClientQuoteSearchActiveAction extends Action{
 //           e.printStackTrace();
 //           
 //       }
-//       System.out.println(" Quote Status           "+status);
-//       // System.out.println("Result size of Quote >>>>>>>>>>>>>>>"+results.size());
+//       //System.out.println(" Quote Status           "+status);
+//       // //System.out.println("Result size of Quote >>>>>>>>>>>>>>>"+results.size());
 //        ArrayList finalResults = new ArrayList();
 //
 //        //remove all sub quotes (only display the most recent quote per parent object (project))
@@ -126,7 +126,7 @@ public class ClientQuoteSearchActiveAction extends Action{
 //            for(ListIterator iter = results.listIterator(); iter.hasNext();) {
 //                Quote1 q = (Quote1) iter.next();
 //                Project p = q.getProject();
-//                //System.out.println("p.getProjectId()="+p.getProjectId());
+//                ////System.out.println("p.getProjectId()="+p.getProjectId());
 //                Project pLazyLoad = null;
 //                try{
 //                    pLazyLoad = ProjectService.getInstance().getSingleProject(p.getProjectId());
@@ -138,7 +138,7 @@ public class ClientQuoteSearchActiveAction extends Action{
 //                    }
 //
 //                }catch(Exception e){
-//                    System.out.println("QuoteSearchAction::"+e);
+//                    //System.out.println("QuoteSearchAction::"+e);
 //                }
 //
 //            }

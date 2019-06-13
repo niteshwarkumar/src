@@ -22,6 +22,7 @@ private String sourceApplication;
 private String targetApplication;
 private String sourceVersion;
 private String targetVersion;
+private Double unitCount;
 
 public Technical(){}
 
@@ -87,6 +88,14 @@ public Technical(){}
 
     public void setTechnicalId(Integer technicalId) {
         this.technicalId = technicalId;
+    }
+
+    public Double getUnitCount() {
+        return unitCount;
+    }
+
+    public void setUnitCount(Double unitCount) {
+        this.unitCount = unitCount;
     }
 
 

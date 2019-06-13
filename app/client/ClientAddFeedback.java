@@ -111,7 +111,7 @@ User u = UserService.getInstance().getSingleUser((String)request.getSession(fals
 
             if(jsonComm!=null && !"".equals(jsonComm)){
         JSONArray comm = new JSONArray(jsonComm);
-    //    System.out.println("comm.length()="+comm.length());
+    //    //System.out.println("comm.length()="+comm.length());
             for(int i=0;i< comm.length();i++){
                 JSONObject j = (JSONObject)comm.get(i);
                 app.client.ClientFeedback pr = new app.client.ClientFeedback();
@@ -170,7 +170,7 @@ User u = UserService.getInstance().getSingleUser((String)request.getSession(fals
                 + u.getFirstName()+" "+u.getLastName() +"</b> has made the following entry in the client module for <b>"+client.getCompany_name()+"</b>:<br>"
 +"<br>=============================<br><br>"+sdf1.format(cal.getTime())+" &ndash; <b>"+j.getString("Rate")+"<br>"+j.getString("Feedback")+"<br>"
 +"<br>=============================<br><br>Best regards,<br><br>ExcelNet Administrator<br><br>"
-                + "<div><img src=http://excelnet.xltrans.com/logo/images/-1168566039logoExcel.gif><div>";
+                + "<div><img src=https://excelnet.xltrans.com/logo/images/excel-logo-blue.jpg><div>";
 
                      String toAddress="";
 

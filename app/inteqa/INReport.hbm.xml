@@ -48,6 +48,6 @@
         <property name="post_dtp" type="double"/>
         <property name="pre_engg" type="double"/>
         <property name="post_engg" type="double"/>
-
+        <property name="quoteSentDate" type="date"/>
     </class>
 </hibernate-mapping>

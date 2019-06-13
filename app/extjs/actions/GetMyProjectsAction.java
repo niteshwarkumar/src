@@ -81,7 +81,9 @@ public final class GetMyProjectsAction extends Action {
         
 //look for pm or ae that matches active projects for this user
         String myName = u.getFirstName() + " " + u.getLastName();
-        List pmProjects = ProjectHelper.getProjectListForPM(myName);
+//        List pmProjects = ProjectHelper.getProjectListForPM(myName);
+//        List pmProjects = ProjectHelper.getProjectListForPM(myName);
+        List pmProjects = ProjectService.getInstance().getProjectListForPM(myName);
         Project p = null;
         
         for(ListIterator iter = pmProjects.listIterator(); iter.hasNext();) {
@@ -92,14 +94,14 @@ public final class GetMyProjectsAction extends Action {
        
            
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyProjectsAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetMyProjectsAction took:"+ ((endProjects-startProjects)/1000.0));
         
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
-        System.out.println(myProjects.size());
+        //System.out.println(myProjects.size());
         out.println(new JSONArray(myProjects.toArray()));
         out.flush();
         

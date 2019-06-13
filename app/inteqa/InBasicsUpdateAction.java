@@ -5,6 +5,8 @@
 package app.inteqa;
 
 import app.project.*;
+import app.quote.Quote1;
+import app.quote.QuoteService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -25,15 +27,15 @@ import org.json.JSONObject;
 /**
  *
  * @author Niteshwar
- */
+ */ 
 public class InBasicsUpdateAction extends Action {
 
     // ----------------------------------------------------- Instance Variables
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
@@ -98,9 +100,6 @@ public class InBasicsUpdateAction extends Action {
         Integer id = Integer.valueOf(projectId);
 
         //END get id of current project from either request, attribute, or cookie
-
-
-
         INBasics INBasics = InteqaService.getInstance().getINBasics(id);
         if (INBasics == null) {
             INBasics = new INBasics();
@@ -110,13 +109,13 @@ public class InBasicsUpdateAction extends Action {
         //place this project into request for further display in jsp page
         DynaValidatorForm upd = (DynaValidatorForm) form;
 
-
-
         String server = (String) upd.get("server");
         String ftp = (String) upd.get("ftp");
         String other = (String) upd.get("other");
         String dtpReq1 = (String) upd.get("dtpReq1");
         String dtpReq2 = (String) upd.get("dtpReq2");
+        String dtpReq21 = (String) upd.get("dtpReq21");
+        String dtpReq22 = (String) upd.get("dtpReq22");
         String genGra1 = (String) upd.get("genGra1");
         String genGra2 = (String) upd.get("genGra2");
         String genGra3 = (String) upd.get("genGra3");
@@ -125,6 +124,12 @@ public class InBasicsUpdateAction extends Action {
         String screen2 = (String) upd.get("screen2");
         String screen3 = (String) upd.get("screen3");
         String screen4 = (String) upd.get("screen4");
+
+        String clientReview1 = (String) upd.get("clientReview1");
+        String clientReview2 = (String) upd.get("clientReview2");
+        String clientReview3 = (String) upd.get("clientReview3");
+        String clientReview4 = (String) upd.get("clientReview4");
+        String clientReview5 = (String) upd.get("clientReview5");
         String deliveryFormat1 = (String) upd.get("deliveryFormat1");
         String deliveryFormatOth = (String) upd.get("deliveryFormatOth");
         String deliveryFormatOthText = (String) upd.get("deliveryFormatOthText");
@@ -132,7 +137,7 @@ public class InBasicsUpdateAction extends Action {
         String DeliveryFiles2 = (String) upd.get("DeliveryFiles2");
         String DeliveryFilesOth = (String) upd.get("DeliveryFilesOth");
         String DeliveryFilesOthText = (String) upd.get("DeliveryFilesOthText");
-        String OtherInstruction = (String) upd.get("OtherInstruction");
+//        String OtherInstruction = (String) upd.get("OtherInstruction");
         String verified = (String) upd.get("verified");
         String verifiedBy = (String) upd.get("verifiedBy");
         String verifiedDate = (String) upd.get("verifiedDate");
@@ -140,14 +145,58 @@ public class InBasicsUpdateAction extends Action {
         String textBox1 = (String) upd.get("textBox1");
         String textBox2 = (String) upd.get("textBox2");
         String textBox3 = (String) upd.get("textBox3");
+        String textBox4 = (String) upd.get("textBox4");
+        String textBox5 = (String) upd.get("textBox5");
 
+        String reference = request.getParameter("reference");
+        String deleteRef = request.getParameter("deleteRef");
+        if(deleteRef!=null) {
+            if(!deleteRef.equalsIgnoreCase("")) {
+                
+             InteqaService.getInstance().unlinkInref(Integer.parseInt(deleteRef));
+            }
+        }else{
+        if (reference.startsWith("Q")) {
+            Quote1 refQ = QuoteService.getInstance().getSingleQuote(reference.trim());
+
+            if (null != refQ) {
+                
+                    Project refP = refQ.getProject();
+                    INReference ref = new INReference();
+                    ref.setQuoteNumber(reference + "#" + refQ.getQuote1Id());
+                    //ref.setQuoteId(refQ.getQuote1Id());
+                    ref.setProjectId(id);
+                    ref.setDescription(refP.getProductDescription());
+                    ref.setProduct(refP.getProduct());
+                    ref.setProjectNumber(refP.getNumber() + "#" + refP.getProjectId());
+                    InteqaService.getInstance().updateInReference(ref);
+                }
+            
+        } else {
+            Project refP = ProjectService.getInstance().getSingleProjectByNumber(reference.trim().replaceAll("[A-Za-z]", ""));
+
+            if (null != refP) {
+                
+                    INReference ref = new INReference();
+                    ref.setProjectId(id);
+                    ref.setDescription(refP.getProductDescription());
+                    ref.setProduct(refP.getProduct());
+                    ref.setProjectNumber(refP.getNumber() + refP.getCompany().getCompany_code() + "#" + refP.getProjectId());
+                    InteqaService.getInstance().updateInReference(ref);
+                }
+           
+        }}
+
+        String OtherInstruction = request.getParameter("note").replaceAll("\\\\", "\\\\\\\\");
 
         try {
             if (verifiedDate.length() > 0) { //if present
                 INBasics.setVerifiedDate(DateService.getInstance().convertDate(verifiedDate).getTime());
+            }else{
+                INBasics.setVerifiedDate(null);
             }
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
 
         INBasics.setDeliveryFilesOthText(DeliveryFilesOthText);
@@ -160,8 +209,9 @@ public class InBasicsUpdateAction extends Action {
         INBasics.setTextBox1(textBox1);
         INBasics.setTextBox2(textBox2);
         INBasics.setTextBox3(textBox3);
+        INBasics.setTextBox4(textBox4);
+        INBasics.setTextBox5(textBox5);
         INBasics.setVerifiedText(verifiedText);
-
 
         if (DeliveryFiles1.equalsIgnoreCase("on")) {
             INBasics.setDeliveryFiles1(true);
@@ -197,6 +247,16 @@ public class InBasicsUpdateAction extends Action {
             INBasics.setDtpReq2(true);
         } else {
             INBasics.setDtpReq2(false);
+        }
+        if (dtpReq21.equalsIgnoreCase("on")) {
+            INBasics.setDtpReq21(true);
+        } else {
+            INBasics.setDtpReq21(false);
+        }
+        if (dtpReq22.equalsIgnoreCase("on")) {
+            INBasics.setDtpReq22(true);
+        } else {
+            INBasics.setDtpReq22(false);
         }
         if (genGra1.equalsIgnoreCase("on")) {
             INBasics.setGenGra1(true);
@@ -238,6 +298,32 @@ public class InBasicsUpdateAction extends Action {
         } else {
             INBasics.setScreen4(false);
         }
+        if (clientReview1.equalsIgnoreCase("on")) {
+            INBasics.setClientReview1(true);
+        } else {
+            INBasics.setClientReview1(false);
+        }
+        if (clientReview2.equalsIgnoreCase("on")) {
+            INBasics.setClientReview2(true);
+        } else {
+            INBasics.setClientReview2(false);
+        }
+        if (clientReview3.equalsIgnoreCase("on")) {
+            INBasics.setClientReview3(true);
+        } else {
+            INBasics.setClientReview3(false);
+        }
+        if (clientReview4.equalsIgnoreCase("on")) {
+            INBasics.setClientReview4(true);
+        } else {
+            INBasics.setClientReview4(false);
+        }
+        if (clientReview5.equalsIgnoreCase("on")) {
+            INBasics.setClientReview5(true);
+        } else {
+            INBasics.setClientReview5(false);
+        }
+
         if (verified.equalsIgnoreCase("on")) {
             INBasics.setVerified(true);
         } else {
@@ -246,29 +332,26 @@ public class InBasicsUpdateAction extends Action {
 
         try {
             boolean unlinkInSourceFile = InteqaService.unlinkInSourceFile(id);
-            String sourceFileJSON=request.getParameter("sourceFileJSON");
-             JSONArray sourceFileJSONArray=  new JSONArray(sourceFileJSON);
-            for(int i=0;i< sourceFileJSONArray.length();i++){
-             JSONObject j=(JSONObject)sourceFileJSONArray.get(i);
-             INSourceFile sourceFile=new INSourceFile();
+            String sourceFileJSON = request.getParameter("sourceFileJSON");
+            JSONArray sourceFileJSONArray = new JSONArray(sourceFileJSON);
+            for (int i = 0; i < sourceFileJSONArray.length(); i++) {
+                JSONObject j = (JSONObject) sourceFileJSONArray.get(i);
+                INSourceFile sourceFile = new INSourceFile();
 //              if(j.getString("id").equalsIgnoreCase("new")){sourceFile=new INSourceFile();}else{
 //               sourceFile=InteqaService.getInstance().getSourceFile(Integer.parseInt(j.getString("id")));}
 
-             sourceFile.setExtension(j.getString("extension"));
-             sourceFile.setNotes(j.getString("notes"));
-             sourceFile.setProjectId(Integer.valueOf(projectId));
-             sourceFile.setQuantity(Integer.parseInt(j.getString("quantity")));
+                sourceFile.setExtension(j.getString("extension"));
+                sourceFile.setNotes(j.getString("notes"));
+                sourceFile.setProjectId(Integer.valueOf(projectId));
+                sourceFile.setQuantity(Integer.parseInt(j.getString("quantity")));
 
-             InteqaService.getInstance().updateInSourceFile(sourceFile);
-             
-        }
+                InteqaService.getInstance().updateInSourceFile(sourceFile);
+
+            }
         } catch (Exception e) {
         }
 
-        
-
         InteqaService.getInstance().updateInBasics(INBasics);
-
 
         // Forward control to the specified success URI
         return (mapping.findForward("Success"));

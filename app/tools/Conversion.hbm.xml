@@ -12,7 +12,7 @@
 -->
 
 <hibernate-mapping>
-   <class name="app.tools.Conversion" table="Conversion">
+   <class name="app.tools.Conversion" table="conversion">
       <id name="id" type="int" column="id">
          <generator class="identity"/>
       </id>

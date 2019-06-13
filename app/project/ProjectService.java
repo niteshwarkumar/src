@@ -1,8 +1,8 @@
 //ProjectService.java contains the db code related to clients to actually read/write
 //to/from db
 package app.project;
+ 
 
-import app.admin.AdminService;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +15,7 @@ import net.sf.hibernate.type.*;
 import net.sf.hibernate.Hibernate;
 import app.db.*;
 import app.client.*;
+import static app.extjs.helpers.ClientHelper.getProjectCountPerQuater;
 import app.extjs.vo.Dropdown;
 import app.hr.HrService;
 import app.user.*;
@@ -27,6 +28,9 @@ import java.text.SimpleDateFormat;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProjectService {
 
@@ -101,7 +105,7 @@ public class ProjectService {
 
             tx = session.beginTransaction();
 
-            session.save(pt);
+            session.saveOrUpdate(pt);
             tx.commit();
         } catch (HibernateException e) {
             try {
@@ -142,7 +146,7 @@ public class ProjectService {
         try {
 
             tx = session.beginTransaction();
-            PreparedStatement st = session.connection().prepareStatement("delete from project_technical where projectid = "+id);
+            PreparedStatement st = session.connection().prepareStatement("delete from project_technical where id = "+id);
 
             st.executeUpdate();
             tx.commit();
@@ -175,6 +179,133 @@ public class ProjectService {
         }
 
         return t;
+    }
+       
+       public static boolean unlinkAllProjectTechnical(int pid) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        boolean t = true;
+        Transaction tx = null;
+
+        try {
+
+            tx = session.beginTransaction();
+            PreparedStatement st = session.connection().prepareStatement("delete from project_technical where projectid = "+pid);
+
+            st.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+        return t;
+    }
+       
+       public Notes addUpdateNotes(Notes notes) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+
+        Transaction tx = null;
+
+        try {
+
+            tx = session.beginTransaction();
+
+            session.saveOrUpdate(notes);
+            tx.commit();
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return notes;
+    }
+ //delete one inspection
+    public void deleteNotes(Notes object) {
+
+        Session session = ConnectionFactory.getInstance().getSession();
+
+        Transaction tx = null;
+
+        try {
+
+            tx = session.beginTransaction();
+
+            session.delete(object);
+            tx.commit();
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
     }
 
 
@@ -270,7 +401,7 @@ public class ProjectService {
         // Transaction tx = null;
 
         try {
-            // System.out.println("deleting...");
+            // //System.out.println("deleting...");
             // tx = session.beginTransaction();
             if (object.getSourceDocs() != null) {
 
@@ -281,36 +412,36 @@ public class ProjectService {
                         //Now, delete all tasks from target docs
                         for (Iterator iter3 = td.getLinTasks().iterator(); iter3.hasNext();) {
                             LinTask lt = (LinTask) iter3.next();
-                            System.out.println("deleting lt:" + lt);
+                            //System.out.println("deleting lt:" + lt);
                             session.delete(lt);
                         }
 
                         for (Iterator iter4 = td.getDtpTasks().iterator(); iter4.hasNext();) {
                             DtpTask lt = (DtpTask) iter4.next();
-                            System.out.println("deleting DtpTask:" + lt);
+                            //System.out.println("deleting DtpTask:" + lt);
                             session.delete(lt);
                         }
 
                         for (Iterator iter4 = td.getEngTasks().iterator(); iter4.hasNext();) {
                             EngTask lt = (EngTask) iter4.next();
-                            System.out.println("deleting EngTask:" + lt);
+                            //System.out.println("deleting EngTask:" + lt);
                             session.delete(lt);
                         }
 
                         for (Iterator iter4 = td.getOthTasks().iterator(); iter4.hasNext();) {
                             OthTask lt = (OthTask) iter4.next();
-                            System.out.println("deleting OthTask:" + lt);
+                            //System.out.println("deleting OthTask:" + lt);
                             session.delete(lt);
                         }
 
                         //delete target doc
-                        System.out.println("deleting Target Doc");
+                        //System.out.println("deleting Target Doc");
                         session.delete(td);
 
                     }
 
                     //delete source doc
-                    System.out.println("deleting Source Doc");
+                    //System.out.println("deleting Source Doc");
                     session.delete(sd);
 
                 }
@@ -320,7 +451,7 @@ public class ProjectService {
             //delete all inspections:
             for (Iterator iter5 = object.getInspections().iterator(); iter5.hasNext();) {
                 Inspection insp = (Inspection) iter5.next();
-                System.out.println("deleting Inspection");
+                //System.out.println("deleting Inspection");
                 session.delete(insp);
             }
 
@@ -329,7 +460,7 @@ public class ProjectService {
 
             //finally, delete the project
 
-            //System.out.println("deleting Project");
+            ////System.out.println("deleting Project");
             //session.delete(object);
 
         } catch (HibernateException e) {
@@ -337,10 +468,10 @@ public class ProjectService {
             //     tx.rollback(); //error
             //  }
             //  catch (HibernateException he) {
-            //      System.out.println("Hibernate Exception" + e.getMessage());
+            //      //System.out.println("Hibernate Exception" + e.getMessage());
             //	throw new RuntimeException(e);
             //  }
-            System.out.println("Hibernate Exception" + e.getMessage());
+            //System.out.println("Hibernate Exception" + e.getMessage());
             throw new RuntimeException(e);
         } finally {
             /*if (session != null)
@@ -352,7 +483,7 @@ public class ProjectService {
             }
             catch (HibernateException e)
             {
-            System.out.println("Hibernate Exception" + e.getMessage());
+            //System.out.println("Hibernate Exception" + e.getMessage());
             throw new RuntimeException(e);
             }
 
@@ -395,10 +526,10 @@ public class ProjectService {
             try {
                 tx.commit();
             } catch (Exception e) {
-                System.out.println(e);
+                //System.out.println(e);
             }
             session.close();
-            System.out.println("here 1");
+            //System.out.println("here 1");
 
             session = ConnectionFactory.getInstance().getSession();
             tx = session.beginTransaction();
@@ -406,15 +537,15 @@ public class ProjectService {
             try {
                 tx.commit();
             } catch (Exception e) {
-                System.out.println(e);
+                //System.out.println(e);
             }
-            System.out.println("here 2");
+            //System.out.println("here 2");
 
             session.close();
             session = ConnectionFactory.getInstance().getSession();
             tx = session.beginTransaction();
             deleteProjectItself(session, object);
-            System.out.println("after 3");
+            //System.out.println("after 3");
 
             tx.commit();
         } catch (HibernateException e) {
@@ -458,39 +589,39 @@ public class ProjectService {
                         //Now, delete all tasks from target docs
                         for (Iterator iter3 = td.getLinTasks().iterator(); iter3.hasNext();) {
                             LinTask lt = (LinTask) iter3.next();
-                            System.out.println("deleting lt for quotes:" + lt);
+                            //System.out.println("deleting lt for quotes:" + lt);
                             session.delete(lt);
                         }
 
                         for (Iterator iter4 = td.getDtpTasks().iterator(); iter4.hasNext();) {
                             DtpTask lt = (DtpTask) iter4.next();
-                            System.out.println("deleting DtpTask for quotes:" + lt);
+                            //System.out.println("deleting DtpTask for quotes:" + lt);
                             session.delete(lt);
                         }
 
                         for (Iterator iter4 = td.getEngTasks().iterator(); iter4.hasNext();) {
                             EngTask lt = (EngTask) iter4.next();
-                            System.out.println("deleting EngTask for quotes:" + lt);
+                            //System.out.println("deleting EngTask for quotes:" + lt);
                             session.delete(lt);
                         }
 
                         for (Iterator iter4 = td.getOthTasks().iterator(); iter4.hasNext();) {
                             OthTask lt = (OthTask) iter4.next();
-                            System.out.println("deleting OthTask for quotes:" + lt);
+                            //System.out.println("deleting OthTask for quotes:" + lt);
                             session.delete(lt);
                         }
 
 
 
                         //delete target doc
-                        System.out.println("deleting Target Doc for quotes");
+                        //System.out.println("deleting Target Doc for quotes");
                         session.delete(td);
 
                     }
 
 
                     //delete source doc
-                    System.out.println("deleting Source Doc for quotes");
+                    //System.out.println("deleting Source Doc for quotes");
                     session.delete(sd);
 
                 }
@@ -1344,6 +1475,70 @@ public class ProjectService {
         }
 
     }
+      //return one change (project change) with id given in argument
+    public Change1 getSingleChange(Integer projectId, String num) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from Change1 as change where change.number = ? and change.Project = ?",
+                    new Object[]{num, projectId},
+                    new Type[]{Hibernate.STRING, Hibernate.INTEGER});
+
+
+        } catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        if (results.isEmpty()) {
+            if(null!=num){
+            if(!num.isEmpty()&&!num.equalsIgnoreCase("Original")){
+                Change1 change = new Change1();
+                change.setNumber(num);
+                change.setName(num);
+                change.setProject(getSingleProject(projectId));
+                updateChange(change);
+                return change;
+            }else{
+                return null;
+            }}else{
+                return null;
+            }
+        } else {
+            return (Change1) results.get(0);
+        }
+
+    }
     //return one invoice
 
     public ClientInvoice getSingleClientInvoice(Integer id) {
@@ -1692,6 +1887,48 @@ public class ProjectService {
             }
         }
         return id;
+    }
+    
+    public void updateScale(Scale sd) {
+        Session session = ConnectionFactory.getInstance().getSession();
+
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            //build relationship
+
+            session.save(sd);
+            tx.commit();
+
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
     }
 
     public Integer addSourceWithProject(Project p, SourceDoc sd, Client_Quote Client_QuoteId, Quote1 q) {
@@ -2655,9 +2892,9 @@ public class ProjectService {
              * Build HQL (Hibernate Query Language) query to retrieve a list
              * of all the items currently stored by Hibernate.
              */
-            query = session.createQuery("select project from app.project.Project project order by project.number");
+            query = session.createQuery("select project from app.project.Project project where project.number > 0 order by project.number desc");
 
-            // System.out.println(query.list().size());
+            // //System.out.println(query.list().size());
             return query.list();
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -2699,7 +2936,48 @@ public class ProjectService {
              */
             query = session.createQuery("select project from app.project.Project project order by project.number desc Limit 0,1");
 
-            // System.out.println(query.list().size());
+            // //System.out.println(query.list().size());
+            return query.list();
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
+     //get Last projects
+    public List getLastProjectListForClient(Integer clientId, Integer limit) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select project from app.project.Project project where project.Company.clientId="+clientId+" order by project.number desc Limit 0,"+limit);
+
+            // //System.out.println(query.list().size());
             return query.list();
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -2962,13 +3240,69 @@ public class ProjectService {
         }
     }
 
+    
+    public JSONArray getClientProjectSearch(Integer clientID) {
+    
+         /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="select * from project where  ID_Client ="+clientID;
+
+        try {
+            //System.out.println(query);
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             JSONArray clientProject = new JSONArray();
+            while(rs.next()) {
+                JSONObject project=new JSONObject();
+                project.put("number", rs.getInt("number"));
+                project.put("id", rs.getInt("number"));
+                project.put("product", rs.getInt("number"));
+                project.put("desctiption", rs.getInt("number"));
+                clientProject.put(project);
+            }
+            rs.close();
+            st.close();
+            return clientProject;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        }  /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+    }
+
+       
+    
     public List getClientProjectSearch(String status, Integer clientID, String projectNumber, String product, String productDescription, String notes, String invoicing, Date deliveryFrom, Date deliveryTo) {
 
         Session session = ConnectionFactory.getInstance().getSession();
         Query query;
         List results = null;
         //Integer clientID=100;
-        System.out.println("product=====================================================================" + product);
+        //System.out.println("product=====================================================================" + product);
         try {
             //retreive projects from database
 
@@ -3091,14 +3425,137 @@ public class ProjectService {
             return results;
         }
     }
- 
+    
     //search for project given the criteria
-    public List getProjectSearch(String status, String companyName, String projectNumber, String product, String productDescription, String notes, String invoicing, Date deliveryFrom, Date deliveryTo, Date startFrom, Date startTo, String cancelled, String srcLang, String targetLang) {
-
+    public List getProjectSearch(String status, String companyName, String projectNumber, String product, String productDescription, String notes, String srcLang, String targetLang, String pm, String ae, String sales) {
+        long startTime = System.currentTimeMillis();
         Session session = ConnectionFactory.getInstance().getSession();
         Query query;
         List results = null;
-        System.out.println("product=====================================================================" + product);
+        //System.out.println("product=====================================================================" + product);
+        try {
+            //retreive projects from database
+
+            //this is the "one" class: it is the main criteria
+            Criteria criteria = session.createCriteria(Project.class);
+
+            //if subcriteria values are present from the form (for the "many" class),
+            //then include subcriteria search values in main search (the "one" class)
+            if (companyName.length() >= 1) {
+                Criteria subCriteria = criteria.createCriteria("Company");
+                subCriteria.add(Expression.like("Company_name", "%" + companyName + "%").ignoreCase());
+
+            }
+                
+                  if (srcLang.length() >= 1) {
+                      Criteria subCriteria = criteria.createCriteria("SourceDocs");                  
+                      subCriteria.add(Expression.like("language", "%" + srcLang + "%").ignoreCase());
+                      
+                       if (targetLang.length() >= 1) {
+                           Criteria subCriteria1 = subCriteria.createCriteria("TargetDocs");
+                            subCriteria1.add(Expression.like("language", "%" + targetLang + "%").ignoreCase());
+                       }
+                    }  
+
+//            if (status.equals("All")||status.equals("")) {
+//                Disjunction any = Expression.disjunction();
+//                any.add(Expression.eq("status", "active"));
+//                any.add(Expression.eq("status", "complete"));
+//                any.add(Expression.eq("status", "on hold"));
+//                any.add(Expression.eq("status", "onhold"));
+//                criteria.add(any);
+//            } else {
+//                criteria.add(Expression.eq("status", status));
+//            }
+
+            if (projectNumber.length() > 0) { //if projectNumber is desired
+                projectNumber = projectNumber.replaceAll("[a-zA-Z]", "");
+                projectNumber = projectNumber.trim();
+                 if (projectNumber.length() > 0) { 
+                criteria.add(Expression.like("number", "%" + projectNumber + "%").ignoreCase());
+                 }
+            }
+
+            if (product.length() > 0) {
+                criteria.add(Expression.like("product", "%" + product + "%").ignoreCase());
+            }
+            
+            if (pm.length() > 0) {
+                criteria.add(Expression.like("pm", "%" + pm + "%").ignoreCase());
+            }
+            
+            if (ae.length() > 0) {
+                criteria.add(Expression.like("ae", "%" + ae + "%").ignoreCase());
+            }
+            if (sales.length() >= 1) {
+                Criteria subCriteria = criteria.createCriteria("Company");
+                subCriteria.add(Expression.like("Sales", "%" + sales + "%").ignoreCase());
+
+            }
+            
+            if (productDescription.length() > 0) {
+                criteria.add(Expression.like("productDescription", "%" + productDescription + "%").ignoreCase());
+            }
+            if (notes.length() > 0) {
+                criteria.add(Expression.like("notes", "%" + notes + "%").ignoreCase());
+            }
+             criteria.setCacheable(true);
+            //criteria.addOrder(Order.desc("startDate"));
+            criteria.addOrder(Order.desc("number"));
+
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+            results = criteria.list();
+
+           
+           
+
+            try {
+                for (ListIterator iter = results.listIterator(); iter.hasNext();) {
+                    Project p = (Project) iter.next();
+                    if (p.getNumber().contains("000000")) {
+                        iter.remove();
+                    }
+                }
+            } catch (Exception e) {
+            }
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        //System.out.println("ProjectSearch took: ============="+(System.currentTimeMillis() - startTime));
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return results;
+        }
+    }
+ 
+    //search for project given the criteria
+    public List getProjectSearch(String status, String companyName, String projectNumber, String product, String productDescription, String notes, String invoicing, Date deliveryFrom, Date deliveryTo, Date startFrom, Date startTo, String cancelled, String srcLang, String targetLang, String pm, String ae, String sales, String postProjectReview) {
+        long startTime = System.currentTimeMillis();
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+        List results = null;
+        //System.out.println("product=====================================================================" + product);
         try {
             //retreive projects from database
 
@@ -3143,16 +3600,41 @@ public class ProjectService {
             if (product.length() > 0) {
                 criteria.add(Expression.like("product", "%" + product + "%").ignoreCase());
             }
+            
+            if (pm.length() > 0) {
+                criteria.add(Expression.like("pm", "%" + pm + "%").ignoreCase());
+            }
+            
+            if (ae.length() > 0) {
+                criteria.add(Expression.like("ae", "%" + ae + "%").ignoreCase());
+            }
+            if (sales.length() >= 1) {
+                Criteria subCriteria = criteria.createCriteria("Company");
+                subCriteria.add(Expression.like("Sales", "%" + sales + "%").ignoreCase());
+
+            }
+            
             if (productDescription.length() > 0) {
                 criteria.add(Expression.like("productDescription", "%" + productDescription + "%").ignoreCase());
             }
             if (notes.length() > 0) {
-                criteria.add(Expression.like("notes", "%" + notes + "%").ignoreCase());
+                List notesList = getProjectIdFromNotes(notes);
+                Disjunction any = Expression.disjunction();
+                for(int i =0; i < notesList.size(); i++){
+                    Notes note= (Notes) notesList.get(i);
+                    any.add(Expression.eq("projectId", note.getProjectId()));
+                }
+                
+                
+                any.add(Expression.like("notes", "%" + notes + "%").ignoreCase());
+                criteria.add(any);
             }
              if(cancelled != null) {
-                            criteria.add(Expression.eq("cancelled", "true"));
-                        }
-            
+                criteria.add(Expression.eq("cancelled", "true"));
+            }
+             if(!StandardCode.getInstance().noNull(postProjectReview).isEmpty()) {
+                criteria.add(Expression.eq("postProjectReview", true));
+            }
 
             //criteria.addOrder(Order.desc("startDate"));
             criteria.addOrder(Order.desc("number"));
@@ -3244,7 +3726,7 @@ public class ProjectService {
 
             }
         }
-
+        //System.out.println("ProjectSearch took: ============="+(System.currentTimeMillis() - startTime));
         if (results.isEmpty()) {
             return null;
         } else {
@@ -3265,7 +3747,7 @@ public class ProjectService {
             //this is the "one" class: it is the main criteria
             Criteria criteria = session.createCriteria(Project.class);
 
-            Criteria subCriteria = criteria.createCriteria("Company");
+//            Criteria subCriteria = criteria.createCriteria("Company");
             //subCriteria.add(Expression.like("Company_name", "%" + companyName + "%").ignoreCase());
 
             criteria.add(Expression.eq("pm", u.getFirstName() + " " + u.getLastName()));
@@ -3277,6 +3759,16 @@ public class ProjectService {
             criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 
             results = criteria.list();
+            
+            try {
+                for (ListIterator iter = results.listIterator(); iter.hasNext();) {
+                    Project p = (Project) iter.next();
+                    if (p.getNumber().contains("000000")) {
+                        iter.remove();
+                    }
+                }
+            } catch (Exception e) {
+            }
 
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -3705,7 +4197,7 @@ public class ProjectService {
         Session session = ConnectionFactory.getInstance().getSession();
         List results = null;
         try {
-            //System.out.println("Initializing projectId: "+id);
+            ////System.out.println("Initializing projectId: "+id);
 
             results = session.find("from Project as project where project.projectId = ?",
                     new Object[]{id},
@@ -3717,22 +4209,22 @@ public class ProjectService {
                 Project p = (Project) results.get(0);
 
                 Hibernate.initialize(p.getSourceDocs());
-                //System.out.println("after p.getSourceDocs()");
+//                //System.out.println("after p.getSourceDocs()");
                 Hibernate.initialize(p.getQualities());
-                //System.out.println("after p.getQualities()");
+//                //System.out.println("after p.getQualities()");
                 Hibernate.initialize(p.getQuotes());
-                // System.out.println("after p.getQuotes()");
+                // //System.out.println("after p.getQuotes()");
                 Hibernate.initialize(p.getInspections());
-                //System.out.println("after p.getInspections()");
+                ////System.out.println("after p.getInspections()");
                 Hibernate.initialize(p.getChange1s());
-                //System.out.println("after p.getChange1s()");
+                ////System.out.println("after p.getChange1s()");
                 Hibernate.initialize(p.getClientInvoices());
-                //System.out.println("after p.getClientInvoices()");
+                ////System.out.println("after p.getClientInvoices()");
                 Hibernate.initialize(p.getCompany());
-                //System.out.println("after p.getCompany()");
+                ////System.out.println("after p.getCompany()");
                 try {
                     Hibernate.initialize(p.getCompany().getClientLanguagePairs());
-                    //System.out.println("Finished initializing projectId: "+id);
+                    ////System.out.println("Finished initializing projectId: "+id);
                 } catch (Exception e) {
                 }
                 return p;
@@ -3791,6 +4283,63 @@ public class ProjectService {
             } else {
                 Project p = (Project) results.get(0);
 
+                return p;
+            }
+
+        } catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
+    //return one project with id given in argument
+    public Project getSingleProjectWithoutInitialize(Integer id) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+            ////System.out.println("Initializing projectId: "+id);
+
+            results = session.find("from Project as project where project.projectId = ?",
+                    new Object[]{id},
+                    new Type[]{Hibernate.INTEGER});
+
+            if (results.isEmpty()) {
+                return null;
+            } else {
+                Project p = (Project) results.get(0);
+
+// 
                 return p;
             }
 
@@ -4294,7 +4843,7 @@ public class ProjectService {
     //return the new Po Number
     public String getNewPoNumber(Project p) {
         String newPoNumber = null;
-
+//        p = ProjectService.getInstance().getSingleProject(p.getProjectId());
         //START get last po number for this project (in one of four tasks)
         ArrayList poNums = new ArrayList();
         //for each source
@@ -4366,6 +4915,22 @@ public class ProjectService {
 
         newPoNumber = String.valueOf(newChar); //covert new po number to string
         return newPoNumber;
+    }
+    
+    public String incrementPoNumber(String lastPoNumber) {
+
+        //build new po number
+        int old = Integer.valueOf(lastPoNumber.substring(0, 3)).intValue();  //e.g., 0
+        old = old + 1; //e.g., 1
+        String sIter = String.valueOf(new Integer(old)); //e.g., 1
+        char[] oldChar = sIter.toCharArray(); //e.g., 1
+        char[] newChar = lastPoNumber.toCharArray(); //e.g., 000
+
+        //copy from right to left the new po number
+        for (int i = 2, j = sIter.length() - 1; i > (2 - sIter.length()); i--, j--) {
+            newChar[i] = oldChar[j];
+        }
+        return String.valueOf(newChar);
     }
 
     //return the new Quality Number
@@ -4500,6 +5065,52 @@ public class ProjectService {
 
             //link project and client contact
             p.setContact(cc);
+            cc.getProjects().add(p);
+
+            session.saveOrUpdate(p);
+
+            tx.commit();
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the pos sibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
+    
+    //build the link between project and contact
+    public void linkProjectCareTaker(Project p, ClientContact cc) {
+        Session session = ConnectionFactory.getInstance().getSession();
+
+        Transaction tx = null;
+
+        try {
+
+            tx = session.beginTransaction();
+
+            //link project and client contact
+            p.setCareTaker(cc);
             cc.getProjects().add(p);
 
             session.saveOrUpdate(p);
@@ -5001,7 +5612,7 @@ public class ProjectService {
 
         //List linlist = HrService.getInstance().getDropdownList("Linguistic");
         // for(int i=0;i<linlist.size()+4;i++)
-        // System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
+        // //System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
 
 
         for (int i = 4; i < linlist.size() + 4; i++) {
@@ -5011,11 +5622,11 @@ public class ProjectService {
             //    linArray += ",";
             // }
             linTaskOptions[i] = ur.getDropdownValue();
-            System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
+            //System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
         }
 
         // for(int i=0;i<linlist.size()+4;i++)
-        //  System.out.println("LinTask" +linTaskOptions[i] );
+        //  //System.out.println("LinTask" +linTaskOptions[i] );
         return linTaskOptions;
     }
 
@@ -5030,7 +5641,7 @@ public class ProjectService {
 
         //List linlist = HrService.getInstance().getDropdownList("Linguistic");
         //for(int i=0;i<linlist.size()+3;i++)
-        // System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
+        // //System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
 
 
         for (int i = 3; i < linlist.size() + 3; i++) {
@@ -5040,11 +5651,11 @@ public class ProjectService {
             //    linArray += ",";
             // }
             linTaskOptions[i] = ur.getDropdownValue();
-            System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
+            //System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
         }
 
         //for(int i=0;i<linlist.size()+3;i++)
-        //System.out.println("LinTask" +linTaskOptions[i] );
+        ////System.out.println("LinTask" +linTaskOptions[i] );
         return linTaskOptions;
     }
 
@@ -5058,7 +5669,7 @@ public class ProjectService {
 
         //List linlist = HrService.getInstance().getDropdownList("Linguistic");
         //for(int i=0;i<linlist.size()+2;i++)
-        // System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
+        // //System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
 
 
         for (int i = 2; i < linlist.size() + 2; i++) {
@@ -5068,11 +5679,11 @@ public class ProjectService {
             //    linArray += ",";
             // }
             linTaskOptions[i] = ur.getDropdownValue();
-            System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
+            //System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
         }
 
         // for(int i=0;i<linlist.size()+2;i++)
-        // System.out.println("LinTask" +linTaskOptions[i] );
+        // //System.out.println("LinTask" +linTaskOptions[i] );
         return linTaskOptions;
     }
 
@@ -5086,7 +5697,7 @@ public class ProjectService {
 
         //List linlist = HrService.getInstance().getDropdownList("Linguistic");
         //    for(int i=0;i<linlist.size()+1;i++)
-        //  System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
+        //  //System.out.println("LinTask"+i+"   "+linTaskOptions[i] );
 
 
         for (int i = n; i < linlist.size() + n; i++) {
@@ -5096,11 +5707,11 @@ public class ProjectService {
             //    linArray += ",";
             // }
             linTaskOptions[i] = ur.getDropdownValue();
-            System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
+            //System.out.println("LinTask" + i + "  " + linTaskOptions[i]);
         }
 
         //for(int i=0;i<linlist.size()+n;i++)
-        // System.out.println("LinTask" +linTaskOptions[i] );
+        // //System.out.println("LinTask" +linTaskOptions[i] );
         return linTaskOptions;
     }
 
@@ -5147,7 +5758,7 @@ public class ProjectService {
     public String[] getDtpTaskOptions() {
         //  String dtpTaskOptions[] = {"DTP", "Graphics ", "Special Output", "Multilingual Deliverable", "Generation of Graphics Files", "Compilation", "Other"};
         String dtpTaskOptions[] = {"Desktop Publishing", "Graphics Localization", "Special Output", "Multilingual Deliverable", "Generation of Graphics Files", "Compilation", "Other"};
-
+      
         return dtpTaskOptions;
     }
 
@@ -5458,7 +6069,7 @@ public class ProjectService {
             return query.list();
 
 
-            //System.out.println("results===="+results.size());
+            ////System.out.println("results===="+results.size());
 
         } catch (ObjectNotFoundException onfe) {
         } catch (HibernateException e) {
@@ -5528,7 +6139,53 @@ public class ProjectService {
             }
         }
     }
+    
 
+public List getProjectWithoutTot(int year) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd ");
+        Date date = new Date();
+        String nd = dateFormat.format(date);
+        //   sout
+
+        //System.out.println("Datrrrrrrrrrrrrrrrrr" + nd);
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            //  query = session.createQuery("select quote from app.quote.Quote1 quote where quote.status = 'pending' and DATEDIFF(" + date+",quote.quoteDate) > 120 order by quote.number ");
+            query = session.createQuery("select project from app.project.Project project where project.typeOfText = null and EXTRACT(YEAR from project.startDate) =" + year + "");
+            return query.list();
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
     public List getProjectListDue(Integer pm) {
         /*
          * Use the ConnectionFactory to retrieve an open
@@ -5543,7 +6200,7 @@ public class ProjectService {
         String nd = dateFormat.format(date);
         //   sout
 
-        System.out.println("Datrrrrrrrrrrrrrrrrr" + nd);
+        //System.out.println("Datrrrrrrrrrrrrrrrrr" + nd);
 
         try {
             /*
@@ -5551,7 +6208,8 @@ public class ProjectService {
              * of all the items currently stored by Hibernate.
              */
             //  query = session.createQuery("select quote from app.quote.Quote1 quote where quote.status = 'pending' and DATEDIFF(" + date+",quote.quoteDate) > 120 order by quote.number ");
-            query = session.createQuery("select project from app.project.Project project where project.status='active' and project.pm_id=" + pm + " and DATEDIFF('" + nd + "',project.dueDate)<3  order by project.number desc ");
+            query = session.createQuery("select project from app.project.Project project where project.status='active' and project.pm_id=" + pm + " "
+                                    + "and (DATEDIFF('" + nd + "',project.dueDate)<3 and project.deliveryDate != null)  order by project.number desc ");
             return query.list();
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -5589,7 +6247,7 @@ public class ProjectService {
         String nd = dateFormat.format(date);
         //   sout
 
-        System.out.println("Datrrrrrrrrrrrrrrrrr" + nd);
+        //System.out.println("Datrrrrrrrrrrrrrrrrr" + nd);
 
         try {
             /*
@@ -5898,7 +6556,7 @@ public class ProjectService {
                 PreparedStatement pstmt = session.connection().prepareStatement(
                         "select sum(totalScore)/sum(numOfScores) as ISAME from "
                         + " (select count(*) as numOfScores,sum(score) as totalScore from "
-                        + " rateScoreLanguage rsl, languagepair lp "
+                        + " ratescorelanguage rsl, languagepair lp "
                         + " where lp.id_resource=? and lp.id_languagepair=rsl.id_languagepair "
                         + " and score<>0 and specialty=?) AS T2 ");
 
@@ -5946,6 +6604,45 @@ finally {
              * of all the items currently stored by Hibernate.
              */
             query = session.createQuery("select qr from app.project.QualityReport qr where qr.qualityyear=" + yr + " order by qr.qualityno asc");
+            return query.list();
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
+      
+       public List getQualityReportPerQuality(String quality) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+        //  int t = q.getQuote1Id();
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select qr from app.project.QualityReport qr where qr.quality='" + quality + "' order by qr.qualityno asc");
             return query.list();
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -6295,6 +6992,1091 @@ finally {
         }
 
     }
+  
+  public Notes getSingleNotes(Integer notesId) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from Notes as notes where notes.idnotes = ?",
+                    new Object[]{notesId},
+                    new Type[]{Hibernate.INTEGER});
+
+            if (results.isEmpty()) {
+                return null;
+            } else {
+                Notes q = (Notes) results.get(0);
+                // Hibernate.initialize(q.getSourceDocs());
+                // Hibernate.initialize(q.getFiles());
+
+                return q;
+            }
+
+        } catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+  }
+        
+    /**
+     *
+     * @param projectid
+     * @return
+     */
+    public List getNotesList(int projectid) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+            query = session.createQuery("select notes from app.project.Notes notes where projectId =" + projectid +" order by editDate desc, idNotes desc");
+            // "select quote from app.quote.Quote1 quote where quote.status = 'pending' order by quote.number"
+            return query.list();
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+
+
+    public JSONArray getRevenuePerLocation(int yr) {
+
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="";
+
+        try {
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+         query = "SELECT EXTRACT(YEAR FROM p.startDate) myYear,SUM( p.projectAmount ) AS projectAmount,\n" +
+                "count(pm_id) as cnt ,l.location as location \n" +
+                "FROM excel.project p inner join user u on p.pm_id = u.ID_User\n" +
+                "inner join  location l on l.id_Location = u.id_location\n" +
+                "WHERE (p.cancelled = 'false' OR p.cancelled IS NULL) and p.startDate is not null and p.number !=0 \n" +
+                " and EXTRACT(YEAR FROM p.startDate) = " +yr +
+                " group by myYear,l.id_Location\n" +
+                " order by myYear desc,l.id_Location";
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, String> revenue = new HashMap<>();
+             JSONArray clientCount = new JSONArray();
+            while(rs.next()) {
+                
+                JSONObject newClient = new JSONObject();
+                    newClient.put("year", rs.getString("myYear"));
+                    newClient.put("cnt", rs.getInt("cnt"));
+                     newClient.put("location", rs.getString("location"));
+//                    newClient.put("company", rs.getString("Company_name"));
+//                    newClient.put("id", rs.getString("ID_Client"));
+                    newClient.put("pAmount", StandardCode.getInstance().formatDouble(rs.getDouble("projectAmount")));
+                    clientCount.put(newClient);
+                
+//                String year = rs.getString("myYear");
+//                String qtr = rs.getString("project_QDate");
+//                Double pAmount = rs.getDouble("project_projectAmount");
+//                String key = year+"#"+qtr;
+//                revenue.put(key, "$ "+StandardCode.getInstance().formatDouble(pAmount));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return clientCount;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+ }
+    
+    public JSONArray getRevenuePerAE(int yr) {
+
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="";
+
+        try {
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+         query = "SELECT EXTRACT(YEAR FROM project.startDate) myYear, count(project.number) as cnt,       \n" +
+                "SUM( project.projectAmount ) AS projectAmount,      \n" +
+                "project.number  AS project_number, COALESCE(ae,'House') as ae \n" +
+                "FROM  project project \n" +
+                "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0 \n" +
+                " and EXTRACT(YEAR FROM project.startDate) = " +yr +
+                " GROUP BY myYear,COALESCE(ae,'House')\n" +
+                "ORDER BY myYear DESC,COALESCE(ae,'House')";
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, String> revenue = new HashMap<>();
+             JSONArray clientCount = new JSONArray();
+            while(rs.next()) {
+                
+                JSONObject newClient = new JSONObject();
+                    newClient.put("year", rs.getString("myYear"));
+                    newClient.put("cnt", rs.getInt("cnt"));
+                     newClient.put("ae", rs.getString("ae"));
+//                    newClient.put("company", rs.getString("Company_name"));
+//                    newClient.put("id", rs.getString("ID_Client"));
+                    newClient.put("pAmount", StandardCode.getInstance().formatDouble(rs.getDouble("projectAmount")));
+                    clientCount.put(newClient);
+                
+//                String year = rs.getString("myYear");
+//                String qtr = rs.getString("project_QDate");
+//                Double pAmount = rs.getDouble("project_projectAmount");
+//                String key = year+"#"+qtr;
+//                revenue.put(key, "$ "+StandardCode.getInstance().formatDouble(pAmount));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return clientCount;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+ }
+    
+     public JSONArray getRevenuePerPM(int yr) {
+
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="";
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+         query = "SELECT EXTRACT(YEAR FROM project.startDate) myYear, count(project.number) as cnt,       \n" +
+                  "EXTRACT(quarter FROM startdate) as project_QDate, "  +
+                "SUM( project.projectAmount ) AS projectAmount,      \n" +
+                "project.number  AS project_number, u.firstname as firstname ,  u.lastname as lastname  \n" +
+                "FROM  project project inner join user u on u.ID_User=project.pm_id\n" +
+                "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0 \n" +
+                " and EXTRACT(YEAR FROM project.startDate) = " +yr +
+                " GROUP BY myYear,project_QDate, u.firstname \n" +
+                "ORDER BY myYear DESC,project_QDate,u.firstname";
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             JSONArray pmRevenue = new JSONArray();
+            while(rs.next()) {
+                
+                JSONObject pm = new JSONObject();
+                    pm.put("year", rs.getString("myYear"));
+                    pm.put("qtr", rs.getString("project_QDate"));
+                    pm.put("cnt", rs.getInt("cnt"));
+                    pm.put("pm", rs.getString("firstname")+" "+rs.getString("lastname"));
+//                    newClient.put("company", rs.getString("Company_name"));
+//                    newClient.put("id", rs.getString("ID_Client"));
+                    pm.put("pAmount", StandardCode.getInstance().formatDouble(rs.getDouble("projectAmount")));
+                    pmRevenue.put(pm);
+                
+//                String year = rs.getString("myYear");
+//                String qtr = rs.getString("project_QDate");
+//                Double pAmount = rs.getDouble("project_projectAmount");
+//                String key = year+"#"+qtr;
+//                revenue.put(key, "$ "+StandardCode.getInstance().formatDouble(pAmount));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return pmRevenue;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+ }
+
+
+public JSONObject getOntimePerQuater() {
+
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String queryString = "SELECT COUNT(ID_Project) AS res,"
+                + "EXTRACT(YEAR FROM startdate) as myYear,"
+                + "EXTRACT(quarter FROM startdate) as project_QDate "
+                    + "FROM project WHERE STATUS='complete' and DATEDIFF(deliveryDate,dueDate)<=0 "
+                + "Group by EXTRACT(YEAR FROM startdate),EXTRACT(quarter FROM startdate)";
+
+
+        try {
+            HashMap<String, Integer> projectCount = getProjectCountPerQuater();
+            
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+//         query = "SELECT " +
+//                "     EXTRACT(YEAR FROM project.startDate) myYear, " +
+//                "EXTRACT(QUARTER FROM project.startDate) AS project_QDate, " +
+//                "     SUM( project.projectAmount ) AS project_projectAmount, " +
+//                "     project.number  AS project_number " +
+//                "FROM  project project " +
+//                "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0 " +
+//                "GROUP BY myYear,project_QDate " +
+//                "ORDER BY myYear DESC,project_QDate ASC ";
+
+             PreparedStatement st = session.connection().prepareStatement(queryString);
+            ResultSet rs = st.executeQuery();
+             JSONObject revenue = new JSONObject();
+            while(rs.next()) {
+                JSONObject data = new JSONObject();
+                String year = rs.getString("myYear");
+                String qtr = rs.getString("project_QDate");
+                if(null != projectCount.get(year+"#"+qtr)){
+                
+                double pOnTimeCountPer = (100.00*(double)rs.getInt("res"))/(double)projectCount.get(year+"#"+qtr);
+                String key = year+"#"+qtr;
+                data.put("pOnTimeCount", rs.getInt("res"));
+                data.put("pCount", projectCount.get(year+"#"+qtr));
+                data.put("pOnTimeCountPer", StandardCode.getInstance().formatDouble(pOnTimeCountPer));
+                
+                revenue.put(key, data);
+            }
+                
+            }
+            rs.close();
+            st.close();
+            return revenue;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+ }
+
+
+public Map<String, String> getRevenuePerQuater() {
+
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="";
+
+        try {
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+         query = "SELECT " +
+                "     EXTRACT(YEAR FROM project.startDate) myYear, " +
+                "EXTRACT(QUARTER FROM project.startDate) AS project_QDate, " +
+                "     SUM( project.projectAmount ) AS project_projectAmount, " +
+                "     project.number  AS project_number " +
+                "FROM  project project " +
+                "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0 " +
+                "GROUP BY myYear,project_QDate " +
+                "ORDER BY myYear DESC,project_QDate ASC ";
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, String> revenue = new HashMap<>();
+            while(rs.next()) {
+                
+                String year = rs.getString("myYear");
+                String qtr = rs.getString("project_QDate");
+                Double pAmount = rs.getDouble("project_projectAmount");
+                String key = year+"#"+qtr;
+                revenue.put(key, "$ "+StandardCode.getInstance().formatDouble(pAmount));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return revenue;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+ }
+public Map<String, String> getRevenuePerYear() {
+
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="";
+
+        try {
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+         query = "SELECT " +
+                "     EXTRACT(YEAR FROM project.startDate) myYear, " +
+                "     SUM( project.projectAmount ) AS project_projectAmount, " +
+                "     project.number  AS project_number " +
+                "FROM  project project " +
+                "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0 " +
+                "GROUP BY myYear " +
+                "ORDER BY myYear DESC";
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, String> revenue = new HashMap<>();
+            while(rs.next()) {
+                
+                String year = rs.getString("myYear");
+                
+                Double pAmount = rs.getDouble("project_projectAmount");
+                String key = year;
+                revenue.put(key, "$ "+StandardCode.getInstance().formatDouble(pAmount));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return revenue;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+ }
+
+ 
+public List getSourceDoc(Project p) {
+    long startTime = System.currentTimeMillis();
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+        int t = p.getProjectId();
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select sourcedoc from app.project.SourceDoc sourcedoc where sourcedoc.Project=" + t );
+            //System.out.println((System.currentTimeMillis() - startTime)+" Timing "  + p.getNumber());
+            
+            return query.list();
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
+
+
+public List getProjectListForPM(String pmName) {
+      Query query;
+//        List temp =  new ArrayList();
+        List results =  new ArrayList();
+        List<Integer> pNumber = new ArrayList<Integer>();
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        try {
+          
+            Criteria criteria = session.createCriteria(Project.class);
+            Hibernate.initialize(Project.class);
+ try{
+           
+                 
+                 criteria.add(Expression.like("pm", "%" + pmName + "%").ignoreCase());
+                 criteria.add(Expression.or(Expression.eq("status", "onhold"), Expression.eq("status", "active")));
+                 criteria.addOrder(Order.desc("number"));
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+         }catch(Exception e){
+           //System.out.println(e.toString());
+         }
+             List criteriaResult = criteria.list();
+            for(int i =0; i<criteriaResult.size();i++){
+              Project p = (Project) criteriaResult.get(i);
+              
+              if(!pNumber.contains(p.getProjectId())&&!p.getNumber().equals("000000")){
+                Hibernate.initialize(p.getSourceDocs());
+                results.add(p);
+                pNumber.add(p.getProjectId());
+              }
+            }
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+        
+        /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        
+           session = ConnectionFactory.getInstance().getSession();
+        try {
+          
+            Criteria criteria = session.createCriteria(Project.class);
+            Hibernate.initialize(Project.class);
+ try{
+           
+                 Criteria subCriteria = criteria.createCriteria("Company");
+                
+                 subCriteria.add(Expression.or(Expression.like("Sales", "%" + pmName + "%").ignoreCase(), Expression.like("Sales_rep", "%" + pmName + "%").ignoreCase()));
+                criteria.add(Expression.or(Expression.eq("status", "onhold"), Expression.eq("status", "active")));
+                 criteria.addOrder(Order.desc("number"));
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+         }catch(Exception e){
+           //System.out.println(e.toString());
+         }
+             List criteriaResult = criteria.list();
+            for(int i =0; i<criteriaResult.size();i++){
+              Project p = (Project) criteriaResult.get(i);
+              if(!pNumber.contains(p.getProjectId())&&!p.getNumber().equals("000000")){
+                Hibernate.initialize(p.getSourceDocs());
+                results.add(p);
+                pNumber.add(p.getProjectId());
+              }
+            }
+            
+            
+              
+//            Hibernate.initialize(results);
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+       
+        /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+//        results = new ArrayList(set);
+        if (results.isEmpty()) {
+            return null;
+        } else {
+
+             //System.out.println("resultsssssss"+results.toString());
+            return results;
+        }
+  }
+
+public String getTradosDiv(LinTask lintask){
+
+return "Hello" + lintask.getLinTaskId();
+}
+
+    public Map<String, String> getClientSatisfactionPerYear() {
+        
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+           String query ="SELECT AVG(p.`clientSatisfaction`) as avgsu,SUM(clientSatisfaction) as su,COUNT(ID_project) as cnt\n" +
+                        ",EXTRACT(YEAR FROM p.`startDate`) AS myYear " +
+                        "FROM `project` p " +
+                        "WHERE startDate IS NOT NULL and clientSatisfaction IS NOT NULL \n" +
+                        "GROUP BY myYear ORDER BY myYear desc ";
+
+        try {
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, String> revenue = new HashMap<>();
+            while(rs.next()) {
+                
+                String year = rs.getString("myYear");
+                
+                Double avg = rs.getDouble("avgsu");
+                String key = year;
+                revenue.put(key, StandardCode.getInstance().formatDouble(avg));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return revenue;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    public JSONArray getClientSatisfactionPerLocation(int yr) {
+        
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="SELECT AVG(p.`clientSatisfaction`) as avgsu,SUM(clientSatisfaction) as su,COUNT(ID_project) as cnt\n" +
+                        ",EXTRACT(YEAR FROM p.`startDate`) AS myYear,l.location as location\n" +
+                        " FROM `project` p INNER JOIN `user` u ON p.`pm_id` = u.`ID_User` inner join  location l on l.id_Location = u.id_location\n" +
+                        " WHERE startDate IS NOT NULL and clientSatisfaction IS NOT NULL \n" +
+                        " and EXTRACT(YEAR FROM p.startDate) = " +yr +
+                        " GROUP BY EXTRACT(YEAR FROM p.`startDate`),l.id_Location ORDER BY EXTRACT(YEAR FROM p.`startDate`) desc ,l.id_Location";
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+            
+             JSONArray clientSatisfaction = new JSONArray();
+            while(rs.next()) {
+                
+                JSONObject newClientSatisfaction = new JSONObject();
+                    newClientSatisfaction.put("year", rs.getString("myYear"));
+                    newClientSatisfaction.put("cnt", rs.getInt("cnt"));
+                     newClientSatisfaction.put("location", rs.getString("location"));
+//                    newClient.put("company", rs.getString("Company_name"));
+//                    newClient.put("id", rs.getString("ID_Client"));
+                    newClientSatisfaction.put("avg", StandardCode.getInstance().formatDouble(rs.getDouble("avgsu")));
+                    clientSatisfaction.put(newClientSatisfaction);
+                
+//                String year = rs.getString("myYear");
+//                String qtr = rs.getString("project_QDate");
+//                Double pAmount = rs.getDouble("project_projectAmount");
+//                String key = year+"#"+qtr;
+//                revenue.put(key, "$ "+StandardCode.getInstance().formatDouble(pAmount));
+                
+                
+            }
+            rs.close();
+            st.close();
+            return clientSatisfaction;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    public Map<String, Double> getExpensePerYear() {
+        
+  /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="";
+
+        try {
+            List results = new ArrayList();
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             *///select pathname from Upload_Doc as Upload_Doc where Upload_Doc.QuoteID ="+ CQuote
+         query = "SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt FROM excel.lintask l \n" +
+"inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+"inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+"inner join excel.project p on p.id_project = s.id_project\n" +
+"WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0  and l.internalDollarTotal is not null\n" +
+"GROUP BY myYear             \n" +
+"union\n" +
+"SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt FROM excel.dtptask l \n" +
+"inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+"inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+"inner join excel.project p on p.id_project = s.id_project\n" +
+"WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0   and l.internalDollarTotal is not null\n" +
+"GROUP BY myYear \n" +
+"union\n" +
+"SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt FROM excel.engtask l \n" +
+"inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+"inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+"inner join excel.project p on p.id_project = s.id_project\n" +
+"WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0   and l.internalDollarTotal is not null\n" +
+"GROUP BY myYear \n" +
+"union\n" +
+"SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt FROM excel.othtask l \n" +
+"inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+"inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+"inner join excel.project p on p.id_project = s.id_project\n" +
+"WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0   and l.internalDollarTotal is not null\n" +
+"GROUP BY myYear ";
+            //System.out.println(query);
+
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, Double> revenue = new HashMap<>();
+            while(rs.next()) {
+                
+                String year = rs.getString("myYear");
+                
+                Double pAmount = rs.getDouble("idt");
+                String key = year;
+                if(revenue.containsKey(key)){
+                    pAmount+=revenue.get(key);
+                    revenue.replace(key, pAmount);
+                }else{
+                    revenue.put(key, pAmount);
+                }
+                
+                
+                
+            }
+            rs.close();
+            st.close();
+            return revenue;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    public Map<String, Double> getExpensePerLocation() {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        String query ="SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt ,\n" +
+                    "lo.location   as loc\n" +
+                    "FROM excel.lintask l \n" +
+                    "inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+                    "inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+                    "inner join excel.project p on p.id_project = s.id_project\n" +
+                    "inner join excel.user u on p.pm_id = u.ID_User\n" +
+                    "inner join excel.location lo on lo.id_Location = u.id_location\n" +
+                    "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0  and l.internalDollarTotal is not null\n" +
+                    " group by myYear,lo.id_Location \n" +
+                    "union\n" +
+                    "SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt ,\n" +
+                    "lo.location   as loc\n" +
+                    "FROM excel.dtptask l \n" +
+                    "inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+                    "inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+                    "inner join excel.project p on p.id_project = s.id_project\n" +
+                    "inner join excel.user u on p.pm_id = u.ID_User\n" +
+                    "inner join excel.location lo on lo.id_Location = u.id_location\n" +
+                    "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0  and l.internalDollarTotal is not null\n" +
+                    " group by myYear,lo.id_Location \n" +
+                    "union\n" +
+                    "SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt ,\n" +
+                    "lo.location   as loc\n" +
+                    "FROM excel.engtask l \n" +
+                    "inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+                    "inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+                    "inner join excel.project p on p.id_project = s.id_project\n" +
+                    "inner join excel.user u on p.pm_id = u.ID_User\n" +
+                    "inner join excel.location lo on lo.id_Location = u.id_location\n" +
+                    "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0  and l.internalDollarTotal is not null\n" +
+                    " group by myYear,lo.id_Location \n" +
+                    "union\n" +
+                    "SELECT EXTRACT(YEAR FROM p.startDate) myYear,sum(l.internalDollarTotal) idt ,\n" +
+                    "lo.location   as loc\n" +
+                    "FROM excel.othtask l \n" +
+                    "inner join excel.targetdoc t on l.id_targetdoc = t.id_targetdoc \n" +
+                    "inner join excel.sourcedoc s on t.id_sourcedoc = s.id_sourcedoc\n" +
+                    "inner join excel.project p on p.id_project = s.id_project\n" +
+                    "inner join excel.user u on p.pm_id = u.ID_User\n" +
+                    "inner join excel.location lo on lo.id_Location = u.id_location\n" +
+                    "WHERE (cancelled = 'false' OR cancelled IS NULL) and startDate is not null and number !=0  and l.internalDollarTotal is not null\n" +
+                    " group by myYear,lo.id_Location ";
+
+        try {
+            //System.out.println(query);
+             PreparedStatement st = session.connection().prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+             Map<String, Double> expense = new HashMap<>();
+//             JSONArray clientCount = new JSONArray();
+            while(rs.next()) {
+                String year = rs.getString("myYear");
+                
+                Double pAmount = rs.getDouble("idt");
+                String key = year+"#"+rs.getString("loc");
+                if(expense.containsKey(key)){
+                    pAmount+=expense.get(key);
+                    expense.replace(key, pAmount);
+                }else{
+                    expense.put(key, pAmount);
+                }
+                
+            }
+            rs.close();
+            st.close();
+            return expense;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProjectService.class.getName()).log(Level.SEVERE, null, ex);
+        }  /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    private List getProjectIdFromNotes(String notes) {
+          /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select notes from app.project.Notes notes where notes.notes like '%"+notes+"%'");
+            return query.list();
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        
+         }
+
 
 
 }

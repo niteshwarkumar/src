@@ -3,6 +3,7 @@
 //this quote to the db
 package app.quote;
 
+import app.extjs.helpers.ProjectHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -17,7 +18,6 @@ import java.util.*;
 import app.project.*;
 import app.standardCode.*;
 import app.security.*;
-import java.lang.*;
 
 public final class QuoteViewGeneralUpdateAction extends Action {
 
@@ -25,8 +25,7 @@ public final class QuoteViewGeneralUpdateAction extends Action {
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
@@ -89,7 +88,7 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
         //get the quote to be updated from db
         Quote1 q = QuoteService.getInstance().getSingleQuote(id);
-        //   System.out.println("isTracked="+request.getParameter("isTracked"));
+        //   //System.out.println("isTracked="+request.getParameter("isTracked"));
         if (request.getParameter("isTracked") != null) {
             q.setIsTracked("Y");
         } else {
@@ -111,17 +110,19 @@ public final class QuoteViewGeneralUpdateAction extends Action {
         String dtpTotalString = "";
         String othTotalString = "";
         double pmTotal = 0;
+        Map<String, Double> linRates = new HashMap<>();
 
         //START LIN TASKS
         //get the updated list of lin Tasks for this quote
         LinTask[] linTasks = (LinTask[]) qvg.get("linTasks");
-        //  System.out.println("---------------------------------------------------------------------------------->"+linTasks[0].getWord100());
+        DtpTask[] dtpTasks = (DtpTask[]) qvg.get("dtpTasks");
+        //  //System.out.println("---------------------------------------------------------------------------------->"+linTasks[0].getWord100());
         //process each lin Task to db
         for (int i = 0; i < linTasks.length; i++) {
             LinTask lt = linTasks[i];
 
-            // System.out.println("alexxx:before lt.getRate()="+lt.getRate());
-            //   System.out.println("alexxx:before lt.getCurrency()="+lt.getCurrency());
+            // //System.out.println("alexxx:before lt.getRate()="+lt.getRate());
+            //   //System.out.println("alexxx:before lt.getCurrency()="+lt.getCurrency());
             lt.setInternalCurrency(lt.getCurrency());
             //START process new total values (2 of them: Total and dollar TOTAL)
             if ((lt.getWord100() != null) || (lt.getWordRep() != null) || (lt.getWord85() != null) || (lt.getWordNew() != null) || (lt.getWordNew4() != null)) { //trados
@@ -130,50 +131,57 @@ public final class QuoteViewGeneralUpdateAction extends Action {
                 int word95 = 0;
                 int word85 = 0;
                 int word75 = 0;
-                int wordNew = 0;
+                double wordNew = 0;
                 int word8599 = 0;
                 int wordPerfect = 0;
                 int wordContext = 0;
                 double wordNew4 = 0;
 
                 if (lt.getWord100() != null) {
-                    word100 = lt.getWord100().intValue();
+                    word100 = lt.getWord100();
                 }
                 if (lt.getWordRep() != null) {
-                    wordRep = lt.getWordRep().intValue();
+                    wordRep = lt.getWordRep();
                 }
                 if (lt.getWord95() != null) {
-                    word95 = lt.getWord95().intValue();
+                    word95 = lt.getWord95();
                 }
                 if (lt.getWord85() != null) {
-                    word85 = lt.getWord85().intValue();
+                    word85 = lt.getWord85();
                 }
                 if (lt.getWord75() != null) {
-                    word75 = lt.getWord75().intValue();
+                    word75 = lt.getWord75();
                 }
                 if (lt.getWordNew() != null) {
-                    wordNew = lt.getWordNew().intValue();
+                    wordNew = lt.getWordNew();
                 }
                 if (lt.getWord8599() != null) {
-                    word8599 = lt.getWord8599().intValue();
+                    word8599 = lt.getWord8599();
                 }
                 if (lt.getWordNew4() != null) {
-                    wordNew4 = lt.getWordNew4().doubleValue();
+                    wordNew4 = lt.getWordNew4();
                 }
                 if (lt.getWordContext() != null) {
-                    wordPerfect = lt.getWordPerfect().intValue();
+                    wordPerfect = lt.getWordPerfect();
                 }
                 if (lt.getWordPerfect() != null) {
-                    wordContext = lt.getWordContext().intValue();
+                    wordContext = lt.getWordContext();
                 }
+               
 
 
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(lt.getRate()).doubleValue();
-                    //System.out.println("Rateeeeeeeeeeeee" + rate);
+                    rate = Double.valueOf(lt.getRate());
+                    ////System.out.println("Rateeeeeeeeeeeee" + rate);
                 } catch (java.lang.NumberFormatException nfe) {
                     rate = 0;
+                }
+                if(lt.getTaskName().contains("Translation")){
+                    linRates.put(lt.getTargetDoc().getName(), rate);
+                }
+                if(ProjectHelper.isProcessRate(q.getProject().getCompany().getClientId(),lt)){
+                    rate = linRates.getOrDefault(lt.getTargetDoc().getName(), 0.00)*ExcelConstants.CLIENT_BBS_PROOFREADING_RATE;
                 }
 
                 double wordTotal = 0;
@@ -181,46 +189,46 @@ public final class QuoteViewGeneralUpdateAction extends Action {
                 double thisTotal = 0.0;
                 double scalePerfect=0,scaleContext=0;
                 //scale the rates (either default or custom)
-                if (q.getProject().getCompany().isScaleDefault()) {
-                    double scale100 = new Double(q.getProject().getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(q.getProject().getCompany().getScaleRep()).doubleValue();
-                    double scale8599 = new Double(q.getProject().getCompany().getScale8599()).doubleValue();
-                    double scaleNew4 = new Double(q.getProject().getCompany().getScaleNew4()).doubleValue();
+                if (q.getProject().getCompany().isScaleDefault(q.getProject().getProjectId())) {
+                    double scale100 = new Double(q.getProject().getCompany().getScale100(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scaleRep = new Double(q.getProject().getCompany().getScaleRep(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scale8599 = new Double(q.getProject().getCompany().getScale8599());
+                    double scaleNew4 = new Double(q.getProject().getCompany().getScaleNew4());
                     try{
-                    scalePerfect = new Double(q.getProject().getCompany().getScalePerfect()).doubleValue();
-                    scaleContext = new Double(q.getProject().getCompany().getScaleContext()).doubleValue();
+                    scalePerfect = new Double(q.getProject().getCompany().getScalePerfect(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    scaleContext = new Double(q.getProject().getCompany().getScaleContext(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
                     } catch (Exception e) {
                     }
                     thisTotal = word100 * scale100 * rate + wordRep * scaleRep * rate + word8599 * scale8599 * rate + wordNew4 * scaleNew4 * rate + wordPerfect * scalePerfect * rate + wordContext * scaleContext* rate;
                     wordTotal = word100 + wordRep + word8599 + wordNew4 + wordPerfect + wordContext;
                 } else {
-                    double scale100 = new Double(q.getProject().getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(q.getProject().getCompany().getScaleRep()).doubleValue();
-                    double scale95 = new Double(q.getProject().getCompany().getScale95()).doubleValue();
-                    double scale85 = new Double(q.getProject().getCompany().getScale85()).doubleValue();
-                    double scale75 = new Double(q.getProject().getCompany().getScale75()).doubleValue();
-                    double scaleNew = new Double(q.getProject().getCompany().getScaleNew()).doubleValue();
+                    double scale100 = new Double(q.getProject().getCompany().getScale100(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scaleRep = new Double(q.getProject().getCompany().getScaleRep(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scale95 = new Double(q.getProject().getCompany().getScale95(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scale85 = new Double(q.getProject().getCompany().getScale85(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scale75 = new Double(q.getProject().getCompany().getScale75(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    double scaleNew = new Double(q.getProject().getCompany().getScaleNew(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
                     try {
-                    scalePerfect = new Double(q.getProject().getCompany().getScalePerfect()).doubleValue();
-                    scaleContext = new Double(q.getProject().getCompany().getScaleContext()).doubleValue();
+                    scalePerfect = new Double(q.getProject().getCompany().getScalePerfect(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
+                    scaleContext = new Double(q.getProject().getCompany().getScaleContext(q.getProject().getProjectId(),q.getProject().getCompany().getClientId()));
                     } catch (Exception e) {
                     }
                     thisTotal = word100 * scale100 * rate + wordRep * scaleRep * rate + word95 * scale95 * rate + word85 * scale85 * rate + word75 * scale75 * rate + wordNew * scaleNew * rate + wordPerfect * scalePerfect * rate + wordContext * scaleContext* rate;
                     wordTotal = word100 + wordRep + word95 + word85 + word75 + wordNew + wordPerfect + wordContext;
                 }
                 if (lt.getMinFee() != null) {
-                    thisTotal += lt.getMinFee().doubleValue();
+                    thisTotal += lt.getMinFee();
                 }
 
-                linTotal += Double.parseDouble((StandardCode.getInstance().formatDouble(new Double(thisTotal))).replaceAll(",","")); //update lin block
+                linTotal += Double.parseDouble((StandardCode.getInstance().formatDouble4(new Double(thisTotal))).replaceAll(",","")); //update lin block
 
                 lt.setWordTotal(new Double(wordTotal));
-                lt.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                lt.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
-                // System.out.println("alexxx:lt.getDollarTotalFee()="+lt.getDollarTotalFee());
+                lt.setDollarTotal(StandardCode.getInstance().formatDouble4(new Double(thisTotal)));
+                lt.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
+                // //System.out.println("alexxx:lt.getDollarTotalFee()="+lt.getDollarTotalFee());
 
                 //if(lt.getDollarTotalFee()==null || "0.00".equals(lt.getDollarTotalFee())){
-                //    System.out.println("alexxx: updating from QuoteViewGeneralUpdateAction");
+                //    //System.out.println("alexxx: updating from QuoteViewGeneralUpdateAction");
                 lt.setNotesFee(lt.getNotes());
                 lt.setUnitsFee(lt.getUnits());
                 lt.setWord100Fee(lt.getWord100());
@@ -249,27 +257,27 @@ public final class QuoteViewGeneralUpdateAction extends Action {
                 if (lt.getWordTotal() != null) { //if from delete then make sure it is not null
 
 
-                    double total = lt.getWordTotal().doubleValue();
+                    double total = lt.getWordTotal();
                     double rate = 0;
                     try {
-                        rate = Double.valueOf(lt.getRate()).doubleValue();
+                        rate = Double.valueOf(lt.getRate());
                     } catch (java.lang.NumberFormatException nfe) {
                         rate = 0;
                     }
 
                     double thisTotal = total * rate;
                     if (lt.getMinFee() != null) {
-                        thisTotal += lt.getMinFee().doubleValue();
+                        thisTotal += lt.getMinFee();
                     }
-                    linTotal += Double.parseDouble((StandardCode.getInstance().formatDouble(new Double(thisTotal))).replaceAll(",","")); //update lin block
+                    linTotal += Double.parseDouble((StandardCode.getInstance().formatDouble4(new Double(thisTotal))).replaceAll(",","")); //update lin block
 
-                    lt.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                    lt.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                    lt.setDollarTotal(StandardCode.getInstance().formatDouble4(new Double(thisTotal)));
+                    lt.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
 
                     //Copy the values into Fee tab as well
-                    //System.out.println("alexxx:lt.getDollarTotalFee()="+lt.getDollarTotalFee());
+                    ////System.out.println("alexxx:lt.getDollarTotalFee()="+lt.getDollarTotalFee());
                     // if(lt.getDollarTotalFee()==null || "0.00".equals(lt.getDollarTotalFee())){
-                    //System.out.println("alexxx: updating from QuoteViewGeneralUpdateAction");
+                    ////System.out.println("alexxx: updating from QuoteViewGeneralUpdateAction");
                     lt.setNotesFee(lt.getNotes());
 
                     lt.setUnitsFee(lt.getUnits());
@@ -290,7 +298,9 @@ public final class QuoteViewGeneralUpdateAction extends Action {
                     lt.setDollarTotalFee(lt.getDollarTotal());
                     //lt.setRateFee(lt.getRate());
                     lt.setRateFee(lt.getInternalRate());
-
+                    if(lt.getTaskName().contains("Translation")){
+                        linRates.put(lt.getTargetDoc().getName(), rate);
+                    }
 
 
                     //  }
@@ -317,19 +327,20 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
             //START process new TOTAL value
             if (et.getTotal() != null) { //if from delete then make sure it is not null
-                double total = et.getTotal().doubleValue();
-                double rate = 0;
+                double total = et.getTotal();
+                double rate = 0.00;
                 try {
-                    rate = Double.valueOf(et.getRate()).doubleValue();
+                    rate = Double.valueOf(et.getRate().replaceAll(",", ""));
                 } catch (java.lang.NumberFormatException nfe) {
+                   // nfe.printStackTrace();
                     rate = 0;
                 }
 
                 double thisTotal = total * rate;
                 engTotal += thisTotal; //update eng block
 
-                et.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                et.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                et.setDollarTotal(StandardCode.getInstance().formatDouble4(new Double(thisTotal)));
+                et.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
                 et.setNotesTeam(et.getNotes());
                 et.setTotalTeam(et.getTotal());
                 et.setUnitsTeam(et.getUnits());
@@ -344,7 +355,7 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
         //START DTP TASKS
         //get the updated list of dtp Tasks for this quote
-        DtpTask[] dtpTasks = (DtpTask[]) qvg.get("dtpTasks");
+       
 
         //process each dtp Task to db
         for (int i = 0; i < dtpTasks.length; i++) {
@@ -352,10 +363,10 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
             //START process new TOTAL value
             if (dt.getTotal() != null) { //if from delete then make sure it is not null
-                double total = dt.getTotal().doubleValue();
+                double total = dt.getTotal();
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(dt.getRate()).doubleValue();
+                    rate = Double.valueOf(dt.getRate().replaceAll(",", ""));
                 } catch (java.lang.NumberFormatException nfe) {
                     rate = 0;
                 }
@@ -363,8 +374,8 @@ public final class QuoteViewGeneralUpdateAction extends Action {
                 double thisTotal = total * rate;
                 dtpTotal += thisTotal; //update dtp block
 
-                dt.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                dt.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                dt.setDollarTotal(StandardCode.getInstance().formatDouble4(new Double(thisTotal)));
+                dt.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
 
                 dt.setNotesTeam(dt.getNotes());
                 dt.setTotalTeam(dt.getTotal());
@@ -388,10 +399,10 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
             //START process new TOTAL value
             if (ot.getTotal() != null) { //if from delete then make sure it is not null
-                double total = ot.getTotal().doubleValue();
+                double total = ot.getTotal();
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(ot.getRate()).doubleValue();
+                    rate = Double.valueOf(ot.getRate());
                 } catch (java.lang.NumberFormatException nfe) {
                     rate = 0;
                 }
@@ -399,8 +410,8 @@ public final class QuoteViewGeneralUpdateAction extends Action {
                 double thisTotal = total * rate;
                 othTotal += thisTotal; //update oth block
 
-                ot.setDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                ot.setRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                ot.setDollarTotal(StandardCode.getInstance().formatDouble4(new Double(thisTotal)));
+                ot.setRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
 
                 ot.setNotesTeam(ot.getNotes());
                 ot.setTotalTeam(ot.getTotal());
@@ -437,9 +448,9 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
         //percent values from form
         String pmPercent = (String) qvg.get("pmPercent");
-        String pmDollarTotal = (String) qvg.get("pmPercentDollarTotal");
+        String pmDollarTotal = ((String) qvg.get("pmPercentDollarTotal")).replaceAll(",", "");
         //if
-
+        if(pmDollarTotal.isEmpty()) pmDollarTotal="0.00";
 
         double pmRate = 0;
         double pmPercentDollarTotal = 0;
@@ -450,30 +461,39 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
         pmRate=QuoteService.getInstance().getPmFee(subTotal);
          pmPercentDollarTotal = (pmRate / 100) * subTotal;
+         q.setPmPercent(StandardCode.getInstance().formatDouble(pmRate));
+          q.setPmPercentDollarTotal(StandardCode.getInstance().formatDouble(pmPercentDollarTotal));
+
 
 
         }else{
         if (pmPercent != null && !"".equals(pmPercent)) { //if pmPercent is present
             try {
-                pmRate = Double.valueOf(pmPercent).doubleValue();
+                pmRate = Double.valueOf(pmPercent);
             } catch (java.lang.NumberFormatException nfe) {
                 pmRate = 0;
             }
             pmPercentDollarTotal = (pmRate / 100) * subTotal;
+            q.setPmPercentDollarTotal(StandardCode.getInstance().formatDouble(new Double(pmPercentDollarTotal)));
+        q.setPmPercent(StandardCode.getInstance().formatDouble(new Double(pmRate)));
         } else if (pmDollarTotal != null && !"".equals(pmDollarTotal)) { //if rushPercent is present
             try {
-                pmPercentDollarTotal = Double.valueOf(pmDollarTotal.replaceAll(",", "")).doubleValue();
+                pmPercentDollarTotal = Double.valueOf(pmDollarTotal.replaceAll(",", ""));
+                q.setPmPercentDollarTotal(StandardCode.getInstance().formatDouble(new Double(pmPercentDollarTotal)));
+                q.setPmPercent(null);
+              ///  pmRate=(pmPercentDollarTotal*100)/subTotal;
             } catch (java.lang.NumberFormatException nfe) {
                 pmRate = 0;
             }
             //quoteTotal = quoteTotal - discountPercentDollarTotal;
 
         }}} catch (Exception e) {
+            e.printStackTrace();
         }
 
         //set totals for each line to quote object
-        q.setPmPercentDollarTotal(StandardCode.getInstance().formatDouble(new Double(pmPercentDollarTotal)));
-        q.setPmPercent(StandardCode.getInstance().formatDouble(new Double(pmRate)));
+//        q.setPmPercentDollarTotal(StandardCode.getInstance().formatDouble(new Double(pmPercentDollarTotal)));
+//        q.setPmPercent(StandardCode.getInstance().formatDouble(new Double(pmRate)));
         //END pm block
 
 
@@ -488,21 +508,21 @@ public final class QuoteViewGeneralUpdateAction extends Action {
         String rushTotal = (String) qvg.get("rushPercentDollarTotal");
         String archiveId = (String) qvg.get("archiveId");
         q.setArchiveId(archiveId);
-        //System.out.println(" q.setApprovalTimeEsimate q.setApprovalTimeEsimate" + request.getParameter("approvalTimeEsimate"));
+        ////System.out.println(" q.setApprovalTimeEsimate q.setApprovalTimeEsimate" + request.getParameter("approvalTimeEsimate"));
         q.setApprovalTimeEsimate((String) qvg.get("approvalTimeEsimate"));
 
         double rushRate = 0;
         double rushPercentDollarTotal = 0;
         if (rushPercent != null && !"".equals(rushPercent)) { //if rushPercent is present
             try {
-                rushRate = Double.valueOf(rushPercent).doubleValue();
+                rushRate = Double.valueOf(rushPercent);
             } catch (java.lang.NumberFormatException nfe) {
                 rushRate = 0;
             }
             rushPercentDollarTotal = (rushRate / 100) * subPmTotal;
         } else if (rushTotal != null && !"".equals(rushTotal)) { //if rushPercent is present
             try {
-                rushPercentDollarTotal = Double.valueOf(rushTotal.replaceAll(",", "")).doubleValue();
+                rushPercentDollarTotal = Double.valueOf(rushTotal.replaceAll(",", ""));
             } catch (java.lang.NumberFormatException nfe) {
                 rushRate = 0;
             }
@@ -519,14 +539,14 @@ public final class QuoteViewGeneralUpdateAction extends Action {
         //START DISCOUNT block
         String discountPercent = request.getParameter("discountPercent");
         String discountDollarTotal = request.getParameter("discountDollarTotal");
-        //System.out.println("discountPercent=" + discountPercent + ",discountDollarTotal=" + discountDollarTotal);
+        ////System.out.println("discountPercent=" + discountPercent + ",discountDollarTotal=" + discountDollarTotal);
         double discountRate = 0;
         double discountPercentDollarTotal = 0;
 
 
         if (discountPercent != null && !"".equals(discountPercent)) { //if rushPercent is present
             try {
-                discountRate = Double.valueOf(discountPercent).doubleValue();
+                discountRate = Double.valueOf(discountPercent);
             } catch (java.lang.NumberFormatException nfe) {
                 discountRate = 0;
             }
@@ -537,7 +557,7 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
         } else if (discountDollarTotal != null && !"".equals(discountDollarTotal)) { //if rushPercent is present
             try {
-                discountPercentDollarTotal = Double.valueOf(discountDollarTotal.replaceAll(",", "")).doubleValue();
+                discountPercentDollarTotal = Double.valueOf(discountDollarTotal.replaceAll(",", ""));
             } catch (java.lang.NumberFormatException nfe) {
                 discountRate = 0;
             }
@@ -564,12 +584,12 @@ public final class QuoteViewGeneralUpdateAction extends Action {
 
 
         //update Quote to db
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
 
         //mark AutoUpdate as true
         Integer autoUpdate = (Integer) request.getAttribute("AutoUpdate");
         if (autoUpdate != null) {
-            Integer newAutoUpdate = new Integer(autoUpdate.intValue() + 1);
+            Integer newAutoUpdate = new Integer(autoUpdate + 1);
             request.setAttribute("AutoUpdate", newAutoUpdate); //place true value (1) into request
         }
 

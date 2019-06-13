@@ -4,17 +4,18 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
-   <class name="app.resource.ResourceClient" table="resourceClient">
-      <id name="id" type="int" >
+   <class name="app.resource.ResourceClient" table="resourceclient">
+      <id name="id"  type="int" column="id">
          <generator class="identity"/>
       </id>
       <property name="client" type="string"/>
       <property name="level" type="string"/>
-      <property name="primary" type="string"/>
-      <property name="primaryCount" type="string"/>
+      <property name="primry" type="string"/>
+      <property name="primaryCount" type="java.lang.Integer"/>
       <property name="secondry" type="string"/>
-      <property name="secondryCount" type="string"/>
+      <property name="secondryCount" type="java.lang.Integer"/>
       <property name="resourceId" type="java.lang.Integer"/>
+      <property name="language" type="string"/>
      
    </class>
 </hibernate-mapping>

@@ -3,30 +3,23 @@
 
 package app.project;
 
-import java.util.Locale;
+import app.inteqa.INDelivery;
+import app.inteqa.INDeliveryReq;
+import app.inteqa.InteqaService;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
-import java.text.*;
 import java.io.*;
-import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import app.user.*;
-import app.resource.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 import app.standardCode.*;
 
@@ -116,8 +109,8 @@ public final class ProjectViewFormsGen12Action extends Action {
             
             //START process pdf
             try {
-                PdfReader reader = new PdfReader("C:/templates/CL02_001.pdf"); //the template
-                
+                PdfReader reader = new PdfReader("C:/templates/CL02_002.pdf"); //the template
+//                PdfReader reader = new PdfReader("/Users/abhisheksingh/Project/templates/CL02_002.pdf"); //the template
                 //save the pdf in memory
                 ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
                 
@@ -136,7 +129,7 @@ public final class ProjectViewFormsGen12Action extends Action {
                 //set the field values in the pdf form
                // form1.setField("", projectId)
                 form1.setField("currentdate",monthName[month]+" "+day+", "+year);
-                form1.setField("firstname", StandardCode.getInstance().noNull(p.getContact().getFirst_name()));
+                form1.setField("firstname", StandardCode.getInstance().noNull(p.getContact().getFirst_name())+",");
                 form1.setField("pm", p.getPm());                
                 form1.setField("emailpm", u.getWorkEmail1());
                 if(u.getWorkPhoneEx() != null && u.getWorkPhoneEx().length() > 0) { //ext present
@@ -151,7 +144,7 @@ public final class ProjectViewFormsGen12Action extends Action {
                 //START add images
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 54, 0,0, 65, 47, 487);
@@ -161,7 +154,22 @@ public final class ProjectViewFormsGen12Action extends Action {
                 form1.setField("productname",StandardCode.getInstance().noNull(p.getProduct()));
                 form1.setField("project", p.getNumber() + p.getCompany().getCompany_code());
                 form1.setField("description", StandardCode.getInstance().noNull(p.getProductDescription()));
-                form1.setField("additional", p.getProjectRequirements());
+                String reqtxt = "";
+            INDelivery indel = InteqaService.getInstance().getINDelivery(Integer.parseInt(projectId));
+            if (indel != null) {
+                java.util.List inDel = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(), "R");
+
+                for (int i = 0; i < inDel.size(); i++) {
+                    INDeliveryReq inDeliveryReq = (INDeliveryReq) inDel.get(i);
+                    if (inDel.size() == 1) {
+                        reqtxt += "" + inDeliveryReq.getClientReqText() + "";
+                    } else {
+                        reqtxt += "* " + inDeliveryReq.getClientReqText() + "\r\n";
+                    }
+                }
+
+            }
+            form1.setField("addcomments", reqtxt);
                 
                 //get sources and targets
                 StringBuffer sources = new StringBuffer("");
@@ -169,19 +177,19 @@ public final class ProjectViewFormsGen12Action extends Action {
                 if(p.getSourceDocs() != null) {
                     for(Iterator iterSource = p.getSourceDocs().iterator(); iterSource.hasNext();) {
                         SourceDoc sd = (SourceDoc) iterSource.next();
-                        sources.append(sd.getLanguage() + " ");
+                        sources.append(sd.getLanguage() + ", ");
                         if(sd.getTargetDocs() != null) {
                             for(Iterator iterTarget = sd.getTargetDocs().iterator(); iterTarget.hasNext();) {
                                 TargetDoc td = (TargetDoc) iterTarget.next();
                                 if(!td.getLanguage().equals("All"))
-                                    targets.append(td.getLanguage() + " ");
+                                    targets.append(td.getLanguage() + ", ");
                             }
                         }
                     }
                 }
                 
-                form1.setField("source", sources.toString());
-                form1.setField("target", targets.toString());
+                form1.setField("source", sources.toString().substring(0, sources.length()-2));
+                form1.setField("target", targets.toString().substring(0, targets.length()-2));
                 
                 //stamp.setFormFlattening(true);
                 stamp.close();
@@ -199,7 +207,8 @@ public final class ProjectViewFormsGen12Action extends Action {
 		throw new RuntimeException(e);
             }
             //END process pdf        
-        
+        p.setDeliveryConfirmation("on");
+        ProjectService.getInstance().updateProject(p);
         // Forward control to the specified success URI
 	return (mapping.findForward("Success"));
     }

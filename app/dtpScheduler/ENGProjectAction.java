@@ -43,7 +43,7 @@ public class ENGProjectAction extends Action{
          DTPSchedulerService.getInstance().unlinkEng("P");
         for(int i=0;i< products.length();i++){
             JSONObject j = (JSONObject)products.get(i);
-            System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>"+j);
+            //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>"+j);
             ENGScheduler eng = new ENGScheduler();
 
             eng.setRequester(j.getString("requester"));
@@ -53,7 +53,7 @@ public class ENGProjectAction extends Action{
               try {
             java.sql.Date d2 = new java.sql.Date(df.parse(j.getString("finishDate")).getTime());
             eng.setFinishDate(d2);
-            //System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
+            ////System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
             } catch (Exception ex){}
   
 
@@ -76,7 +76,7 @@ public class ENGProjectAction extends Action{
 DTPSchedulerService.getInstance().unlinkEng("Q");
         for(int i=0;i< products.length();i++){
             JSONObject j = (JSONObject)products.get(i);
-            System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>"+j);
+            //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>"+j);
             ENGScheduler eng = new ENGScheduler();
 
             eng.setRequester(j.getString("requester"));
@@ -85,14 +85,14 @@ DTPSchedulerService.getInstance().unlinkEng("Q");
               try {
             java.sql.Date d3 = new java.sql.Date(df.parse(j.getString("finishDate")).getTime());
             eng.setFinishDate(d3);
-            //System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
+            ////System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
             } catch (Exception ex){}
             eng.setTask(j.getString("task"));
             eng.setTimeNeeded(j.getString("timeNeed"));
             eng.setHour(j.getString("hour"));
             eng.setTimeNeededUnit(j.getString("timeNeededUnit"));
             eng.setProjectOrQuote("Q");
-            //System.out.println("ddddddddddddddddddddddddddd"+j.getString("id"));
+            ////System.out.println("ddddddddddddddddddddddddddd"+j.getString("id"));
 
             DTPSchedulerService.getInstance().addENGProject(eng);
 

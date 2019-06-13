@@ -3,32 +3,21 @@
 
 package app.project;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
-import java.text.*;
-import app.user.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
-import app.project.*;
 import app.resource.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
-import app.client.*;
 
 
 public final class ProjectViewTeamUpdateAction extends Action {
@@ -151,7 +140,7 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 int word95 = 0;
                 int word85 = 0;
                 int word75 = 0;
-                int wordNew = 0;
+                double wordNew = 0;
                 int word8599 = 0;
                 double wordNew4 = 0;
                 
@@ -171,7 +160,7 @@ public final class ProjectViewTeamUpdateAction extends Action {
                     word75 = lt.getWord75().intValue();
                 }
                 if(lt.getWordNew() != null) { 
-                    wordNew = lt.getWordNew().intValue();
+                    wordNew = lt.getWordNew().doubleValue();
                 }
                 if(lt.getWord8599() != null) { 
                     word8599 = lt.getWord8599().intValue();
@@ -193,7 +182,7 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 
                 double wordTotal = word100 + wordRep + word8599 + wordNew4;
                 
-                 if(!p.getCompany().isScaleDefault()) {
+                 if(!p.getCompany().isScaleDefault(p.getProjectId())) {
                     wordTotal = word100 + wordRep + word95 + word85 + word75 + wordNew;
                 } 
                 
@@ -204,10 +193,10 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 if(lt.getPersonName() != null && lt.getPersonName().length() > 0) {
                     r = ResourceService.getInstance().getSingleResource(Integer.valueOf(lt.getPersonName()));
                 }
-                if(p.getCompany().isScaleDefault()) {
+                if(p.getCompany().isScaleDefault(p.getProjectId())) {
                     double rateNew4 = rate;
-                    double rate100 = rate * Double.parseDouble(p.getCompany().getScale100());
-                    double rateRep = rate * Double.parseDouble(p.getCompany().getScaleRep());
+                    double rate100 = rate * Double.parseDouble(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId()));
+                    double rateRep = rate * Double.parseDouble(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId()));
                     double rate8599 = rate * Double.parseDouble(p.getCompany().getScale8599());   
                     double costNew4 = wordNew4 * rateNew4;
                     double cost100 = word100 * rate100;
@@ -218,11 +207,11 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 }
                 else {
                     double rateNew4 = rate;
-                    double rate100 = rate * Double.parseDouble(p.getCompany().getScale100());
-                    double rateRep = rate * Double.parseDouble(p.getCompany().getScaleRep());
-                    double rate7584 = rate * Double.parseDouble(p.getCompany().getScale75());  
-                    double rate8594 = rate * Double.parseDouble(p.getCompany().getScale85()); 
-                    double rate9599 = rate * Double.parseDouble(p.getCompany().getScale95()); 
+                    double rate100 = rate * Double.parseDouble(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId()));
+                    double rateRep = rate * Double.parseDouble(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId()));
+                    double rate7584 = rate * Double.parseDouble(p.getCompany().getScale75(p.getProjectId(),p.getCompany().getClientId()));  
+                    double rate8594 = rate * Double.parseDouble(p.getCompany().getScale85(p.getProjectId(),p.getCompany().getClientId())); 
+                    double rate9599 = rate * Double.parseDouble(p.getCompany().getScale95(p.getProjectId(),p.getCompany().getClientId())); 
                     
                     double costNew4 = wordNew * rateNew4;
                     double cost100 = word100 * rate100;
@@ -240,13 +229,13 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 lt.setWordTotal(new Double(wordTotal));
                 
                 ////Let user overwrite automatic calculations
-                ///ALEX: Do NOT let user overwrite the calculations
+                ///ALEX: Do NOT let user overwrite the calculationsØ
                 //if(lt.getInternalDollarTotal()==null || "".equals(lt.getInternalDollarTotal())){
                     lt.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
                
                // }
                 
-                lt.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
+                lt.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));
                 
            /* }
             else { //non-trados; such as hourly                
@@ -261,7 +250,7 @@ public final class ProjectViewTeamUpdateAction extends Action {
                     }                
 
                     double thisTotal = total*rate;
-                    System.out.println("inside of else:total="+total+",rate="+rate+"thisTotal="+thisTotal);
+                    //System.out.println("inside of else:total="+total+",rate="+rate+"thisTotal="+thisTotal);
                     linTotal += thisTotal; //update lin block
                    //If user didn't leave it empty, then override it'
                   //if(lt.getInternalDollarTotal()==null || "".equals(lt.getInternalDollarTotal())){
@@ -275,19 +264,19 @@ public final class ProjectViewTeamUpdateAction extends Action {
             
             if(autoUpdate == null) { //update dates only if not updating tasks
                 //START update lin dates
-                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + String.valueOf(i));
+                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + lt.getLinTaskId());
                 if(linTasksProjectSentArray.length() >= 1) {
                     lt.setSentDateDate(DateService.getInstance().convertDate(linTasksProjectSentArray).getTime());
                 }
-                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + String.valueOf(i));
+                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + lt.getLinTaskId());
                 if(linTasksProjectDueArray.length() >= 1) {
                     lt.setDueDateDate(DateService.getInstance().convertDate(linTasksProjectDueArray).getTime());
                 }
-                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + String.valueOf(i));
+                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + lt.getLinTaskId());
                 if(linTasksProjectReceivedArray.length() >= 1) {
                     lt.setReceivedDateDate(DateService.getInstance().convertDate(linTasksProjectReceivedArray).getTime());
                 }
-                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + String.valueOf(i));
+                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + lt.getLinTaskId());
                 if(linTasksProjectInvoiceArray.length() >= 1) {
                     lt.setInvoiceDateDate(DateService.getInstance().convertDate(linTasksProjectInvoiceArray).getTime());
                 }
@@ -322,25 +311,25 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 engTotal += thisTotal; //update eng block
                 
                 et.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                et.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));            
+                et.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));            
              }
             //END process new total value
             
             if(autoUpdate == null) { //update dates only if not updating tasks
                 //START update eng dates
-                String engTasksProjectSentArray = request.getParameter("engTasksProjectSentArray" + String.valueOf(i));
+                String engTasksProjectSentArray = request.getParameter("engTasksProjectSentArray" + et.getEngTaskId());
                 if(engTasksProjectSentArray.length() >= 1) {
                     et.setSentDateDate(DateService.getInstance().convertDate(engTasksProjectSentArray).getTime());
                 }
-                String engTasksProjectDueArray = request.getParameter("engTasksProjectDueArray" + String.valueOf(i));
+                String engTasksProjectDueArray = request.getParameter("engTasksProjectDueArray" + et.getEngTaskId());
                 if(engTasksProjectDueArray.length() >= 1) {
                     et.setDueDateDate(DateService.getInstance().convertDate(engTasksProjectDueArray).getTime());
                 }
-                String engTasksProjectReceivedArray = request.getParameter("engTasksProjectReceivedArray" + String.valueOf(i));
+                String engTasksProjectReceivedArray = request.getParameter("engTasksProjectReceivedArray" + et.getEngTaskId());
                 if(engTasksProjectReceivedArray.length() >= 1) {
                     et.setReceivedDateDate(DateService.getInstance().convertDate(engTasksProjectReceivedArray).getTime());
                 }
-                String engTasksProjectInvoiceArray = request.getParameter("engTasksProjectInvoiceArray" + String.valueOf(i));
+                String engTasksProjectInvoiceArray = request.getParameter("engTasksProjectInvoiceArray" + et.getEngTaskId());
                 if(engTasksProjectInvoiceArray.length() >= 1) {
                     et.setInvoiceDateDate(DateService.getInstance().convertDate(engTasksProjectInvoiceArray).getTime());
                 }
@@ -375,25 +364,25 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 dtpTotal += thisTotal; //update dtp block
                 
                 dt.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                dt.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));            
+                dt.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));            
             }
             //END process new total value
             
             if(autoUpdate == null) { //update dates only if not updating tasks
                 //START update dtp dates
-                String dtpTasksProjectSentArray = request.getParameter("dtpTasksProjectSentArray" + String.valueOf(i));
+                String dtpTasksProjectSentArray = request.getParameter("dtpTasksProjectSentArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectSentArray.length() >= 1) {
                     dt.setSentDateDate(DateService.getInstance().convertDate(dtpTasksProjectSentArray).getTime());
                 }
-                String dtpTasksProjectDueArray = request.getParameter("dtpTasksProjectDueArray" + String.valueOf(i));
+                String dtpTasksProjectDueArray = request.getParameter("dtpTasksProjectDueArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectDueArray.length() >= 1) {
                     dt.setDueDateDate(DateService.getInstance().convertDate(dtpTasksProjectDueArray).getTime());
                 }
-                String dtpTasksProjectReceivedArray = request.getParameter("dtpTasksProjectReceivedArray" + String.valueOf(i));
+                String dtpTasksProjectReceivedArray = request.getParameter("dtpTasksProjectReceivedArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectReceivedArray.length() >= 1) {
                     dt.setReceivedDateDate(DateService.getInstance().convertDate(dtpTasksProjectReceivedArray).getTime());
                 }
-                String dtpTasksProjectInvoiceArray = request.getParameter("dtpTasksProjectInvoiceArray" + String.valueOf(i));
+                String dtpTasksProjectInvoiceArray = request.getParameter("dtpTasksProjectInvoiceArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectInvoiceArray.length() >= 1) {
                     dt.setInvoiceDateDate(DateService.getInstance().convertDate(dtpTasksProjectInvoiceArray).getTime());
                 }
@@ -428,7 +417,7 @@ public final class ProjectViewTeamUpdateAction extends Action {
                 othTotal += thisTotal; //update oth block
                 
                 ot.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                ot.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));            
+                ot.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));            
             }
             //END process new total value
             

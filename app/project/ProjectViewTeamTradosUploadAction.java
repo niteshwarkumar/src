@@ -18,6 +18,7 @@ import java.io.*;
 import app.security.*;
 import app.standardCode.*;
 import java.util.Iterator;
+import java.util.Objects;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.struts.validator.*;
@@ -81,8 +82,9 @@ public final class ProjectViewTeamTradosUploadAction extends Action {
         }
         //END check for login (security)
                      
-        //get the lin task to update
+        //get the lin task to updateprojectViewTeamLinTaskId
         String linTaskId = StandardCode.getInstance().getCookie("projectViewTeamTradosUploadId", request.getCookies());
+       
         LinTask lt = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linTaskId));
         
         
@@ -90,7 +92,7 @@ public final class ProjectViewTeamTradosUploadAction extends Action {
         DynaValidatorForm qvgtu = (DynaValidatorForm) form;
         FormFile myFile = (FormFile) qvgtu.get("trados");
         //START process the trados .log file
-      System.out.println("myFile nameeeeeeeee"+myFile.getFileName());
+      //System.out.println("myFile nameeeeeeeee"+myFile.getFileName());
       
 
       //get input stream
@@ -262,7 +264,7 @@ public final class ProjectViewTeamTradosUploadAction extends Action {
       lt.setWord95(num95);
       lt.setWord85(num85);
       lt.setWord75(num75);
-      lt.setWordNew(new Integer(numNew));
+      lt.setWordNew(new Double(numNew));
       lt.setWord8599(new Integer(num8599));
       lt.setWordNew4(new Double(numNew4));
       lt.setWordPerfect(0);
@@ -299,13 +301,13 @@ String[] dataValue=new String[11];
                         {
                             dataValue[i++]=cell.toString();
 
-                            System.out.println("cel value---------->  "+cell.toString());
+                            //System.out.println("cel value---------->  "+cell.toString());
 
                             if(i>10){flag="false";}
 
                         }
-                   }catch(Exception e){System.out.println("Integer Value"+count++);}
-
+                   }catch(Exception e){//System.out.println("Integer Value"+count++);}
+                   }
                    }
                 }
 
@@ -331,7 +333,7 @@ String[] dataValue=new String[11];
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordContext(numContext);
@@ -343,6 +345,17 @@ String[] dataValue=new String[11];
                                         lt.setWordTotal(numTotal);
 
                                     }
+//                                    if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+//                                        lt.setWordRep(numRep);
+//                                        lt.setWord100(num100);
+//                                        lt.setWord95(num95);
+//                                        lt.setWord85(num85);
+//                                        lt.setWord75(num75);
+//                                        lt.setWordNew(new Double(numNew));
+//                                        lt.setWord8599(num8599);
+//                                        lt.setWordNew4(new Double(numNew4));
+//                                        lt.setWordTotal(numTotal);
+//                                    }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
@@ -364,7 +377,7 @@ String[] dataValue=new String[11];
                                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                                     Document doc = dBuilder.parse(in);
                                     doc.getDocumentElement().normalize();
-                                    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+                                    //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
                                     Integer numRep = 0;
                                     Integer numRepCross = 0;
                                     Integer num100 = 0;
@@ -398,7 +411,7 @@ String[] dataValue=new String[11];
 
                                                         Node nNode = fuzzy.item(temp);
 
-                                                        System.out.println("\nCurrent Element :" + nNode.getNodeName());
+                                                        //System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
                                                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -510,14 +523,14 @@ String[] dataValue=new String[11];
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordTotal(new Double(numTotal));
                                         lt.setWordContext(numContext);
                                         lt.setWordPerfect(numPerfect);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-                                        lt.setWordNew(new Integer(numTotal));
+                                        lt.setWordNew(new Double(numTotal));
                                         lt.setWordNew4(new Double(numTotal));
                                         lt.setWordTotal(new Double(numTotal));
                                     }
@@ -525,7 +538,7 @@ String[] dataValue=new String[11];
                                     ProjectService.getInstance().updateLinTask(lt);
 
                                 } 
-      else {System.out.println("myFile nameeeeeeeee"+myFile.getFileName());}
+     // else {//System.out.println("myFile nameeeeeeeee"+myFile.getFileName());}
         // Forward control to the specified success URI
 	return (mapping.findForward("Success"));
     }

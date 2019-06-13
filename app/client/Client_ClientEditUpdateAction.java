@@ -134,7 +134,7 @@ public final class Client_ClientEditUpdateAction extends Action {
            // File f = new File("/logo/images/");
 
 
-            File saveFile = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName);
+            File saveFile = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
@@ -183,12 +183,12 @@ public final class Client_ClientEditUpdateAction extends Action {
 
         c.setModifiedByDate(new Date());
         c.setModifiedBy(u.getFirstName()+" " + u.getLastName());
-        // System.out.println("alexx:delinquent="+delinquent);
+        // //System.out.println("alexx:delinquent="+delinquent);
         //set updated values to db
         ClientService.getInstance().clientUpdateNoContact(c);
 
         String jsonProducts = request.getParameter("productJSON");
-        //System.out.println("jsonProducts="+jsonProducts);
+        ////System.out.println("jsonProducts="+jsonProducts);
 
         //First delete all products, and then re-insert it
        // ClientService.getInstance().unlinkClientAndProducts(Integer.parseInt(id));
@@ -205,7 +205,7 @@ public final class Client_ClientEditUpdateAction extends Action {
                 pr.setCategory(j.getString("category"));
                 pr.setMedical(j.getString("medical"));
                 ClientService.getInstance().saveProduct(pr);
-                //System.out.println("product details-------------->"+j.getString("medical")+" Category" +j.getString("category"));
+                ////System.out.println("product details-------------->"+j.getString("medical")+" Category" +j.getString("category"));
             }
         }
        // ClientService.getInstance().updateP

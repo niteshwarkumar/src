@@ -31,8 +31,8 @@ public class QMSLibraryAddDocumentAction extends Action {
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
@@ -56,31 +56,39 @@ public class QMSLibraryAddDocumentAction extends Action {
         User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
         String mainTab = request.getParameter("mainTab");
         String subTab = request.getParameter("subTab");
+        String number = request.getParameter("number");
+        String id = request.getParameter("id");
 
-         String userViewId = StandardCode.getInstance().getCookie("userViewId", request.getCookies());
-         try {
-            User currentUser= UserService.getInstance().getSingleUser(Integer.parseInt(userViewId));
+        String userViewId = StandardCode.getInstance().getCookie("userViewId", request.getCookies());
+        try {
+            User currentUser = UserService.getInstance().getSingleUser(Integer.parseInt(userViewId));
             u = currentUser;
         } catch (Exception e) {
         }
-         
 
 //        String desc=request.getParameter("desc");
-
-//           java.io.File dBDir = new java.io.File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab);
+//           java.io.File dBDir = new java.io.File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab);
 //        boolean exists = dBDir.exists();
 //        if (!exists) {
-//            String strDirectoy = "C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab;
+//            String strDirectoy = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/"+mainTab;
 //            // Create one directory
 //            boolean success = (new java.io.File(strDirectoy)).mkdir();
 //        } else {
 //            // It returns true if File or directory exists
 //        }
-
-
         DynaValidatorForm uvg = (DynaValidatorForm) form;
         FormFile Upload = (FormFile) uvg.get("uploadFile");
+
         QMSLibrary uDoc = new QMSLibrary();
+        try {
+            uDoc = QMSService.getInstance().getSingleQMSLibraryDocument(Integer.parseInt(id));
+        } catch (Exception e) {
+            uDoc = new QMSLibrary();
+        }
+        if (uDoc == null) {
+            uDoc = new QMSLibrary();
+        }
+
 //         LibraryUpload uDoc = new LibraryUpload();
         String saveFileName = null;
         String fileName = null;
@@ -91,7 +99,8 @@ public class QMSLibraryAddDocumentAction extends Action {
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
 //            java.io.File saveFile = new java.io.File("D:/Library/QMS/" + saveFileName);
-            java.io.File saveFile = new java.io.File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/qms/" + saveFileName);
+            java.io.File saveFile = new java.io.File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/Library/qms/" + saveFileName);
+//             java.io.File saveFile = new java.io.File("/Users/abhisheksingh/" + saveFileName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
@@ -103,6 +112,13 @@ public class QMSLibraryAddDocumentAction extends Action {
             uDoc.setFileSaveName(saveFileName);
         }
         uDoc.setDocId((String) uvg.get("docId"));
+        if (null != number) {
+            if (mainTab.equalsIgnoreCase("Capa")) {
+                uDoc.setDocId(number);
+                request.setAttribute("number", number);
+            }
+        }
+
         uDoc.setVersion((String) uvg.get("version"));
         uDoc.setType((String) uvg.get("type"));
         try {
@@ -121,9 +137,8 @@ public class QMSLibraryAddDocumentAction extends Action {
         uDoc.setIsoreference((String) uvg.get("isoreference"));
         uDoc.setAffectedBox((String) uvg.get("affectedBox"));
 
-        String notaffected =request.getParameter("notaffected");
-        String affected =request.getParameter("affected");
-
+        String notaffected = request.getParameter("notaffected");
+        String affected = request.getParameter("affected");
 
         String releaseDate = (String) uvg.get("release");
         try {
@@ -131,15 +146,14 @@ public class QMSLibraryAddDocumentAction extends Action {
                 uDoc.setReleaseDate(DateService.getInstance().convertDate(releaseDate).getTime());
             }
         } catch (Exception e) {
-            System.out.println("Date Errooooorr " + e.getMessage());
+            //System.out.println("Date Errooooorr " + e.getMessage());
         }
-        if(mainTab.equalsIgnoreCase("Review")){
-            uDoc.setOwner(u.getFirstName());
+        if (mainTab.equalsIgnoreCase("Review")) {
+            uDoc.setOwner(u.getFirstName() + " " + u.getLastName());
+            uDoc.setOwnerid(u.getUserId());
         }
 
-
-
-        QMSService.getInstance().addLibrary(uDoc);
+        int docId = QMSServiceAddUpdate.getInstance().addLibrary(uDoc);
 
         QMSLibraryHistory libHistory = new QMSLibraryHistory();
         libHistory.setDocId(uDoc.getDocId());
@@ -147,10 +161,28 @@ public class QMSLibraryAddDocumentAction extends Action {
         libHistory.setVersion(uDoc.getVersion());
         libHistory.setReleaseDate(uDoc.getReleaseDate());
         libHistory.setQMSLibId(uDoc.getId());
-        QMSService.getInstance().addHistory(libHistory);
+        QMSServiceAddUpdate.getInstance().addHistory(libHistory);
+
+        String[] isoStandard = request.getParameterValues("isoStandard");
+        if (isoStandard != null) {
+            for (String iso : isoStandard) {
+                IsoDoc isoDoc = new IsoDoc();
+                isoDoc.setDocId(docId);
+                isoDoc.setIsoStandard(Integer.parseInt(iso));
+                QMSServiceAddUpdate.getInstance().addIsoDoc(isoDoc);
+            }
+        }
+//        List<String> isoKeyHeader = new ArrayList();
+//        List<String> isoKey = new ArrayList();
+//        String[] isoKeyHeaderArr = request.getParameterValues("isoKeyHeader");
+//        String[] isoKeyArr = request.getParameterValues("isoKey");
+//        if(isoKeyHeaderArr!=null) isoKeyHeader =  Arrays.asList(isoKeyHeaderArr);
+//        if(isoKeyArr!=null) isoKey =  Arrays.asList(isoKeyArr);
+//        request.setAttribute("isoKeyHeader", isoKeyHeader); 
+//        request.setAttribute("isoKey", isoKey);
+//        request.setAttribute("isoHeader",false);
 
         // Forward control to the specified success URI
-
         return (mapping.findForward(mainTab));
 
     }

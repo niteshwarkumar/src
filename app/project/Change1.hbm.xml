@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-    <class name="app.project.Change1" table="Change1">
+    <class name="app.project.Change1" table="change1">
         <id name="change1Id" type="int" column="ID_Change1">
             <generator class="identity"/>
         </id>
@@ -14,6 +14,30 @@
         <property name="changeDate" type="date"/>
         <property name="dollarTotal" type="string"/>
         <property name="approved" type="boolean"/>
+        
+        <property name="name" type="string"/> 
+        <property name="finalVerification" type="boolean"/>
+        <property name="finalVerificationDate" type="date"/>
+        <property name="finalVerificationBy" type="string"/> 
+        <property name="engVerification" type="boolean"/>
+        <property name="engVerificationDate" type="date"/>
+        <property name="engVerificationBy" type="string"/> 
+        <property name="dtpVerification" type="boolean"/>
+        <property name="dtpVerificationDate" type="date"/>
+        <property name="dtpVerificationBy" type="string"/> 
+        
+        <property name="discountPercent" type="string"/> 
+        <property name="discountDollarTotal" type="string"/>
+        <property name="pmPercent" type="string"/>
+        <property name="pmPercentDollarTotal" type="string"/>
+        <property name="rushPercent" type="string"/>
+        <property name="rushPercentDollarTotal" type="string"/>
+        
+        <property name="locationFiles" type="string"/> 
+        <property name="clientApproval" type="boolean"/>
+        <property name="clientApprovalDate" type="date"/>
+        <property name="clientApprovalSrc" type="string"/>
+        <property name="clientApprovalDesc" type="string"/>
       
         <many-to-one name="Project" class="app.project.Project" column="ID_Project"/>
       

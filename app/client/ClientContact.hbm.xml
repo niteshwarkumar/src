@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.client.ClientContact" table="Client_Contact_Info">
+   <class name="app.client.ClientContact" table="client_contact_info">
       <id name="clientContactId" type="int" column="ID_Client_Contact">
          <generator class="identity"/>
       </id>
@@ -31,6 +31,7 @@
       <property name="key_personnel" type="boolean"/>   
       <property name="tracker_password" type="string"/>
       <property name="display" type="boolean"/>
+      <property name="isformer" type="boolean"/>
       <many-to-one name="Company" class="app.client.Client" column="ID_Client"/>
       
       <set name="Projects" lazy="true" inverse="true" order-by="number">

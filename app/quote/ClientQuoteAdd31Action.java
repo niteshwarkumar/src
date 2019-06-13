@@ -60,18 +60,18 @@ public class ClientQuoteAdd31Action extends Action{
         //String projectId = StandardCode.getInstance().getCookie("projectAddId", request.getCookies());
         String projectId = request.getParameter("projectViewId");
         Integer productId=Integer.parseInt(request.getParameter("productId"));
-         System.out.println("productIdproductIdproductId"+productId);
-        //System.out.println("gggggggggggggggggggggggggggggggggggggggggggg"+request.getParameter("id"));
+         //System.out.println("productIdproductIdproductId"+productId);
+        ////System.out.println("gggggggggggggggggggggggggggggggggggggggggggg"+request.getParameter("id"));
 
 
         Client_Quote newQA=QuoteService.getInstance().getSingleClient_Quote(new Integer(request.getParameter("quoteViewId")));
         Quote1 newQ = QuoteService.getInstance().getSingleQuote(newQA.getQuote_ID());
         Project p = ProjectService.getInstance().getSingleProject(newQ.getProject().getProjectId());
 
-        System.out.println("hi");
+        //System.out.println("hi");
 //int qnum=newQ.getQuote1Id();
      //     int qnum= Integer.parseInt(request.getSession(false).getAttribute("ClientQuoteId").toString());
-     //    System.out.println(qnum);
+     //    //System.out.println(qnum);
 
          // getSingleClient_Quote(Integer id)
        // Client_Quote newQA = QuoteService.getInstance().getSingleClientQuoteFromProduct(newQ.getQuote1Id(),productId);
@@ -81,7 +81,7 @@ int z=0;
 HttpSession session = request.getSession(false);
         session.setAttribute("cid",newQA.getId());
 
-         System.out.println(request.getSession(false).getAttribute("cid").toString());
+         //System.out.println(request.getSession(false).getAttribute("cid").toString());
 
         //Project p = ProjectService.getInstance().getSingleProject(Integer.valueOf(projectId));
 
@@ -94,24 +94,24 @@ HttpSession session = request.getSession(false);
         QuoteHelper.clientUnlinkSourcesAndTargets(newQ,newQA.getId());
   //JSONObject jo = new JSONObject();
   //   Client_Quote ur = (Client_Quote) newQA.get(z);
-  // System.out.println("mainTarget="+mainTarget);
+  // //System.out.println("mainTarget="+mainTarget);
   //update values
-        //System.out.println("project id="+p.getProjectId());
+        ////System.out.println("project id="+p.getProjectId());
         if(mainSrc!=null)
         for(int i=0; i<mainSrc.length;i++){
             sd.setLanguage(mainSrc[i]);
-            System.out.println("   sd.setLanguage(mainSrc[i]);"+mainSrc[i]);
+            //System.out.println("   sd.setLanguage(mainSrc[i]);"+mainSrc[i]);
             //add SourceDoc to db building one-to-many relationship between project and source
             //Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd);
            Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd,newQA,newQ);
 
-            //System.out.println("linking source id="+sd.getSourceDocId());
+            ////System.out.println("linking source id="+sd.getSourceDocId());
         if(targetLanguage!=null)
             for(int j = 0; j < targetLanguage.length; j++) {
                 //target language's new object
                 TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                 td.setLanguage(targetLanguage[j]);
-                //System.out.println("linking target id="+td.getTargetDocId());
+                ////System.out.println("linking target id="+td.getTargetDocId());
                 //link this target Doc to the source Doc; add new target Doc to db
                 Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
             }
@@ -120,7 +120,7 @@ HttpSession session = request.getSession(false);
             for(int j = 0; j < mainTarget.length; j++) {
                 //target language's new object
                 if(!mainTarget[j].equalsIgnoreCase("t")){
-                System.out.println("main Targetttttttttt::::"+mainTarget[j]);
+                //System.out.println("main Targetttttttttt::::"+mainTarget[j]);
                 TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                 td.setLanguage(mainTarget[j]);
 
@@ -133,7 +133,7 @@ HttpSession session = request.getSession(false);
     if(sourceLanguage!=null)
         for(int i=0; i<sourceLanguage.length;i++){
             sd.setLanguage(sourceLanguage[i]);
-            System.out.println("   sd.setLanguage(mainSrc[i]);"+sourceLanguage[i]);
+            //System.out.println("   sd.setLanguage(mainSrc[i]);"+sourceLanguage[i]);
             //add SourceDoc to db building one-to-many relationship between project and source
               //QuoteService.getInstance().clientAddSourceWithQuote(newQ, sd,newQA) ;
             Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd,newQA,newQ);

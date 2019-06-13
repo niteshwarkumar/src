@@ -49,7 +49,7 @@ public class FinishQuoteAction extends Action{
 
               User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
 
-             System.out.println("Qu0te id "+quoteId);
+             //System.out.println("Qu0te id "+quoteId);
          if(u.getuserType() != null){
       if(u.getuserType().equalsIgnoreCase("client"))
           //href=\"javascript:parent.openSingleContactWindow

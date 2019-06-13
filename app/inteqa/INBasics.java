@@ -28,6 +28,10 @@ public class INBasics implements Serializable {
     /** nullable persistent field */
     private boolean dtpReq2;
     /** nullable persistent field */
+    private boolean dtpReq21;
+    /** nullable persistent field */
+    private boolean dtpReq22;
+    /** nullable persistent field */
     private boolean genGra1;
     /** nullable persistent field */
     private boolean genGra2;
@@ -43,6 +47,16 @@ public class INBasics implements Serializable {
     private boolean screen3;
     /** nullable persistent field */
     private boolean screen4;
+    /** nullable persistent field */
+    private boolean clientReview1;
+    /** nullable persistent field */
+    private boolean clientReview2;
+    /** nullable persistent field */
+    private boolean clientReview3;
+    /** nullable persistent field */
+    private boolean clientReview4;
+    /** nullable persistent field */
+    private boolean clientReview5;
     /** nullable persistent field */
     private boolean deliveryFormat1;
     /** nullable persistent field */
@@ -73,6 +87,10 @@ public class INBasics implements Serializable {
     private String textBox2;
     /** nullable persistent field */
     private String textBox3;
+    /** nullable persistent field */
+    private String textBox4;
+     /** nullable persistent field */
+    private String textBox5;
 
     /** default constructor */
     public INBasics() {
@@ -127,7 +145,10 @@ public class INBasics implements Serializable {
     }
 
     public String getOtherInstruction() {
-        return OtherInstruction;
+        if(OtherInstruction!=null)
+            return OtherInstruction.replaceAll("/\\\\\\\\/g", "\\\\");
+        else
+            return OtherInstruction;
     }
 
     public void setOtherInstruction(String OtherInstruction) {
@@ -316,6 +337,78 @@ public class INBasics implements Serializable {
 
     public void setTextBox3(String textBox3) {
         this.textBox3 = textBox3;
+    }
+
+    public boolean isClientReview1() {
+        return clientReview1;
+    }
+
+    public void setClientReview1(boolean clientReview1) {
+        this.clientReview1 = clientReview1;
+    }
+
+    public boolean isClientReview2() {
+        return clientReview2;
+    }
+
+    public void setClientReview2(boolean clientReview2) {
+        this.clientReview2 = clientReview2;
+    }
+
+    public boolean isClientReview3() {
+        return clientReview3;
+    }
+
+    public void setClientReview3(boolean clientReview3) {
+        this.clientReview3 = clientReview3;
+    }
+
+    public boolean isClientReview4() {
+        return clientReview4;
+    }
+
+    public void setClientReview4(boolean clientReview4) {
+        this.clientReview4 = clientReview4;
+    }
+
+    public boolean isClientReview5() {
+        return clientReview5;
+    }
+
+    public void setClientReview5(boolean clientReview5) {
+        this.clientReview5 = clientReview5;
+    }
+    
+    public String getTextBox4() {
+        return textBox4;
+    }
+
+    public void setTextBox4(String textBox4) {
+        this.textBox4 = textBox4;
+    }
+
+    public String getTextBox5() {
+        return textBox5;
+    }
+
+    public void setTextBox5(String textBox5) {
+        this.textBox5 = textBox5;
+    }
+
+    public boolean isDtpReq21() {
+        return dtpReq21;
+    }
+
+    public void setDtpReq21(boolean dtpReq21) {
+        this.dtpReq21 = dtpReq21;
+    }
+
+    public boolean isDtpReq22() {
+        return dtpReq22;
+    }
+
+    public void setDtpReq22(boolean dtpReq22) {
+        this.dtpReq22 = dtpReq22;
     }
 
 

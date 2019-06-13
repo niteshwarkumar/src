@@ -68,16 +68,16 @@ User u=UserService.getInstance().getSingleUser((String) request.getSession(false
     List results = new ArrayList();
 String pORq="";
 pORq=request.getParameter("pORq");
-        System.out.println(pORq);
+        //System.out.println(pORq);
 List engProjectList=DTPSchedulerService.getInstance().getAllENGProjectsOrQuotes(pORq);
-        System.out.println("Hello");
+        //System.out.println("Hello");
 for(int i=0;i<engProjectList.size();i++){
 
 ENGScheduler eng=(ENGScheduler) engProjectList.get(i);
             JSONObject jo = new JSONObject();
             jo.put("requester",eng.getRequester());
             jo.put("pno",StandardCode.getInstance().noNull(eng.getID_Project()));
-            System.out.println(StandardCode.getInstance().noNull(eng.getID_Quote()));
+            //System.out.println(StandardCode.getInstance().noNull(eng.getID_Quote()));
             jo.put("qno", StandardCode.getInstance().noNull(eng.getID_Quote()));
             jo.put("task",eng.getTask());
             jo.put("timeNeed",eng.getTimeNeeded());
@@ -92,7 +92,7 @@ ENGScheduler eng=(ENGScheduler) engProjectList.get(i);
 
      response.setContentType("text/json");
      response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
       PrintWriter out = response.getWriter();
       out.println(new JSONArray(results.toArray()));
         //request.setAttribute("blogJSArray",new JSONArray(results.toArray()));

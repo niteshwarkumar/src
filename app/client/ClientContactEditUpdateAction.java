@@ -74,6 +74,7 @@ public final class ClientContactEditUpdateAction extends Action {
         
         //client contact to-be-updated
         String id = request.getParameter("clientContactId");
+        String isformer = request.getParameter("isformer");
         
         //get the contact to be updated
         ClientContact cc = ClientService.getInstance().getSingleClientContact(Integer.valueOf(id));
@@ -98,6 +99,7 @@ public final class ClientContactEditUpdateAction extends Action {
         cc.setNote(Note);
         cc.setTimeZone(timeZone);
         cc.setKey_personnel(ccef.isKey_personnel());
+        cc.setIsformer(ccef.isIsFormer());
         cc.setDivision(division);
         //update client's contact to db
         ClientService.getInstance().clientContactUpdate(cc);

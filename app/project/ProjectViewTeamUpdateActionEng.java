@@ -240,7 +240,7 @@ public final class ProjectViewTeamUpdateActionEng extends Action {
 //                    }
 //
 //                    double thisTotal = total*rate;
-//                    System.out.println("inside of else:total="+total+",rate="+rate+"thisTotal="+thisTotal);
+//                    //System.out.println("inside of else:total="+total+",rate="+rate+"thisTotal="+thisTotal);
 //                    linTotal += thisTotal; //update lin block
 //                   //If user didn't leave it empty, then override it'
 //                  //if(lt.getInternalDollarTotal()==null || "".equals(lt.getInternalDollarTotal())){
@@ -254,19 +254,19 @@ public final class ProjectViewTeamUpdateActionEng extends Action {
 //
 //            if(autoUpdate == null) { //update dates only if not updating tasks
 //                //START update lin dates
-//                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + String.valueOf(i));
+//                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + et.getEngTaskId());
 //                if(linTasksProjectSentArray.length() >= 1) {
 //                    lt.setSentDateDate(DateService.getInstance().convertDate(linTasksProjectSentArray).getTime());
 //                }
-//                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + String.valueOf(i));
+//                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + et.getEngTaskId());
 //                if(linTasksProjectDueArray.length() >= 1) {
 //                    lt.setDueDateDate(DateService.getInstance().convertDate(linTasksProjectDueArray).getTime());
 //                }
-//                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + String.valueOf(i));
+//                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + et.getEngTaskId());
 //                if(linTasksProjectReceivedArray.length() >= 1) {
 //                    lt.setReceivedDateDate(DateService.getInstance().convertDate(linTasksProjectReceivedArray).getTime());
 //                }
-//                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + String.valueOf(i));
+//                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + et.getEngTaskId());
 //                if(linTasksProjectInvoiceArray.length() >= 1) {
 //                    lt.setInvoiceDateDate(DateService.getInstance().convertDate(linTasksProjectInvoiceArray).getTime());
 //                }
@@ -301,28 +301,28 @@ public final class ProjectViewTeamUpdateActionEng extends Action {
                 engTotal += thisTotal; //update eng block
                 
                 et.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                et.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));            
+                et.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));            
              }
             //END process new total value
             
             if(autoUpdate == null) { //update dates only if not updating tasks
                 //START update eng dates
-                String engTasksProjectSentArray = request.getParameter("engTasksProjectSentArray" + String.valueOf(i));
+                String engTasksProjectSentArray = request.getParameter("engTasksProjectSentArray" + et.getEngTaskId());
                 if(engTasksProjectSentArray.length() >= 1) {
                     et.setSentDateDate(DateService.getInstance().convertDate(engTasksProjectSentArray).getTime());
-                }et.setSentDateDate(null);
-                String engTasksProjectDueArray = request.getParameter("engTasksProjectDueArray" + String.valueOf(i));
+                } else et.setSentDateDate(null);
+                String engTasksProjectDueArray = request.getParameter("engTasksProjectDueArray" + et.getEngTaskId());
                 if(engTasksProjectDueArray.length() >= 1) {
                     et.setDueDateDate(DateService.getInstance().convertDate(engTasksProjectDueArray).getTime());
-                }et.setDueDateDate(null);
-                String engTasksProjectReceivedArray = request.getParameter("engTasksProjectReceivedArray" + String.valueOf(i));
+                } else et.setDueDateDate(null);
+                String engTasksProjectReceivedArray = request.getParameter("engTasksProjectReceivedArray" + et.getEngTaskId());
                 if(engTasksProjectReceivedArray.length() >= 1) {
                     et.setReceivedDateDate(DateService.getInstance().convertDate(engTasksProjectReceivedArray).getTime());
-                }et.setReceivedDateDate(null);
-                String engTasksProjectInvoiceArray = request.getParameter("engTasksProjectInvoiceArray" + String.valueOf(i));
+                } else et.setReceivedDateDate(null);
+                String engTasksProjectInvoiceArray = request.getParameter("engTasksProjectInvoiceArray" + et.getEngTaskId());
                 if(engTasksProjectInvoiceArray.length() >= 1) {
                     et.setInvoiceDateDate(DateService.getInstance().convertDate(engTasksProjectInvoiceArray).getTime());
-                }et.setInvoiceDateDate(null);
+                } else et.setInvoiceDateDate(null);
                 //END update eng dates
             }
             
@@ -407,7 +407,7 @@ public final class ProjectViewTeamUpdateActionEng extends Action {
                 othTotal += thisTotal; //update oth block
                 
                 ot.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                ot.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));            
+                ot.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));            
             }
             //END process new total value
             

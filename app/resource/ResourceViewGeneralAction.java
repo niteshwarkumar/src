@@ -183,12 +183,13 @@ public final class ResourceViewGeneralAction extends Action {
           //place into form for display
         Unavail[] unavailsArray = (Unavail[]) unavails.toArray(new Unavail[0]);
         for(int i = 0; i < unavailsArray.length; i++) {
-          
+          try{
             if(new Date().after(unavailsArray[i].getEndDate()))  {
                 
                 unavails.remove(unavailsArray[i]);
             }
-            
+          }catch(Exception e){
+          }
         }
        
         //place into form for display
@@ -207,12 +208,15 @@ public final class ResourceViewGeneralAction extends Action {
         }
         for(int i = 0; i < unavailsArray.length; i++) {
             int cnrtr = 0;
+            try{
             if(unavailsArray[i].getEndDate() != null && new Date().before(unavailsArray[i].getEndDate()))  {
                 request.setAttribute("unavailEnd" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(unavailsArray[i].getEndDate()));
             }
             else {
                 request.setAttribute("unavailEnd" + String.valueOf(i), "");
-            }
+            }}catch(Exception e){
+                request.setAttribute("unavailEnd" + String.valueOf(i), "");
+          }
         }
      
         

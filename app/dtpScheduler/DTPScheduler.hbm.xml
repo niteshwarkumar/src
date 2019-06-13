@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.dtpScheduler.DTPScheduler" table="DTP_Scheduler">
+   <class name="app.dtpScheduler.DTPScheduler" table="dtp_scheduler">
       <id name="ID_Schedule" type="int" column="ID_Scheduler">
          <generator class="identity"/>
       </id>

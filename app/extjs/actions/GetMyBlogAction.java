@@ -25,7 +25,7 @@ import org.json.JSONObject;
 public final class GetMyBlogAction extends Action {
     public GetMyBlogAction()
     {
-        System.out.println("GetMyBlogAction constructor*********************************");
+        //System.out.println("GetMyBlogAction constructor*********************************");
     }
 
 
@@ -83,18 +83,18 @@ public final class GetMyBlogAction extends Action {
         long startProjects = System.currentTimeMillis();
         String myName = u.getFirstName() + " " + u.getLastName();
         List myClients = ClientHelper.getBlogList();
-        System.out.println("myclient>>>>>>>>>>>>>>>>>>>>>"+myClients.size());
+        //System.out.println("myclient>>>>>>>>>>>>>>>>>>>>>"+myClients.size());
 
 
 
 
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyClientsAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetMyClientsAction took:"+ ((endProjects-startProjects)/1000.0));
 
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(myClients.toArray()));

@@ -116,7 +116,7 @@ public class ProjectRsfServiceUpdate extends Action {
         }
 
         p.setDeliveryMethod(deliveryMethod);
-        p.setClientAuthorization(request.getParameter("clientAuthorization"));
+//        p.setClientAuthorization(request.getParameter("clientAuthorization"));
        // p.setProduct(request.getParameter("product"));
         String[] components = request.getParameterValues("component");
         if (components != null) {

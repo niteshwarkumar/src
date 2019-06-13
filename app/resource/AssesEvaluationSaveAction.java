@@ -38,12 +38,12 @@ public class AssesEvaluationSaveAction  extends Action{
 String resource=request.getParameter("resourceViewId");
 
 
-              System.out.println("resourceeeeeeeeeeeeeeee"+resource);
+              //System.out.println("resourceeeeeeeeeeeeeeee"+resource);
             if(resource==null)
                        resource= request.getSession(false).getAttribute("resource").toString();
 
            //   resource=request.getAttribute(resource).toString();
-              System.out.println("resourceeBBBBBBBBBBBBBBBBBB"+resource);
+              //System.out.println("resourceeBBBBBBBBBBBBBBBBBB"+resource);
 
 ResourceService.getInstance().unlinkAssesEval(resource);
        // List eval=ResourceService.getInstance().getEvaluationList()
@@ -53,7 +53,7 @@ ResourceService.getInstance().unlinkAssesEval(resource);
         for(int i=0;i< products.length();i++){
             JSONObject j = (JSONObject)products.get(i);
             AssesEval pr=null;
-            System.out.println("Alert ID"+j.getString("id"));
+            //System.out.println("Alert ID"+j.getString("id"));
             if(j.getString("id").equalsIgnoreCase("new")){
             pr = new AssesEval();
             }else{
@@ -69,6 +69,7 @@ ResourceService.getInstance().unlinkAssesEval(resource);
             pr.setEnteredBy(j.getString("enteredBy"));
             pr.setRejected(j.getString("rejected"));
             pr.setApproved(j.getString("approved"));
+            pr.setPreferred(j.getString("preferred"));
             try {
                  pr.setScore(Integer.parseInt(j.getString("score")));
             } catch (NumberFormatException e) {

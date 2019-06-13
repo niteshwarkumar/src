@@ -87,7 +87,7 @@ public final class ProjectAdd1Action extends Action {
         //insert new project into db, building one-to-many link between client and project
         Project p = new Project();
         p.setEuroToUsdExchangeRate(new Double(ForexRates.getEuroUsdRate()));
-        //System.out.println("projectViewId="+request.getParameter("projectViewId"));
+        ////System.out.println("projectViewId="+request.getParameter("projectViewId"));
         if(request.getParameter("projectViewId")==null || "".equals(request.getParameter("projectViewId"))){
             p.setNumber(ProjectService.getInstance().getNewProjectNumber());
         }else{
@@ -105,15 +105,13 @@ public final class ProjectAdd1Action extends Action {
         p.setProductDescription(request.getParameter("productDescription") );
         p.setPm(request.getParameter("projectManager"));
       try{
-        String[] fname = request.getParameter("projectManager").split(" ");
-         User pm = null;
-            if (fname.length == 2) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1]);
-            } else if (fname.length == 3) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
-            } else if (fname.length == 4) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
-            }
+        String fname = request.getParameter("projectManager");
+         User pm = UserService.getInstance().getSingleUserRealName(fname);
+//            } else if (fname.length == 3) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
+//            } else if (fname.length == 4) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
+//            }
          p.setPm_id(pm.getUserId());
         }catch(Exception e){ p.setPm_id(0); }
         p.setAe(c.getSales_rep());

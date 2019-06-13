@@ -37,6 +37,9 @@ public class SavedSearch implements Serializable {
 
     /** nullable persistent field */
     private String agency;
+    
+     /** nullable persistent field */
+    private String isagency;
 
     /** nullable persistent field */
     private String oldId;
@@ -148,7 +151,7 @@ public class SavedSearch implements Serializable {
     private String fqa;
 
     /** full constructor */
-    public SavedSearch(String description, String resultTotal, String firstName, String lastName, String singleCompanyName, String contactFirstName, String contactLastName, String agency, String oldId, String sourceId, String targetId, String status, String includeDoNot, String translator, String editor, String proofreader, String dtp, String icr, String trate, String erate, String terate, String prate, String dtpRate, String rateOldDb, String dtpSourceId, String dtpTargetId, String specific, String general, String scoresLin, String scoreOldDb, String projectScoreGreater, String usesTrados, String usesSdlx, String usesDejavu, String usesCatalyst, String usesTransit, String usesOtherTool1, String usesOtherTool2, String city, String country, String resume, app.user.User User, String other, String consultant, String partner, String engineering, String businesssuport, String fqa) {
+    public SavedSearch(String description, String resultTotal, String firstName, String lastName, String singleCompanyName, String contactFirstName, String contactLastName, String agency, String isAgency, String oldId, String sourceId, String targetId, String status, String includeDoNot, String translator, String editor, String proofreader, String dtp, String icr, String trate, String erate, String terate, String prate, String dtpRate, String rateOldDb, String dtpSourceId, String dtpTargetId, String specific, String general, String scoresLin, String scoreOldDb, String projectScoreGreater, String usesTrados, String usesSdlx, String usesDejavu, String usesCatalyst, String usesTransit, String usesOtherTool1, String usesOtherTool2, String city, String country, String resume, app.user.User User, String other, String consultant, String partner, String engineering, String businesssuport, String fqa) {
         this.description = description;
         this.resultTotal = resultTotal;
         this.firstName = firstName;
@@ -156,6 +159,7 @@ public class SavedSearch implements Serializable {
         this.contactFirstName = contactFirstName;
         this.contactLastName = contactLastName;
         this.agency = agency;
+        this.isagency = isAgency;
         this.oldId = oldId;
         this.sourceId = sourceId;
         this.targetId = targetId;
@@ -610,7 +614,14 @@ public class SavedSearch implements Serializable {
         this.singleCompanyName = singleCompanyName;
     }
 
+    public String getIsagency() {
+        return isagency;
+    }
 
-   
+    public void setIsagency(String isagency) {
+        this.isagency = isagency;
+    }
+
+ 
 
 }

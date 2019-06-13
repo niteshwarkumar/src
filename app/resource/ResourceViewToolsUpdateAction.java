@@ -4,29 +4,18 @@
 
 package app.resource;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.struts.upload.FormFile;
 import org.apache.struts.validator.*;
-import java.io.*;
 import java.util.*;
-import app.user.*;
-import app.client.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 
 
@@ -233,6 +222,10 @@ public final class ResourceViewToolsUpdateAction extends Action {
           if(request.getParameter("otherMA.paymentMail") == null) {
             maOther.setPaymentMail(null);
         }
+          
+          if(request.getParameter("otherMA.paymentCheck") == null) {
+            maOther.setPaymentCheck(null);
+        }
          
           if(request.getParameter("otherMA.paymentRegistered") == null) {
             maOther.setPaymentRegistered(null);
@@ -240,7 +233,22 @@ public final class ResourceViewToolsUpdateAction extends Action {
           if(request.getParameter("otherMA.wireTransfer") == null) {
             maOther.setWireTransfer(null);
         }
-         
+          if(request.getParameter("otherMA.paypal") == null) {
+            maOther.setPaypal(null);
+        }
+          if(request.getParameter("otherMA.other") == null) {
+            maOther.setOther(null);
+        }
+          if(request.getParameter("otherMA.holdPayment") == null) {
+            maOther.setHoldPayment(null);
+        }
+          if(request.getParameter("otherMA.holdNo") == null) {
+            maOther.setHoldNo(null);
+        }
+          if(request.getParameter("otherMA.holdYes") == null) {
+            maOther.setHoldYes(null);
+        }
+
         ResourceService.getInstance().updateMAOther(maOther);
         
         
@@ -249,7 +257,12 @@ public final class ResourceViewToolsUpdateAction extends Action {
         for(int i = 0; i < resourceTools.length; i++) {
             ResourceService.getInstance().updateResourceTool(resourceTools[i]);
         }     
-        
+        String screen = request.getParameter("screen");
+        if (screen != null) {
+            if (screen.equalsIgnoreCase("competance")) {
+                return (mapping.findForward("Competance"));
+            }
+        }
                
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));

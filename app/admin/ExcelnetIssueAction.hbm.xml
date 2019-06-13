@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.admin.ExcelnetIssueAction" table="excelnetissue_action">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="vid" type="int"/>
+        <property name="action" type="string"/>
+        <property name="responsible" type="int"/>
+        <property name="status" type="string"/>
+        <property name="approver" type="int"/>
+        <property name="startdate" type="date"/>
+        <property name="enddate" type="date"/>
+        <property name="comment" type="string"/>
+        <property name="fileName" type="string"/>
+        <property name="filepath" type="string"/>
+    </class>
+</hibernate-mapping>

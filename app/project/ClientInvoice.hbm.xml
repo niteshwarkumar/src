@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.project.ClientInvoice" table="ClientInvoice">
+   <class name="app.project.ClientInvoice" table="clientinvoice">
       <id name="clientInvoiceId" type="int" column="ID_ClientInvoice">
          <generator class="identity"/>
       </id>
@@ -13,7 +13,8 @@
       <property name="invoiceRequestDate" type="date"/>         
       <property name="amount" type="string"/>         
       <property name="description" type="string"/>         
-      <property name="invoicePaidDate" type="date"/>         
+      <property name="invoicePaidDate" type="date"/> 
+      <property name="invoicePeriod" type="string"/>        
       
       <many-to-one name="Project" class="app.project.Project" column="ID_Project"/>
       

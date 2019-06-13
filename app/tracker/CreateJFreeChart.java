@@ -91,7 +91,7 @@ public class CreateJFreeChart {
 //                    totalLanguages.put(lt.getTargetLanguage(),ProjectService.getInstance().getLanguageId(lt.getTargetLanguage())); 
 //                        if(translateTasks.get(lt.getTaskName())!=null && lt.getDueDateDate()!=null){
 //                            expectedDates.put((Integer)totalLanguages.get(lt.getTargetLanguage())+"_"+(String)translateTasks.get(lt.getTaskName()),lt.getDueDateDate());
-//                            //System.out.println("adding:"+(Integer)totalLanguages.get(lt.getTargetLanguage())+"_"+(String)translateTasks.get(lt.getTaskName())+","+lt.getDueDateDate());
+//                            ////System.out.println("adding:"+(Integer)totalLanguages.get(lt.getTargetLanguage())+"_"+(String)translateTasks.get(lt.getTaskName())+","+lt.getDueDateDate());
 //                        }
 //                    }
 //                    
@@ -182,14 +182,14 @@ public class CreateJFreeChart {
 //               milestones[milestoneCount]=mlst;
 //              
 //               newInspectArr[milestoneCount]=inspectionsArray[i];
-//                //System.out.println("adding milestone:"+milestones[milestoneCount]);
+//                ////System.out.println("adding milestone:"+milestones[milestoneCount]);
 //                milestoneCount++;
 //           }
 //        }
 //       
 //       milestones[countavailinspect]+=" "+endDate;
 //        //milestones[milestoneCount]="Finish";
-//      // System.out.println("about to create valueAxis with milestones.length="+milestones.length);
+//      // //System.out.println("about to create valueAxis with milestones.length="+milestones.length);
 //       /**************************************************************************************/
 //      
 //        //X-AXIS (Create SymbolicAxis)
@@ -198,7 +198,7 @@ public class CreateJFreeChart {
 //		SymbolAxis valueAxis = new SymbolAxis("Milestones",milestones); 
 //		valueAxis.setGridBandsVisible(false); 
 //		valueAxis.setTickLabelsVisible(true); 
-//		//System.out.println("created valueAxis");
+//		////System.out.println("created valueAxis");
 //		//Y-AXIS
 //		final CategoryAxis categoryAxis = new CategoryAxis("Languages");
 //		
@@ -206,11 +206,11 @@ public class CreateJFreeChart {
 //		//String[] languagesArr = new String[]{"German","Japanese", "Italian", "Korean"}; 
 //		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 //		//2) TODO: for every milestone/lang combo, dataset.setValue(new Long(1), milestones[i], languages[j]);
-//		//System.out.println("milestones.length="+milestones.length);
-//                //System.out.println("languages.size()="+languages.size());
+//		////System.out.println("milestones.length="+milestones.length);
+//                ////System.out.println("languages.size()="+languages.size());
 //       
 //       Hashtable toolTipMessages = new Hashtable();
-//        //System.out.println("milestones.length="+milestones.length+", languages.size()="+languages.size());
+//        ////System.out.println("milestones.length="+milestones.length+", languages.size()="+languages.size());
 //        
 //        //Add Start
 //        for(int j=0;j<languages.size();j++) { 

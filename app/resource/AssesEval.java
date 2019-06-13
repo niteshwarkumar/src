@@ -22,6 +22,7 @@ public class AssesEval implements Serializable {
     private String approved;
     private String rejected;
     private Integer resourceId;
+    private String preferred;
 
     public AssesEval(){}
 
@@ -102,6 +103,16 @@ public class AssesEval implements Serializable {
     public void setResourceId(Integer resourceId) {
         this.resourceId = resourceId;
     }
+
+    public String getPreferred() {
+        return preferred;
+    }
+
+    public void setPreferred(String preferred) {
+        this.preferred = preferred;
+    }
+    
+    
 
   
 }

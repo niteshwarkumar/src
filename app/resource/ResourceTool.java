@@ -5,7 +5,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /** @author Hibernate CodeGenerator */
-public class ResourceTool implements Serializable {
+public class ResourceTool{
 
     /** identifier field */
     private Integer resourceToolId;

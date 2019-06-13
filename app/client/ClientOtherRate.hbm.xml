@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.client.ClientOtherRate" table="ClientOtherRate">
+   <class name="app.client.ClientOtherRate" table="clientotherrate">
       <id name="clientOtherRateId" type="int" column="ID_ClientOtherRate">
          <generator class="identity"/>
       </id>

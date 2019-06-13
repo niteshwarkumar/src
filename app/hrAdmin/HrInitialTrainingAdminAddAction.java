@@ -78,7 +78,7 @@ public class HrInitialTrainingAdminAddAction extends Action {
             UserService.getInstance().unlinkInitialTrainingAdmin();
             for (int i = 0; i < training.length(); i++) {
                 JSONObject j = (JSONObject) training.get(i);
-                System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
+                //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
                 TrainingInitialAdmin td = new TrainingInitialAdmin();
                 td = new TrainingInitialAdmin();
                 String datestarted = j.getString("hiredate");
@@ -92,7 +92,7 @@ public class HrInitialTrainingAdminAddAction extends Action {
                 String[] userArray=j.getString("empname").split(" ");
                 String fName=userArray[0];
                 String lName=j.getString("empname").replace(userArray[0]+" ", "");
-                User user = UserService.getInstance().getSingleUserRealName(fName, lName);
+                User user = UserService.getInstance().getSingleUserRealName(j.getString("empname"));
                 if(user==null){user=UserService.getInstance().getSingleUserLastName(lName);}
                 td.setEmpname(j.getString("empname"));
                 td.setDepartment(j.getString("department"));

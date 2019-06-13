@@ -3,21 +3,16 @@
 
 package app.project;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
 import java.text.*;
 import java.io.*;
@@ -25,8 +20,6 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import app.user.*;
 import app.resource.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 import app.standardCode.*;
 
@@ -243,7 +236,7 @@ public final class ProjectViewTeamGeneratePoAction extends Action {
                 //START add images
                 if(u.getPicture() != null && u.getPicture().length() > 0) {
                     PdfContentByte over;
-                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
                     img.setAbsolutePosition(200, 200);
                     over = stamp.getOverContent(1);
                     over.addImage(img, 45, 0,0, 45, 300,100);
@@ -257,7 +250,7 @@ public final class ProjectViewTeamGeneratePoAction extends Action {
                 //project number + sequential PO number + abbreviation of target language 
    // Example: 007941therm-002-DE.pdf 
 response.setHeader("Content-disposition", "attachment; filename=" + p.getNumber() + p.getCompany().getCompany_code() + "-" + lt.getPoNumber() +"-"+targetLang+ ".pdf");
-             //   System.out.println("att:"+p.getNumber() + p.getCompany().getCompany_code() + "-" + lt.getPoNumber() +"-"+targetLang);
+             //   //System.out.println("att:"+p.getNumber() + p.getCompany().getCompany_code() + "-" + lt.getPoNumber() +"-"+targetLang);
 //response.setHeader("Content-disposition", "attachment; filename=\"test.pdf\"");
 
                 //response.setHeader("Content-disposition", "attachment; filename=" + p.getNumber() + p.getCompany().getCompany_code() + "-PO-" + lt.getPoNumber() + ".pdf");
@@ -347,7 +340,7 @@ response.setHeader("Content-disposition", "attachment; filename=" + p.getNumber(
                 //START add images
                 if(u.getPicture() != null && u.getPicture().length() > 0) {
                     PdfContentByte over;
-                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
                     img.setAbsolutePosition(200, 200);
                     over = stamp.getOverContent(1);
                     over.addImage(img, 45, 0,0, 45, 300,100);
@@ -448,7 +441,7 @@ response.setHeader("Content-disposition", "attachment; filename=" + p.getNumber(
                 //START add images
                 if(u.getPicture() != null && u.getPicture().length() > 0) {
                     PdfContentByte over;
-                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
                     img.setAbsolutePosition(200, 200);
                     over = stamp.getOverContent(1);
                     over.addImage(img, 45, 0,0, 45, 300,100);
@@ -549,7 +542,7 @@ response.setHeader("Content-disposition", "attachment; filename=" + p.getNumber(
                 //START add images
                 if(u.getPicture() != null && u.getPicture().length() > 0) {
                     PdfContentByte over;
-                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
                     img.setAbsolutePosition(200, 200);
                     over = stamp.getOverContent(1);
                     over.addImage(img, 45, 0,0, 45, 300,100);

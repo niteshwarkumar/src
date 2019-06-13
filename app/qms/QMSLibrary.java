@@ -25,6 +25,7 @@ public class QMSLibrary implements Serializable {
   private String format;
   private Date releaseDate;
   private String owner;
+  private Integer ownerid;
   private boolean allCheck;
   private boolean pmCheck;
   private boolean engCheck;
@@ -257,6 +258,16 @@ public class QMSLibrary implements Serializable {
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+    public Integer getOwnerid() {
+        return ownerid;
+    }
+
+    public void setOwnerid(Integer ownerid) {
+        this.ownerid = ownerid;
+    }
+    
+    
 
     public boolean isPmCheck() {
         return pmCheck;

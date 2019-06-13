@@ -86,7 +86,7 @@ public class GetHWListAction extends Action{
 
 List HW=MenuService.getInstance().getHWList();
 
-            System.out.println("                  working                     ");
+            //System.out.println("                  working                     ");
             //String ty="lk";
 
 for(int i=0;i<HW.size();i++){
@@ -102,7 +102,7 @@ for(int i=0;i<HW.size();i++){
 
 
 
-           // System.out.println("Type.............."+rs.getString("Type"));
+           // //System.out.println("Type.............."+rs.getString("Type"));
         results.add(jo);
 
           //  tx.commit();
@@ -142,7 +142,7 @@ for(int i=0;i<HW.size();i++){
 
      response.setContentType("text/json");
      response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

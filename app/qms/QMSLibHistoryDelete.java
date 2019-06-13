@@ -67,6 +67,7 @@ public class QMSLibHistoryDelete  extends Action {
         }
         //END check for login (security)
         String delJson = request.getParameter("DelData");
+        String qmsHistory = request.getParameter("qmsHistory");
         String mainTab=request.getParameter("mainTab");
         String id=request.getParameter("id");
 
@@ -74,9 +75,21 @@ public class QMSLibHistoryDelete  extends Action {
           JSONArray delJsonArray = new JSONArray(delJson);
           for(int i=0;i<delJsonArray.length();i++){
                 JSONObject j=(JSONObject)delJsonArray.get(i);
-                QMSService.getInstance().unlinkHistory(j.getInt("id"));
+                QMSServiceDelete.getInstance().unlinkHistory(j.getInt("id"));
           }
         }catch(Exception e){}
+        
+        try {
+            JSONArray qmsHistoryArray = new JSONArray(qmsHistory);
+          for(int i=0;i<qmsHistoryArray.length();i++){
+                JSONObject j=(JSONObject)qmsHistoryArray.get(i);
+                
+               QMSLibraryHistory his = QMSService.getInstance().getSingleQMSLibraryHistory(j.getInt("id"));
+                his.setTrained(j.getString("trained"));
+                QMSServiceAddUpdate.getInstance().addHistory(his);
+          }
+        } catch (Exception e) {
+        }
 
         request.setAttribute("mainTab", mainTab);
         request.setAttribute("id", id);

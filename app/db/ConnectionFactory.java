@@ -8,7 +8,7 @@
 //the db, the session is discarded.
 
 package app.db;
-
+ 
 import app.dtpScheduler.DTPScheduler;
 import app.dtpScheduler.ENGScheduler;
 import net.sf.hibernate.*;
@@ -22,11 +22,13 @@ import app.quote.*;
 import app.resource.*;
 import app.menu.*;
 import app.admin.*;
-import app.hrAdmin.*;
 import app.tracker.*;
 import app.qms.*;
 import app.inteqa.*;
 import app.comm.*;
+import app.portal.Wiki;
+import app.reports.Kpi;
+import app.util.*;
 
 
 public class ConnectionFactory {
@@ -163,7 +165,37 @@ public class ConnectionFactory {
             .addClass(Couples.class)
             .addClass(INQualityFeedback.class)
             .addClass(Excelnetissue.class)
-            .addClass(QMSAction.class);
+            .addClass(QMSAction.class)
+            .addClass(ResourceClient.class)
+            .addClass(Approval.class)
+            .addClass(MailingListClient.class)
+            .addClass(MailingListVendor.class)
+            .addClass(MailingList.class)
+            .addClass(Notes.class)
+            .addClass(Temp.class)
+            .addClass(ClientNotes.class)
+            .addClass(RiskHazardIndex.class)
+            .addClass(RiskMitigation.class)
+            .addClass(RiskProbability.class)
+            .addClass(RiskSeverity.class)
+            .addClass(ClientProfile.class)
+            .addClass(Kpi.class)
+            .addClass(Scale.class)
+            .addClass(INReference.class)
+            .addClass(ResourceCompDomain.class)
+            .addClass(CompetanceTranslation.class)
+            .addClass(INTime.class)
+            .addClass(ISOStandard.class)
+            .addClass(IsoDoc.class)
+            .addClass(Requirement.class)
+            .addClass(RequirementPO.class)
+            .addClass(StrategicChange.class)
+            .addClass(StrategicChange_Id.class)
+            .addClass(StrategicChange_Planner.class)
+            .addClass(Options.class)
+            .addClass(OptionsSelect.class).addClass(Wiki.class)
+            .addClass(AdminMisc.class).addClass(Competence.class).addClass(ExcelnetIssueAction.class)
+              ;
 
             
             sessionFactory = cfg.buildSessionFactory();

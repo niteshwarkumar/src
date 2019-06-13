@@ -58,7 +58,12 @@ public class HrViewReview  extends Action {
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
-        String userViewId = StandardCode.getInstance().getCookie("userViewId", request.getCookies());
+        String userViewId = "";
+        userViewId = request.getParameter("userViewId");
+        if(userViewId==null)
+         userViewId = StandardCode.getInstance().getCookie("userViewId", request.getCookies());
+        else if(userViewId.isEmpty())
+         userViewId = StandardCode.getInstance().getCookie("userViewId", request.getCookies());
         User  u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
         User currentUser= UserService.getInstance().getSingleUser(Integer.parseInt(userViewId));
 
@@ -71,13 +76,21 @@ public class HrViewReview  extends Action {
         List results = new ArrayList();
 
         String mainTab = request.getParameter("mainTab");
-        String query=" where owner=+'"+currentUser.getFirstName()+"' and mainTab='Review'";
-      
-
-        List docList = QMSService.getInstance().getQMSLibraryDocumentByTabs("Review",query);
+//        String userViewId1 = request.getParameter("userViewId");
+        List docList = new ArrayList();
+         String query=" where owner='"+currentUser.getFirstName()+" "+currentUser.getLastName()+"' and mainTab='Review'";
+        try{
+         docList = QMSService.getInstance().getQMSLibraryDocumentByTabs("Review",query);
+        }catch(Exception e){}
+//        List docList = new ArrayList<Object>();
+        if(docList.isEmpty()){
+             query=" where ownerid like'"+userViewId+"%' and mainTab='Review'";
+            docList = QMSService.getInstance().getQMSLibraryDocumentByTabs("Review",query);
+        }
+        
         for (int i = 0; i < docList.size(); i++) {
             QMSLibrary lu = (QMSLibrary) docList.get(i);
-            if(lu.getOwner().equalsIgnoreCase(currentUser.getFirstName())){
+//            if(lu.getOwner().equalsIgnoreCase(currentUser.getFirstName()+" "+currentUser.getLastName())){
             JSONObject jo = new JSONObject();
             
             jo.put("id", lu.getId());
@@ -109,12 +122,12 @@ public class HrViewReview  extends Action {
             jo.put("update", "<a " + HrHelper.LINK_STYLE + " href=../qmsLibUpdateDocumentPreAction.do?mainTab="+mainTab+"&id=" + lu.getId() + ">Click</a>");
             }
             results.add(jo);
-            }
+//            }
         }
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -144,7 +144,7 @@ public final class ProjectViewInspectionAction extends Action {
         for(ListIterator iter = trackerItems.listIterator(); iter.hasNext(); ) {
                 MilestoneLanguage millan = (MilestoneLanguage) iter.next();
                 ////THIS FORM: MILLAN_<%=iDisplay.getInspectionId()+"_"+languageId+"_"+iDisplay.getProject().getProjectId()
-               // System.out.println("alexx:"+"MILLAN_"+millan.getMilestone_id()+"_"+millan.getLang_id()+"_"+millan.getProject_id());
+               // //System.out.println("alexx:"+"MILLAN_"+millan.getMilestone_id()+"_"+millan.getLang_id()+"_"+millan.getProject_id());
                 millanValues.put("MILLAN_"+millan.getMilestone_id()+"_"+millan.getLang_id()+"_"+millan.getProject_id()," checked ");
             }
         }

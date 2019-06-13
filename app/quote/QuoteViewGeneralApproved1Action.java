@@ -72,7 +72,7 @@ public final class QuoteViewGeneralApproved1Action extends Action {
         //id of quote from request
 	String quoteId = null;
 	quoteId = request.getParameter("id");
-        System.out.println("XXXXXXXX "+quoteId );
+        //System.out.println("XXXXXXXX "+quoteId );
         //check attribute in request
         if(quoteId == null) {
             quoteId = (String) request.getAttribute("id");
@@ -101,7 +101,7 @@ public final class QuoteViewGeneralApproved1Action extends Action {
              q.setLastModifiedByTS(new Date());
         }
 
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
         Project p = ProjectService.getInstance().getSingleProject(q.getProject().getProjectId());
         p.setStatus("active");
         //update project dollar values (fee tab) to match quote
@@ -262,7 +262,7 @@ public final class QuoteViewGeneralApproved1Action extends Action {
                 int word95 = 0;
                 int word85 = 0;
                 int word75 = 0;
-                int wordNew = 0;
+                double wordNew = 0;
                 int word8599 = 0;
                 double wordNew4 = 0;
 
@@ -282,7 +282,7 @@ public final class QuoteViewGeneralApproved1Action extends Action {
                     word75 = lt.getWord75Fee().intValue();
                 }
                 if(lt.getWordNewFee() != null) {
-                    wordNew = lt.getWordNewFee().intValue();
+                    wordNew = lt.getWordNewFee().doubleValue();
                 }
                 if(lt.getWord8599Fee() != null) {
                     word8599 = lt.getWord8599Fee().intValue();
@@ -291,20 +291,20 @@ public final class QuoteViewGeneralApproved1Action extends Action {
                     wordNew4 = lt.getWordNew4Fee().doubleValue();
                 }
                 double wordTotal   = 0;
-                if(p.getCompany().isScaleDefault()) {
-                    double scale100 = new Double(p.getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(p.getCompany().getScaleRep()).doubleValue();
+                if(p.getCompany().isScaleDefault(p.getProjectId())) {
+                    double scale100 = new Double(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
+                    double scaleRep = new Double(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
                     double scale8599 = new Double(p.getCompany().getScale8599()).doubleValue();
                     double scaleNew4 = new Double(p.getCompany().getScaleNew4()).doubleValue();
                     thisTotal = word100*scale100*rate + wordRep*scaleRep*rate + word8599*scale8599*rate + wordNew4*scaleNew4*rate;
                     wordTotal = word100 + wordRep + word8599 + wordNew4;
                 } else {
-                    double scale100 = new Double(p.getCompany().getScale100()).doubleValue();
-                    double scaleRep = new Double(p.getCompany().getScaleRep()).doubleValue();
-                    double scale95 = new Double(p.getCompany().getScale95()).doubleValue();
-                    double scale85 = new Double(p.getCompany().getScale85()).doubleValue();
-                    double scale75 = new Double(p.getCompany().getScale75()).doubleValue();
-                    double scaleNew = new Double(p.getCompany().getScaleNew()).doubleValue();
+                    double scale100 = new Double(p.getCompany().getScale100(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
+                    double scaleRep = new Double(p.getCompany().getScaleRep(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
+                    double scale95 = new Double(p.getCompany().getScale95(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
+                    double scale85 = new Double(p.getCompany().getScale85(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
+                    double scale75 = new Double(p.getCompany().getScale75(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
+                    double scaleNew = new Double(p.getCompany().getScaleNew(p.getProjectId(),p.getCompany().getClientId())).doubleValue();
                     thisTotal = word100*scale100*rate + wordRep*scaleRep*rate + word95*scale95*rate + word85*scale85*rate + word75*scale75*rate + wordNew*scaleNew*rate;
                     wordTotal = word100 + wordRep + word95 + word85 + word75 + wordNew;
                 }

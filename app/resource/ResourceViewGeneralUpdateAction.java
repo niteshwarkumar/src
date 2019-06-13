@@ -154,6 +154,13 @@ public final class ResourceViewGeneralUpdateAction extends Action {
             r.setPartner(false);
         }
         
+        if(!"".equals(request.getParameter("tne"))) {
+            r.setTne(true);
+        }
+        else {
+            r.setTne(false);
+        }
+        
         if(!"".equals(request.getParameter("engineering"))) {
             r.setEngineering(true);
         }
@@ -224,6 +231,13 @@ public final class ResourceViewGeneralUpdateAction extends Action {
             r.setProdOther(false);
         }
         
+        if(!"".equals(request.getParameter("postEditing"))) {
+            r.setPostEditing(true);
+        }
+        else {
+            r.setPostEditing(false);
+        }
+        
         
         if(request.getParameter("resourceFromForm.localizer") != null) {
             r.setLocalizer(true);
@@ -272,8 +286,8 @@ public final class ResourceViewGeneralUpdateAction extends Action {
             r.setQuality(false);
         }
 //        if(!"".equals((String) rvt.get("confiAgreement"))){
-//            System.out.println("onononononononono");}else{
-//            System.out.println("ofofofofofofofofof");
+//            //System.out.println("onononononononono");}else{
+//            //System.out.println("ofofofofofofofofof");
 //            }
         String msaSent = (String) rvt.get("msaSent");
         String msaReceived = (String) rvt.get("msaReceived");
@@ -296,6 +310,7 @@ public final class ResourceViewGeneralUpdateAction extends Action {
           r.setOtherText(request.getParameter("resourceFromForm.otherText"));
             r.setProdOtherText(request.getParameter("resourceFromForm.prodOtherText"));
               r.setBsdOtherText(request.getParameter("resourceFromForm.bsdOtherText"));
+//              r.setPostEditing(request.getParameter("resourceFromForm.postEditing"));
        
         //set updated values to db
         ResourceService.getInstance().updateResource(r);

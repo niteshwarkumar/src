@@ -80,7 +80,7 @@ public final class ClientViewGeneralAction extends Action {
         Integer flag=0;
         User u=UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
        try{
-           System.out.println(u.getuserType()+"============== dddddddddddddddddddddddddddddddd======"+u.getId_client());
+           //System.out.println(u.getuserType()+"============== dddddddddddddddddddddddddddddddd======"+u.getId_client());
      if(u.getuserType().equalsIgnoreCase("client")){
            clientId=""+u.getId_client();
         flag=1;
@@ -91,10 +91,10 @@ public final class ClientViewGeneralAction extends Action {
 
        }
         if(flag==1){
-        System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
+        //System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
         }else{
 	clientId = request.getParameter("clientViewId");
-        System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
+        //System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
         //check attribute in request
         if(clientId == null) {
             clientId = (String) request.getAttribute("clientViewId");
@@ -124,7 +124,7 @@ public final class ClientViewGeneralAction extends Action {
         if (clientId!=null && clientId.trim() != "")
         {
         c = ClientService.getInstance().getSingleClient(Integer.parseInt(clientId));
-         System.out.println("clientid>....................................."+c);
+         //System.out.println("clientid>....................................."+c);
         }
         else
         {
@@ -185,6 +185,7 @@ public final class ClientViewGeneralAction extends Action {
         cef.setProject_mngr(c.getProject_mngr());
         cef.setBackup_pm(c.getBackup_pm());
         cef.setSales_rep(c.getSales_rep());
+        cef.setSales(c.getSales());
         cef.setSatisfaction_score(c.getSatisfaction_score());
         cef.setSatisfaction_level(c.getSatisfaction_level());
         cef.setFtp_host_excel(c.getFtp_host_excel());
@@ -207,6 +208,7 @@ public final class ClientViewGeneralAction extends Action {
         cef.setOtherContact5(c.getOtherContact5());
      
          cef.setAuto_alert(c.getAuto_alert());
+         cef.setSpecialNotes(c.getSpecialNotes());
         
         //place this client into the client form for display
         request.setAttribute("clientEditForm", cef);        
@@ -230,14 +232,14 @@ public final class ClientViewGeneralAction extends Action {
         
         request.setAttribute("productsJSArray", productsJSArray);
         
-        System.out.println("Products JASON"+productsJSArray);
+        //System.out.println("Products JASON"+productsJSArray);
         List clientComms = ClientService.getInstance().getCommunicationListForClient(clientId);
         String commJSArray = "";
         for(int i=0; i<clientComms.size();i++){
             Communication pr = (Communication)clientComms.get(i);
             JSONObject j = new JSONObject();
               commJSArray+= "[\""+HrHelper.jsSafe(pr.getCommunicationType())+"\",";
-              commJSArray+= "\""+HrHelper.jsSafe(pr.getDescription())+"\"]";
+              commJSArray+= "\""+HrHelper.jsSafe(pr.getDescription().replaceAll("\"", "'"))+"\"]";
                 if(i!=clientComms.size()-1){
                   commJSArray+=",";
                 }

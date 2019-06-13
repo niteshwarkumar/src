@@ -77,7 +77,7 @@ public class CapaUpdateAction extends Action {
         JSONArray delJsonArray = new JSONArray(delJson);
           for(int i=0;i<delJson.length();i++){
                 JSONObject j=(JSONObject)delJsonArray.get(i);
-                QMSService.getInstance().deleteCapa(j.getInt("id"));
+                QMSServiceDelete.getInstance().deleteCapa(j.getInt("id"));
           }
         }catch(Exception e){}
 
@@ -109,7 +109,7 @@ public class CapaUpdateAction extends Action {
                capa.setCdate(d2);
 
                } catch (Exception ex){
-                   System.out.println("eroooooooooooooooo"+ex.getMessage());
+                   //System.out.println("eroooooooooooooooo"+ex.getMessage());
             }
 
             try {
@@ -151,7 +151,7 @@ public class CapaUpdateAction extends Action {
             }
 
             
-            QMSService.getInstance().saveCapa(capa);
+            QMSServiceAddUpdate.getInstance().saveCapa(capa);
              
         }
         }catch(Exception e){}

@@ -38,9 +38,10 @@ public class HrHelper {
 
     public static final String LINK_STYLE = " style='color:#666688; text-decoration:none;' onmouseover=\"this.style.color='#333';this.style.textDecoration='underline'\" onmouseout=\"this.style.color='#666688';this.style.textDecoration='none'\"";
     public static final String excelAdminCommDropdowns = "('Abscences')";
-    public static final String excelAdminClientDropdowns = "('Units', 'Certifications')";
+    public static final String excelAdminClientDropdowns = "('Units', 'Certifications','PO_BBS')";
     // excelAdminQuoteDropdowns
     public static final String excelAdminQuoteDropdowns = "('Application','Units', 'Deliverable','Os','Component','Linguistic','Format', 'Engineering','Other','Reject Reason','Expected Approval Time','Type of Text')";
+    public static final String excelAdminQuoteLectraDropdowns = "('Format','Tool Type','Tool Category','Lectra Offer','Solution','Version','Entity')";
 //excelAdminTaskDropdowns
     public static final String excelAdminDefaultDropdowns = "('Units')";
     public static final String excelAdminTaskDropdowns = "('Linguistic','Format', 'Engineering','Other')";
@@ -85,21 +86,23 @@ public class HrHelper {
 
     public static final String excelAdminTrainingUser() {
 //        ['Topic', 'Topic']
+        StringCleaner sc = new StringCleaner();
+
         List userList = UserService.getInstance().getUserListCurrentDropDown();
         String userStr = "";
         for (int i = 0; i < userList.size(); i++) {
             User user = (User) userList.get(i);
-            userStr += "['" + user.getFirstName() + " " + user.getLastName() + "','" + user.getFirstName() + " " + user.getLastName() + "']";
+            userStr += "['" + user.getFirstName() + " " + user.getLastName() + "','"
+                    + user.getFirstName() + " " + user.getLastName() + "']";
             if (i < userList.size() - 1) {
                 userStr += ", ";
             }
         }
         userStr += "";
-        return userStr;
+        return sc.convertToAscii(userStr, false);
     }
 
-
-        public static final String excelAdminPositionDropdowns() {
+    public static final String excelAdminPositionDropdowns() {
 //        ['Topic', 'Topic']
         List posList = UserService.getInstance().getPositionList();
         String pos = "";
@@ -113,7 +116,6 @@ public class HrHelper {
         pos += "";
         return pos;
     }
-
 
     //get all active projects
     public static List getAllEmployees(User user) {
@@ -161,9 +163,7 @@ public class HrHelper {
                 jo.put("Work_Email", u.getWorkEmail1());
                 jo.put("Phone_Number", u.getWorkPhone());
 
-
                 jo.put("Name", "<a " + LINK_STYLE + " href=\"javascript:parent.openSingleEmployeeWindow('" + HrHelper.jsSafe(u.getFirstName() + " " + u.getLastName()) + "','" + u.getUserId() + "')\">" + u.getFirstName() + " " + u.getLastName() + "</a>");
-
 
                 if (!"true".equals(u.getCurrentEmployee())) {
                     jo.put("Location", "FORMER EMPLOYEES");
@@ -184,8 +184,6 @@ public class HrHelper {
                 }
 
             }
-
-
 
             return results;
         } catch (Exception e) {
@@ -246,9 +244,7 @@ public class HrHelper {
                 jo.put("Phone_Number", u.getWorkPhone());
 
 //                jo.put("Name", "<a " + LINK_STYLE + " href=\"javascript:parent.openSingleEmployeeWindow('" + HrHelper.jsSafe(u.getFirstName() + " " + u.getLastName()) + "','" + u.getUserId() + "')\">" + u.getFirstName() + " " + u.getLastName() + "</a>");
-
                 jo.put("Name", "<a " + LINK_STYLE + " href=\"javascript:parent.openSingleEmployeeWindow('" + HrHelper.jsSafe(u.getFirstName() + " " + u.getLastName()) + "','" + u.getUserId() + "')\">" + u.getFirstName() + " " + u.getLastName() + "</a>");
-
 
                 if (!"true".equals(u.getCurrentEmployee())) {
                     jo.put("Location", "FORMER EMPLOYEES");
@@ -268,9 +264,7 @@ public class HrHelper {
                     results.add(jo);
                 }
 
-
             }
-
 
             return results;
         } catch (Exception e) {
@@ -375,9 +369,10 @@ public class HrHelper {
         for (Iterator iter = absc.keySet().iterator(); iter.hasNext();) {
 
             String date = (String) iter.next();
-            // System.out.println((String)absc.get(reason));
+            // //System.out.println((String)absc.get(reason));
 
-            results += "{date: new Date(" + date + ")," + //fixed date marked only on 2008/01/02
+            results += "{date: new Date(" + date + "),"
+                    + //fixed date marked only on 2008/01/02
                     "text: \"" + (String) absc.get(date) + "\","
                     + "cls: 'x-datepickerplus-eventdates' }";
 
@@ -428,7 +423,7 @@ public class HrHelper {
             st.executeUpdate();
             st.close();
             String jsonProducts = request.getParameter("dropdownJSON");
-            //System.out.println("jsonProducts="+jsonProducts);
+            ////System.out.println("jsonProducts="+jsonProducts);
 
             //First delete all products, and then re-insert it
             if (jsonProducts != null && !"".equals(jsonProducts)) {
@@ -446,14 +441,10 @@ public class HrHelper {
                         pr.setTab("");
                     }
 
-
                     // HrHelper.saveDropdown(pr);
                     session.save(pr);
                 }
             }
-
-
-
 
             tx.commit();
         } catch (Exception e) {
@@ -504,7 +495,7 @@ public class HrHelper {
             query = session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType in " + dropdownValues + " and dropdown.tab = '' order by  dropdown.dropdownType, dropdown.dropdownValue ");
             List dropdowns = query.list();
 
-            //  System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
+            //  //System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
             String dropdownJSArray = "";
             for (int i = 0; i < dropdowns.size(); i++) {
                 Dropdown pr = (Dropdown) dropdowns.get(i);
@@ -520,7 +511,6 @@ public class HrHelper {
             }
 
             return dropdownJSArray;
-
 
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -543,6 +533,57 @@ public class HrHelper {
             }
         }
 
+    }
+
+    //get all clients
+    public static String getAdminDefaultValues(String dropdownType) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType = '" + dropdownType + "' and dropdown.priority = 'Default'");
+            List dropdowns = query.list();
+
+            //  //System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
+            String res = "";
+            for (int i = 0; i < dropdowns.size(); i++) {
+
+                Dropdown pr = (Dropdown) dropdowns.get(i);
+                res = HrHelper.jsSafe(pr.getDropdownValue());
+
+            }
+
+            return res;
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
 
     }
 
@@ -564,7 +605,7 @@ public class HrHelper {
             query = session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType in " + dropdownValues + " and dropdown.tab = '" + tab + "' order by  dropdown.dropdownType, dropdown.dropdownValue ");
             List dropdowns = query.list();
 
-            //  System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
+            //  //System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
             String dropdownJSArray = "";
             for (int i = 0; i < dropdowns.size(); i++) {
                 Dropdown pr = (Dropdown) dropdowns.get(i);
@@ -580,7 +621,6 @@ public class HrHelper {
             }
 
             return dropdownJSArray;
-
 
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -603,10 +643,9 @@ public class HrHelper {
             }
         }
 
-
     }
 
-     //get all clients
+    //get all clients
     public static List getAdminTopicList(String dropdownValues, String tab) {
         /*
          * Use the ConnectionFactory to retrieve an open
@@ -624,9 +663,7 @@ public class HrHelper {
             query = session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType = '" + dropdownValues + "' and dropdown.tab = '" + tab + "' order by  dropdown.dropdownType, dropdown.dropdownValue ");
             List dropdowns = query.list();
 
-           
             return dropdowns;
-
 
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -649,10 +686,50 @@ public class HrHelper {
             }
         }
 
+    }
+
+    public static List getAdminTopicList(String tab) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.tab = '" + tab + "' order by  dropdown.dropdownType, dropdown.dropdownValue ");
+            List dropdowns = query.list();
+
+            return dropdowns;
+
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
 
     }
 
-    
     //get all clients
     public static String getDefaultValueList() {
         /*
@@ -671,7 +748,7 @@ public class HrHelper {
             query = session.createQuery("select DefaultValue from app.extjs.vo.DefaultValue DefaultValue ");
             List dropdowns = query.list();
 
-            //  System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
+            //  //System.out.println("query"+excelAdminQuoteDropdowns+"                  "+query);
             String dropdownJSArray = "";
             for (int i = 0; i < dropdowns.size(); i++) {
                 DefaultValue pr = (DefaultValue) dropdowns.get(i);
@@ -686,7 +763,6 @@ public class HrHelper {
             }
 
             return dropdownJSArray;
-
 
         } catch (HibernateException e) {
             System.err.println("Hibernate Exception" + e.getMessage());
@@ -708,7 +784,6 @@ public class HrHelper {
 
             }
         }
-
 
     }
 
@@ -736,7 +811,7 @@ public class HrHelper {
             st.executeUpdate();
             st.close();
             String jsonProducts = request.getParameter("dropdownJSON");
-            //System.out.println("jsonProducts="+jsonProducts);
+            ////System.out.println("jsonProducts="+jsonProducts);
 
             //First delete all products, and then re-insert it
             if (jsonProducts != null && !"".equals(jsonProducts)) {
@@ -750,9 +825,6 @@ public class HrHelper {
                     session.save(pr);
                 }
             }
-
-
-
 
             tx.commit();
         } catch (Exception e) {
@@ -815,7 +887,7 @@ public class HrHelper {
 //                }
 //
 //            }
-//            System.out.println("osJSArray                          ---" + osJSArray);
+//            //System.out.println("osJSArray                          ---" + osJSArray);
 //            return osJSArray;
 //
 //
@@ -846,11 +918,9 @@ public class HrHelper {
 
         Session session = ConnectionFactory.getInstance().getSession();
 
-
         String result = "";
 
         try {
-
 
             PreparedStatement st = session.connection().prepareStatement("select * from dropdown where dropdownType=? order by priority DESC , dropdownValue asc");
             st.setString(1, dropdownName);
@@ -888,18 +958,15 @@ public class HrHelper {
             }
         }
 
-
     }
 
     public static String getDropdownValuesExtjs(String dropdownName, String sortOrder) {
 
         Session session = ConnectionFactory.getInstance().getSession();
 
-
         String result = "";
 
         try {
-
 
             PreparedStatement st = session.connection().prepareStatement("select * from dropdown where dropdownType=? order by dropdownValue " + sortOrder);
             st.setString(1, dropdownName);
@@ -938,18 +1005,15 @@ public class HrHelper {
             }
         }
 
-
     }
 
     public static ArrayList getDropdownValuesList(String dropdownName) {
 
         Session session = ConnectionFactory.getInstance().getSession();
 
-
         ArrayList result = new ArrayList();
 
         try {
-
 
             PreparedStatement st = session.connection().prepareStatement("select * from dropdown where dropdownType=? order by dropdownValue asc");
             st.setString(1, dropdownName);
@@ -981,7 +1045,6 @@ public class HrHelper {
 
             }
         }
-
 
     }
 

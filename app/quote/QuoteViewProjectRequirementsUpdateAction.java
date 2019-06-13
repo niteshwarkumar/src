@@ -88,14 +88,15 @@ public final class QuoteViewProjectRequirementsUpdateAction extends Action {
         Quote1 q = QuoteService.getInstance().getSingleQuote(cq.getQuote_ID());
 //        List quoteList=QuoteService.getInstance().getSingleClientQuote(id);
          //cq1=QuoteService.getInstance().get_SingleClientQuote(id);
-         System.out.println("Client Quoteeee Iddddddddddddddddddddddddd"+cq.getId());
+         //System.out.println("Client Quoteeee Iddddddddddddddddddddddddd"+cq.getId());
 
         //updated values of the project
         DynaValidatorForm qvpr = (DynaValidatorForm) form;
 //        String product = (String) (qvpr.get("product"));
-//        System.out.println("prooooooooooooooooooooooooooooooood"+product);
+//        //System.out.println("prooooooooooooooooooooooooooooooood"+product);
         String projectRequirements = (String) qvpr.get("projectRequirements");
         String projectDescription = (String) qvpr.get("projectDescription");
+        
 //        String beforeWorkTurn = (String) (qvpr.get("beforeWorkTurn"));
 //        String beforeWorkTurnUnits = (String) (qvpr.get("beforeWorkTurnUnits"));
 //        String afterWorkTurn = (String) (qvpr.get("afterWorkTurn"));

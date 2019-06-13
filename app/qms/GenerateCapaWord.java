@@ -4,10 +4,6 @@
  */
 
 package app.qms;
-import app.client.ClientService;
-import app.extjs.helpers.QuoteHelper;
-import app.extjs.vo.Product;
-import app.extjs.vo.Upload_Doc;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -17,14 +13,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
-import java.util.*;
 import java.text.*;
 import java.io.*;
 import app.user.*;
-import app.project.*;
 import app.security.*;
 import app.standardCode.*;
-import com.lowagie.text.Image;
 /**
  *
  * @author Niteshwar
@@ -77,7 +70,7 @@ User  u = UserService.getInstance().getSingleUser((String)request.getSession(fal
             CapaId capaId = QMSService.getInstance().getSingleCapaId(number);
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 
-        byte[] template = getBytesFromFile(new java.io.File("C:/templates2/NC-CAPA Internal.rtf"));
+        byte[] template = getBytesFromFile(new java.io.File("C:/templates2/NC-CAPA InternalF2004.rtf"));
 
         String content = new String(template);
 //         content = content.replaceAll("INSERT_DATE_INSERT", DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
@@ -91,6 +84,8 @@ User  u = UserService.getInstance().getSingleUser((String)request.getSession(fal
         content = content.replaceAll("INSERT_OWNER3_INSERT", capaId.getOwner3());
 
         content = content.replaceAll("INSERT_RCA_INSERT", capaId.getRca());
+        content = content.replaceAll("INSERT_IMACT_INSERT", capaId.getImact());
+        
         content = content.replaceAll("INSERT_ACTION_IMPLEMENTED_INSERT", capaId.getActionimp());
         content = content.replaceAll("INSERT_EFFECTIVENESS_IMPLEMENTED_INSERT", capaId.getEffectiveplan());
         content = content.replaceAll("INSERT_VERIFICATION_INSERT", capaId.getVerify());
@@ -128,12 +123,21 @@ User  u = UserService.getInstance().getSingleUser((String)request.getSession(fal
         } catch (Exception e) { content = content.replaceAll("INSERT_ACTION_TARGET_INSERT", "");
         }
           try {
-        content = content.replaceAll("INSERT_RCA_ACTUAL_INSERT"," "+ DateFormat.getDateInstance(DateFormat.SHORT).format(capaId.getRca_t_date()));
+        content = content.replaceAll("INSERT_RCA_ACTUAL_INSERT"," "+ DateFormat.getDateInstance(DateFormat.SHORT).format(capaId.getRca_a_date()));
         } catch (Exception e) { content = content.replaceAll("INSERT_RCA_ACTUAL_INSERT", "");
         }
           try {
-        content = content.replaceAll("INSERT_RCA_TARGET_INSERT"," "+ DateFormat.getDateInstance(DateFormat.SHORT).format(capaId.getRca_a_date()));
+        content = content.replaceAll("INSERT_RCA_TARGET_INSERT"," "+ DateFormat.getDateInstance(DateFormat.SHORT).format(capaId.getRca_t_date()));
         } catch (Exception e) { content = content.replaceAll("INSERT_RCA_TARGET_INSERT", "");
+        }
+          
+            try {
+        content = content.replaceAll("INSERT_IMACT_TGT_INSERT"," "+ DateFormat.getDateInstance(DateFormat.SHORT).format(capaId.getImact_t_date()));
+        } catch (Exception e) { content = content.replaceAll("INSERT_IMACT_TGT_INSERT", "");
+        }
+          try {
+        content = content.replaceAll("INSERT_IMACT_ACT_INSERT"," "+ DateFormat.getDateInstance(DateFormat.SHORT).format(capaId.getImact_a_date()));
+        } catch (Exception e) { content = content.replaceAll("INSERT_IMACT_ACT_INSERT", "");
         }
 
         content = content.replaceAll("INSERT_EMPLOYEE_INSERT", capa.getEmployee());
@@ -158,7 +162,7 @@ User  u = UserService.getInstance().getSingleUser((String)request.getSession(fal
           String filename = capaId.getCapa_number()+"-NC-CAPA.doc";
 
         content = content.replaceAll("NC-CAPA Internal.rtf", StandardCode.getInstance().noNull(filename));
-        System.out.println("hereeeeee6");
+        //System.out.println("hereeeeee6");
         //write to client (web browser)
         response.setHeader("Content-Type", "Application/msword");
         response.setHeader("Content-disposition", "attachment; filename=" + filename);

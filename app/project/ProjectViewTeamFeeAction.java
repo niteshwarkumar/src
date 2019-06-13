@@ -109,7 +109,9 @@ public final class ProjectViewTeamFeeAction extends Action {
         List totalEngTasks = new ArrayList();
         List totalDtpTasks = new ArrayList();
         List totalOthTasks = new ArrayList();
-        
+        String chg = request.getParameter("change");
+        request.setAttribute("change", StandardCode.getInstance().noNull(chg));
+        TreeSet<String> changes = new TreeSet();
         //for each source
         for(Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
             SourceDoc sd = (SourceDoc) sourceIter.next();
@@ -122,18 +124,55 @@ public final class ProjectViewTeamFeeAction extends Action {
                 for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
                     LinTask lt = (LinTask) linTaskIter.next();
                     totalLinTasks.add(lt);
+                    String change = StandardCode.getInstance().noNull(lt.getChangeDesc());
+                    if(!changes.contains(change)){
+                        Change1 c = ProjectService.getInstance().getSingleChange(id, lt.getChangeDesc());
+                        String changename = change;
+                        if(null != c){
+                        if(StandardCode.getInstance().noNull(c.getName()).isEmpty()){
+                           changename = c.getName();
+                        }}else{
+                            changename = "";
+                        }
+                         changes.add(change);
+                    }
                 }
                 
                 //for each eng Task of this target
                 for(Iterator engTaskIter = td.getEngTasks().iterator(); engTaskIter.hasNext();) {
                     EngTask et = (EngTask) engTaskIter.next();
                     totalEngTasks.add(et);
+                    String change = StandardCode.getInstance().noNull(et.getChangeDesc());
+                    if(!changes.contains(change)){
+                        Change1 c = ProjectService.getInstance().getSingleChange(id, et.getChangeDesc());
+                        String changename = change;
+                        if(null != c){
+                        if(StandardCode.getInstance().noNull(c.getName()).isEmpty()){
+                           changename = c.getName();
+                        }}else{
+                            changename = "";
+                        }
+                         changes.add(change);
+                    }
                 }
                 
                 //for each dtp Task of this target
                 for(Iterator dtpTaskIter = td.getDtpTasks().iterator(); dtpTaskIter.hasNext();) {
                     DtpTask dt = (DtpTask) dtpTaskIter.next();
                     totalDtpTasks.add(dt);
+                    String change = StandardCode.getInstance().noNull(dt.getChangeDesc());
+                    if(!changes.contains(change)){
+                        Change1 c = ProjectService.getInstance().getSingleChange(id, dt.getChangeDesc());
+                        String changename = change;
+                        if(null != c){
+                        if(StandardCode.getInstance().noNull(c.getName()).isEmpty()){
+                           changename = c.getName();
+                        }}else{
+                            changename = "";
+                        }
+                         changes.add(change);
+                     
+                    }
                 }
                 
                 //for each oth Task of this target
@@ -159,34 +198,34 @@ public final class ProjectViewTeamFeeAction extends Action {
         //START set up lin dates
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
+                request.setAttribute("linTasksProjectSentArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectSentArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
+                request.setAttribute("linTasksProjectDueArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectDueArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("linTasksProjectReceivedArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectReceivedArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("linTasksProjectInvoiceArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectInvoiceArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         //END set up lin dates
@@ -194,34 +233,34 @@ public final class ProjectViewTeamFeeAction extends Action {
         //START set up eng dates
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
+                request.setAttribute("engTasksProjectSentArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectSentArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
+                request.setAttribute("engTasksProjectDueArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectDueArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("engTasksProjectReceivedArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectReceivedArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("engTasksProjectInvoiceArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectInvoiceArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         //END set up eng dates
@@ -229,34 +268,34 @@ public final class ProjectViewTeamFeeAction extends Action {
         //START set up dtp dates
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
+                request.setAttribute("dtpTasksProjectSentArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectSentArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
+                request.setAttribute("dtpTasksProjectDueArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectDueArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("dtpTasksProjectReceivedArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectReceivedArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         for(int i = 0; i < totalDtpTasks.size(); i++) {
             if(dtpTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("dtpTasksProjectInvoiceArray" + dtpTasksArray[i].getDtpTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("dtpTasksProjectInvoiceArray" + dtpTasksArray[i].getDtpTaskId(), "");
             }
         }
         //END set up dtp dates
@@ -398,7 +437,8 @@ public final class ProjectViewTeamFeeAction extends Action {
         request.setAttribute("dtpTaskTotal", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)));
         request.setAttribute("othTaskTotal", StandardCode.getInstance().formatDouble(new Double(othTaskTotal)));
         request.setAttribute("teamTotal", StandardCode.getInstance().formatDouble(new Double(teamTotal)));
-            
+        request.setAttribute("changeLst", changes);
+             
         
         //place all Tasks for this project into the form for display
         DynaValidatorForm qvg = (DynaValidatorForm) form;

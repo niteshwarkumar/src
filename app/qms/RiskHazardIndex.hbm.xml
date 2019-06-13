@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.RiskHazardIndex" table="riskhazardindex">
+            <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+  <property name="severity" type="int"/>
+  <property name="probability" type="int"/>
+  <property name="riskindex" type="int"/>
+  <property name="indexcolor" type="string"/>
+<!--  <many-to-one name="Probability" class="app.qms.RiskProbability" column="probability"/>
+  <many-to-one name="Severity" class="app.qms.RiskSeverity" column="severity"/>-->
+
+    </class>
+</hibernate-mapping>

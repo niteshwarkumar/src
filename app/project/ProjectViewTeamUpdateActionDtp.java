@@ -115,222 +115,6 @@ public final class ProjectViewTeamUpdateActionDtp extends Action {
         double othTotal = 0;        
         double pmTotal = 0;
         
-        //START LIN TASKS
-        //get the updated list of lin Tasks for this project
-//        LinTask[] linTasks = (LinTask[]) qvg.get("linTasksProject");
-//
-//        //process each lin Task to db
-//        for(int i = 0; i < linTasks.length; i++) {
-//            LinTask lt = linTasks[i];
-//
-//            //START process new total values (2 of them: Total and dollar TOTAL)
-//           // if((lt.getWord100() != null  && !lt.getWord100().equals(new Integer(0))) || (lt.getWordRep() != null  && !lt.getWordRep().equals(new Integer(0))) || (lt.getWord85() != null  && !lt.getWord85().equals(new Integer(0))) || (lt.getWordNew() != null  && !lt.getWordNew().equals(new Integer(0))) || (lt.getWordNew4() != null  && !lt.getWordNew4().equals(new Double(0)))) { //trados
-//                int word100 = 0;
-//                int wordRep = 0;
-//                int word95 = 0;
-//                int word85 = 0;
-//                int word75 = 0;
-//                int wordNew = 0;
-//                int word8599 = 0;
-//                double wordNew4 = 0;
-//
-//                if(lt.getWord100() != null) {
-//                    word100 = lt.getWord100().intValue();
-//                }
-//                if(lt.getWordRep() != null) {
-//                    wordRep = lt.getWordRep().intValue();
-//                }
-//                if(lt.getWord95() != null) {
-//                    word95 = lt.getWord95().intValue();
-//                }
-//                if(lt.getWord85() != null) {
-//                    word85 = lt.getWord85().intValue();
-//                }
-//                if(lt.getWord75() != null) {
-//                    word75 = lt.getWord75().intValue();
-//                }
-//                if(lt.getWordNew() != null) {
-//                    wordNew = lt.getWordNew().intValue();
-//                }
-//                if(lt.getWord8599() != null) {
-//                    word8599 = lt.getWord8599().intValue();
-//                }
-//                if(lt.getWordNew4() != null) {
-//                    wordNew4 = lt.getWordNew4().doubleValue();
-//                }
-//
-//
-//
-//                double rate = 0;
-//                try {
-//                    String unformattedRate = lt.getInternalRate().replaceAll(",", "");
-//                    rate = Double.valueOf(unformattedRate).doubleValue();
-//                }
-//                catch(java.lang.NumberFormatException nfe) {
-//                    rate = 0;
-//                }
-//
-//                double wordTotal = word100 + wordRep + word8599 + wordNew4;
-//
-//                 if(!p.getCompany().isScaleDefault()) {
-//                    wordTotal = word100 + wordRep + word95 + word85 + word75 + wordNew;
-//                }
-//
-//                //rate and cost
-//                double thisTotal = 0.0;
-//                //scale the rates (either default or custom)
-//                Resource r = null; //get this task's team member to see if default scale used or not
-//                if(lt.getPersonName() != null && lt.getPersonName().length() > 0) {
-//                    r = ResourceService.getInstance().getSingleResource(Integer.valueOf(lt.getPersonName()));
-//                }
-//                if(p.getCompany().isScaleDefault()) {
-//                    double rateNew4 = rate;
-//                    double rate100 = rate * Double.parseDouble(p.getCompany().getScale100());
-//                    double rateRep = rate * Double.parseDouble(p.getCompany().getScaleRep());
-//                    double rate8599 = rate * Double.parseDouble(p.getCompany().getScale8599());
-//                    double costNew4 = wordNew4 * rateNew4;
-//                    double cost100 = word100 * rate100;
-//                    double costRep = wordRep * rateRep;
-//                    double cost8599 = word8599 * rate8599;
-//
-//                    thisTotal = costNew4 + cost100 + costRep + cost8599;
-//                }
-//                else {
-//                    double rateNew4 = rate;
-//                    double rate100 = rate * Double.parseDouble(p.getCompany().getScale100());
-//                    double rateRep = rate * Double.parseDouble(p.getCompany().getScaleRep());
-//                    double rate7584 = rate * Double.parseDouble(p.getCompany().getScale75());
-//                    double rate8594 = rate * Double.parseDouble(p.getCompany().getScale85());
-//                    double rate9599 = rate * Double.parseDouble(p.getCompany().getScale95());
-//
-//                    double costNew4 = wordNew * rateNew4;
-//                    double cost100 = word100 * rate100;
-//                    double costRep = wordRep * rateRep;
-//                    double cost7584 = word75 * rate7584;
-//                    double cost8594 = word85 * rate8594;
-//                    double cost9599 = word95 * rate9599;
-//
-//                    thisTotal = costNew4 + cost100 + costRep + cost7584 + cost8594 + cost9599;
-//                    //thisTotal = wordTotal*rate;
-//                }
-//
-//                linTotal += thisTotal; //update lin block
-//
-//                lt.setWordTotal(new Double(wordTotal));
-//
-//                ////Let user overwrite automatic calculations
-//                ///ALEX: Do NOT let user overwrite the calculations
-//                //if(lt.getInternalDollarTotal()==null || "".equals(lt.getInternalDollarTotal())){
-//                    lt.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-//
-//               // }
-//
-//                lt.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
-//
-           /* }
-            else { //non-trados; such as hourly                
-                if(lt.getWordTotal() != null) { //if from delete then make sure it is not null
-                    double total = lt.getWordTotal().doubleValue();
-                    double rate = 0;
-                    try {
-                        rate = Double.valueOf(lt.getInternalRate()).doubleValue();
-                    }
-                    catch(java.lang.NumberFormatException nfe) {
-                        rate = 0;
-                    }                
-
-                    double thisTotal = total*rate;
-                    System.out.println("inside of else:total="+total+",rate="+rate+"thisTotal="+thisTotal);
-                    linTotal += thisTotal; //update lin block
-                   //If user didn't leave it empty, then override it'
-                  //if(lt.getInternalDollarTotal()==null || "".equals(lt.getInternalDollarTotal())){
-                    lt.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                  // }
-                    lt.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
-                }
-            }*/
-            
-            //END process new total values (2 of them)
-            
-//            if(autoUpdate == null) { //update dates only if not updating tasks
-//                //START update lin dates
-//                String linTasksProjectSentArray = request.getParameter("linTasksProjectSentArray" + String.valueOf(i));
-//                if(linTasksProjectSentArray.length() >= 1) {
-//                    lt.setSentDateDate(DateService.getInstance().convertDate(linTasksProjectSentArray).getTime());
-//                }
-//                String linTasksProjectDueArray = request.getParameter("linTasksProjectDueArray" + String.valueOf(i));
-//                if(linTasksProjectDueArray.length() >= 1) {
-//                    lt.setDueDateDate(DateService.getInstance().convertDate(linTasksProjectDueArray).getTime());
-//                }
-//                String linTasksProjectReceivedArray = request.getParameter("linTasksProjectReceivedArray" + String.valueOf(i));
-//                if(linTasksProjectReceivedArray.length() >= 1) {
-//                    lt.setReceivedDateDate(DateService.getInstance().convertDate(linTasksProjectReceivedArray).getTime());
-//                }
-//                String linTasksProjectInvoiceArray = request.getParameter("linTasksProjectInvoiceArray" + String.valueOf(i));
-//                if(linTasksProjectInvoiceArray.length() >= 1) {
-//                    lt.setInvoiceDateDate(DateService.getInstance().convertDate(linTasksProjectInvoiceArray).getTime());
-//                }
-//                //END update lin dates
-//            }
-            
-            //update to db
-//            ProjectService.getInstance().updateLinTask(lt);
-           
-//        }//END LIN TASKS
-        
-        //START ENG TASKS
-        //get the updated list of eng Tasks for this project
-//        EngTask[] engTasks = (EngTask[]) qvg.get("engTasksProject");
-//
-//        //process each eng Task to db
-//        for(int i = 0; i < engTasks.length; i++) {
-//            EngTask et = engTasks[i];
-//
-//                //START process new TOTAL value
-//             if(et.getTotalTeam() != null) { //if from delete then make sure it is not null
-//                double total = et.getTotalTeam().doubleValue();
-//                double rate = 0;
-//                try {
-//                    rate = Double.valueOf(et.getInternalRate()).doubleValue();
-//                }
-//                catch(java.lang.NumberFormatException nfe) {
-//                    rate = 0;
-//                }
-//
-//                double thisTotal = total*rate;
-//                engTotal += thisTotal; //update eng block
-//
-//                et.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-//                et.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
-//             }
-//            //END process new total value
-//
-//            if(autoUpdate == null) { //update dates only if not updating tasks
-//                //START update eng dates
-//                String engTasksProjectSentArray = request.getParameter("engTasksProjectSentArray" + String.valueOf(i));
-//                if(engTasksProjectSentArray.length() >= 1) {
-//                    et.setSentDateDate(DateService.getInstance().convertDate(engTasksProjectSentArray).getTime());
-//                }
-//                String engTasksProjectDueArray = request.getParameter("engTasksProjectDueArray" + String.valueOf(i));
-//                if(engTasksProjectDueArray.length() >= 1) {
-//                    et.setDueDateDate(DateService.getInstance().convertDate(engTasksProjectDueArray).getTime());
-//                }
-//                String engTasksProjectReceivedArray = request.getParameter("engTasksProjectReceivedArray" + String.valueOf(i));
-//                if(engTasksProjectReceivedArray.length() >= 1) {
-//                    et.setReceivedDateDate(DateService.getInstance().convertDate(engTasksProjectReceivedArray).getTime());
-//                }
-//                String engTasksProjectInvoiceArray = request.getParameter("engTasksProjectInvoiceArray" + String.valueOf(i));
-//                if(engTasksProjectInvoiceArray.length() >= 1) {
-//                    et.setInvoiceDateDate(DateService.getInstance().convertDate(engTasksProjectInvoiceArray).getTime());
-//                }
-//                //END update eng dates
-//            }
-//
-//            //update to db
-//            ProjectService.getInstance().updateEngTask(et);
-//
-//        }//END ENG TASKS
-        
         //START DTP TASKS
         //get the updated list of dtp Tasks for this project
         DtpTask[] dtpTasks = (DtpTask[]) qvg.get("dtpTasksProject");
@@ -341,10 +125,10 @@ public final class ProjectViewTeamUpdateActionDtp extends Action {
             
             //START process new TOTAL value
             if(dt.getTotalTeam() != null) { //if from delete then make sure it is not null
-                double total = dt.getTotalTeam().doubleValue();
+                double total = dt.getTotalTeam();
                 double rate = 0;
                 try {
-                    rate = Double.valueOf(dt.getInternalRate()).doubleValue();
+                    rate = Double.valueOf(dt.getInternalRate().replaceAll(",", ""));
                 }
                 catch(java.lang.NumberFormatException nfe) {
                     rate = 0;
@@ -354,25 +138,25 @@ public final class ProjectViewTeamUpdateActionDtp extends Action {
                 dtpTotal += thisTotal; //update dtp block
                 
                 dt.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-                dt.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));            
+                dt.setInternalRate(StandardCode.getInstance().formatDouble4(new Double(rate)));            
             }
             //END process new total value
             
             if(autoUpdate == null) { //update dates only if not updating tasks
                 //START update dtp dates
-                String dtpTasksProjectSentArray = request.getParameter("dtpTasksProjectSentArray" + String.valueOf(i));
+                String dtpTasksProjectSentArray = request.getParameter("dtpTasksProjectSentArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectSentArray.length() >= 1) {
                     dt.setSentDateDate(DateService.getInstance().convertDate(dtpTasksProjectSentArray).getTime());
                 }else dt.setSentDateDate(null);
-                String dtpTasksProjectDueArray = request.getParameter("dtpTasksProjectDueArray" + String.valueOf(i));
+                String dtpTasksProjectDueArray = request.getParameter("dtpTasksProjectDueArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectDueArray.length() >= 1) {
                     dt.setDueDateDate(DateService.getInstance().convertDate(dtpTasksProjectDueArray).getTime());
                 }else dt.setDueDateDate(null);
-                String dtpTasksProjectReceivedArray = request.getParameter("dtpTasksProjectReceivedArray" + String.valueOf(i));
+                String dtpTasksProjectReceivedArray = request.getParameter("dtpTasksProjectReceivedArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectReceivedArray.length() >= 1) {
                     dt.setReceivedDateDate(DateService.getInstance().convertDate(dtpTasksProjectReceivedArray).getTime());
                 }else dt.setReceivedDateDate(null);
-                String dtpTasksProjectInvoiceArray = request.getParameter("dtpTasksProjectInvoiceArray" + String.valueOf(i));
+                String dtpTasksProjectInvoiceArray = request.getParameter("dtpTasksProjectInvoiceArray" + dt.getDtpTaskId());
                 if(dtpTasksProjectInvoiceArray.length() >= 1) {
                     dt.setInvoiceDateDate(DateService.getInstance().convertDate(dtpTasksProjectInvoiceArray).getTime());
                 }else dt.setInvoiceDateDate(null);
@@ -384,59 +168,7 @@ public final class ProjectViewTeamUpdateActionDtp extends Action {
            
         }//END DTP TASKS
         
-        //START OTH TASKS
-        //get the updated list of oth Tasks for this project
-//        OthTask[] othTasks = (OthTask[]) qvg.get("othTasksProject");
-//
-//        //process each oth Task to db
-//        for(int i = 0; i < othTasks.length; i++) {
-//            OthTask ot = othTasks[i];
-//
-//            //START process new TOTAL value
-//            if(ot.getTotalTeam() != null) { //if from delete then make sure it is not null
-//                double total = ot.getTotalTeam().doubleValue();
-//                double rate = 0;
-//                try {
-//                    rate = Double.valueOf(ot.getInternalRate()).doubleValue();
-//                }
-//                catch(java.lang.NumberFormatException nfe) {
-//                    rate = 0;
-//                }
-//
-//                double thisTotal = total*rate;
-//                othTotal += thisTotal; //update oth block
-//
-//                ot.setInternalDollarTotal(StandardCode.getInstance().formatDouble(new Double(thisTotal)));
-//                ot.setInternalRate(StandardCode.getInstance().formatDouble3(new Double(rate)));
-//            }
-//            //END process new total value
-//
-//            if(autoUpdate == null) { //update dates only if not updating tasks
-//                //START update oth dates
-//                String othTasksProjectSentArray = request.getParameter("othTasksProjectSentArray" + String.valueOf(i));
-//                if(othTasksProjectSentArray.length() >= 1) {
-//                    ot.setSentDateDate(DateService.getInstance().convertDate(othTasksProjectSentArray).getTime());
-//                }
-//                String othTasksProjectDueArray = request.getParameter("othTasksProjectDueArray" + String.valueOf(i));
-//                if(othTasksProjectDueArray.length() >= 1) {
-//                    ot.setDueDateDate(DateService.getInstance().convertDate(othTasksProjectDueArray).getTime());
-//                }
-//                String othTasksProjectReceivedArray = request.getParameter("othTasksProjectReceivedArray" + String.valueOf(i));
-//                if(othTasksProjectReceivedArray.length() >= 1) {
-//                    ot.setReceivedDateDate(DateService.getInstance().convertDate(othTasksProjectReceivedArray).getTime());
-//                }
-//                String othTasksProjectInvoiceArray = request.getParameter("othTasksProjectInvoiceArray" + String.valueOf(i));
-//                if(othTasksProjectInvoiceArray.length() >= 1) {
-//                    ot.setInvoiceDateDate(DateService.getInstance().convertDate(othTasksProjectInvoiceArray).getTime());
-//                }
-//                //END update oth dates
-//            }
-//
-//            //update to db
-//            ProjectService.getInstance().updateOthTask(ot);
-//
-//        }//END OTH TASKS
-//
+  
         //update project to db
         //NOTE: NO PROJECT TOTALS CHANGES 
         if(request.getParameter("euroToUsdExchangeRate")!=null){
@@ -449,14 +181,7 @@ public final class ProjectViewTeamUpdateActionDtp extends Action {
             Integer newAutoUpdate = new Integer(autoUpdate.intValue() + 1);
             request.setAttribute("AutoUpdate", newAutoUpdate); //place true value (1) into request 
         }
-        
-         
-//        if(request.getParameter("projectInformalsJSON")!=null){
-//
-//          ProjectHelper.updateProjectReqs(id.intValue(),request.getParameter("projectInformalsJSON"),"DTP");
-//
-//        }
-//
+
         // Forward control to the specified success URI
 	return (mapping.findForward("Success"));
     }

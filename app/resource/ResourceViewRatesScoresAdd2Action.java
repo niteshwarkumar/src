@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -114,11 +114,11 @@ public final class ResourceViewRatesScoresAdd2Action extends Action {
         //values for getting all of the rate-score-languages from form
         DynaValidatorForm rvrs = (DynaValidatorForm) form;
         
-        RateScoreLanguage[] rateScoreLanguages = (RateScoreLanguage[]) rvrs.get("rateScoreLanguagesAdd");
+        RateScoreLanguage[] ratescorelanguages = (RateScoreLanguage[]) rvrs.get("rateScoreLanguagesAdd");
         
-        //build link (one-to-many) between languagePair and rateScoreLanguage
-        for(int i = 0; i < rateScoreLanguages.length; i++) {
-            ResourceService.getInstance().linkLanguagePairRateScoreLanguage(lp, rateScoreLanguages[i]);        
+        //build link (one-to-many) between languagePair and ratescorelanguage
+        for(int i = 0; i < ratescorelanguages.length; i++) {
+            ResourceService.getInstance().linkLanguagePairRateScoreLanguage(lp, ratescorelanguages[i]);        
         }
              
                 

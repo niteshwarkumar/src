@@ -81,8 +81,8 @@ name2=name[1];}catch(Exception e){name2="";}
 try{
 name2+=" "+name[2];
 }catch(Exception e){name2+="";}
-        System.out.println(name1);
-        System.out.println(name2);
+        //System.out.println(name1);
+        //System.out.println(name2);
         
 
 //for(int i=0;i<name.length();i++){
@@ -102,7 +102,7 @@ name2+=" "+name[2];
 
 Client HW=ClientService.getInstance().getClient(u.getId_client());
 
-            System.out.println("                  working                     ");
+            //System.out.println("                  working                     ");
             //String ty="lk";
 
 try{
@@ -125,7 +125,7 @@ User uPM=UserService.getInstance().getSingleUserRealName(name1, name2);
 
      response.setContentType("text/json");
      response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

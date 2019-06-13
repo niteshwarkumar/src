@@ -22,7 +22,7 @@ public final class GetClientStats extends Action {
 
     public GetClientStats()
     {
-    System.out.println ("GetClientStats constructor calling**************************************");
+    //System.out.println ("GetClientStats constructor calling**************************************");
     }
     // ----------------------------------------------------- Instance Variables
     
@@ -74,7 +74,7 @@ public final class GetClientStats extends Action {
         
         //response.setContentType("text/html");
         //response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         // PrintWriter out = response.getWriter();
         
         //out.println("<response success=\"true\"></response>");
@@ -88,7 +88,9 @@ public final class GetClientStats extends Action {
         try{
         id=Integer.parseInt(clientViewId);
         
-        }catch(Exception e){System.out.println("error msg"+e.getMessage());}
+        }catch(Exception e){//System.out.println("error msg"+e.getMessage());
+            
+        }
 
        
             if("WorkLoad".equals(origin)){
@@ -105,12 +107,12 @@ public final class GetClientStats extends Action {
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         long endProjects = System.currentTimeMillis();
         out.println(new JSONArray(myStats.toArray()));
         out.flush();
-        System.out.println("GetClientStats took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetClientStats took:"+ ((endProjects-startProjects)/1000.0));
         
         // Forward control to the specified success URI
        return (null);

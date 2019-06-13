@@ -20,13 +20,15 @@ import app.security.*;
 import app.standardCode.*;
 import java.text.SimpleDateFormat;
 import org.apache.struts.validator.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
  * @author Niteshwar
  */
 public class InQReportPreAction extends Action {
-
+ 
     // ----------------------------------------------------- Instance Variables
     /**
      * The <code>Log</code> instance for this application.
@@ -72,9 +74,16 @@ public class InQReportPreAction extends Action {
         String projectId = null;
         String porq = "project";
         String quoteViewId = request.getParameter("quoteViewId");
+        
         if (quoteViewId != null) {
             Quote1 q = QuoteService.getInstance().getSingleQuote(Integer.parseInt(quoteViewId));
             projectId = q.getProject().getProjectId().toString();
+            List clq = QuoteService.getInstance().getClient_Quote(q.getQuote1Id());
+            Client_Quote cq = (Client_Quote) clq.get(0);
+            
+            List technicalList=QuoteService.getInstance().getTechnicalList(cq.getId());
+            request.setAttribute("q_technicalList", technicalList);
+            request.setAttribute(porq, q);
             porq = "quote";
 
         }
@@ -228,7 +237,7 @@ public class InQReportPreAction extends Action {
         } catch (Exception e) {
             uvg.set("lingReq1", "");
 
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
 
         try {
@@ -295,6 +304,12 @@ public class InQReportPreAction extends Action {
             uvg.set("verifiedDate", "" + StandardCode.getInstance().noNull((myFormat.format(ir.getVerifiedDate())).toString()));
         } catch (Exception e) {
             uvg.set("verifiedDate", "");
+        }
+        
+        try {
+            uvg.set("quoteSentDate", "" + StandardCode.getInstance().noNull((myFormat.format(ir.getQuoteSentDate())).toString()));
+        } catch (Exception e) {
+            uvg.set("quoteSentDate", "");
         }
         try {
             uvg.set("verifiedText", StandardCode.getInstance().noNull(ir.getVerifiedText()));
@@ -400,13 +415,91 @@ public class InQReportPreAction extends Action {
         if (qp.getStatus() == 2) {
             uvg.set("cross", "on");
         }}catch(Exception e){}
-
+        List technicalList = ProjectService.getInstance().getProjectTechnicalList(p.getProjectId());
+        
+        
+        INDelivery indel=InteqaService.getInstance().getINDelivery(Integer.parseInt(projectId));
+        
 
         //place this project into request for further display in jsp page
-
+        request.setAttribute("technicalList", technicalList);
         request.setAttribute("inReport", ir);
         request.setAttribute("project", p);
         response.addCookie(StandardCode.getInstance().setCookie("projectViewId", String.valueOf(p.getProjectId())));
+        JSONArray requirement = new JSONArray();
+         if(null!=indel){
+         List inDelR = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(),"R");
+        for (int i = 0; i < inDelR.size(); i++) {
+            INDeliveryReq inDeliveryReq = (INDeliveryReq) inDelR.get(i);
+            JSONObject jo = new JSONObject();
+            porq = "quote";
+            if (porq.equalsIgnoreCase("quote")) {
+                if (inDeliveryReq.getFromPorQ().equalsIgnoreCase("Q")) {
+                    jo.put("requirement", StandardCode.getInstance().noNull(inDeliveryReq.getClientReqText()));
+                    jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                    jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                    jo.put("id", inDeliveryReq.getId());
+                    requirement.put(jo);
+                }
+            } else {
+                jo.put("requirement", inDeliveryReq.getClientReqText());
+                jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                jo.put("id", inDeliveryReq.getId());
+                requirement.put(jo);
+            }
+            
+        }
+        JSONArray instruction = new JSONArray();
+        List inDelI = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(),"I");
+        for (int i = 0; i < inDelI.size(); i++) {
+            INDeliveryReq inDeliveryReq = (INDeliveryReq) inDelI.get(i);
+            JSONObject jo = new JSONObject();
+            if (porq.equalsIgnoreCase("quote")) {
+                if (inDeliveryReq.getFromPorQ().equalsIgnoreCase("Q")) {
+                    jo.put("requirement", StandardCode.getInstance().noNull(inDeliveryReq.getClientReqText()));
+                    jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                    jo.put("instructionsFor", StandardCode.getInstance().noNull(inDeliveryReq.getInstructionsFor()));
+                    
+                    jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                    jo.put("notes", inDeliveryReq.getNotes());
+                    jo.put("id", inDeliveryReq.getId());
+                    instruction.put(jo);
+                }
+            } else {
+                jo.put("requirement", inDeliveryReq.getClientReqText());
+                jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                jo.put("instructionsFor", StandardCode.getInstance().noNull(inDeliveryReq.getInstructionsFor()));
+                jo.put("notes", inDeliveryReq.getNotes());
+                jo.put("id", inDeliveryReq.getId());
+                instruction.put(jo);
+            }
+            
+        }
+         request.setAttribute("requirement", requirement.toString());
+         request.setAttribute("instruction", instruction.toString());
+        }
+         
+         List inRefList = InteqaService.getInstance().getInReference(p.getProjectId());
+        JSONArray inRefArray = new JSONArray();
+        for(int i = 0; i< inRefList.size(); i++){
+        INReference ref = (INReference)inRefList.get(i);
+            JSONObject refObj = new JSONObject();
+            refObj.put("projectId", ref.getProjectId());
+            if(Integer.parseInt(ref.getProjectNumber().split("#")[0].replaceAll("[A-Za-z]", ""))>0)
+             refObj.put("projectNumber", ""+ref.getProjectNumber().split("#")[0]);
+            else
+             refObj.put("projectNumber", "");
+           // refObj.put("quoteId", ref.getQuoteId());
+           try{ refObj.put("quoteNumber", ref.getQuoteNumber().split("#")[0]);}catch(Exception e){refObj.put("quoteNumber","");}
+            refObj.put("product", ref.getProduct());
+            refObj.put("productDescription", ref.getDescription());
+            inRefArray.put(refObj);
+            
+            
+        }
+        request.setAttribute("relatedProj", inRefArray);
 
         // Forward control to the specified success URI
         return (mapping.findForward("Success"));

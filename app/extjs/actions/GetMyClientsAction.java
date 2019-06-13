@@ -15,13 +15,15 @@ import org.apache.struts.util.MessageResources;
 import java.util.*;
 import app.user.*;
 import app.security.*;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import org.json.CDL;
 import org.json.JSONArray;
 
 public final class GetMyClientsAction extends Action {
     public GetMyClientsAction()
     {
-        System.out.println("GetMyClientsAction constructor*********************************");
+        //System.out.println("GetMyClientsAction constructor*********************************");
     }
     
     
@@ -78,18 +80,39 @@ public final class GetMyClientsAction extends Action {
         //get a user's Backup projects
         long startProjects = System.currentTimeMillis();
         String myName = u.getFirstName() + " " + u.getLastName();
+        
+         
+        String print = request.getParameter("print");
+        if(print!=null){
+         if(print.equalsIgnoreCase("yes")){
+            response.setContentType("text/csv");
+            response.setHeader("Content-Disposition", "attachment; filename=\"ClientList_"+myName.replaceAll(" ","_")+".csv\"");
+            try
+            {
+                List myClients = ClientHelper.getClientListForPMPrint(myName);
+                String csv = CDL.toString(new JSONArray(myClients.toArray()));
+                //System.out.println(csv);
+            OutputStream outputStream = response.getOutputStream();
+            outputStream.write(csv.getBytes("UTF-8"));
+            outputStream.flush();
+            outputStream.close();
+            }
+            catch(Exception e)
+            {
+                //System.out.println(e.toString());
+            }
+             return (null);
+         }}
+        
         List myClients = ClientHelper.getClientListForPM(myName);
-        
-        
-            
            
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyClientsAction took:"+ ((endProjects-startProjects)/1000.0));
-        
+        //System.out.println("GetMyClientsAction took:"+ ((endProjects-startProjects)/1000.0));
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         
         out.println(new JSONArray(myClients.toArray()));

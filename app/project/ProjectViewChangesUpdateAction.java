@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -118,6 +118,8 @@ public final class ProjectViewChangesUpdateAction extends Action {
                 String changeDateChanged = request.getParameter("dateChanged" + String.valueOf(i));
                 if(changeDateChanged.length() >= 1) {
                     c.setChangeDate(DateService.getInstance().convertDate(changeDateChanged).getTime());
+                }else{
+                c.setChangeDate(null);
                 }
                 //END update change dates
             
@@ -150,10 +152,14 @@ public final class ProjectViewChangesUpdateAction extends Action {
                 String changeDateChanged = request.getParameter("requestDate" + String.valueOf(i));
                 if(changeDateChanged.length() >= 1) {
                     c.setInvoiceRequestDate(DateService.getInstance().convertDate(changeDateChanged).getTime());
+                }else{
+                    c.setInvoiceRequestDate(null);
                 }
                 String paidDate = request.getParameter("paidDate" + String.valueOf(i));
                 if(paidDate.length() >= 1) {
                     c.setInvoicePaidDate(DateService.getInstance().convertDate(paidDate).getTime());
+                }else{
+                    c.setInvoicePaidDate(null);
                 }
                 //END update dates           
                 

@@ -4,6 +4,8 @@
  */
 package app.project;
 
+import app.comm.CommService;
+import app.comm.Requirement;
 import app.inteqa.INEngineering;
 import app.inteqa.InteqaService;
 import app.resource.Resource;
@@ -24,10 +26,12 @@ import java.io.*;
 import java.util.*;
 import app.security.*;
 import app.user.*;
+import app.util.GeneratePOTemplate;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.apache.struts.validator.DynaValidatorForm;
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -39,8 +43,8 @@ public class GeneratePO extends Action {
     /**
      * The <code>Log</code> instance for this application.
      */
-    private Log log =
-            LogFactory.getLog("org.apache.struts.webapp.Example");
+    private Log log
+            = LogFactory.getLog("org.apache.struts.webapp.Example");
 
     // --------------------------------------------------------- Public Methods
     /**
@@ -107,14 +111,11 @@ public class GeneratePO extends Action {
         Integer id = Integer.valueOf(projectId);
         DynaValidatorForm qvg = (DynaValidatorForm) form;
 
-
-
-
         (new java.io.File("C:/" + projectId)).mkdir();
         Project p = ProjectService.getInstance().getSingleProject(id);
 
         String Po6Tier = "6";
-        if (!p.getCompany().isScaleDefault()) {
+        if (!p.getCompany().isScaleDefault(p.getProjectId())) {
             Po6Tier = "";
         }
 
@@ -127,9 +128,10 @@ public class GeneratePO extends Action {
         LinTask[] linTasks = (LinTask[]) qvg.get("linTasksProject");
 
         LinTask lt = null;
-        String poNumber = ProjectService.getInstance().getNewPoNumber(p);
+//        String poNumber = ProjectService.getInstance().getNewPoNumber(p);
+        String poNumber = "";
         for (int i = 0; i < linTasks.length; i++) {
-            /// System.out.println(request.getParameter("POCheck" + String.valueOf(i)));
+            /// //System.out.println(request.getParameter("POCheck" + String.valueOf(i)));
             if (request.getParameter("POCheck" + String.valueOf(i)) != null) {
                 try {
 
@@ -137,7 +139,13 @@ public class GeneratePO extends Action {
                 } catch (Exception e) {
                     lt = linTasks[i];
                 }
-                System.out.println(lt.getTaskName() + "      " + request.getParameter("POCheck" + String.valueOf(i)));
+                if (poNumber.equals("")) {
+                    poNumber = ProjectService.getInstance().getNewPoNumber(p);
+                } else {
+                    poNumber = ProjectService.getInstance().incrementPoNumber(poNumber);
+                }
+                //System.out.println(lt.getTaskName() + "      " + request.getParameter("POCheck" + String.valueOf(i)));
+
                 lt.setPoNumber(poNumber);
                 ProjectService.getInstance().updateLinTask(lt);
                 flagT = 0;
@@ -152,109 +160,78 @@ public class GeneratePO extends Action {
                 if (lt.getTaskName().trim().contentEquals("Proofreading") || lt.getTaskName().contentEquals("Proofreading / Linguistic QA")) {
                     flagP = 1;
                 }
+                boolean isMulti = false;
+                tasktype = "";
                 if (lt.getMulti() != null) {
-
-                    if (lt.getMulti() != null && !lt.getMulti().equalsIgnoreCase("T&E") && !lt.getMulti().equalsIgnoreCase("T&P") && !lt.getMulti().equalsIgnoreCase("E&P")) {
-
-
-                        if (!p.getCompany().isScaleDefault()) {
-                            if (flagT == 1 && flagE == 0 && flagP == 0) {
-                                formFileName = "PO_Translator.pdf";
-                                tasktype = "Translation";
-                            }
-                            if (flagT == 0 && flagE == 1 && flagP == 0) {
-                                formFileName = "PO_Editor.pdf";
-                                tasktype = "Editing";
-                            }
-                            if (flagT == 0 && flagE == 0 && flagP == 1) {
-                                formFileName = "PO_Proofreader.pdf";
-                                tasktype = "Proofreading";
-                            }
-                        } else {
-                            if (flagT == 1 && flagE == 0 && flagP == 0) {
-                                formFileName = "PO_Translator6.pdf";
-                                tasktype = "Translation";
-                            }
-                            if (flagT == 0 && flagE == 1 && flagP == 0) {
-                                formFileName = "PO_Editor6.pdf";
-                                tasktype = "Editing";
-                            }
-                            if (flagT == 0 && flagE == 0 && flagP == 1) {
-                                formFileName = "PO_Proofreader6.pdf";
-                                tasktype = "Proofreading";
-                            }
+                    isMulti = true;
+                    if (!p.getCompany().isScaleDefault(p.getProjectId())) {
+                        if (lt.getMulti().equalsIgnoreCase("T&E")) {
+                            formFileName = "PO_TE" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "T&E";
+                        }
+                        if (lt.getMulti().equalsIgnoreCase("T&P")) {
+                            formFileName = "PO_TP" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "T&P";
+                        }
+                        if (lt.getMulti().equalsIgnoreCase("E&P")) {
+                            formFileName = "PO_EP" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "E&P";
                         }
                     } else {
-
-                        if (lt.getMulti() != null && !p.getCompany().isScaleDefault()) {
-                            if (lt.getMulti().equalsIgnoreCase("T&E")) {
-                                formFileName = "PO_TE.pdf";
-                                tasktype = "T&E";
-                            }
-                            if (lt.getMulti().equalsIgnoreCase("T&P")) {
-                                formFileName = "PO_TP.pdf";
-                                tasktype = "T&P";
-                            }
-                            if (lt.getMulti().equalsIgnoreCase("E&P")) {
-                                formFileName = "PO_EP.pdf";
-                                tasktype = "E&P";
-                            }
-                        } else {
-                            if (lt.getMulti().equalsIgnoreCase("T&E")) {
-                                formFileName = "PO_TE6.pdf";
-                                tasktype = "T&E";
-                            }
-                            if (lt.getMulti().equalsIgnoreCase("T&P")) {
-                                formFileName = "PO_TP6.pdf";
-                                tasktype = "T&P";
-                            }
-                            if (lt.getMulti().equalsIgnoreCase("E&P")) {
-                                formFileName = "PO_EP6.pdf";
-                                tasktype = "E&P";
-                            }
+                        if (lt.getMulti().equalsIgnoreCase("T&E")) {
+                            formFileName = "PO_TE6" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "T&E";
                         }
-
-
-                    }
-                } else {
-                    if (!p.getCompany().isScaleDefault()) {
-                        if (flagT == 1 && flagE == 0 && flagP == 0) {
-                            formFileName = "PO_Translator.pdf";
-                            tasktype = "Translation";
+                        if (lt.getMulti().equalsIgnoreCase("T&P")) {
+                            formFileName = "PO_TP6" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "T&P";
                         }
-                        if (flagT == 0 && flagE == 1 && flagP == 0) {
-                            formFileName = "PO_Editor.pdf";
-                            tasktype = "Editing";
-                        }
-                        if (flagT == 0 && flagE == 0 && flagP == 1) {
-                            formFileName = "PO_Proofreader.pdf";
-                            tasktype = "Proofreading";
-                        }
-                    } else {
-                        if (flagT == 1 && flagE == 0 && flagP == 0) {
-                            formFileName = "PO_Translator6.pdf";
-                            tasktype = "Translation";
-                        }
-                        if (flagT == 0 && flagE == 1 && flagP == 0) {
-                            formFileName = "PO_Editor6.pdf";
-                            tasktype = "Editing";
-                        }
-                        if (flagT == 0 && flagE == 0 && flagP == 1) {
-                            formFileName = "PO_Proofreader6.pdf";
-                            tasktype = "Proofreading";
+                        if (lt.getMulti().equalsIgnoreCase("E&P")) {
+                            formFileName = "PO_EP6" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "E&P";
                         }
                     }
-
                 }
 
-                System.out.println(lt.getTaskName() + "       ---------         " + formFileName);
+                if (tasktype.equalsIgnoreCase("")) {
+
+                    if (!p.getCompany().isScaleDefault(p.getProjectId())) {
+                        if (flagT == 1 && flagE == 0 && flagP == 0) {
+                            formFileName = "PO_Translator" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "Translation";
+                        }
+                        if (flagT == 0 && flagE == 1 && flagP == 0) {
+                            formFileName = "PO_Editor" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "Editing";
+                        }
+                        if (flagT == 0 && flagE == 0 && flagP == 1) {
+                            formFileName = "PO_Proofreader" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "Proofreading";
+                        }
+                    } else {
+                        if (flagT == 1 && flagE == 0 && flagP == 0) {
+                            formFileName = "PO_Translator6" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "Translation";
+                        }
+                        if (flagT == 0 && flagE == 1 && flagP == 0) {
+                            formFileName = "PO_Editor6" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "Editing";
+                        }
+                        if (flagT == 0 && flagE == 0 && flagP == 1) {
+                            formFileName = "PO_Proofreader6" + GeneratePOTemplate.ext + ".pdf";
+                            tasktype = "Proofreading";
+                        }
+                    }
+                } 
+
                 pdfNameLng = lt.getTargetDoc().getLanguage();
                 pdfNamePoNo = lt.getPoNumber();
                 PdfReader reader = new PdfReader("C:/templates/" + formFileName);
+//                PdfReader reader = new PdfReader("/Users/abhisheksingh/Project/PO/New/"+ formFileName);
                 ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
                 PdfStamper stamp = new PdfStamper(reader, new FileOutputStream("C:/" + projectId + "/" + p.getNumber() + p.getCompany().getCompany_code() + "-" + pdfNameLng + "-" + tasktype + ".pdf"));
+//                PdfStamper stamp = new PdfStamper(reader, new FileOutputStream("/Users/abhisheksingh/Project/PO/New/" + p.getNumber() + p.getCompany().getCompany_code() + "-" + pdfNameLng + "-" + tasktype + ".pdf"));
                 AcroFields form1 = stamp.getAcroFields();
-
 
                 try {
                     form1.setField("contractor", " ");
@@ -272,8 +249,8 @@ public class GeneratePO extends Action {
                     form1.setField("contractor", " ");
                 }
                 form1.setField("Project", p.getNumber() + p.getCompany().getCompany_code());
-                form1.setField("PO", p.getNumber() + p.getCompany().getCompany_code() + "-PO-" + lt.getPoNumber());
-                poNumber = lt.getPoNumber();
+                form1.setField("PO", p.getNumber() + p.getCompany().getCompany_code() + "-PO-" + poNumber);
+//                poNumber = lt.getPoNumber();
                 form1.setField("Deliverby", "email");
                 if (lt.getDueDateDate() != null) {
                     form1.setField("Deadline", DateFormat.getDateInstance(DateFormat.SHORT).format(lt.getDueDateDate()));
@@ -296,69 +273,154 @@ public class GeneratePO extends Action {
                 } catch (Exception e) {
                 }
 
+                List<Integer> poList = CommService.getInstance().getReqPoList(Integer.parseInt(projectId));
+                List<Requirement> generalReq = CommService.getInstance().getRequirement("G", "L", 0, 0);
+                List<Requirement> clientReq = CommService.getInstance().getRequirement("C", "L", p.getCompany().getClientId(), 0);
+                List<Requirement> projectReq = CommService.getInstance().getRequirement("P", "L", 0, Integer.parseInt(projectId));
+                String reqGenStr = "";
+                String reqClientStr = "";
+                String reqProjectStr = "";
+                for (Requirement req : generalReq) {
+                    if (poList.contains(req.getId()) || poList.isEmpty()) {
+                        if (!reqGenStr.isEmpty()) {
+                            reqGenStr += "\n\n";
+                        }
+                        reqGenStr += Jsoup.parse(req.getRequirement()).text().replaceAll("&nbsp;", "");
+                    }
+                }
+                for (Requirement req : clientReq) {
+                    if (poList.contains(req.getId()) || poList.isEmpty()) {
+                        if (!reqClientStr.isEmpty()) {
+                            reqClientStr += "\n\n";
+                        }
+                        reqClientStr += Jsoup.parse(req.getRequirement()).text().replaceAll("&nbsp;", "");
+                    }
+                }
+                for (Requirement req : projectReq) {
+                    if (poList.contains(req.getId()) || poList.isEmpty()) {
+                        if (!reqProjectStr.isEmpty()) {
+                            reqProjectStr += "\n\n";
+                        }
+                        reqProjectStr += Jsoup.parse(req.getRequirement()).text().replaceAll("&nbsp;", "");
+                    }
+                }
+
+                form1.setField("gen-reqs", reqGenStr);
+                form1.setField("client-reqs", reqClientStr);
+                form1.setField("project-reqs", reqProjectStr);
+
                 form1.setField("Language", lt.getTargetDoc().getLanguage());
 
-                form1.setField("Unit1", lt.getUnits());
-            double scale100 = 0.25;
-            double scaleRep = 0.25;
-            double scale8599 = 0.50;
-            double scaleNew4 = 1.0;
-            double scalePerfect = 0.20;
-            double scaleContext = 0.20;
-            double scale95 = 0.50;
-            double scale85 = 0.50;
-            double scale75 = 0.60;
-            double scaleNew = 1.0;
+                //   form1.setField("Unit1", lt.getUnits());
+                double scale100 = 0.25;
+                double scaleRep = 0.25;
+                double scale8599 = 0.50;
+                double scaleNew4 = 1.0;
+                double scalePerfect = 0.20;
+                double scaleContext = 0.20;
+                double scale95 = 0.50;
+                double scale85 = 0.50;
+                double scale75 = 0.60;
+                double scaleNew = 1.0;
 
-                 try {
-                Resource res = ResourceService.getInstance().getSingleResource(Integer.parseInt(lt.getPersonName()));
+                try {
+                    Resource res = ResourceService.getInstance().getSingleResource(Integer.parseInt(lt.getPersonName()));
+                    if (res.isDefaultRate()) {
+                        if (null != lt.getScale()) {
+                            scale100 = new Double(lt.getScale().getScale100());
+                            scaleRep = new Double(lt.getScale().getScaleRep());
+//                        scaleNew4 = new Double(lt.getScale().getScaleNew4());
+                            scalePerfect = new Double(lt.getScale().getScalePerfect());
+                            scaleContext = new Double(lt.getScale().getScaleContext());
+                            scale95 = new Double(lt.getScale().getScale95());
+                            scale85 = new Double(lt.getScale().getScale85());
+                            scale75 = new Double(lt.getScale().getScale75());
+                            scaleNew = new Double(lt.getScale().getScaleNew());
+                            scaleNew4 = new Double(lt.getScale().getScaleNew());
+                        } else {
+                            scale100 = new Double(res.getScale100());
+                            scaleRep = new Double(res.getScaleRep());
+//                    scale8599 = new Double(res.getScale8599());
+//                    scaleNew4 = new Double(res.getScaleNew4());
+                            scalePerfect = new Double(res.getScalePerfect());
+                            scaleContext = new Double(res.getScaleContext());
+                            scale95 = new Double(res.getScale95());
+                            scale85 = new Double(res.getScale85());
+                            scale75 = new Double(res.getScale75());
+                            scaleNew = new Double(res.getScaleNew());
+                            scaleNew4 = new Double(res.getScaleNew());
 
-                scale100 = new Double(res.getScale100()).doubleValue();
-                scaleRep = new Double(res.getScaleRep()).doubleValue();
-                scale8599 = new Double(res.getScale8599()).doubleValue();
-                scaleNew4 = new Double(res.getScaleNew4()).doubleValue();
-                scalePerfect = new Double(res.getScalePerfect()).doubleValue();
-                scaleContext = new Double(res.getScaleContext()).doubleValue();
-                scale95 = new Double(res.getScale95()).doubleValue();
-                scale85 = new Double(res.getScale85()).doubleValue();
-                scale75 = new Double(res.getScale75()).doubleValue();
-                scaleNew = new Double(res.getScaleNew()).doubleValue();
-            } catch (Exception e) {
-            }
+                            Scale scale = new Scale();
+                            scale.setScale100(res.getScale100());
+                            scale.setScale75(res.getScale75());
+                            scale.setScale85(res.getScale85());
+                            scale.setScale95(res.getScale95());
+                            scale.setScaleContext(res.getScaleContext());
+                            scale.setScaleNew(res.getScaleNew());
+                            scale.setScalePerfect(res.getScalePerfect());
+                            scale.setScaleRep(res.getScaleRep());
+                            lt.setScale(scale);
+                            ProjectService.getInstance().updateScale(scale);
+
+                        }
+                    } else {
+                        if (null != lt.getScale()) {
+                            scale100 = new Double(lt.getScale().getScale100());
+                            scaleRep = new Double(lt.getScale().getScaleRep());
+//                        scaleNew4 = new Double(lt.getScale().getScaleNew4());
+                            scalePerfect = new Double(lt.getScale().getScalePerfect());
+                            scaleContext = new Double(lt.getScale().getScaleContext());
+                            scale95 = new Double(lt.getScale().getScale95());
+                            scale85 = new Double(lt.getScale().getScale85());
+                            scale75 = new Double(lt.getScale().getScale75());
+                            scaleNew = new Double(lt.getScale().getScaleNew());
+                        } else {
+                            scale100 = p.getCompany().getScale100_team();
+                            scaleRep = p.getCompany().getScaleRep_team();
+                            try {
+                                scale8599 = p.getCompany().getScale8599_team();
+                            } catch (Exception e1) {
+                            }
+                            try {
+                                scaleNew4 = p.getCompany().getScaleNew4_team();
+                            } catch (Exception e1) {
+                            }
+                            scalePerfect = p.getCompany().getScalePerfect_team();
+                            scaleContext = p.getCompany().getScaleContext_team();
+                            scale95 = p.getCompany().getScale95_team();
+                            scale85 = p.getCompany().getScale85_team();
+                            scale75 = p.getCompany().getScale75_team();
+                            scaleNew = p.getCompany().getScaleNew_team();
+
+                        }
+                    }
+                } catch (Exception e) {
+                    scale100 = p.getCompany().getScale100_team();
+                    scaleRep = p.getCompany().getScaleRep_team();
+                    try {
+                        scale8599 = p.getCompany().getScale8599_team();
+                    } catch (Exception e1) {
+                    }
+                    try {
+                        scaleNew4 = p.getCompany().getScaleNew4_team();
+                    } catch (Exception e1) {
+                    }
+                    scalePerfect = p.getCompany().getScalePerfect_team();
+                    scaleContext = p.getCompany().getScaleContext_team();
+                    scale95 = p.getCompany().getScale95_team();
+                    scale85 = p.getCompany().getScale85_team();
+                    scale75 = p.getCompany().getScale75_team();
+                    scaleNew = p.getCompany().getScaleNew_team();
+                }
 
                 double rate = 0.0;
                 if (lt.getInternalRate() != null) {
-                    form1.setField("Rate_new", lt.getInternalRate());
+//                    form1.setField("Rate_new", lt.getInternalRate());
                     rate = Double.parseDouble(lt.getInternalRate());
                 }
 
                 double totalWords = 0;
                 double newWords = 0;
-
-
-
-
-                if (!p.getCompany().isScaleDefault() && lt.getWordNew() != null) {
-                    form1.setField("Volume_new", lt.getWordNew().toString());
-                    newWords = lt.getWordNew().doubleValue();
-                    totalWords += newWords;
-                } else if (lt.getWordNew4() != null) {
-                    form1.setField("Volume_new", lt.getWordNew4().toString());
-                    newWords = lt.getWordNew4().doubleValue();
-                    totalWords += newWords;
-                }
-
-                double costTotalNew = rate * newWords;
-                form1.setField("Cost_new", "" + StandardCode.getInstance().formatDouble(costTotalNew * 100 / 100.00));
-
-                //Set VOLUME fields
-                double word100Cost = 0.0;
-                if (lt.getWord100() != null) {
-                    form1.setField("Volume_100", lt.getWord100().toString());
-                    word100Cost = rate * scale100 * lt.getWord100().intValue();
-                    totalWords += lt.getWord100().intValue();
-                }
-
 
                 double wordRepCost = 0.0;
                 double wordRep8599 = 0.0;
@@ -367,79 +429,142 @@ public class GeneratePO extends Action {
                 double wordRep9599 = 0.0;
                 double wordPerfect = 0.0;
                 double wordContext = 0.0;
+                double wordNewCost = 0.0;
+                boolean isMinFee = false;
+                if (isMulti) {
+                    if (lt.getMulti().equalsIgnoreCase("Minimum Fee")) {
+                        isMinFee = true;
+                    }
+                }
+                if (lt.getMulti() == null) {
+                    lt.setMulti("");
+                }
+                 double totalAmount = 0;
 
+                if (isMinFee) {
+                    form1.setField("Minimum Fee", "Minimum Fee");
+                    form1.setField("MinFeeAmnt", lt.getMinFee().toString());
 
+                } else {
+                    form1.setField("Unit1", lt.getUnits());
+                    form1.setField("Unit", lt.getUnits());
 
+                    if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWordNew() != null) {
+                        form1.setField("Volume_new", lt.getWordNew().toString());
+                        newWords = lt.getWordNew();
+                        totalWords += newWords;
+                        wordNewCost = rate * newWords * scaleNew;
+                        form1.setField("Rate_new", StandardCode.getInstance().formatDouble4(rate * scaleNew));
+                        form1.setField("Cost_new", "" + StandardCode.getInstance().formatDouble4(wordNewCost * 100 / 100.00));
+                    } else if (lt.getWordNew4() != null) {
+                        form1.setField("Volume_new", lt.getWordNew4().toString());
+                        newWords = lt.getWordNew4();
+                        totalWords += newWords;
+                        wordNewCost = rate * newWords * scaleNew4;
+                        form1.setField("Rate_new", StandardCode.getInstance().formatDouble4(rate * scaleNew4));
+                        form1.setField("Cost_new", "" + StandardCode.getInstance().formatDouble4(wordNewCost * 100 / 100.00));
+                    }
+
+                    //Set VOLUME fields
+                    double word100Cost = 0.0;
+                    if (lt.getWord100() != null) {
+                        form1.setField("Rate_100", StandardCode.getInstance().formatDouble4(new Double(rate * scale100)));
+//                        form1.setField("Cost_100", lt.getWord100().toString());
+                        word100Cost = rate * scale100 * lt.getWord100();
+                         form1.setField("Cost_100", "" + StandardCode.getInstance().formatDouble(word100Cost));
+                    }
+
+                    if (lt.getWordRep() != null) {
+                        form1.setField("Rate_rep", StandardCode.getInstance().formatDouble4(new Double(rate * scaleRep)));
+                       
+                        wordRepCost = rate * scaleRep * lt.getWordRep();
+                         form1.setField("Cost_rep", "" + StandardCode.getInstance().formatDouble(wordRepCost));
+                    }
+                    if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord75() != null) {
+                        wordRep7584 = rate * scale75 * lt.getWord75();
+                        form1.setField("Rate_7584", StandardCode.getInstance().formatDouble4(new Double(rate * scale75)));
+                        form1.setField("Cost_7584", "" + StandardCode.getInstance().formatDouble(new Double(wordRep7584)));
+                    }
+                    if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord85() != null) {
+                        wordRep8594 = rate * scale85 * lt.getWord85();
+                        form1.setField("Rate_8594", StandardCode.getInstance().formatDouble4(new Double(rate * scale85)));
+                        form1.setField("Cost_8594", "" + StandardCode.getInstance().formatDouble(new Double(wordRep8594)));
+                    }
+
+                    if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord95() != null) {
+                        wordRep9599 = rate * scale95 * lt.getWord95();
+                        form1.setField("Rate_9599", StandardCode.getInstance().formatDouble4(new Double(rate * scale95)));
+                        form1.setField("Cost_9599", "" + StandardCode.getInstance().formatDouble(new Double(wordRep9599)));
+                    }
+                    if (lt.getWordPerfect() != null) {
+                        wordPerfect = rate * scalePerfect * lt.getWordPerfect();
+                        form1.setField("Rate_Perfect", StandardCode.getInstance().formatDouble4(new Double(rate * scalePerfect)));
+                        form1.setField("Cost_Perfect", "" + StandardCode.getInstance().formatDouble(new Double(wordPerfect)));
+                    }
+                    if (lt.getWordContext() != null) {
+                        wordContext = rate * scaleContext * lt.getWordContext();
+                        form1.setField("Rate_Context", StandardCode.getInstance().formatDouble4(new Double(rate * scaleContext)));
+                        form1.setField("Cost_Context", "" + StandardCode.getInstance().formatDouble(new Double(wordContext)));
+                    }
+                    if (p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord8599() != null) {
+                        wordRep8599 = rate * scale8599 * lt.getWord8599();
+                        form1.setField("Rate_8599", StandardCode.getInstance().formatDouble4(new Double(rate * scale8599)));
+                        form1.setField("Cost_8599", "" + StandardCode.getInstance().formatDouble(new Double(wordRep8599)));
+                    }
+                    //Set VOLUME fields
+//                double word100Cost = 0.0;
+                if (lt.getWord100() != null) {
+                    form1.setField("Volume_100", lt.getWord100().toString());
+                    totalWords += lt.getWord100();
+                }
                 if (lt.getWordRep() != null) {
                     form1.setField("Volume_rep", lt.getWordRep().toString());
-                    wordRepCost = rate * scaleRep * lt.getWordRep().intValue();
-                    totalWords += lt.getWordRep().intValue();
+                    totalWords += lt.getWordRep();
                 }
-                if (!p.getCompany().isScaleDefault() && lt.getWord75() != null) {
+                if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord75() != null) {
                     form1.setField("Volume_7584", lt.getWord75().toString());
-                    wordRep7584 = rate * scale75 * lt.getWord75().intValue();
-                    totalWords += lt.getWord75().intValue();
-                    form1.setField("Rate_7584", StandardCode.getInstance().formatDouble3(new Double(rate * scale75)));
-                    form1.setField("Cost_7584", "" + StandardCode.getInstance().formatDouble(new Double(wordRep7584)));
+                    totalWords += lt.getWord75();
                 }
-                if (!p.getCompany().isScaleDefault() && lt.getWord85() != null) {
+                if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord85() != null) {
                     form1.setField("Volume_8594", lt.getWord85().toString());
-                    wordRep8594 = rate * scale85 * lt.getWord85().intValue();
-                    totalWords += lt.getWord85().intValue();
-                    form1.setField("Rate_8594", StandardCode.getInstance().formatDouble3(new Double(rate * scale85)));
-                    form1.setField("Cost_8594", "" + StandardCode.getInstance().formatDouble(new Double(wordRep8594)));
+                    totalWords += lt.getWord85();
                 }
-
-                if (!p.getCompany().isScaleDefault() && lt.getWord95() != null) {
+                if (!p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord95() != null) {
                     form1.setField("Volume_9599", lt.getWord95().toString());
-                    wordRep9599 = rate * scale95 * lt.getWord95().intValue();
-                    totalWords += lt.getWord95().intValue();
-                    form1.setField("Rate_9599", StandardCode.getInstance().formatDouble3(new Double(rate * scale95)));
-                    form1.setField("Cost_9599", "" + StandardCode.getInstance().formatDouble(new Double(wordRep9599)));
+                    totalWords += lt.getWord95();
                 }
                 if (lt.getWordPerfect() != null) {
                     form1.setField("Volume_Perfect", lt.getWordPerfect().toString());
-                    wordPerfect = rate * scalePerfect * lt.getWordPerfect().intValue();
-                    totalWords += lt.getWordPerfect().intValue();
-                    form1.setField("Rate_Perfect", StandardCode.getInstance().formatDouble3(new Double(rate * scalePerfect)));
-                    form1.setField("Cost_Perfect", "" + StandardCode.getInstance().formatDouble(new Double(wordPerfect)));
+                    totalWords += lt.getWordPerfect();
                 }
                 if (lt.getWordContext() != null) {
                     form1.setField("Volume_Context", lt.getWordContext().toString());
-                    wordContext = rate * scaleContext * lt.getWordContext().intValue();
-                    totalWords += lt.getWordContext().intValue();
-                    form1.setField("Rate_Context", StandardCode.getInstance().formatDouble3(new Double(rate *scaleContext)));
-                    form1.setField("Cost_Context", "" + StandardCode.getInstance().formatDouble(new Double(wordContext)));
+                    totalWords += lt.getWordContext();
                 }
-                if (p.getCompany().isScaleDefault() && lt.getWord8599() != null) {
+                if (p.getCompany().isScaleDefault(p.getProjectId()) && lt.getWord8599() != null) {
                     form1.setField("Volume_8599", lt.getWord8599().toString());
-                    wordRep8599 = rate * scale8599 * lt.getWord8599().intValue();
-                    totalWords += lt.getWord8599().intValue();
-                    form1.setField("Rate_8599", StandardCode.getInstance().formatDouble3(new Double(rate * scale8599)));
-                    form1.setField("Cost_8599", "" + StandardCode.getInstance().formatDouble(new Double(wordRep8599)));
+                    totalWords += lt.getWord8599();
                 }
-
-
-
-
-                form1.setField("Rate_100", StandardCode.getInstance().formatDouble3(new Double(rate * scale100)));
-                form1.setField("Rate_rep", StandardCode.getInstance().formatDouble3(new Double(rate * scaleRep)));
-                form1.setField("Cost_100", "" + StandardCode.getInstance().formatDouble(new Double(word100Cost)));
-                form1.setField("Cost_rep", "" + StandardCode.getInstance().formatDouble(new Double(wordRepCost)));
-
-                double totalAmount = 0;
-                if (!p.getCompany().isScaleDefault()) {
-                    totalAmount = costTotalNew + word100Cost + wordRepCost + wordRep8599 + wordRep9599 + wordRep7584 + wordRep8594 + wordContext + wordPerfect;
+                if (lt.getMulti().equalsIgnoreCase("Minimum Fee")) {
+                    totalAmount = 0.00;
+                } else if (!p.getCompany().isScaleDefault(p.getProjectId())) {
+                    totalAmount = wordNewCost + word100Cost + wordRepCost + wordRep8599 + wordRep9599 + wordRep7584 + wordRep8594 + wordContext + wordPerfect;
                 } else {
-                    totalAmount = costTotalNew + word100Cost + wordRepCost + wordRep8599 + wordContext + wordPerfect;
+                    totalAmount = wordNewCost + word100Cost + wordRepCost + wordRep8599 + wordContext + wordPerfect;
                 }
+                }
+                
+
+
+               
+                
+                
                 form1.setField("Cost_total", "" + StandardCode.getInstance().formatDouble(new Double(totalAmount)));
 
                 form1.setField("totalwords", "" + totalWords);
 
                 //Add tasks
                 //tasktype="Translation";
-
                 form1.setField("Task1", lt.getTaskName());
                 try {
                     if (lt.getMulti() != null && lt.getMulti().equalsIgnoreCase("T&E")) {
@@ -457,50 +582,36 @@ public class GeneratePO extends Action {
                 } catch (Exception e) {
                 }
                 try {
-                     INEngineering inEngg = InteqaService.getInstance().getINEngineering(id);
-                String Instr3="";
-                if(inEngg.isLpr1()==true){Instr3+="Keep file name as is\n";}
-                if(inEngg.isLpr2()==true){Instr3+="Keep folder structure as is\n";}
-                if(inEngg.isLpr3()==true){Instr3+="Use TagEditor\n";}
-                if(inEngg.isLpr4()==true){Instr3+="Use the specific .ini.file\n";}
-                if(inEngg.isLpr5()==true){Instr3+=inEngg.getLpr5Text()+"\n";}
-                if(inEngg.isLpr6()==true){Instr3+=inEngg.getLpr6Text()+"\n";}
-              
-                form1.setField("Instr-3", Instr3);
-                    
+                    INEngineering inEngg = InteqaService.getInstance().getINEngineering(id);
+                    String Instr3 = "";
+                    if (inEngg.isLpr1() == true) {
+                        Instr3 += "Keep file name as is\n";
+                    }
+                    if (inEngg.isLpr2() == true) {
+                        Instr3 += "Keep folder structure as is\n";
+                    }
+                    //if(inEngg.isLpr3()==true){Instr3+="Use TagEditor\n";}
+                    if (inEngg.isLpr4() == true) {
+                        Instr3 += "Use the specific .ini.file\n";
+                    }
+                    if (inEngg.isLpr5() == true) {
+                        Instr3 += inEngg.getLpr5Text() + "\n";
+                    }
+                    if (inEngg.isLpr6() == true) {
+                        Instr3 += inEngg.getLpr6Text() + "\n";
+                    }
+
+                    form1.setField("Instr-3", Instr3);
+
                 } catch (Exception e) {
                 }
-               
-               
-
-//                if(tasktype.equalsIgnoreCase("T&E")){
-//                form1.setField("Task1", "Translation");
-//                form1.setField("Task2", "Editing");
-//                }else if(tasktype.equalsIgnoreCase("T&P")){
-//                form1.setField("Task1", "Translation");
-//                form1.setField("Task2", "Proofreading");
-//                }else if(tasktype.equalsIgnoreCase("E&P")){
-//                form1.setField("Task1", "Editing");
-//                form1.setField("Task2", "Proofreading");
-//                }else
-//                form1.setField("Task1", lt.getTaskName());
-
 
                 stamp.close();
+                formFileName = "";
 
-                //(new File("C:/log")).mkdir();
-                //FileOutputStream fs=new FileOutputStream("C:/"+p.getNumber() + p.getCompany().getCompany_code() + "-" + pdfNamePoNo +"-"+pdfNameLng+ ".pdf");
-                //  fs=new FileOutputStream("C:/"+pdfStream.toString());
-                // fs=new FileOutputStream(null);
-                // System.out.println(fs.toString());
-                // response.getOutputStream();
-//       response.setHeader("Content-disposition", "hidden; filename=" + p.getNumber() + p.getCompany().getCompany_code() + "-" + pdfNamePoNo +"-"+pdfNameLng+ ".pdf");
-//             OutputStream os = response.getOutputStream();
-//             pdfStream.writeTo(os);
-//             os.flush();
             }
         }
-        //}}
+
         try {
             java.io.File inFolder = new java.io.File("C:/" + projectId);
             java.io.File outFolder = new java.io.File("C:/PO" + p.getNumber() + p.getCompany().getCompany_code() + ".zip");
@@ -545,19 +656,15 @@ public class GeneratePO extends Action {
         }
 
         deleteFile("C:/PO" + p.getNumber() + p.getCompany().getCompany_code() + ".zip");
-        //   (new java.io.File("C:/"+p.getNumber() + p.getCompany().getCompany_code())).mkdir();
 
         for (Iterator iter1 = p.getSourceDocs().iterator(); iter1.hasNext();) {
             SourceDoc sd = (SourceDoc) iter1.next();
             for (Iterator iter2 = sd.getTargetDocs().iterator(); iter2.hasNext();) {
                 TargetDoc td = (TargetDoc) iter2.next();
-                poNumber = ProjectService.getInstance().getNewPoNumber(p);
                 for (Iterator iter = td.getLinTasks().iterator(); iter.hasNext();) {
                     LinTask lt1 = (LinTask) iter.next();
                     pdfNameLng = lt1.getTargetDoc().getLanguage();
-                    pdfNamePoNo = lt1.getPoNumber();
                     File inpt = new File("C:/" + projectId + "/" + p.getNumber() + p.getCompany().getCompany_code() + "-" + pdfNameLng + "-" + tasktype + ".pdf");
-                    // deleteFile("C:/"+projectId+"/"+p.getNumber() + p.getCompany().getCompany_code() + "-" + pdfNamePoNo +"-"+pdfNameLng+ ".pdf");
                     inpt.delete();
 
                 }
@@ -565,8 +672,6 @@ public class GeneratePO extends Action {
         }
 
         deleteFile("C:/" + projectId);
-
-
 
         // Forward control to the specified success URI
         return (mapping.findForward("Success"));

@@ -107,7 +107,7 @@ public final class QuoteViewGeneralAction extends Action {
         
         //get this quote's sources
         Set sources = q.getSourceDocs();
-       // System.out.println("alexxxx:::quoteId="+quoteId);
+       // //System.out.println("alexxxx:::quoteId="+quoteId);
         //for each source add each sources' Tasks
 
         List totalLinTasks = new ArrayList();
@@ -117,12 +117,12 @@ public final class QuoteViewGeneralAction extends Action {
         List totalOthTasks = new ArrayList();
 
 
-      //  System.out.println("quoteViewId"+quoteId+"         "+request.getParameter("quoteViewId")+"        "+quoteViewId);
+      //  //System.out.println("quoteViewId"+quoteId+"         "+request.getParameter("quoteViewId")+"        "+quoteViewId);
            Integer CQuote =Integer.parseInt(quoteId);
            // Integer CQuote=1410;
          //    List results = new ArrayList();
        //  Session session = ConnectionFactory.getInstance().getSession();
-            System.out.println("getNewClientQuoteNumber" + CQuote);
+            //System.out.println("getNewClientQuoteNumber" + CQuote);
            List rs=null;
            int size=1;
            List sourcelang=null;
@@ -133,7 +133,7 @@ try{
 
             rs=QuoteService.getInstance().getClient_Quote(CQuote);
             size=rs.size();
-            System.out.println("RS ka sizeeeeeeeeeeeeeeeeeee"+rs.size());
+            //System.out.println("RS ka sizeeeeeeeeeeeeeeeeeee"+rs.size());
 
 
 }catch(Exception e){size=0;}
@@ -159,7 +159,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("Translation")||lt.getTaskName().equalsIgnoreCase("Translation "))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                 //   System.out.println("linTaskList" +lt.getTaskName());
+                                 //   //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -167,7 +167,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("Editing")||lt.getTaskName().equalsIgnoreCase("Editing "))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                 //    System.out.println("linTaskList" +lt.getTaskName());
+                                 //    //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -175,7 +175,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("ICR ")||lt.getTaskName().equalsIgnoreCase("ICR"))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                //    System.out.println("linTaskList" +lt.getTaskName());
+                                //    //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -183,7 +183,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("Proofreading ")||lt.getTaskName().equalsIgnoreCase("Proofreading"))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                    //  System.out.println("linTaskList" +lt.getTaskName());
+                                    //  //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -191,7 +191,7 @@ try{
                                       if(!lt.getTaskName().equalsIgnoreCase("Proofreading ")&&!lt.getTaskName().equalsIgnoreCase("ICR ")&&!lt.getTaskName().equalsIgnoreCase("Editing")&&!lt.getTaskName().equalsIgnoreCase("Translation")&&!lt.getTaskName().equalsIgnoreCase("Proofreading")&&!lt.getTaskName().equalsIgnoreCase("ICR")&&!lt.getTaskName().equalsIgnoreCase("Editing ")&&!lt.getTaskName().equalsIgnoreCase("Translation "))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                    //  System.out.println("linTaskList" +lt.getTaskName());
+                                    //  //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
 
@@ -224,8 +224,13 @@ try{
                   Client_Quote cq=(Client_Quote) rs.get(i);
                    // Client_Quote cq=QuoteService.getInstance().getSingleClient_Quote(rs.getInt("id"));
                     sourcelang=QuoteService.getInstance().getSourceLang(q,cq.getId());
+                    if(sourcelang.isEmpty()){
+                        sourcelang=QuoteService.getInstance().getSourceLang1(q);
+                    }
                    
-                }catch(Exception e){ sourcelang=QuoteService.getInstance().getSourceLang1(q);}
+                }catch(Exception e){ 
+                    sourcelang=QuoteService.getInstance().getSourceLang1(q);
+                }
 
                     for (int ii = 0; ii < sourcelang.size(); ii++) {
 
@@ -249,7 +254,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("Translation"))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                 //   System.out.println("linTaskList" +lt.getTaskName());
+                                 //   //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -257,7 +262,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("Editing"))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                 //    System.out.println("linTaskList" +lt.getTaskName());
+                                 //    //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -265,7 +270,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("ICR "))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                //    System.out.println("linTaskList" +lt.getTaskName());
+                                //    //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -273,7 +278,7 @@ try{
                                       if(lt.getTaskName().equalsIgnoreCase("Proofreading "))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                    //  System.out.println("linTaskList" +lt.getTaskName());
+                                    //  //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
                       for(int ll=0;ll<linTaskList.size();ll++){
@@ -281,7 +286,7 @@ try{
                                       if(!lt.getTaskName().equalsIgnoreCase("Proofreading ")&&!lt.getTaskName().equalsIgnoreCase("ICR ")&&!lt.getTaskName().equalsIgnoreCase("Editing")&&!lt.getTaskName().equalsIgnoreCase("Translation"))
                                          totalLinTasks.add(lt);
                                        //linTasksArray.
-                                    //  System.out.println("linTaskList" +lt.getTaskName());
+                                    //  //System.out.println("linTaskList" +lt.getTaskName());
 
                                     }
 
@@ -322,7 +327,7 @@ try{
         EngTask[] engTasksArray = (EngTask[]) totalEngTasks.toArray(new EngTask[0]);
         DtpTask[] dtpTasksArray = (DtpTask[]) totalDtpTasks.toArray(new DtpTask[0]);
         OthTask[] othTasksArray = (OthTask[]) totalOthTasks.toArray(new OthTask[0]);
-        System.out.println("linnnnnnnnnnnnnnnnnnnnn Task..............."+linTasksArray.length);
+        //System.out.println("linnnnnnnnnnnnnnnnnnnnn Task..............."+linTasksArray.length);
         //find total of LinTasks
         double linTaskTotal = 0;
         for(int i = 0; i < linTasksArray.length; i++) {
@@ -395,7 +400,7 @@ try{
         qvg.set("approvalTimeEsimate", q.getApprovalTimeEsimate());
         qvg.set("archiveId", q.getArchiveId());
         qvg.set("manualPMFee", q.getManualPMFee());
-        System.out.println(q.getApprovalTimeEsimate());
+        //System.out.println(q.getApprovalTimeEsimate());
         
         //HERE down is standard and does not need to change when adding task blocks
         //place this quote into request for further display in jsp page

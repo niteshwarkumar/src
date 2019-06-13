@@ -5,9 +5,7 @@
 //and updateUser()
 package app.user;
 
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import app.admin.AdminMisc;
 import net.sf.hibernate.*;
 import net.sf.hibernate.HibernateException;
 import net.sf.hibernate.ObjectNotFoundException;
@@ -19,6 +17,8 @@ import net.sf.hibernate.Criteria;
 import net.sf.hibernate.expression.*;
 import java.util.*;
 import app.db.*;
+import app.extjs.vo.Upload_Doc;
+import app.standardCode.StandardCode;
 import java.sql.PreparedStatement;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -1107,7 +1107,7 @@ public class UserService {
                     new Type[]{Hibernate.INTEGER});
 
 
-            System.out.println("resultssssssssss" + results.toString());
+            //System.out.println("resultssssssssss" + results.toString());
         } /*
          * If the object is not found, i.e., no Item exists with the
          * requested id, we want the method to return null rather
@@ -1518,9 +1518,127 @@ public class UserService {
         List results = null;
         try {
 
-            results = session.find("from User as user where user.firstName = ? and user.lastName = ?",
-                    new Object[]{firstName, lastName},
-                    new Type[]{Hibernate.STRING, Hibernate.STRING});
+            results = session.find("from User as user where CONCAT_WS(' ',user.firstName, user.lastName) = ? ",
+                    new Object[]{firstName+" "+lastName},
+                    new Type[]{Hibernate.STRING});
+
+
+
+        } /*
+         * If the object is not found, i.e., no Item exists with the
+         * requested id, we want the method to return null rather
+         * than throwing an Exception.
+         *
+         */ catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return (User) results.get(0);
+        }
+
+    }
+     //get a user by real name
+    //should be unique
+    public User getSingleUserRealName(String name) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from User as user where CONCAT_WS(' ',user.firstName, user.lastName) = ? ",
+                    new Object[]{name},
+                    new Type[]{Hibernate.STRING});
+
+
+
+        } /*
+         * If the object is not found, i.e., no Item exists with the
+         * requested id, we want the method to return null rather
+         * than throwing an Exception.
+         *
+         */ catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return (User) results.get(0);
+        }
+
+    }
+    
+    
+    public User getSingleCurrentUserRealName(String firstName, String lastName) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from User as user where CONCAT_WS(' ',user.firstName, user.lastName) = ? and currentEmployee='true'",
+                    new Object[]{firstName+" "+lastName},
+                    new Type[]{Hibernate.STRING});
 
 
 
@@ -1623,6 +1741,7 @@ public class UserService {
         }
 
     }
+    
 
     //get a position by its name
     //should be unique
@@ -2099,9 +2218,49 @@ public class UserService {
             }
         }
     }
+    
+//      //get all users that are currently employeed
+//    public List getUserListCurrentOrderByOffice() {
+//        /*
+//         * Use the ConnectionFactory to retrieve an open
+//         * Hibernate Session.
+//         *
+//         */
+//        Session session = ConnectionFactory.getInstance().getSession();
+//        Query query;
+//
+//        try {
+//            /*
+//             * Build HQL (Hibernate Query Language) query to retrieve a list
+//             * of all the items currently stored by Hibernate.
+//             */
+//            query = session.createQuery("select user from app.user.User user where user.currentEmployee = 'true' order by user.Location.locationId, user.lastName, user.firstName");
+//            return query.list();
+//        } catch (HibernateException e) {
+//            System.err.println("Hibernate Exception" + e.getMessage());
+//            throw new RuntimeException(e);
+//        } /*
+//         * Regardless of whether the above processing resulted in an Exception
+//         * or proceeded normally, we want to close the Hibernate session.  When
+//         * closing the session, we must allow for the possibility of a Hibernate
+//         * Exception.
+//         *
+//         */ finally {
+//            if (session != null) {
+//                try {
+//                    session.close();
+//                } catch (HibernateException e) {
+//                    System.err.println("Hibernate Exception" + e.getMessage());
+//                    throw new RuntimeException(e);
+//                }
+//
+//            }
+//        }
+//    }
+    
 
     //get all users that were employed
-    public List getUserListFormer() {
+    public List<User> getUserListFormer() {
         /*
          * Use the ConnectionFactory to retrieve an open
          * Hibernate Session.
@@ -2781,6 +2940,59 @@ public class UserService {
             subCriteria.add(Expression.eq("userId", userId));
             criteria.add(Expression.eq("docId", docId));
             criteria.add(Expression.eq("departmentId", departmentId));
+
+            criteria.addOrder(Order.asc("dateCompleted"));
+
+            //remove duplicates
+            criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+            results = criteria.list();
+
+            return results;
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
+    
+         //get a list of training for this user
+    public List getTrainingByDocId(Integer docId) {
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+
+        try {
+            //retreive away events from database
+
+            //this is the main class
+            Criteria criteria = session.createCriteria(Training.class);
+
+            //sub criteria; the user
+            Criteria subCriteria = criteria.createCriteria("User");
+//            subCriteria.add(Expression.eq("userId", userId));
+            criteria.add(Expression.eq("docId", docId));
+//            criteria.add(Expression.eq("departmentId", departmentId));
 
             criteria.addOrder(Order.asc("dateCompleted"));
 
@@ -3896,7 +4108,6 @@ public class UserService {
         }
     }
     
-
     public static String getTeamTaskDue(Integer pmid) {
 
         //get resource to edit
@@ -3940,9 +4151,9 @@ public class UserService {
            Integer count=1;
             while (rs.next()) {
             if(count==1) result = "<fieldset><legend>Due Tasks</legend><div align='center'><table class='tableHighlight' width='90%' align='center' ><tr><td>&nbsp;</td></tr>";
-//                System.out.println("AAAAAANNNNNAAAAAA" + rs.getString("sLang"));
-//                System.out.println("ddddddddddddddddd" + rs.getString("taskname"));
-//                System.out.println("qqqqqqqqqqqqqqqqq" + rs.getString("tLang"));
+//                //System.out.println("AAAAAANNNNNAAAAAA" + rs.getString("sLang"));
+//                //System.out.println("ddddddddddddddddd" + rs.getString("taskname"));
+//                //System.out.println("qqqqqqqqqqqqqqqqq" + rs.getString("tLang"));
                 String resource = "";
                 if (rs.getString("firstName").equals("")) {
                     resource = rs.getString("companyname");
@@ -3960,13 +4171,105 @@ public class UserService {
             }
                 st.close();
         } catch (Exception e) {
-            System.out.println("errrrrrrrrrrrrrror" + e.getMessage());
+            //System.out.println("errrrrrrrrrrrrrror" + e.getMessage());
                 } finally {
             if (session != null) {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception:" + e);
+                    //System.out.println("Hibernate Exception:" + e);
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        return result;
+
+    }
+
+    public static String getTeamTaskDueInvoice(Integer pmid) {
+
+        //get resource to edit
+        Session session = ConnectionFactory.getInstance().getSession();
+        String result = "";
+        String invoiceAmt = StandardCode.getInstance().getPropertyValue("resource.invoice.alert.limit");
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd ");
+        Date date = new Date();
+        String ndt = dateFormat.format(date);
+        try {
+            PreparedStatement st = session.connection().prepareStatement("SELECT p.number,l.taskname,l.internalDollarTotal,l.internalCurrency,s.language as sLang,t.language as tLang,l.dueDatedate, r.firstName,r.lastName,r.companyname,c.company_code FROM project p INNER JOIN sourcedoc s ON p.id_project=s.id_project "
+                    + "INNER JOIN targetdoc t ON s.id_sourcedoc=t.id_sourcedoc "
+                    + "INNER JOIN lintask l ON l.ID_TargetDoc=t.ID_TargetDoc "
+                    + "INNER JOIN resource r ON l.personname=r.id_resource "
+                    + "INNER JOIN client_information c ON p.id_client=c.id_client "
+                    + "WHERE l.receiveddatedate IS NOT NULL AND REPLACE(l.internalDollarTotal,',','')>"+invoiceAmt+" AND l.invoicedatedate IS NULL AND p.pm_id=" + pmid + " "
+                    + "UNION "
+                    + "SELECT p.number,l.taskname,l.internalDollarTotal,l.internalCurrency,s.language as sLang,t.language as tLang,l.dueDatedate, r.firstName,r.lastName,r.companyname,c.company_code FROM project p INNER JOIN sourcedoc s ON p.id_project=s.id_project "
+                    + "INNER JOIN targetdoc t ON s.id_sourcedoc=t.id_sourcedoc "
+                    + "INNER JOIN dtptask l ON l.ID_TargetDoc=t.ID_TargetDoc "
+                    + "INNER JOIN resource r ON l.personname=r.id_resource "
+                    + "INNER JOIN client_information c ON p.id_client=c.id_client "
+                    + "WHERE l.receiveddatedate IS NOT NULL AND REPLACE(l.internalDollarTotal,',','')>"+invoiceAmt+" AND l.invoicedatedate IS NULL AND p.pm_id=" + pmid + "  "
+                    + "UNION "
+                    + "SELECT p.number,l.taskname,l.internalDollarTotal,l.internalCurrency,s.language as sLang,t.language as tLang,l.dueDatedate, r.firstName,r.lastName,r.companyname,c.company_code FROM project p INNER JOIN sourcedoc s ON p.id_project=s.id_project "
+                    + "INNER JOIN targetdoc t ON s.id_sourcedoc=t.id_sourcedoc "
+                    + "INNER JOIN engtask l ON l.ID_TargetDoc=t.ID_TargetDoc "
+                    + "INNER JOIN resource r ON l.personname=r.id_resource "
+                    + "INNER JOIN client_information c ON p.id_client=c.id_client "
+                    + "WHERE l.receiveddatedate IS NOT NULL AND REPLACE(l.internalDollarTotal,',','')>"+invoiceAmt+" AND l.invoicedatedate IS NULL AND p.pm_id=" + pmid + "  "
+                    + "UNION "
+                    + "SELECT p.number,l.taskname,l.internalDollarTotal,l.internalCurrency,s.language as sLang,t.language as tLang,l.dueDatedate, r.firstName,r.lastName,r.companyname,c.company_code FROM project p INNER JOIN sourcedoc s ON p.id_project=s.id_project "
+                    + "INNER JOIN targetdoc t ON s.id_sourcedoc=t.id_sourcedoc "
+                    + "INNER JOIN othtask l ON l.ID_TargetDoc=t.ID_TargetDoc "
+                    + "INNER JOIN resource r ON l.personname=r.id_resource "
+                    + "INNER JOIN client_information c ON p.id_client=c.id_client "
+                    + "WHERE l.receiveddatedate IS NOT NULL  AND REPLACE(l.internalDollarTotal,',','')>"+invoiceAmt+" AND l.invoicedatedate IS NULL AND p.pm_id=" + pmid + " ");
+
+            ResultSet rs = st.executeQuery();
+           
+           Integer count=1;
+            while (rs.next()) {
+            if(count==1) result = "<fieldset><legend>Due Invoice</legend>"
+                    + "<div><font size=\"1\" color='red'>Note: (only invoices over $"+invoiceAmt+" are displayed here)</font></div>"
+                    + "<div class =\"row\">";
+//                //System.out.println("AAAAAANNNNNAAAAAA" + rs.getString("sLang"));
+//                //System.out.println("ddddddddddddddddd" + rs.getString("taskname"));
+//                //System.out.println("qqqqqqqqqqqqqqqqq" + rs.getString("tLang"));
+                String resource = "";
+                if (rs.getString("firstName").equals("")) {
+                    resource = rs.getString("companyname");
+                } else {
+                    resource = rs.getString("firstName") + " " + rs.getString("lastName");
+                }
+                result += "<div class=\"six column\" style=\"padding-bottom: 10px\">";
+                result+="<div class=\"w3-card-8 w3-light-grey\" style=\"padding-bottom: 5px\">";
+                result += "<div class=\"w3-container\">"
+                        +"</br><span style='font-size:15px'><b>" + resource + "</b></span>"
+                        + "<span class='w3-right' style='color : blue'>"+rs.getString("internalDollarTotal")+ " " +rs.getString("internalCurrency")+"</span></br>"
+                         +"</br></br><span style='font-size:12px'><b>" + rs.getInt("number") +rs.getString("company_code") + "</b></span>"
+                        + "</br>"+ rs.getString("taskname") + " "
+                        + "( " + rs.getString("sLang") + " - " + rs.getString("tLang") + ")  <br><br>" 
+                        + "</div>";
+               
+              
+
+                result += "</b></div></div>";
+                count++;
+
+            }
+            if (count > 1) {
+                result += "</fieldset>";
+            }
+                st.close();
+        } catch (Exception e) {
+            //System.out.println("errrrrrrrrrrrrrror" + e.getMessage());
+                } finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    //System.out.println("Hibernate Exception:" + e);
                     throw new RuntimeException(e);
                 }
 
@@ -4373,6 +4676,259 @@ public static boolean unlinkInitialTrainingAdmin() {
 
             session.delete(a);
             tx.commit();
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+    }
+    
+    public Upload_Doc getDocList(int docId) {
+        /*
+     * Use the ConnectionFactory to retrieve an open
+     * Hibernate Session.
+     * resource.lastName, resource.firstName, resource.companyName
+     */
+    Session session = ConnectionFactory.getInstance().getSession();
+    List results = null;
+
+    try {
+      results = session.find("from Upload_Doc as uploadDoc where uploadDoc.uploadDoc ='" + docId + "'");
+      
+    } catch (ObjectNotFoundException onfe) {
+      return null;
+    } catch (HibernateException e) {
+      /*
+       * All Hibernate Exceptions are transformed into an unchecked
+       * RuntimeException.  This will have the effect of causing the
+       * user's request to return an error.
+       *
+       */
+      System.err.println("Hibernate Exception" + e.getMessage());
+      throw new RuntimeException(e);
+    } /*
+     * Regardless of whether the above processing resulted in an Exception
+     * or proceeded normally, we want to close the Hibernate session.  When
+     * closing the session, we must allow for the possibility of a Hibernate
+     * Exception.
+     *
+     */ finally {
+      if (session != null) {
+        try {
+          session.close();
+        } catch (HibernateException e) {
+          System.err.println("Hibernate Exception" + e.getMessage());
+          throw new RuntimeException(e);
+        }
+
+      }
+    }
+    if (results.isEmpty()) {
+      return null;
+    } else {
+      return (Upload_Doc) results.get(0);
+    }
+    }
+    
+    //get a position by its name
+    //should be unique
+    //public Client getSingleAdminMiscById(String client){}
+    public AdminMisc getSingleAdminMiscById(Integer id, String type) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from AdminMisc as am where am.id = ? and type = ? ",
+                    new Object[]{id,type},
+                    new Type[]{Hibernate.INTEGER,Hibernate.STRING});
+
+
+
+        } /*
+         * If the object is not found, i.e., no Item exists with the
+         * requested id, we want the method to return null rather
+         * than throwing an Exception.
+         *
+         */ catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return (AdminMisc) results.get(0);
+        }
+
+    }
+
+    public AdminMisc getSingleAdminMiscById(Integer id) {
+    
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from AdminMisc as am where am.id = ? ",
+                    new Object[]{id},
+                    new Type[]{Hibernate.INTEGER});
+
+
+
+        } /*
+         * If the object is not found, i.e., no Item exists with the
+         * requested id, we want the method to return null rather
+         * than throwing an Exception.
+         *
+         */ catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return (AdminMisc) results.get(0);
+        }
+    
+    }
+
+    public void deleteAdminMisc(AdminMisc l) {
+    Session session = ConnectionFactory.getInstance().getSession();
+
+        Transaction tx = null;
+
+        try {
+
+            tx = session.beginTransaction();
+
+            session.delete(l);
+            tx.commit();
+        } catch (HibernateException e) {
+            try {
+                tx.rollback(); //error
+            } catch (HibernateException he) {
+                System.err.println("Hibernate Exception" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }    
+    
+    }
+
+    public void addUpdateAdminMisc(AdminMisc adminMisc) {
+       
+        //the new User's id
+        Integer id = null;
+
+        Session session = ConnectionFactory.getInstance().getSession();
+
+        Transaction tx = null;
+
+        try {
+
+            tx = session.beginTransaction();
+
+            session.saveOrUpdate(adminMisc);
+            tx.commit();
+
+
         } catch (HibernateException e) {
             try {
                 tx.rollback(); //error

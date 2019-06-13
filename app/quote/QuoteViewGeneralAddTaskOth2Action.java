@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -95,10 +95,12 @@ public final class QuoteViewGeneralAddTaskOth2Action extends Action {
                 //need target doc and source doc to add tasks to it
                 TargetDoc td = ProjectService.getInstance().getSingleTargetDoc(Integer.valueOf(targets[i]));
                 SourceDoc sd = td.getSourceDoc();
+                Project p = sd.getQuote().getProject();
 
                     OthTask ot = new OthTask();
                     ot.setSourceLanguage(sd.getLanguage());
                     ot.setTargetLanguage(td.getLanguage());
+                    ot.setCurrency(p.getCompany().getCcurrency());
                     ot.setTargetDoc(td);
                     ot.setTaskName(othTask);
                     ot.setOrderNum(new Integer(1));
@@ -123,6 +125,7 @@ public final class QuoteViewGeneralAddTaskOth2Action extends Action {
             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
             td.setLanguage("All");
             SourceDoc sd = sources[i];
+            Project p = sd.getQuote().getProject();
             
             //link this target Doc to the source Doc; add new target Doc to db
             Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td); 
@@ -130,6 +133,7 @@ public final class QuoteViewGeneralAddTaskOth2Action extends Action {
                     OthTask ot = new OthTask();
                     ot.setSourceLanguage(sd.getLanguage());
                     ot.setTargetLanguage(td.getLanguage());
+                    ot.setCurrency(p.getCompany().getCcurrency());
                     ot.setTargetDoc(td);
                     ot.setTaskName(othTask);
                     ot.setOrderNum(new Integer(1));

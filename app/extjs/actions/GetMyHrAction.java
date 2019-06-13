@@ -75,10 +75,10 @@ public final class GetMyHrAction extends Action {
 
         List myHr = HrHelper.getAllEmployees(u);
         long endProjects = System.currentTimeMillis();
-        System.out.println("GetMyHrAction took:"+ ((endProjects-startProjects)/1000.0));
+        //System.out.println("GetMyHrAction took:"+ ((endProjects-startProjects)/1000.0));
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();       
         out.println(new JSONArray(myHr.toArray()));
         out.flush();

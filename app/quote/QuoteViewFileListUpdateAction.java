@@ -92,7 +92,7 @@ public final class QuoteViewFileListUpdateAction extends Action {
         DynaValidatorForm qvf = (DynaValidatorForm) form;
         File[] quoteFiles = (File[]) qvf.get("quoteFiles");
              q.setClientFileNote((String) qvf.get("fileNotes"));
-             QuoteService.getInstance().updateQuote(q);
+             QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
         //update each file to db
         for(int i = 0; i < quoteFiles.length; i++) {
             QuoteService.getInstance().updateFile(quoteFiles[i]);

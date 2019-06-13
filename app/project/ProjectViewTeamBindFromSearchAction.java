@@ -83,20 +83,20 @@ public final class ProjectViewTeamBindFromSearchAction extends Action {
         //get this resources language pairs
         Set languagePairs = r.getLanguagePairs();
         
-        //the list for display (load all rateScoreLanguage entries)
-        List rateScoreLanguages = new ArrayList();
+        //the list for display (load all ratescorelanguage entries)
+        List ratescorelanguages = new ArrayList();
         for(Iterator iter = languagePairs.iterator(); iter.hasNext();) {
             LanguagePair lp = (LanguagePair) iter.next();
             for(Iterator rateScoreIter = lp.getRateScoreLanguages().iterator(); rateScoreIter.hasNext();) {
                 RateScoreLanguage rsl = (RateScoreLanguage) rateScoreIter.next();
-                rateScoreLanguages.add(rsl);
+                ratescorelanguages.add(rsl);
             }
                 
         }
         
         
-	//prepare the rateScoreLanguages and rateScoreDtps for display
-        RateScoreLanguage[] rateScoreLanguagesArray = (RateScoreLanguage[]) rateScoreLanguages.toArray(new RateScoreLanguage[0]);
+	//prepare the ratescorelanguages and rateScoreDtps for display
+        RateScoreLanguage[] ratescorelanguagesArray = (RateScoreLanguage[]) ratescorelanguages.toArray(new RateScoreLanguage[0]);
         RateScoreDtp[] rateScoreDtpsArray = (RateScoreDtp[]) r.getRateScoreDtps().toArray(new RateScoreDtp[0]);
         
             LinTask t = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linId));
@@ -108,39 +108,39 @@ public final class ProjectViewTeamBindFromSearchAction extends Action {
             //Map Fee amount from Rate/Score tab
             Client c = t.getTargetDoc().getSourceDoc().getProject().getCompany();
             String clientSpec = c.getIndustry().getDescription();
-            //System.out.println("clientSpec="+clientSpec);
-            //System.out.println("t.getTaskName()="+t.getTaskName());
-            //System.out.println("t.getTargetLanguage()="+t.getTargetLanguage());
-            //System.out.println("t.getSourceLanguage()="+t.getSourceLanguage());
+            ////System.out.println("clientSpec="+clientSpec);
+            ////System.out.println("t.getTaskName()="+t.getTaskName());
+            ////System.out.println("t.getTargetLanguage()="+t.getTargetLanguage());
+            ////System.out.println("t.getSourceLanguage()="+t.getSourceLanguage());
             
             
-            for(int i=0; i<rateScoreLanguagesArray.length;i++){
+            for(int i=0; i<ratescorelanguagesArray.length;i++){
                 
-               // System.out.println("rateScoreLanguagesArray.getSource():"+rateScoreLanguagesArray[i].getSource());
-               // System.out.println("rateScoreLanguagesArray.getTarget():"+rateScoreLanguagesArray[i].getTarget());
+               // //System.out.println("ratescorelanguagesArray.getSource():"+ratescorelanguagesArray[i].getSource());
+               // //System.out.println("ratescorelanguagesArray.getTarget():"+ratescorelanguagesArray[i].getTarget());
                 
-                if(rateScoreLanguagesArray[i].getSource().equals(t.getSourceLanguage()) && rateScoreLanguagesArray[i].getTarget().equals(t.getTargetLanguage())){
-                   // System.out.println("rateScoreLanguagesArray[i].getSpecialty()="+rateScoreLanguagesArray[i].getSpecialty());
+                if(ratescorelanguagesArray[i].getSource().equals(t.getSourceLanguage()) && ratescorelanguagesArray[i].getTarget().equals(t.getTargetLanguage())){
+                   // //System.out.println("ratescorelanguagesArray[i].getSpecialty()="+ratescorelanguagesArray[i].getSpecialty());
 
 
                     if(  
-                        ("Medical".equals(rateScoreLanguagesArray[i].getSpecialty()) && "Medical, Dental, Pharmaceutical".equals(clientSpec))||
-                        ("Software".equals(rateScoreLanguagesArray[i].getSpecialty()) && "Computer: Hardware & Software, Localization".equals(clientSpec))||
-                        ("Legal/Financial".equals(rateScoreLanguagesArray[i].getSpecialty()) && "Business & Finance & Legal: Banking, Commerce, Management".equals(clientSpec))||
-                        "Technical".equals(rateScoreLanguagesArray[i].getSpecialty()) 
+                        ("Medical".equals(ratescorelanguagesArray[i].getSpecialty()) && "Medical, Dental, Pharmaceutical".equals(clientSpec))||
+                        ("Software".equals(ratescorelanguagesArray[i].getSpecialty()) && "Computer: Hardware & Software, Localization".equals(clientSpec))||
+                        ("Legal/Financial".equals(ratescorelanguagesArray[i].getSpecialty()) && "Business & Finance & Legal: Banking, Commerce, Management".equals(clientSpec))||
+                        "Technical".equals(ratescorelanguagesArray[i].getSpecialty()) 
                     ){
 
                         if("Translation".equalsIgnoreCase(t.getTaskName())){
-                            t.setInternalRate(""+rateScoreLanguagesArray[i].getT());
-                          //  System.out.println("Setting rate for Translation:"+rateScoreLanguagesArray[i].getT());
+                            t.setInternalRate(""+ratescorelanguagesArray[i].getT());
+                          //  //System.out.println("Setting rate for Translation:"+ratescorelanguagesArray[i].getT());
                              break;
                         }else if("Editing".equalsIgnoreCase(t.getTaskName())){
-                            t.setInternalRate(""+rateScoreLanguagesArray[i].getE());
-                          //  System.out.println("Setting rate for Editing"+rateScoreLanguagesArray[i].getE());
+                            t.setInternalRate(""+ratescorelanguagesArray[i].getE());
+                          //  //System.out.println("Setting rate for Editing"+ratescorelanguagesArray[i].getE());
                              break;
                         }else if("Proofreading / Linguistic QA".equalsIgnoreCase(t.getTaskName())){
-                            t.setInternalRate(""+rateScoreLanguagesArray[i].getP());
-                           // System.out.println("Setting rate for Proofreading:"+rateScoreLanguagesArray[i].getP());
+                            t.setInternalRate(""+ratescorelanguagesArray[i].getP());
+                           // //System.out.println("Setting rate for Proofreading:"+ratescorelanguagesArray[i].getP());
                              break;
                         }
 

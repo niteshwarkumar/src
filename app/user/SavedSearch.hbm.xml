@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.user.SavedSearch" table="SavedSearch">
+   <class name="app.user.SavedSearch" table="savedsearch">
       <id name="savedSearchId" type="int" column="ID_SavedSearch">
          <generator class="identity"/>
       </id>

@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -140,7 +140,7 @@ public final class QuoteAddEng2Action extends Action {
                     if(clp != null){  
                          for(int z=0; z<clp.length; z++){                       
                             if(clp[z].getSource()!=null && clp[z].getSource().equals(et.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(et.getTargetLanguage())&& clp[z].getTask()!=null && clp[z].getTask()!=null && clp[z].getTask().equals("ENG - "+et.getTaskName())){                            
-                                //System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
+                                ////System.out.println("alexxx:assigning clp[z].getRate()= "+clp[z].getRate());
                                 et.setRate(clp[z].getRate());
                                 et.setUnits(clp[z].getUnits());
                                 break;

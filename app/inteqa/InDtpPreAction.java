@@ -22,6 +22,7 @@ import java.util.*;
 import app.security.*;
 import app.standardCode.StandardCode;
 import org.apache.struts.validator.*;
+import org.json.JSONObject;
 
 /**
  *
@@ -127,38 +128,41 @@ public class InDtpPreAction extends Action {
                     number = q.getNumber();
                     porqid = q.getQuote1Id();
                 }
+            }else{
+                q= QuoteService.getInstance().getSingleQuoteFromProject(id);
             }
         } catch (Exception e) {
         }
 
-        Quote1 quote = QuoteService.getInstance().getSingleQuoteFromProject(id);
+//        Quote1 quote = QuoteService.getInstance().getSingleQuoteFromProject(id);
         try {
 
 
-            List clq = QuoteService.getInstance().getClient_Quote(quote.getQuote1Id());
+            List clq = QuoteService.getInstance().getClient_Quote(q.getQuote1Id());
             cq = (Client_Quote) clq.get(0);
-            cqQuoteId = cq.getid();
-            List ptl = ProjectService.getInstance().getProjectTechnicalList(p.getProjectId());
-            if (!quote.getStatus().equalsIgnoreCase("pending") && ptl.size() == 0) {
-
-                List technicalList = QuoteService.getInstance().getTechnicalList(cqQuoteId);
-                for (int i = 0; i < technicalList.size(); i++) {
-                    Technical t = (Technical) technicalList.get(i);
-                    Project_Technical pt = new Project_Technical();
-
-
-//     t.getTechnicalId());
-                    pt.setSourceos(t.getSourceOs());
-                    pt.setTargetos(t.getTargetOs());
-                    pt.setSourceapp(t.getSourceApplication());
-                    pt.setTargetapp(t.getTargetApplication());
-                    pt.setSourcever(t.getSourceVersion());
-                    pt.setTargetver(t.getTargetVersion());
-                    pt.setProjectid(p.getProjectId());
-                    ProjectService.getInstance().addUpdateProjectTechnical(pt);
-
-                }
-            }
+            cqQuoteId = cq.getId();
+//            List ptl = ProjectService.getInstance().getProjectTechnicalList(p.getProjectId());
+//            
+//            if (!q.getStatus().equalsIgnoreCase("pending") && ptl.size() == 0) {
+//
+//                List technicalList = QuoteService.getInstance().getTechnicalList(cqQuoteId);
+//                for (int i = 0; i < technicalList.size(); i++) {
+//                    Technical t = (Technical) technicalList.get(i);
+//                    Project_Technical pt = new Project_Technical();
+//
+//
+////     t.getTechnicalId());
+//                    pt.setSourceos(t.getSourceOs());
+//                    pt.setTargetos(t.getTargetOs());
+//                    pt.setSourceapp(t.getSourceApplication());
+//                    pt.setTargetapp(t.getTargetApplication());
+//                    pt.setSourcever(t.getSourceVersion());
+//                    pt.setTargetver(t.getTargetVersion());
+//                    pt.setProjectid(p.getProjectId());
+//                    ProjectService.getInstance().addUpdateProjectTechnical(pt);
+//
+//                }
+//            }
 
         } catch (Exception e) {
         }
@@ -168,7 +172,9 @@ public class InDtpPreAction extends Action {
         //get this project's sources
         Set sources = p.getSourceDocs();
         if (sources.size() == 0) {
-            sources = q.getSourceDocs();
+           try{ sources = q.getSourceDocs();}catch(Exception e){
+            //do nothing
+           }
         }
 
 
@@ -177,7 +183,9 @@ public class InDtpPreAction extends Action {
         List totalDtpTasks = new ArrayList();
         List totalEngTasks = new ArrayList();
         Integer lang0 = 0, lang1 = 0, lang2 = 0, lang3 = 0, lang4 = 0, lang5 = 0, lang6 = 0;
-
+        try {
+            
+        
         //for each source
         for (Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
             SourceDoc sd = (SourceDoc) sourceIter.next();
@@ -222,7 +230,8 @@ public class InDtpPreAction extends Action {
                 }
             }
         }
-
+} catch (Exception e) {
+        }
 
         //array for display in jsp
 
@@ -665,6 +674,76 @@ public class InDtpPreAction extends Action {
         } catch (Exception e) {
             uvg.set("othEnteredBy", "");
         }
+        
+       
+    List results = new ArrayList();
+    if(porq.equalsIgnoreCase("p")){
+      
+        
+    Integer projectid=p.getProjectId();
+    List technicalList=ProjectService.getInstance().getProjectTechnicalList(projectid);
+    for(int i=0;i<technicalList.size();i++){
+        Project_Technical t=(Project_Technical) technicalList.get(i);
+    JSONObject jo=new JSONObject();
+    jo.put("id", t.getId());
+    jo.put("sourceOs",t.getSourceos() );
+    jo.put("targetOs",t.getTargetos() );
+    jo.put("sourceApplication",t.getSourceapp() );
+    jo.put("targetApplication",t.getTargetapp() );
+    jo.put("sourceVersion",t.getSourcever() );
+    jo.put("targetVersion",t.getTargetver() );
+    jo.put("unitCount",t.getUnitCount() );
+    
+    results.add(jo);
+    }
+    }else{
+
+
+    List technicalList=QuoteService.getInstance().getTechnicalList(cqQuoteId);
+    for(int i=0;i<technicalList.size();i++){
+        Technical t=(Technical) technicalList.get(i);
+    JSONObject jo=new JSONObject();
+    jo.put("id", t.getTechnicalId());
+    jo.put("sourceOs",t.getSourceOs() );
+    jo.put("targetOs",t.getTargetOs() );
+    jo.put("sourceApplication",t.getSourceApplication() );
+    jo.put("targetApplication",t.getTargetApplication() );
+    jo.put("sourceVersion",t.getSourceVersion() );
+    jo.put("targetVersion",t.getTargetVersion() );
+    jo.put("unitCount",t.getUnitCount() );
+    
+    results.add(jo);
+    }
+    }
+        
+//        List instruction = new ArrayList();
+//        if(null!=indel){
+//         List inDelI = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(),"I");
+//        for (int i = 0; i < inDelI.size(); i++) {
+//            INDeliveryReq inDeliveryReq = (INDeliveryReq) inDelI.get(i);
+//            JSONObject jo = new JSONObject();
+//            if (fromPorQ.equalsIgnoreCase("Q")) {
+//                if (inDeliveryReq.getFromPorQ().equalsIgnoreCase("Q")) {
+//                    jo.put("requirement", inDeliveryReq.getClientReqText());
+//                    jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+//                    jo.put("reqBy", inDeliveryReq.getClientReqBy());
+//                    jo.put("id", inDeliveryReq.getId());
+//                    jo.put("notes", inDeliveryReq.getNotes());
+//                    instruction.add(jo);
+//                }
+//            } else {
+//                jo.put("requirement", inDeliveryReq.getClientReqText());
+//                jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+//                jo.put("reqBy", inDeliveryReq.getClientReqBy());
+//                jo.put("id", inDeliveryReq.getId());
+//                jo.put("notes", inDeliveryReq.getNotes());
+//                jo.put("instructionsFor", inDeliveryReq.getInstructionsFor());
+//                instruction.add(jo);
+//            }
+//            
+//        }
+         request.setAttribute("technical", results.toString());
+        
 
 
         request.setAttribute("formValue", uvg);

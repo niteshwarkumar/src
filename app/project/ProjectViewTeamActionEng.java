@@ -3,30 +3,22 @@
 
 package app.project;
 
-import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.util.ModuleException;
 import org.apache.struts.util.MessageResources;
-import org.apache.commons.beanutils.PropertyUtils;
 import java.util.*;
 import java.text.*;
-import app.user.*;
-import app.db.*;
-import app.workspace.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
-import app.client.*;
+import org.json.JSONObject;
 
 
 public final class ProjectViewTeamActionEng extends Action {
@@ -113,13 +105,23 @@ public final class ProjectViewTeamActionEng extends Action {
         
         //get this project's sources
         Set sources = p.getSourceDocs();
-        
+        Set changesLst = p.getChange1s();
+        JSONObject changeObj = new JSONObject();
+        String verifymsg ="<font color=\"red\">Verification was not performed yet. Please check and try again.</font>";
+        for(Iterator chg = changesLst.iterator(); chg.hasNext();) {
+            Change1 change1 = (Change1) chg.next();
+            
+            JSONObject jo = new JSONObject();
+            jo.put("name", change1.getName());
+            jo.put("number", change1.getNumber());
+            changeObj.put(change1.getNumber(), jo);
+        }
         //for each source add each sources' Tasks
-        List totalLinTasks = new ArrayList();
+//        List totalLinTasks = new ArrayList();
         List totalEngTasks = new ArrayList();
-        List totalDtpTasks = new ArrayList();
+//        List totalDtpTasks = new ArrayList();
         List totalOthTasks = new ArrayList();
-        
+        TreeSet<String> changes = new TreeSet();
         //for each source
         for(Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
             SourceDoc sd = (SourceDoc) sourceIter.next();
@@ -128,23 +130,27 @@ public final class ProjectViewTeamActionEng extends Action {
             for(Iterator linTargetIter = sd.getTargetDocs().iterator(); linTargetIter.hasNext();) {
                 TargetDoc td = (TargetDoc) linTargetIter.next();
                 
-                //for each lin Task of this target
-                for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
-                    LinTask lt = (LinTask) linTaskIter.next();
-                    totalLinTasks.add(lt);
-                }
+//                //for each lin Task of this target
+//                for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
+//                    LinTask lt = (LinTask) linTaskIter.next();
+//                    totalLinTasks.add(lt);
+//                }
                 
                 //for each eng Task of this target
                 for(Iterator engTaskIter = td.getEngTasks().iterator(); engTaskIter.hasNext();) {
                     EngTask et = (EngTask) engTaskIter.next();
                     totalEngTasks.add(et);
+                    String change = StandardCode.getInstance().noNull(et.getChangeDesc());
+                    if(!changes.contains(change)){
+                        changes.add(change);
+                    }
                 }
                 
-                //for each dtp Task of this target
-                for(Iterator dtpTaskIter = td.getDtpTasks().iterator(); dtpTaskIter.hasNext();) {
-                    DtpTask dt = (DtpTask) dtpTaskIter.next();
-                    totalDtpTasks.add(dt);
-                }
+//                //for each dtp Task of this target
+//                for(Iterator dtpTaskIter = td.getDtpTasks().iterator(); dtpTaskIter.hasNext();) {
+//                    DtpTask dt = (DtpTask) dtpTaskIter.next();
+//                    totalDtpTasks.add(dt);
+//                }
                 
                 //for each oth Task of this target
                 for(Iterator othTaskIter = td.getOthTasks().iterator(); othTaskIter.hasNext();) {
@@ -162,114 +168,80 @@ public final class ProjectViewTeamActionEng extends Action {
 //        Collections.sort(totalOthTasks, CompareTaskOth.getInstance());
 //
         //array for display in jsp
-        LinTask[] linTasksArray = (LinTask[]) totalLinTasks.toArray(new LinTask[0]);
+//        LinTask[] linTasksArray = (LinTask[]) totalLinTasks.toArray(new LinTask[0]);
         EngTask[] engTasksArray = (EngTask[]) totalEngTasks.toArray(new EngTask[0]);
-        DtpTask[] dtpTasksArray = (DtpTask[]) totalDtpTasks.toArray(new DtpTask[0]);
+//        DtpTask[] dtpTasksArray = (DtpTask[]) totalDtpTasks.toArray(new DtpTask[0]);
         OthTask[] othTasksArray = (OthTask[]) totalOthTasks.toArray(new OthTask[0]);
-        
-        //START set up lin dates
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalLinTasks.size(); i++) {
-            if(linTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
-            }
-            else {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), "");
-            }
-        }
-        //END set up lin dates
+
         
         //START set up eng dates
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
+                request.setAttribute("engTasksProjectSentArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectSentArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
+                request.setAttribute("engTasksProjectDueArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectDueArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("engTasksProjectReceivedArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectReceivedArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         for(int i = 0; i < totalEngTasks.size(); i++) {
             if(engTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("engTasksProjectInvoiceArray" + engTasksArray[i].getEngTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("engTasksProjectInvoiceArray" + engTasksArray[i].getEngTaskId(), "");
             }
         }
         //END set up eng dates
         
-        //START set up dtp dates
-        for(int i = 0; i < totalDtpTasks.size(); i++) {
-            if(dtpTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
-            }
-            else {
-                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalDtpTasks.size(); i++) {
-            if(dtpTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
-            }
-            else {
-                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalDtpTasks.size(); i++) {
-            if(dtpTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
-            }
-            else {
-                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), "");
-            }
-        }
-        for(int i = 0; i < totalDtpTasks.size(); i++) {
-            if(dtpTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
-            }
-            else {
-                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), "");
-            }
-        }
+//        //START set up dtp dates
+//        for(int i = 0; i < totalDtpTasks.size(); i++) {
+//            if(dtpTasksArray[i].getSentDateDate() != null) {
+//                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
+//            }
+//            else {
+//                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), "");
+//            }
+//        }
+//        for(int i = 0; i < totalDtpTasks.size(); i++) {
+//            if(dtpTasksArray[i].getDueDateDate() != null) {
+//                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
+//            }
+//            else {
+//                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), "");
+//            }
+//        }
+//        for(int i = 0; i < totalDtpTasks.size(); i++) {
+//            if(dtpTasksArray[i].getReceivedDateDate() != null) {
+//                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
+//            }
+//            else {
+//                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), "");
+//            }
+//        }
+//        for(int i = 0; i < totalDtpTasks.size(); i++) {
+//            if(dtpTasksArray[i].getInvoiceDateDate() != null) {
+//                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
+//            }
+//            else {
+//                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), "");
+//            }
+//        }
         //END set up dtp dates
         
         //START set up oth dates
@@ -308,33 +280,38 @@ public final class ProjectViewTeamActionEng extends Action {
         //END set up oth dates
         
         //find total of LinTasks
-        double linTaskTotal = 0;
-        for(int i = 0; i < linTasksArray.length; i++) {
-            if(linTasksArray[i].getInternalDollarTotal() != null) {
-                //remove comma's
-                String linTotal = linTasksArray[i].getInternalDollarTotal();
-                linTotal = linTotal.replaceAll(",","");
-                if("".equals(linTotal)){
-                    linTotal = "0";
-                }
-                Double total = Double.valueOf(linTotal);
-                
-                
-                 if("EURO".equals(linTasksArray[i].getInternalCurrency())){
-                     if(p.getEuroToUsdExchangeRate()==null)
-                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-                    else
-                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());;
-                }
-                
-                
-                linTaskTotal += total.doubleValue();
-            }
-        }     
+//        double linTaskTotal = 0;
+//        for(int i = 0; i < linTasksArray.length; i++) {
+//            if(linTasksArray[i].getInternalDollarTotal() != null) {
+//                //remove comma's
+//                String linTotal = linTasksArray[i].getInternalDollarTotal();
+//                linTotal = linTotal.replaceAll(",","");
+//                if("".equals(linTotal)){
+//                    linTotal = "0";
+//                }
+//                Double total = Double.valueOf(linTotal);
+//                
+//                
+//                 if("EURO".equals(linTasksArray[i].getInternalCurrency())){
+//                     if(p.getEuroToUsdExchangeRate()==null)
+//                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
+//                    else
+//                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());;
+//                }
+//                
+//                
+//                linTaskTotal += total.doubleValue();
+//            }
+//        }     
         
         //find total of EngTasks
         double engTaskTotal = 0;
+        for(String change : changes){
+            
+          double changeTotal = 0; 
         for(int i = 0; i < engTasksArray.length; i++) {
+        if(StandardCode.getInstance().noNull(engTasksArray[i].getChangeDesc()).equalsIgnoreCase(change)){
+
             if(engTasksArray[i].getInternalDollarTotal() != null) {
                 //remove comma's
                 String engTotal = engTasksArray[i].getInternalDollarTotal();
@@ -352,33 +329,42 @@ public final class ProjectViewTeamActionEng extends Action {
                         total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());;
                 }
                 
-                
+                changeTotal += total;
                 engTaskTotal += total.doubleValue();
             }
-        }    
+        }  }
+         JSONObject jo = new JSONObject();
+        if(!change.equalsIgnoreCase("")){
+            if(changeObj.has(change))
+             jo = changeObj.getJSONObject(change);
+        } 
+        jo.put("usd", StandardCode.getInstance().formatDouble(changeTotal));
+        jo.put("euro", StandardCode.getInstance().formatDouble(changeTotal/p.getEuroToUsdExchangeRate().doubleValue()));
+        changeObj.put(change, jo);
+        }  
         
-        //find total of DtpTasks
-        double dtpTaskTotal = 0;
-        for(int i = 0; i < dtpTasksArray.length; i++) {
-            if(dtpTasksArray[i].getInternalDollarTotal() != null) {
-                //remove comma's
-                String dtpTotal = dtpTasksArray[i].getInternalDollarTotal();
-                dtpTotal = dtpTotal.replaceAll(",","");
-                if("".equals(dtpTotal)){
-                    dtpTotal = "0";
-                }
-                Double total = Double.valueOf(dtpTotal);
-                
-                 if("EURO".equals(dtpTasksArray[i].getInternalCurrency())){
-                     if(p.getEuroToUsdExchangeRate()==null)
-                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-                    else
-                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());;
-                }
-                
-                dtpTaskTotal += total.doubleValue();
-            }
-        }    
+//        //find total of DtpTasks
+//        double dtpTaskTotal = 0;
+//        for(int i = 0; i < dtpTasksArray.length; i++) {
+//            if(dtpTasksArray[i].getInternalDollarTotal() != null) {
+//                //remove comma's
+//                String dtpTotal = dtpTasksArray[i].getInternalDollarTotal();
+//                dtpTotal = dtpTotal.replaceAll(",","");
+//                if("".equals(dtpTotal)){
+//                    dtpTotal = "0";
+//                }
+//                Double total = Double.valueOf(dtpTotal);
+//                
+//                 if("EURO".equals(dtpTasksArray[i].getInternalCurrency())){
+//                     if(p.getEuroToUsdExchangeRate()==null)
+//                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
+//                    else
+//                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());;
+//                }
+//                
+//                dtpTaskTotal += total.doubleValue();
+//            }
+//        }    
         
         //find total of OthTasks
         double othTaskTotal = 0;
@@ -405,26 +391,26 @@ public final class ProjectViewTeamActionEng extends Action {
         }    
               
         //find team TOTAL
-        double teamTotal = linTaskTotal + engTaskTotal + dtpTaskTotal + othTaskTotal;
+//        double teamTotal = linTaskTotal + engTaskTotal + dtpTaskTotal + othTaskTotal;
         
-        if(p.getLegacyCost() != null && p.getLegacyCost().length() > 0) {
-            String teamTotalTemp = p.getLegacyCost().replaceAll(",", "");
-            teamTotal = new Double(teamTotalTemp).doubleValue();
-        }
-        
+//        if(p.getLegacyCost() != null && p.getLegacyCost().length() > 0) {
+//            String teamTotalTemp = p.getLegacyCost().replaceAll(",", "");
+//            teamTotal = new Double(teamTotalTemp).doubleValue();
+//        }
+//        
         //place TaskTotals in request as formated string
-        request.setAttribute("linTaskTotal", StandardCode.getInstance().formatDouble(new Double(linTaskTotal)));
+//        request.setAttribute("linTaskTotal", StandardCode.getInstance().formatDouble(new Double(linTaskTotal)));
         request.setAttribute("engTaskTotal", StandardCode.getInstance().formatDouble(new Double(engTaskTotal)));
-        request.setAttribute("dtpTaskTotal", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)));
+//        request.setAttribute("dtpTaskTotal", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)));
         request.setAttribute("othTaskTotal", StandardCode.getInstance().formatDouble(new Double(othTaskTotal)));
-        request.setAttribute("teamTotal", StandardCode.getInstance().formatDouble(new Double(teamTotal)));
-            
+//        request.setAttribute("teamTotal", StandardCode.getInstance().formatDouble(new Double(teamTotal)));
+//            
         
         //place all Tasks for this project into the form for display
         DynaValidatorForm qvg = (DynaValidatorForm) form;
-        qvg.set("linTasksProject", linTasksArray);        
+//        qvg.set("linTasksProject", linTasksArray);        
         qvg.set("engTasksProject", engTasksArray);
-        qvg.set("dtpTasksProject", dtpTasksArray);
+//        qvg.set("dtpTasksProject", dtpTasksArray);
         qvg.set("othTasksProject", othTasksArray);
         
         
@@ -437,7 +423,8 @@ public final class ProjectViewTeamActionEng extends Action {
         
         //add tab location to cookies; this will remember which tab we are at
         response.addCookie(StandardCode.getInstance().setCookie("projectViewTab", "Team"));
-        
+        request.setAttribute("changes", changes);
+        request.setAttribute("changesFee", changeObj);
         //an update of totals may be required
         Integer autoUpdate = (Integer) request.getAttribute("AutoUpdate");
         if(autoUpdate != null && autoUpdate.equals(new Integer(0))) { //make sure it was just updated

@@ -69,7 +69,7 @@ public final class HomePageAction extends Action {
    
         
         //get announcements
-        List announcements = MenuService.getInstance().getAnnouncementList();        
+        List announcements = app.menu.MenuService.getInstance().getAnnouncementList();        
         //place announcements into request for display
         request.setAttribute("announcements", announcements);
         long end = System.currentTimeMillis();

@@ -81,20 +81,24 @@ public class TechnicalEvaluationAction extends Action {
                 tx = session.beginTransaction();
 
 
-                PreparedStatement pstmt = session.connection().prepareStatement("select eval_id,test,enteredBy,assessmentDate,score,approved,rejected from asseseval where evaluation.resourceId='"+resource+"'");
-                ResultSet rs = pstmt.executeQuery();
-                // ClientService.getInstance().getBlogList();
-                Integer result = null;
+//                PreparedStatement pstmt = session.connection().prepareStatement("select eval_id,test,enteredBy,assessmentDate,score,approved,rejected from asseseval where evaluation.resourceId='"+resource+"'");
+//                ResultSet rs = pstmt.executeQuery();
+//                // ClientService.getInstance().getBlogList();
+//                Integer result = null;
+                List techEval = ResourceService.getInstance().getTechnicalScore(null, resource);
+                
 
-                while (rs.next()) {
+               
+                  for(int i = 0;i< techEval.size();i++){
+                    Evaluation evaluation = (Evaluation) techEval.get(i);
                     JSONObject jo = new JSONObject();
-                    jo.put("id", rs.getInt("eval_id"));
-                    jo.put("test", rs.getString("test"));
-                    jo.put("enteredBy", rs.getString("enteredBy"));
-                    jo.put("assessmentDate", rs.getString("assessmentDate"));
-                    jo.put("approved", rs.getString("approved"));
-                    jo.put("rejected", rs.getString("rejected"));
-                    jo.put("score", rs.getInt("score"));
+                    jo.put("id", evaluation.getEval_id());
+                    jo.put("topic", evaluation.getEvaluation_area());
+                    jo.put("enteredBy", evaluation.getEnteredBy());
+                    jo.put("project", evaluation.getProjectId());
+                    jo.put("comment", evaluation.getComment());
+                    jo.put("rate", evaluation.getRate());
+                    
                     results.add(jo);
                 }
                 tx.commit();
@@ -129,7 +133,7 @@ public class TechnicalEvaluationAction extends Action {
 
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");
-            // System.out.println(actResponse.toXML());
+            // //System.out.println(actResponse.toXML());
             PrintWriter out = response.getWriter();
 
             out.println(new JSONArray(results.toArray()));

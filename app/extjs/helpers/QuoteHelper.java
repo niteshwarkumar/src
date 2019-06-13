@@ -57,11 +57,11 @@ public class QuoteHelper {
              * Build HQL (Hibernate Query Language) query to retrieve a list
              * of all the items currently stored by Hibernate.
              */
-            query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.status = 'pending' and (quote.Project.pm ='" + pmName + "' OR quote.Project.Company.Sales_rep ='" + pmName + "') order by quote.quote1Id desc");
+            query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.status = 'pending' and (quote.Project.pm ='" + pmName + "' OR quote.Project.Company.Sales_rep ='" + pmName + "' OR quote.Project.Company.Sales='" + pmName + "') order by quote.quote1Id desc");
 
             List temp = query.list();
             List results = new ArrayList();
-            System.out.println("Found:::" + temp.size());
+            //System.out.println("Found:::" + temp.size());
 
             Hashtable duplicateQuotes = new Hashtable();
             for (ListIterator iter = temp.listIterator(); iter.hasNext();) {
@@ -96,7 +96,7 @@ public class QuoteHelper {
                         for (Iterator iter = subQuotes.iterator(); iter.hasNext();) {
                             Quote1 subQ = (Quote1) iter.next();
                             if (subQ != null) {
-                                // System.out.println("subQ.getQuote1Id()="+subQ.getQuote1Id());
+                                // //System.out.println("subQ.getQuote1Id()="+subQ.getQuote1Id());
                                 if (subQ.getQuote1Id().compareTo(q.getQuote1Id()) != 0) {
 
                                     //Hibernate.initialize(subQ.getSourceDocs());
@@ -104,7 +104,7 @@ public class QuoteHelper {
 
                                     q.setSubquotes(q.getSubquotes() + "<a " + HrHelper.LINK_STYLE + " href=\"javascript:openQuoteWindow('" + q.getQuote1Id() + "','" + subQ.getNumber() + q.getProject().getCompany().getCompany_code() + "')\">" + subQ.getNumber() + q.getProject().getCompany().getCompany_code() + " / " + StandardCode.getInstance().formatMoney(subQ.getQuoteDollarTotal().doubleValue()) + " / " + sdf.format(subQ.getQuoteDate()) + "</a>" + "<br>");
                                     //results.add(subQ);
-                                    System.out.println("Project no and Quote No" + p.getNumber() + "       " + q.getNumber());
+                                    //System.out.println("Project no and Quote No" + p.getNumber() + "       " + q.getNumber());
                                 }
                             }
 
@@ -136,10 +136,10 @@ public class QuoteHelper {
                  }*/
             }
             temp = null;
-            //System.out.println("Returning:::" + results.size());
+            ////System.out.println("Returning:::" + results.size());
             return results;
         } catch (Exception e) {
-            System.out.println("Exception::" + e.getMessage());
+            //System.out.println("Exception::" + e.getMessage());
             throw new RuntimeException(e);
         } /*
          * Regardless of whether the above processing resulted in an Exception
@@ -152,7 +152,7 @@ public class QuoteHelper {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception" + e.getMessage());
+                    //System.out.println("Hibernate Exception" + e.getMessage());
                     throw new RuntimeException(e);
                 }
 
@@ -179,7 +179,7 @@ public class QuoteHelper {
 
             List temp = query.list();
             List results = new ArrayList();
-            //System.out.println("Found:::" + temp.size());
+            ////System.out.println("Found:::" + temp.size());
 
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
@@ -193,13 +193,13 @@ public class QuoteHelper {
 
                     Hibernate.initialize(q.getSourceDocs());
                     results.add(q);
-                    //  System.out.println("q.getQuote1Id()="+q.getQuote1Id());
+                    //  //System.out.println("q.getQuote1Id()="+q.getQuote1Id());
                     Set subQuotes = p.getQuotes();
                     q.setSubquotes("");
                     for (Iterator iter = subQuotes.iterator(); iter.hasNext();) {
                         Quote1 subQ = (Quote1) iter.next();
                         if (subQ != null) {
-                            // System.out.println("subQ.getQuote1Id()="+subQ.getQuote1Id());
+                            // //System.out.println("subQ.getQuote1Id()="+subQ.getQuote1Id());
                             if (subQ.getQuote1Id().compareTo(q.getQuote1Id()) != 0) {
 
                                 //Hibernate.initialize(subQ.getSourceDocs());
@@ -228,10 +228,10 @@ public class QuoteHelper {
                  }*/
             }
             temp = null;
-            System.out.println("results:::" + results.size());
+            //System.out.println("results:::" + results.size());
             return results;
         } catch (Exception e) {
-            System.out.println("Exception:" + e);
+            //System.out.println("Exception:" + e);
             throw new RuntimeException(e);
         } /*
          * Regardless of whether the above processing resulted in an Exception
@@ -244,7 +244,7 @@ public class QuoteHelper {
                 try {
                     session.close();
                 } catch (HibernateException e) {
-                    System.out.println("Hibernate Exception" + e.getMessage());
+                    //System.out.println("Hibernate Exception" + e.getMessage());
                     throw new RuntimeException(e);
                 }
 
@@ -259,7 +259,7 @@ public class QuoteHelper {
         if (q.getStatus().equalsIgnoreCase("pending")) {
             jo.put("projectNumber", "");
         } else {
-            jo.put("projectNumber", "<a " + HrHelper.LINK_STYLE + " href=\"javascript:openProjectWindow('" + q.getProject().getProjectId() + "','" + q.getProject().getNumber() + q.getProject().getCompany().getCompany_code() + "')\">" + q.getProject().getNumber() + q.getProject().getCompany().getCompany_code() + "</a>");
+            jo.put("projectNumber", "<a " + HrHelper.LINK_STYLE + " href=\"javascript:openProjectWindow('" + q.getProject().getNumber() + q.getProject().getCompany().getCompany_code() + "','" + q.getProject().getProjectId() + "')\">" + q.getProject().getNumber() + q.getProject().getCompany().getCompany_code() + "</a>");
         }
         try {
             jo.put("approvalTime", StandardCode.getInstance().noNull(q.getApprovalTimeEsimate()));
@@ -338,7 +338,7 @@ public class QuoteHelper {
             // Product pr=p.get
             if (p != null) {
                 jo.put("projectNumber", "<a " + HrHelper.LINK_STYLE + " href='../projectViewOverview.do?projectViewId=" + p.getProjectId() + "'>" + p.getNumber() + p.getCompany().getCompany_code() + "</a>");
-                jo.put("AE", p.getCompany().getSales_rep());
+                jo.put("AE", p.getAe());
                 jo.put("projectDescription", p.getProductDescription());
                 jo.put("product", p.getProduct());
                 jo.put("medical", p.getProduct());
@@ -445,11 +445,320 @@ public class QuoteHelper {
 
             return jo;
         } catch (Exception e) {
-            System.out.println("Problem processing quote:" + q.getNumber());
+            //System.out.println("Problem processing quote:" + q.getNumber());
+        }
+        return new JSONObject();
+    }
+    
+    public static JSONObject QuoteToJson3(Quote1 q) throws Exception {
+
+
+        try {
+            JSONObject jo = new JSONObject();
+            //jo.put("projectNumber",p.getNumber()+p.getCompany().getCompany_code());
+            Project p = q.getProject();
+            // Product pr=p.get
+            if (p != null) {
+                if(!q.getStatus().equalsIgnoreCase("pending")&&!q.getStatus().equalsIgnoreCase("rejected")){
+                    jo.put("projectNumber", "<a " + HrHelper.LINK_STYLE + " href='../projectViewOverview.do?projectViewId=" + p.getProjectId() + "'>" + p.getNumber() + p.getCompany().getCompany_code() + "</a>");
+                }else{
+                jo.put("projectNumber", "");
+                }
+                jo.put("AE", p.getAe());
+                jo.put("projectDescription", p.getProductDescription());
+                jo.put("product", p.getProduct());
+                jo.put("medical", p.getProduct());
+                jo.put("status", q.getStatus());
+                jo.put("sales", p.getCompany().getSales());
+                jo.put("ae", p.getAe());
+                jo.put("pm", p.getPm());
+                
+                jo.put("TargetLangs", p.getTargetLang());
+                
+                
+
+//                String targets = "";
+//                String sources = "";
+//                HashMap alreadyAdded = new HashMap();
+//                p.getTargetLang();
+//                for (Iterator iterSources = p.getSourceDocs().iterator(); iterSources.hasNext();) {
+//                    SourceDoc sd = (SourceDoc) iterSources.next();
+//                    sources += (String) LanguageAbs.getInstance().getAbs().get(sd.getLanguage());
+//                    if (iterSources.hasNext()) {
+//
+//                        sources += ", ";
+//                    }
+//                    for (Iterator iterTargets = sd.getTargetDocs().iterator(); iterTargets.hasNext();) {
+//                        TargetDoc td = (TargetDoc) iterTargets.next();
+//                        for (Iterator iterLintasks = td.getLinTasks().iterator(); iterLintasks.hasNext();) {
+//                            LinTask lt = (LinTask) iterLintasks.next();
+//                            if (!"".equalsIgnoreCase(lt.getTargetLanguage())) {
+//                                String srcLang = lt.getTargetLanguage();
+//
+//                                String abr = (String) LanguageAbs.getInstance().getAbs().get(srcLang);
+//                                //Also prevent duplicates
+//                                if (abr != null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(abr) == null) {
+//                                    targets += abr + ", ";
+//                                    alreadyAdded.put(abr, abr);
+//                                } else if (abr == null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(srcLang) == null) {
+//                                    targets += srcLang + ", ";
+//                                    alreadyAdded.put(srcLang, srcLang);
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                    if (targets.endsWith(", ")) {
+//                        targets = targets.substring(0, targets.length() - 2);
+//                    }
+//                }
+//
+//                try {
+//                    if (sources.equals("") || q.getStatus().equalsIgnoreCase("pending")) {
+//                        for (Iterator iterSources = q.getSourceDocs().iterator(); iterSources.hasNext();) {
+//                            SourceDoc sd = (SourceDoc) iterSources.next();
+//                            sources += (String) LanguageAbs.getInstance().getAbs().get(sd.getLanguage());
+//                            if (iterSources.hasNext()) {
+//
+//                                sources += ", ";
+//                            }
+//                            for (Iterator iterTargets = sd.getTargetDocs().iterator(); iterTargets.hasNext();) {
+//                                TargetDoc td = (TargetDoc) iterTargets.next();
+//                                for (Iterator iterLintasks = td.getLinTasks().iterator(); iterLintasks.hasNext();) {
+//                                    LinTask lt = (LinTask) iterLintasks.next();
+//                                    if (!"".equalsIgnoreCase(lt.getTargetLanguage())) {
+//                                        String srcLang = lt.getTargetLanguage();
+//
+//                                        String abr = (String) LanguageAbs.getInstance().getAbs().get(srcLang);
+//                                        //Also prevent duplicates
+//                                        if (abr != null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(abr) == null) {
+//                                            targets += abr + ", ";
+//                                            alreadyAdded.put(abr, abr);
+//                                        } else if (abr == null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(srcLang) == null) {
+//                                            targets += srcLang + ", ";
+//                                            alreadyAdded.put(srcLang, srcLang);
+//                                        }
+//
+//                                    }
+//                                }
+//                            }
+//                            if (targets.endsWith(", ")) {
+//                                targets = targets.substring(0, targets.length() - 2);
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                }
+//                jo.put("SourceLangs", sources);
+//                jo.put("TargetLangs", targets);
+
+                if (p.getContact() != null) {
+                    //jo.put("ClientContact","<a "+HrHelper.LINK_STYLE+" href=../clientContactEdit.do?clientContactId=" + p.getContact().getClientContactId() + ">" + p.getContact().getFirst_name()+" " + p.getContact().getLast_name()+"</a>");
+                    jo.put("ClientContact", "<a " + HrHelper.LINK_STYLE + " href=\"javascript:parent.openSingleContactWindow('" + p.getContact().getLast_name() + ", " + p.getContact().getFirst_name() + "','" + p.getContact().getClientContactId() + "')\">" + p.getContact().getLast_name() + ", " + p.getContact().getFirst_name() + "</a>");
+
+                }
+
+            }
+
+            if (q.getQuoteDate() != null) {
+                jo.put("QuoteDate", q.getQuoteDate());
+                jo.put("year", q.getQuoteDate().getYear() + 1900);
+            }
+
+            jo.put("Status", q.getStatus());
+            jo.put("QuoteAmount", q.getQuoteDollarTotal());
+            jo.put("quoteNumber", "<a " + HrHelper.LINK_STYLE + " href=\"javascript:parent.openSingleQuoteWindow('" + q.getQuote1Id() + "','" + StandardCode.getInstance().noNull(q.getNumber()) + "')\">" + StandardCode.getInstance().noNull(q.getNumber()) + "</a>");
+
+
+
+//            jo.put("newQuoteShallow", "<input type='button' class='x-btn' value='Copy' onclick=\"javascript:createNewQuote('" + q.getQuote1Id() + "')\">");
+//            jo.put("newQuoteDeep", "<input type='button' value='Copy' class='x-btn' onclick=\"javascript:createNewQuoteDeepCopy('" + q.getQuote1Id() + "')\">");
+
+
+
+
+            return jo;
+        } catch (Exception e) {
+            //System.out.println("Problem processing quote:" + q.getNumber());
         }
         return new JSONObject();
     }
 
+        public static JSONObject ClientQuoteToJsonPrint(Quote1 q) throws Exception {
+
+        JSONObject jo = new JSONObject();
+        try {
+
+            //jo.put("projectNumber",p.getNumber()+p.getCompany().getCompany_code());
+
+//            String medical = "";
+            String product = "";
+            String category = "";
+            String desc = "";
+//            String clientTask = "";
+            String lineOfText ="";
+
+            Project p = q.getProject();
+//            List cq = null;
+
+            try {
+                List cq = QuoteService.getInstance().getSingleClientQuote(q.getQuote1Id());
+
+
+                for (int ii = 0; ii < cq.size(); ii++) {
+                    // SourceDoc sd = (SourceDoc) iterSources.next();
+                    Client_Quote newQA = (Client_Quote) cq.get(ii);
+                    Product prod = ClientService.getInstance().getSingleProduct(newQA.getProduct_ID());
+                    product += prod.getProduct();
+//                    medical += StandardCode.getInstance().noNull(newQA.getMedical());
+                    category += StandardCode.getInstance().noNull(prod.getCategory());
+                    if (p.getCompany().getClientId()==100) {
+                         lineOfText += StandardCode.getInstance().noNull(newQA.getProductText());
+                         desc +=StandardCode.getInstance().noNull(newQA.getType().replaceAll("\r\n", " "));
+                    }else{
+                     desc += prod.getDescription().replaceAll("\r\n", " ");
+                    }
+                    
+                    desc += prod.getDescription().replaceAll("\r\n", " ");
+                    ////System.out.println(desc);
+//                    clientTask += StandardCode.getInstance().noNull(newQA.getClientTask()) + StandardCode.getInstance().noNull(newQA.getOtherTask());
+                    //if(iterSources.hasNext()){
+                    if (ii != cq.size() - 1) {
+//                        if(!medical.equals(""))medical += ", ";
+                        if(!product.equals(""))product += ", ";
+                        if(!category.equals(""))category += ", ";
+                        if(!desc.equals(""))desc += ", ";
+//                        if(!clientTask.equals(""))clientTask += ", ";
+                        if(!lineOfText.equals(""))lineOfText += ", ";
+                    }
+
+                }
+
+                
+            } catch (Exception e) {
+
+//                medical = "";
+                product = "";
+                category = "";
+                desc = "";
+
+            }
+//            Map jo = new LinkedHashMap();
+            
+            ///    Client_Quote cq=QuoteService.getInstance().getSingleClient_Quote(q.getQuote1Id());
+            if (p != null) {
+                jo.put("Project Number", StandardCode.getInstance().noNull(p.getNumber() + p.getCompany().getCompany_code()));
+                jo.put("AE", p.getCompany().getSales_rep());
+                try {
+                    jo.put("Client Fee", StandardCode.getInstance().formatDouble(q.getQuoteDollarTotal()));
+                } catch (Exception e) {
+                    jo.put("Client Fee", "");
+                }
+
+                if (!product.equals("")) {
+
+                    jo.put("Product", product);
+                   
+                    jo.put("Project Description", desc.replaceAll("\r\n", " "));
+                    jo.put("Line Of Text", lineOfText);
+//                    jo.put("Medical Device", StandardCode.getInstance().noNull(medical));
+                    jo.put("Category", category);
+
+                    // jo.put("projectDescription",p.getProductDescription());
+                    //      jo.put("product",p.getProduct());
+                } else {
+                    try {
+                        jo.put("Project Description", StandardCode.getInstance().noNull(p.getProductDescription()).replaceAll("\r\n", " "));
+                        jo.put("Product", StandardCode.getInstance().noNull(p.getProduct()));
+                        jo.put("Line Of Text", "");
+//                        jo.put("Medical Device", "");
+                        jo.put("Category", "");
+                    } catch (Exception e) {
+                        jo.put("Project Description", "");
+                        jo.put("Product", "");
+                        jo.put("Line Of Text", "");
+//                        jo.put("Medical Device", "");
+                        jo.put("Category", "");
+                        //System.out.println("error here");
+                    }
+                    //   jo.put("product",product);
+                    //    jo.put("projectDescription",desc);
+                    //   jo.put("medicalDevice",medical);
+                    //    jo.put("Category",category);
+                }
+                
+               
+//                jo.put("Task", p.getTask());
+                jo.put("SourceLangs", p.getSrcLang());
+                jo.put("TargetLangs", p.getTargetLang());
+
+
+                if (p.getContact() != null) {
+                    jo.put("ClientContact",   p.getContact().getLast_name() + ", " + p.getContact().getFirst_name() );
+
+                }else{
+                    jo.put("ClientContact",   "" );
+                }
+
+            }
+            DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+//            Date date = new Date();
+//            String dateString = dateFormat.format(date);
+            try {
+                jo.put("ApprovalDate", dateFormat.format(q.getApprovalDate()));
+            } catch (Exception e) {
+                jo.put("ApprovalDate", "");
+            }
+            if (q.getQuoteDate() != null) {
+                jo.put("Quote Date", dateFormat.format(q.getQuoteDate()));
+                jo.put("Year", q.getQuoteDate().getYear() + 1900);
+            }else{
+                jo.put("Quote Date", "");
+                jo.put("Year", "");
+            }
+
+
+            try {
+                jo.put("Publish Date", dateFormat.format(q.getPublishDate()));
+                jo.put("Published By", q.getPublishBy());
+            } catch (Exception e) {
+                 jo.put("Publish Date", "");
+                jo.put("Published By", "");
+            }
+
+            try {
+
+                jo.put("Rejection Date", q.getApprovalDate());
+                jo.put("Reject Reason", StandardCode.getInstance().noNull(q.getRejectReason()));
+            } catch (Exception e) {
+                jo.put("Rejection Date", "");
+                jo.put("Reject Reason", q.getRejectReason());
+            }
+            try{
+                jo.put("Status", q.getStatus());
+                jo.put("Quote Amount", q.getQuoteDollarTotal());
+                jo.put("Approval Time Esimate", q.getApprovalTimeEsimate());
+            }catch(Exception e){
+                jo.put("Status", "");
+                jo.put("Quote Amount", "");
+                jo.put("Approval Time Esimate", "");
+            }
+            jo.put("Quote Number", q.getNumber());
+//if(jo.getString("Project Description").contains("Diamino Testimonial China")){
+//    //System.out.println(jo.getString("Project Description"));
+//    //System.out.println(q.getNumber());
+//}
+
+           
+            return jo;
+        } catch (Exception e) {
+            //System.out.println("Problem processing quote:" + q.getNumber());
+        }
+        return new JSONObject();
+    }
+
+        
+        
     public static JSONObject ClientQuoteToJson2(Quote1 q) throws Exception {
 
 
@@ -472,7 +781,7 @@ public class QuoteHelper {
 
 
                 for (int ii = 0; ii < cq.size(); ii++) {
-                    System.out.println("Sizeeeeeeeeeeeeeeeeeeeee" + cq.size());
+                    //System.out.println("Sizeeeeeeeeeeeeeeeeeeeee" + cq.size());
                     // SourceDoc sd = (SourceDoc) iterSources.next();
                     Client_Quote newQA = (Client_Quote) cq.get(ii);
                     Product prod = ClientService.getInstance().getSingleProduct(newQA.getProduct_ID());
@@ -499,8 +808,8 @@ public class QuoteHelper {
                     }
 
                 }
-                System.out.println("getQuote1IdgetQuote1IdgetQuote1IdgetQuote1IdgetQuote1Id" + q.getQuote1Id());
-                System.out.println("getClient_QuotegetClient_Quote   size" + cq.size());
+                //System.out.println("getQuote1IdgetQuote1IdgetQuote1IdgetQuote1IdgetQuote1Id" + q.getQuote1Id());
+                //System.out.println("getClient_QuotegetClient_Quote   size" + cq.size());
 
             } catch (Exception e) {
 
@@ -515,9 +824,9 @@ public class QuoteHelper {
 
 
             try {
-                System.out.println(medical + product + category);
+                //System.out.println(medical + product + category);
             } catch (Exception e) {
-                System.out.println("error here");
+                //System.out.println("error here");
             }
             JSONObject jo = new JSONObject();
             ///    Client_Quote cq=QuoteService.getInstance().getSingleClient_Quote(q.getQuote1Id());
@@ -534,7 +843,7 @@ public class QuoteHelper {
                     jo.put("product", product);
                    
                     jo.put("projectDescription", desc);
-                    jo.put("lineOfText", lineOfText);
+                      jo.put("lineOfText", lineOfText);
                     jo.put("medicalDevice", medical);
                     jo.put("Category", category);
 
@@ -545,7 +854,7 @@ public class QuoteHelper {
                         jo.put("projectDescription", StandardCode.getInstance().noNull(p.getProductDescription()));
                         jo.put("product", StandardCode.getInstance().noNull(p.getProduct()));
                     } catch (Exception e) {
-                        System.out.println("error here");
+                        //System.out.println("error here");
                     }
                     //   jo.put("product",product);
                     //    jo.put("projectDescription",desc);
@@ -553,109 +862,109 @@ public class QuoteHelper {
                     //    jo.put("Category",category);
                 }
                 int idTask1 = 0;
-                String targets = "";
-                String sources = "";
-                String task1 = "";
-                HashMap alreadyAdded = new HashMap();
+//                String targets = "";
+//                String sources = "";
+//                String task1 = "";
+//                HashMap alreadyAdded = new HashMap();
 //try{Iterator iterSources = p.getSourceDocs().iterator();}catch(Exception ){Iterator iterSources = q.getSourceDocs().iterator();}
-                List sourcelang1 = QuoteService.getInstance().getSourceLang1(q);
+//                List sourcelang1 = QuoteService.getInstance().getSourceLang1(q);
+//
+//
+//                for (int ii = 0; ii < sourcelang1.size(); ii++) {
+//                    SourceDoc sd = (SourceDoc) sourcelang1.get(ii);
+//                    sources += (String) LanguageAbs.getInstance().getAbs().get(sd.getLanguage());
+//                    if (ii != sourcelang1.size() - 1) {
+//                        sources += ", ";
+//                    }
+//                    for (Iterator iterTargets = sd.getTargetDocs().iterator(); iterTargets.hasNext();) {
+//                        TargetDoc td = (TargetDoc) iterTargets.next();
+//                        for (Iterator iterLintasks = td.getLinTasks().iterator(); iterLintasks.hasNext();) {
+//                            LinTask lt = (LinTask) iterLintasks.next();
+//                            if (!"".equalsIgnoreCase(lt.getTargetLanguage())) {
+//                                String srcLang = lt.getTargetLanguage();
+//                                // String srcLang = td.getLanguage();
+//                                String abr = (String) LanguageAbs.getInstance().getAbs().get(srcLang);
+//                                //Also prevent duplicates
+//                                if (abr != null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(abr) == null) {
+//                                    targets += abr + ", ";
+//                                    alreadyAdded.put(abr, abr);
+//                                } else if (abr == null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(srcLang) == null) {
+//                                    targets += srcLang + ", ";
+//                                    alreadyAdded.put(srcLang, srcLang);
+//                                }
+//
+//                            }
+//                        }
+//                        idTask1 = td.getTargetDocId();
+//                    }
+//                    if (targets.endsWith(", ")) {
+//                        targets = targets.substring(0, targets.length() - 2);
+//                    }
+//                }
 
 
-                for (int ii = 0; ii < sourcelang1.size(); ii++) {
-                    SourceDoc sd = (SourceDoc) sourcelang1.get(ii);
-                    sources += (String) LanguageAbs.getInstance().getAbs().get(sd.getLanguage());
-                    if (ii != sourcelang1.size() - 1) {
-                        sources += ", ";
-                    }
-                    for (Iterator iterTargets = sd.getTargetDocs().iterator(); iterTargets.hasNext();) {
-                        TargetDoc td = (TargetDoc) iterTargets.next();
-                        for (Iterator iterLintasks = td.getLinTasks().iterator(); iterLintasks.hasNext();) {
-                            LinTask lt = (LinTask) iterLintasks.next();
-                            if (!"".equalsIgnoreCase(lt.getTargetLanguage())) {
-                                String srcLang = lt.getTargetLanguage();
-                                // String srcLang = td.getLanguage();
-                                String abr = (String) LanguageAbs.getInstance().getAbs().get(srcLang);
-                                //Also prevent duplicates
-                                if (abr != null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(abr) == null) {
-                                    targets += abr + ", ";
-                                    alreadyAdded.put(abr, abr);
-                                } else if (abr == null && !"".equals(srcLang) && !"".equals(abr) && alreadyAdded.get(srcLang) == null) {
-                                    targets += srcLang + ", ";
-                                    alreadyAdded.put(srcLang, srcLang);
-                                }
-
-                            }
-                        }
-                        idTask1 = td.getTargetDocId();
-                    }
-                    if (targets.endsWith(", ")) {
-                        targets = targets.substring(0, targets.length() - 2);
-                    }
-                }
-
-
-                List linTaskList = QuoteService.getInstance().getLinTask(idTask1);
-                List engTaskList = QuoteService.getInstance().getEnggTask(idTask1);
-                List forTaskList = QuoteService.getInstance().getFormatTask(idTask1);
-                List otherTaskList = QuoteService.getInstance().getOtherTask(idTask1);
-                if (linTaskList.size() == 0 && engTaskList.size() == 0 && forTaskList.size() == 0 && otherTaskList.size() == 0) {
-
-
-                    jo.put("Task", clientTask);
-
-                } else {
-
-                    for (int ll = 0; ll < linTaskList.size(); ll++) {
-                        LinTask lt = (LinTask) linTaskList.get(ll);
-                        if (alreadyAdded.get(lt.getTaskName()) == null) {
-
-                            if (task1 == null ? "" != null : !task1.equals("")) {
-                                task1 += ", ";
-                            }
-                            task1 += lt.getTaskName();
-                        }
-
-
-                    }
-                    for (int ll = 0; ll < engTaskList.size(); ll++) {
-                        EngTask lt = (EngTask) engTaskList.get(ll);
-                        if (alreadyAdded.get(lt.getTaskName()) == null) {
-                            if (task1 == null ? "" != null : !task1.equals("")) {
-                                task1 += ", ";
-                            }
-                            task1 += lt.getTaskName();
-                        }
-
-
-                    }
-                    for (int ll = 0; ll < forTaskList.size(); ll++) {
-                        DtpTask lt = (DtpTask) forTaskList.get(ll);
-                        if (alreadyAdded.get(lt.getTaskName()) == null) {
-                            if (task1 != "") {
-                                task1 += ", ";
-                            }
-                            task1 += lt.getTaskName();
-                        }
-
-
-                    }
-                    for (int ll = 0; ll < otherTaskList.size(); ll++) {
-
-                        OthTask lt = (OthTask) otherTaskList.get(ll);
-                        if (alreadyAdded.get(lt.getTaskName()) == null) {
-                            if (task1 != "") {
-                                task1 += ", ";
-                            }
-                            task1 += lt.getTaskName();
-                        }
-
-
-                    }
-                    jo.put("Task", task1);
-                }
-
-                jo.put("SourceLangs", sources);
-                jo.put("TargetLangs", targets);
+//                List linTaskList = QuoteService.getInstance().getLinTask(idTask1);
+//                List engTaskList = QuoteService.getInstance().getEnggTask(idTask1);
+//                List forTaskList = QuoteService.getInstance().getFormatTask(idTask1);
+//                List otherTaskList = QuoteService.getInstance().getOtherTask(idTask1);
+//                if (linTaskList.size() == 0 && engTaskList.size() == 0 && forTaskList.size() == 0 && otherTaskList.size() == 0) {
+//
+//
+//                    jo.put("Task", clientTask);
+//
+//                } else {
+//
+//                    for (int ll = 0; ll < linTaskList.size(); ll++) {
+//                        LinTask lt = (LinTask) linTaskList.get(ll);
+//                        if (alreadyAdded.get(lt.getTaskName()) == null) {
+//
+//                            if (task1 == null ? "" != null : !task1.equals("")) {
+//                                task1 += ", ";
+//                            }
+//                            task1 += lt.getTaskName();
+//                        }
+//
+//
+//                    }
+//                    for (int ll = 0; ll < engTaskList.size(); ll++) {
+//                        EngTask lt = (EngTask) engTaskList.get(ll);
+//                        if (alreadyAdded.get(lt.getTaskName()) == null) {
+//                            if (task1 == null ? "" != null : !task1.equals("")) {
+//                                task1 += ", ";
+//                            }
+//                            task1 += lt.getTaskName();
+//                        }
+//
+//
+//                    }
+//                    for (int ll = 0; ll < forTaskList.size(); ll++) {
+//                        DtpTask lt = (DtpTask) forTaskList.get(ll);
+//                        if (alreadyAdded.get(lt.getTaskName()) == null) {
+//                            if (task1 != "") {
+//                                task1 += ", ";
+//                            }
+//                            task1 += lt.getTaskName();
+//                        }
+//
+//
+//                    }
+//                    for (int ll = 0; ll < otherTaskList.size(); ll++) {
+//
+//                        OthTask lt = (OthTask) otherTaskList.get(ll);
+//                        if (alreadyAdded.get(lt.getTaskName()) == null) {
+//                            if (task1 != "") {
+//                                task1 += ", ";
+//                            }
+//                            task1 += lt.getTaskName();
+//                        }
+//
+//
+//                    }
+//                    jo.put("Task", p.getTask());
+//                }
+                jo.put("Task", p.getTask());
+                jo.put("SourceLangs", p.getSrcLang());
+                jo.put("TargetLangs", p.getTargetLang());
 
 
                 if (p.getContact() != null) {
@@ -676,7 +985,7 @@ public class QuoteHelper {
                 jo.put("QuoteDate", dateFormat.format(q.getQuoteDate()));
                 jo.put("year", q.getQuoteDate().getYear() + 1900);
             }
-            System.out.println("======================================================>" + q.getQuoteDate().getYear() + 1900 + "   " + q.getNumber());
+            //System.out.println("======================================================>" + q.getQuoteDate().getYear() + 1900 + "   " + q.getNumber());
 
 
             try {
@@ -715,14 +1024,14 @@ public class QuoteHelper {
             jo.put("newQuoteShallow", "<input type='button' class='x-btn' value='Copy' onclick=\"javascript:createNewQuote('" + q.getQuote1Id() + "')\">");
             jo.put("newQuoteDeep", "<input type='button' value='Copy' class='x-btn' onclick=\"javascript:createNewQuoteDeepCopy('" + q.getQuote1Id() + "')\">");
 
-            // System.out.println("Quote IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"+q.getQuote1Id());
+            // //System.out.println("Quote IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"+q.getQuote1Id());
 //?resourceViewId="+resourceViewId
 
 
-            System.out.println(q.getQuoteDate().getYear() + 1900);
+            //System.out.println(q.getQuoteDate().getYear() + 1900);
             return jo;
         } catch (Exception e) {
-            System.out.println("Problem processing quote:" + q.getNumber());
+            //System.out.println("Problem processing quote:" + q.getNumber());
         }
         return new JSONObject();
     }
@@ -751,17 +1060,17 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
-            for (int i = 0; i < temp.size(); i++) {
-                Quote1 q = (Quote1) temp.get(i);
-                // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
-                Hibernate.initialize(q.getProject());
-                Hibernate.initialize(q.getProject().getSourceDocs());
-                Hibernate.initialize(q.getSourceDocs());
-
-                // results.add(p);
-                //}
-            }
+            // //System.out.println("Found:::"+temp.size());
+//            for (int i = 0; i < temp.size(); i++) {
+//                Quote1 q = (Quote1) temp.get(i);
+//                // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
+//                Hibernate.initialize(q.getProject());
+//                Hibernate.initialize(q.getProject().getSourceDocs());
+//                Hibernate.initialize(q.getSourceDocs());
+//
+//                // results.add(p);
+//                //}
+//            }
             //temp = null;
             return temp;
         } catch (HibernateException e) {
@@ -814,13 +1123,13 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
                 Hibernate.initialize(q.getProject());
                 Hibernate.initialize(q.getProject().getSourceDocs());
-                Hibernate.initialize(q.getSourceDocs());
+//                Hibernate.initialize(q.getSourceDocs());
 
                 // results.add(p);
                 //}
@@ -878,7 +1187,7 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
@@ -942,7 +1251,7 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
@@ -990,7 +1299,7 @@ public class QuoteHelper {
              * Build HQL (Hibernate Query Language) query to retrieve a list
              * of all the items currently stored by Hibernate.
              *///and (project.pm='"+pmName+"' or project.Company.Sales_rep='"+pmName+"') order by project.number
-            System.out.println("Beforrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+            //System.out.println("Beforrrrrrrrrrrrrrrrrrrrrrrrrrrr");
             query = session.createQuery("select quote from app.quote.Quote1 quote left join  quote.Project.Company company where quote.status = 'pending' and (company.clientId='" + clientId + "')order by number desc");
             //      query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.Project.projectId=7148 and quote.status = 'pending' and (company.clientId='"+clientId+"')order by number desc");
             //         query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.status = 'pending' and (quote.Project.pm ='"+pmName+"' OR quote.Project.Company.Sales_rep ='"+pmName+"')");
@@ -1002,7 +1311,7 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
@@ -1055,7 +1364,7 @@ public class QuoteHelper {
              * Build HQL (Hibernate Query Language) query to retrieve a list
              * of all the items currently stored by Hibernate.
              *///and (project.pm='"+pmName+"' or project.Company.Sales_rep='"+pmName+"') order by project.number
-            System.out.println("Beforrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+            //System.out.println("Beforrrrrrrrrrrrrrrrrrrrrrrrrrrr");
 
             query = session.createQuery("select quote from app.quote.Quote1 quote left join  quote.Project.Company company where quote.status = 'pending' and quote.quoteDate <'" + eDate + "' and quote.quoteDate >'" + sDate + "' and  (company.clientId='" + clientId + "')order by number desc");
             //      query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.Project.projectId=7148 and quote.status = 'pending' and (company.clientId='"+clientId+"')order by number desc");
@@ -1068,7 +1377,7 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
@@ -1122,7 +1431,7 @@ public class QuoteHelper {
              * of all the items currently stored by Hibernate.
              *///and (project.pm='"+pmName+"' or project.Company.Sales_rep='"+pmName+"') order by project.number
 
-            query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.status = 'approved' and (company.clientId='" + clientId + "')  order by quote.number desc");
+            query = session.createQuery("select quote from app.quote.Quote1 quote  where quote.status = 'approved' and (quote.Project.Company.clientId='" + clientId + "')  order by quote.number desc");
             //         query = session.createQuery("select quote from app.quote.Quote1 quote left join quote.Project.Company company where quote.status = 'pending' and (quote.Project.pm ='"+pmName+"' OR quote.Project.Company.Sales_rep ='"+pmName+"')");
 
             List temp = query.list();
@@ -1132,18 +1441,18 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
-            for (int i = 0; i < temp.size(); i++) {
-                Quote1 q = (Quote1) temp.get(i);
-                // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
-                try {
-                    Hibernate.initialize(q.getProject());
-                    Hibernate.initialize(q.getProject().getSourceDocs());
-                } catch (Exception e) {
-                }
-                // results.add(p);
-                //}
-            }
+            // //System.out.println("Found:::"+temp.size());
+//            for (int i = 0; i < temp.size(); i++) {
+//                Quote1 q = (Quote1) temp.get(i);
+//                // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
+//                try {
+//                    Hibernate.initialize(q.getProject());
+//                    Hibernate.initialize(q.getProject().getSourceDocs());
+//                } catch (Exception e) {
+//                }
+//                // results.add(p);
+//                //}
+//            }
             //temp = null;
             return temp;
         } catch (HibernateException e) {
@@ -1167,6 +1476,8 @@ public class QuoteHelper {
             }
         }
     }
+    
+    
 
     public static List getClientQuoteListForClient(String clientId, String year) {
         /*
@@ -1198,7 +1509,7 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
@@ -1260,7 +1571,7 @@ public class QuoteHelper {
             //temp.addAll(query.list());
             // List results = new ArrayList();
 
-            // System.out.println("Found:::"+temp.size());
+            // //System.out.println("Found:::"+temp.size());
             for (int i = 0; i < temp.size(); i++) {
                 Quote1 q = (Quote1) temp.get(i);
                 // if(pmName.equals(p.getCompany().getBackup_pm()) && !pmName.equals(p.getCompany().getSales_rep()) && !pmName.equals(p.getPm())){
@@ -1309,28 +1620,28 @@ public class QuoteHelper {
         String results = "<table border='0' width='75%'>";
         results += "<tr><td></td>"
                 + "<td colspan=6 align='center'><a " + HrHelper.LINK_STYLE + " href=\"javascript:parent.openClientWindowReverse('" + HrHelper.jsSafe(q.getProject().getCompany().getCompany_name()) + "','" + q.getProject().getCompany().getClientId() + "')\"><font size='4' color='blue'>" + p.getCompany().getCompany_name() + "</font></a></td></tr>";
-        // System.out.println("qqqqqqqqqqqqqqqqqqqqqq"+q.getNumber());
+        // //System.out.println("qqqqqqqqqqqqqqqqqqqqqq"+q.getNumber());
 
-        results += "<tr><td align='right'><font size='2'><b>Quote Number:</td><td align='left'>" + q.getNumber() + "</td>"
-                + "<td align='right'><font size='2' ><b> Status:</td><td align='left'>" + publishStatus + "</td>"
-                + "<td align='right'><font size='2' ><b> Archive ID:</td><td align='left'>" + StandardCode.getInstance().noNull(q.getArchiveId()) + "</td></tr>";
+        results += "<tr><td align='right'><font size='2'><b>Quote Number:&nbsp</td><td align='left'>" + q.getNumber() + "</td>"
+                + "<td align='right'><font size='2' ><b> Status:&nbsp</td><td align='left'>" + publishStatus + "</td>"
+                + "<td align='right'><font size='2' ><b> Archive ID:&nbsp</td><td align='left'>" + StandardCode.getInstance().noNull(q.getArchiveId()) + "</td></tr>";
         results += "</table><hr>";
         try {        //if(q.getEnteredById()!=null){
             User enteredByUser = UserService.getInstance().getSingleUser(q.getEnteredById());
             User modifiedByUser = UserService.getInstance().getSingleUser(q.getLastModifiedById());
 //User approvedByUser = UserService.getInstance().getSingleUser(q.getA)
-            results += "<table><tr><td align='right'>Quote Entered By :    </td><td>" + enteredByUser.getFirstName() + " " + enteredByUser.getLastName() + "</td><td>on   </td><td align='left'>" + q.getEnteredByTS() + "</td></tr>"
-                    + "<tr><td align='right'>Quote Modified By :   </td><td>" + modifiedByUser.getFirstName() + " " + modifiedByUser.getLastName() + "</td><td>on   </td><td align='left'>" + q.getLastModifiedByTS() + "</td></tr>";
+            results += "<table><tr><td align='right'>Quote Entered By:&nbsp    </td><td>" + enteredByUser.getFirstName() + " " + enteredByUser.getLastName() + "</td><td>on   </td><td align='left'>" + q.getEnteredByTS() + "</td></tr>"
+                    + "<tr><td align='right'>Quote Modified By:&nbsp</td><td>" + modifiedByUser.getFirstName() + " " + modifiedByUser.getLastName() + "</td><td>on   </td><td align='left'>" + q.getLastModifiedByTS() + "</td></tr>";
             if (q.getStatus().equalsIgnoreCase("pending")) {
             } else {
 
-                results += "<tr><td align='right'>Quote Approved By :   </td><td>" + modifiedByUser.getFirstName() + " " + modifiedByUser.getLastName() + "</td><td>on   </td><td align='left'>" + q.getApprovedTS() + "</td></tr>";
+                results += "<tr><td align='right'>Quote Approved By:&nbsp</td><td>" + modifiedByUser.getFirstName() + " " + modifiedByUser.getLastName() + "</td><td>on   </td><td align='left'>" + q.getApprovedTS() + "</td></tr>";
             }
             results += "</table><hr>";
 
         } catch (Exception e) {
 
-            System.out.println("Errorrrrrrrrrrrrrrrrrrrrrrrrr");
+            //System.out.println("Errorrrrrrrrrrrrrrrrrrrrrrrrr");
         }
         return results;
 
@@ -1540,26 +1851,27 @@ public class QuoteHelper {
                     + "    sum(totalAmountLin) as totalLin, "
                     + "    sum(totalAmountDtp) as totalDtp, "
                     + "    sum(totalAmountEng) as totalEng, sum(totalAmountLin)+sum(totalAmountDtp)+sum(totalAmountEng) as myTotal, "
-                    + "    languages "
+                    + "    languages,languageCombination "
                     + "  from "
                     + "   (  "
                     + "  SELECT * FROM( "
                     + " select  sum(replace(lintask.dollarTotal,',','')) as totalAmountLin, 0 as totalAmountDtp, 0 as totalAmountEng, "
-                    + "         targetLanguage as languages "
-                    + // "         CONCAT(sourceLanguage,' to ', targetLanguage) as languages "+
-                    " 	from "
+                    + "         targetLanguage as languages, "
+                    +  "         CONCAT(sourceLanguage,' to ', targetLanguage) as languageCombination "
+                    + " 	from "
                     + "         lintask, targetdoc, sourcedoc, quote1 "
                     + " 	where "
                     + "             quote1.id_Quote1=? "
                     + "               and lintask.id_targetDoc=targetdoc.id_targetDoc "
                     + "               and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc "
                     + "               and sourcedoc.id_Quote1 = quote1.id_Quote1 "
-                    + " 	group by languages "
+                    + " 	group by languageCombination "
                     + "   ) AS T1   "
                     + "   union   "
                     + "   select * from (   "
                     + " 	select  0 as totalAmountLin, sum(replace(dtptask.dollarTotal,',','')) as totalAmountDtp,0 as totalAmountEng, "
-                    + "        targetLanguage as languages "
+                    + "        targetLanguage as languages, "
+                    +  "         CONCAT(sourceLanguage,' to ', targetLanguage) as languageCombination "
                     + " 	from "
                     + "         dtptask, targetdoc, sourcedoc, quote1 "
                     + " 	where "
@@ -1567,12 +1879,13 @@ public class QuoteHelper {
                     + "               and dtptask.id_targetDoc=targetdoc.id_targetDoc "
                     + "               and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc "
                     + "               and sourcedoc.id_Quote1 = quote1.id_Quote1 "
-                    + " 	group by languages "
+                    + " 	group by languageCombination "
                     + "   ) AS T2   "
                     + "   union   "
                     + "   select * from (   "
                     + " 	select  0 as totalAmountLin,  0 as totalAmountDtp,  sum(replace(engtask.dollarTotal,',','')) as totalAmountEng, "
-                    + "         targetLanguage as languages "
+                    + "         targetLanguage as languages, "
+                    +  "         CONCAT(sourceLanguage,' to ', targetLanguage) as languageCombination "
                     + " 	from "
                     + "         engtask, targetdoc, sourcedoc, quote1 "
                     + " 	where "
@@ -1580,10 +1893,10 @@ public class QuoteHelper {
                     + "               and engtask.id_targetDoc=targetdoc.id_targetDoc "
                     + "               and sourcedoc.id_sourcedoc  = targetdoc.id_sourcedoc "
                     + "               and sourcedoc.id_Quote1 = quote1.id_Quote1 "
-                    + " 	group by languages "
+                    + " 	group by languageCombination "
                     + "   ) AS T3   "
                     + "   ) AS MAINTABLE "
-                    + " group by languages ");
+                    + " group by languageCombination ");
 
 
             st.setInt(1, quoteId);
@@ -1604,7 +1917,7 @@ public class QuoteHelper {
 
              resultHt.put("INSERT_BREAKDOWN_1_INSERT", result);*/
 
-            /*System.out.println(QuoteHelper.padMyString("LANGUAGE","RIGHT",45) +
+            /*//System.out.println(QuoteHelper.padMyString("LANGUAGE","RIGHT",45) +
              QuoteHelper.padMyString("LINGUISTIC","LEFT",15) +
              QuoteHelper.padMyString("DTP","LEFT",15) +
              QuoteHelper.padMyString("ENGINEERING","LEFT",15) +
@@ -1629,13 +1942,14 @@ public class QuoteHelper {
                     currentCounter = "0" + currentCounter;
                 }
 
+                resultHt.put("bd_langCombo_" + currentCounter, rs.getString("languageCombination") + "");
                 resultHt.put("bd_lang_" + currentCounter, rs.getString("languages") + "");
                 resultHt.put("bd_lin_" + currentCounter, StandardCode.getInstance().formatDouble(new Double(rs.getDouble("totalLin"))));
                 resultHt.put("bd_dtp_" + currentCounter, StandardCode.getInstance().formatDouble(new Double(rs.getDouble("totalDtp"))));
                 resultHt.put("bd_eng_" + currentCounter, StandardCode.getInstance().formatDouble(new Double(rs.getDouble("totalEng"))));
                 resultHt.put("bd_total_" + currentCounter, StandardCode.getInstance().formatDouble(new Double(rs.getDouble("myTotal"))));
 
-                /*System.out.println(QuoteHelper.padMyString(rs.getString("languages"),"RIGHT",45) +
+                /*//System.out.println(QuoteHelper.padMyString(rs.getString("languages"),"RIGHT",45) +
                  QuoteHelper.padMyString(rs.getDouble("totalLin")+"","LEFT",15) +
                  QuoteHelper.padMyString(rs.getDouble("totalDtp")+"","LEFT",15) +
                  QuoteHelper.padMyString(rs.getDouble("totalEng")+"","LEFT",15) +
@@ -1769,7 +2083,7 @@ public class QuoteHelper {
         try {
 
             tx = session.beginTransaction();
-            System.out.println("PIDPIDPID" + pid);
+            //System.out.println("PIDPIDPID" + pid);
             PreparedStatement st = session.connection().prepareStatement("delete from sourcedoc where id_quote1=? and Id_Client_Quote=" + pid);
             st.setInt(1, q.getQuote1Id().intValue());
             st.executeUpdate();
@@ -1847,5 +2161,14 @@ public class QuoteHelper {
         }
 
         return t;
+    }
+    
+    public void setQuoteUpdateInfo(Quote1 q, String username){
+    
+            q.setLastModifiedById(username);
+           //  QuoteHelper.setQuoteUpdateInfo(q,(String)request.getSession(false).getAttribute("username")); 
+             q.setLastModifiedByTS(new Date());
+        
+        //QuoteService.getInstance().updateQuote(q);
     }
 }

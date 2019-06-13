@@ -99,7 +99,7 @@ public final class QuoteViewGeneralAddSource1Action extends Action {
         
         //update values
         sd.setLanguage(sourceLanguage);
-        System.out.println("sddddddddddddd"+sd.getSourceDocId());
+        //System.out.println("sddddddddddddd"+sd.getSourceDocId());
 
         Client_Quote cq=QuoteService.getInstance().get_SingleClientQuote(id);
         

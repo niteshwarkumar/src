@@ -112,6 +112,7 @@ public final class ClientEditUpdateAction extends Action {
         String Project_mngr = cef.getProject_mngr();
         String Backup_pm = cef.getBackup_pm();
         String Sales_rep = cef.getSales_rep();
+        String Sales = cef.getSales();
         String Satisfaction_score = cef.getSatisfaction_score();
         String Satisfaction_level = cef.getSatisfaction_level();
         String Ftp_host_excel = cef.getFtp_host_excel();
@@ -126,6 +127,7 @@ public final class ClientEditUpdateAction extends Action {
         FormFile terms=cef.getTerms();
         String termsNames=cef.getTermsNames();
         String auto_alert = cef.getAuto_alert();
+        String specialNotes = cef.getSpecialNotes();
         
         //process logo upload
         String saveFileName = null;
@@ -135,7 +137,7 @@ public final class ClientEditUpdateAction extends Action {
             //random number in image name to prevent repeats
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
-            File saveFile = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName); 
+            File saveFile = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + saveFileName); 
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
@@ -150,7 +152,7 @@ public final class ClientEditUpdateAction extends Action {
             //random number in image name to prevent repeats
             Random gen = new Random(new Date().getSeconds());
             saveTermsName = String.valueOf(gen.nextInt()) + fileName;
-            File saveFile = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/ClientUpload/" + saveTermsName);
+            File saveFile = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/ClientUpload/" + saveTermsName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
@@ -183,6 +185,7 @@ public final class ClientEditUpdateAction extends Action {
         c.setProject_mngr(Project_mngr);
         c.setBackup_pm(Backup_pm);
         c.setSales_rep(Sales_rep);
+        c.setSales(Sales);
         c.setSatisfaction_score(Satisfaction_score);
         c.setSatisfaction_level(Satisfaction_level);
         c.setFtp_host_excel(Ftp_host_excel);
@@ -205,16 +208,17 @@ public final class ClientEditUpdateAction extends Action {
         c.setOtherContact4(cef.getOtherContact4());
         c.setOtherContact5(cef.getOtherContact5());
         c.setAuto_alert(auto_alert);
+        c.setSpecialNotes(specialNotes);
         User u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
 
         c.setModifiedByDate(new Date());
         c.setModifiedBy(u.getFirstName()+" " + u.getLastName());
-        // System.out.println("alexx:delinquent="+delinquent);
+        // //System.out.println("alexx:delinquent="+delinquent);
         //set updated values to db
         ClientService.getInstance().clientUpdateNoContact(c);
 
         String jsonProducts = request.getParameter("productJSON");
-        //System.out.println("jsonProducts="+jsonProducts);
+        ////System.out.println("jsonProducts="+jsonProducts);
 
         //First delete all products, and then re-insert it
        // ClientService.getInstance().unlinkClientAndProducts(Integer.parseInt(id));
@@ -222,7 +226,7 @@ public final class ClientEditUpdateAction extends Action {
         JSONArray products = new JSONArray(jsonProducts);
             for(int i=0;i< products.length();i++){
                 JSONObject j = (JSONObject)products.get(i);
-              //  System.out.println(j.getString("productId"));
+              //  //System.out.println(j.getString("productId"));
                Product pr=null;
                try{
                  pr=ClientService.getInstance().getSingleProduct(Integer.parseInt(j.getString("productId")));

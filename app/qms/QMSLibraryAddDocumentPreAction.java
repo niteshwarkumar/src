@@ -64,9 +64,24 @@ public class QMSLibraryAddDocumentPreAction extends Action {
 
         String id = request.getParameter("id");
         String mainTab = request.getParameter("mainTab");
-        request.setAttribute("id", id);
-        request.setAttribute("mainTab", mainTab);
-        if (id != null) {
+        String number = request.getParameter("number");
+        if(null != number){
+            request.setAttribute("number", number);
+        }else{
+            request.setAttribute("number", "");
+        }
+        if(null == mainTab){
+        
+         mainTab = (String) request.getAttribute("mainTab");
+        }
+        if(null == id){
+         id = (String) request.getAttribute("id");
+//         mainTab = (String) request.getAttribute("mainTab");
+        }
+        if(null == id){
+         id ="0";
+        }
+            try{
             QMSLibrary qms = QMSService.getInstance().getSingleQMSLibraryDocument(Integer.parseInt(id));
             DynaValidatorForm qvg = (DynaValidatorForm) form;
             qvg.set("allCheck", "" + qms.isAllCheck());
@@ -120,9 +135,10 @@ public class QMSLibraryAddDocumentPreAction extends Action {
             qvg.set("title", qms.getTitle());
             qvg.set("isoreference", qms.getIsoreference());
             qvg.set("affectedBox", qms.getAffectedBox());
-
-        }
-
+            }catch(Exception e){}
+     
+        request.setAttribute("id", id);
+        request.setAttribute("mainTab", mainTab);
 
         return (mapping.findForward("Success"));
     }

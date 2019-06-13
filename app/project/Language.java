@@ -18,6 +18,8 @@ public class Language implements Serializable {
 
 
     private String lang_group;
+    
+    private String dtp_lang_group;
 
     /** full constructor */
     public Language(String language) {
@@ -66,6 +68,15 @@ public class Language implements Serializable {
         this.lang_group = lang_group;
     }
 
+    public String getDtp_lang_group() {
+        return dtp_lang_group;
+    }
+
+    public void setDtp_lang_group(String dtp_lang_group) {
+        this.dtp_lang_group = dtp_lang_group;
+    }
+
+    
 
 
 }

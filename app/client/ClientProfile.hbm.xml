@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.client.ClientProfile" table="client_profile">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+
+      
+    <property name="clientId" type="int"/>
+    <property name="ae_text" type="string"/>
+    <property name="process_text" type="string"/>
+    <property name="icr_text" type="string"/>
+    <property name="deliverable_text" type="string"/>
+    <property name="technical_project_text" type="string"/>
+    <property name="pricing_text" type="string"/>
+    <property name="current_invoicing_process_text" type="string"/>
+    <property name="typical_project_text" type="string"/>
+    <property name="updatedBy" type="string"/>
+    <property name="updateDate" type="date"/>
+ 
+      
+         </class>
+              
+</hibernate-mapping>

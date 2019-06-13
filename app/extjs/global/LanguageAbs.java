@@ -46,10 +46,10 @@ public class LanguageAbs {
 
     
     public static void refreshCache(){
-        System.out.println("refreshing LanguageAbs");
+        //System.out.println("refreshing LanguageAbs");
         abs = new HashMap();
         List langs = ProjectService.getInstance().getLanguageList();
-        //System.out.println("langs.size()="+langs.size());
+        ////System.out.println("langs.size()="+langs.size());
         for(int i=0; i<langs.size(); i++){
             //if(((Language)langs.get(i)).getAbr()!=null){
                 abs.put( ((Language)langs.get(i)).getLanguage(), ((Language)langs.get(i)).getAbr());
@@ -58,7 +58,7 @@ public class LanguageAbs {
         }
         abs.put("All","All");
         langAbs.lastUpdate = System.currentTimeMillis();
-        System.out.println("finished refreshing LanguageAbs");
+        //System.out.println("finished refreshing LanguageAbs");
     }
   
 

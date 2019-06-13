@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+	
+<hibernate-mapping>
+   <class name="app.project.Scale" table="scale">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+      
+
+<property name="scaleRep" type="string"/>
+      <property name="scale100" type="string"/>
+      <property name="scale95" type="string"/>
+      <property name="scale85" type="string"/>
+      <property name="scale75" type="string"/>
+      <property name="scaleNew" type="string"/>
+      <property name="scalePerfect"  type="string"/>
+      <property name="scaleContext"  type="string"/>
+      
+      <set name="LinTasks" inverse="true" order-by="orderNum">
+      	<key column="ID_LinTask"/>
+      	<one-to-many class="app.project.LinTask"/>
+      </set>
+      
+   </class>
+              
+</hibernate-mapping>

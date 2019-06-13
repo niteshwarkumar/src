@@ -15,6 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.*;
 import app.client.*;
+import app.init.ClientRate;
 import app.project.*;
 import app.standardCode.*;
 import app.security.*;
@@ -105,6 +106,8 @@ public final class QuoteAdd3Action extends Action {
         //Set PM RATE 
         String clientViewId = StandardCode.getInstance().getCookie("quoteAddClientId", request.getCookies());
         Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(clientViewId));
+       // client
+                
         ClientLanguagePair[] clp = null;
         if(c!=null){
             if(c.getClientLanguagePairs()!=null){
@@ -125,7 +128,7 @@ public final class QuoteAdd3Action extends Action {
         
         //update project to db
         ProjectService.getInstance().updateProject(p);   
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
         
         // Forward control to the specified success URI
 	return (mapping.findForward("Success"));

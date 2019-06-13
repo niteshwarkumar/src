@@ -81,7 +81,7 @@ public class CoupleData  extends Action{
 
     response.setContentType("text/json");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

@@ -73,12 +73,12 @@ public class TechnicalEvaluationAction_1 extends Action {
             String resource=request.getParameter("resourceViewId");
 
 
-              System.out.println("resourceeeeeeeeeeeeeeee"+resource);
+              //System.out.println("resourceeeeeeeeeeeeeeee"+resource);
             if(resource==null)
                        resource= request.getSession(false).getAttribute("resource").toString();
 
            //   resource=request.getAttribute(resource).toString();
-              System.out.println("resourceeBBBBBBBBBBBBBBBBBB"+resource);
+              //System.out.println("resourceeBBBBBBBBBBBBBBBBBB"+resource);
             try {
 
                 tx = session.beginTransaction();
@@ -100,7 +100,7 @@ public class TechnicalEvaluationAction_1 extends Action {
                     jo.put("rate", rs.getInt("rate"));
 
 
-                    System.out.println("author.............." + rs.getString("evaluation_area"));
+                    //System.out.println("author.............." + rs.getString("evaluation_area"));
                     results.add(jo);
                 }
                 tx.commit();
@@ -135,7 +135,7 @@ public class TechnicalEvaluationAction_1 extends Action {
 
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");
-            // System.out.println(actResponse.toXML());
+            // //System.out.println(actResponse.toXML());
             PrintWriter out = response.getWriter();
 
             out.println(new JSONArray(results.toArray()));

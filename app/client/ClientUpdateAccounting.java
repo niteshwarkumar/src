@@ -3,7 +3,6 @@
 //this client to the db
 
 package app.client;
-import app.extjs.vo.Product;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -13,20 +12,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
-import org.apache.struts.upload.FormFile;
-import java.util.Random;
-import java.io.*;
-import java.util.*;
 import app.security.*;
-import app.user.User;
-import app.user.UserService;
-import org.json.*;
 
 
 public final class ClientUpdateAccounting extends Action {
     public ClientUpdateAccounting()
     {
-        System.out.println("ClientUpdateAccounting constructor**********************");
+        //System.out.println("ClientUpdateAccounting constructor**********************");
     }
     
     // ----------------------------------------------------- Instance Variables
@@ -76,7 +68,7 @@ public final class ClientUpdateAccounting extends Action {
         
         //which client to update from hidden value in form
         String id = request.getParameter("clientViewId");
-        System.out.println("client id***************"+id);
+        //System.out.println("client id***************"+id);
         
         //get the client to be updated from db
         //Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(id));
@@ -85,7 +77,7 @@ public final class ClientUpdateAccounting extends Action {
         if (id!=null){
         c = ClientService.getInstance().getSingleClient(Integer.parseInt(id));
          c.setBilling_address1(request.getParameter("getBilling_address1"));
-        System.out.println(request.getParameter("getBilling_address1"));
+        //System.out.println(request.getParameter("getBilling_address1"));
         c.setBilling_address2(request.getParameter("getBilling_address2"));
          c.setBilling_zip(request.getParameter("getBilling_zip"));
           c.setBilling_city(request.getParameter("getBilling_city"));
@@ -97,7 +89,7 @@ public final class ClientUpdateAccounting extends Action {
         c = new Client();
         c.setClientId(0);
         c.setBilling_address1(request.getParameter("getBilling_address1"));
-        System.out.println(request.getParameter("getBilling_address1"));
+        //System.out.println(request.getParameter("getBilling_address1"));
         c.setBilling_address2(request.getParameter("getBilling_address2"));
          c.setBilling_zip(request.getParameter("getBilling_zip"));
           c.setBilling_city(request.getParameter("getBilling_city"));
@@ -111,7 +103,7 @@ public final class ClientUpdateAccounting extends Action {
         ClientService.getInstance().updateClient(c);
        
         String jsonProducts = request.getParameter("billingReqsJSON");
-       // System.out.println("serviceJSON="+jsonProducts+", clientViewId="+id);
+       // //System.out.println("serviceJSON="+jsonProducts+", clientViewId="+id);
         request.setAttribute("clientViewId",id);
         
         

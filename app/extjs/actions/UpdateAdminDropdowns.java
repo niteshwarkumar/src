@@ -68,7 +68,7 @@ public final class UpdateAdminDropdowns extends Action {
 
         //response.setContentType("text/html");
         //response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         // PrintWriter out = response.getWriter();
 
         //out.println("<response success=\"true\"></response>");
@@ -94,6 +94,8 @@ public final class UpdateAdminDropdowns extends Action {
                 return (mapping.findForward("qms"));
             }else if("TRAINING".equals(origin)){
                 return (mapping.findForward("training"));
+            }else if("QUOTELECT".equals(origin)){
+                return (mapping.findForward("quoteLect"));
             }
 
         // Forward control to the specified success URI

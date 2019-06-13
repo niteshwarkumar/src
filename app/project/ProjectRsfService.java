@@ -7,6 +7,7 @@ package app.project;
 
 
 
+import app.extjs.helpers.ProjectHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -116,29 +117,29 @@ public class ProjectRsfService  extends Action{
 
 
         //get project to edit
-        Project p = ProjectService.getInstance().getSingleProject(id);
+        Project p = ProjectService.getInstance().getSingleProjectWithoutInitialize(id);
 
         //START get current record number
         //all current projects in db in number order
-        List projects = ProjectService.getInstance().getProjectListActive();
+//        List projects = ProjectService.getInstance().getProjectListActive();
 
         //set the total now
-        String projectRecordTotal = String.valueOf(new Integer(projects.size()));
-        Project newP;
-        Project currentP = p;
-	int current = 0;
+//        String projectRecordTotal = String.valueOf(new Integer(projects.size()));
+//        Project newP;
+//        Project currentP = p;
+//	int current = 0;
 
-        //get the current record number (e.g., "3" of 40)
-        for(ListIterator iter = projects.listIterator(); iter.hasNext(); ) {
-                  newP = (Project) iter.next();
-                  current++; //advance current record count
-                  if(newP.getProjectId().equals(currentP.getProjectId())) { //check if current
-                      break; //stop looking for current count
-                  }
-        }
+//        //get the current record number (e.g., "3" of 40)
+//        for(ListIterator iter = projects.listIterator(); iter.hasNext(); ) {
+//                  newP = (Project) iter.next();
+//                  current++; //advance current record count
+//                  if(newP.getProjectId().equals(currentP.getProjectId())) { //check if current
+//                      break; //stop looking for current count
+//                  }
+//        }
         //set current record and total records into session and cookie
-        request.getSession(false).setAttribute("projectRecordCurrent", String.valueOf(new Integer(current)));
-        response.addCookie(StandardCode.getInstance().setCookie("projectRecordCurrent", String.valueOf(new Integer(current))));
+//        request.getSession(false).setAttribute("projectRecordCurrent", String.valueOf(new Integer(current)));
+//        response.addCookie(StandardCode.getInstance().setCookie("projectRecordCurrent", String.valueOf(new Integer(current))));
 
         //END get current record number
 
@@ -189,6 +190,22 @@ public class ProjectRsfService  extends Action{
         else {
             request.setAttribute("cancelled", new String(""));
         }
+        
+        List projectInformals = ProjectHelper.getIncrementals(p.getProjectId().toString());
+        String projectInformalsJSArray = "";
+        if (projectInformals != null) {
+            for (int i = 0; i < projectInformals.size(); i++) {
+                app.extjs.vo.Incremental pr = (app.extjs.vo.Incremental) projectInformals.get(i);
+                //JSONObject j = new JSONObject();
+                projectInformalsJSArray += "[" + pr.getIncremental_id() + ",";
+                projectInformalsJSArray += "\"" + pr.getIncDate() + "\",";
+                projectInformalsJSArray += "\"" + pr.getIncDescription().replaceAll("\"", "'") + "\"]";
+                if (i != projectInformals.size() - 1) {
+                    projectInformalsJSArray += ",";
+                }
+            }
+        }
+        request.setAttribute("projectInformalsJSArray", projectInformalsJSArray);
 
         //add this project id to cookies; this will remember the last project
         response.addCookie(StandardCode.getInstance().setCookie("projectViewId", projectId));

@@ -92,21 +92,25 @@ public final class QuoteViewGeneralModifyAction extends Action {
         //get quote to and then its sources
         Quote1 q = QuoteService.getInstance().getSingleQuote(id); 
         
-        //System.out.println("alexx:quoteId="+quoteId);
-        // System.out.println("alexx:oldNumber="+q.getQuote1Id());
+        ////System.out.println("alexx:quoteId="+quoteId);
+        // //System.out.println("alexx:oldNumber="+q.getQuote1Id());
         //create new sub quote from current quote (q)
         Quote1 newQ = (Quote1) SerializationHelper.clone(q);
+        
+        
         //null the id so it will be persisted to db
         newQ.setQuote1Id(null);
         //set new quote number
         String qNumber = QuoteService.getInstance().getNewQuoteNumber();
         newQ.setNumber(qNumber);
-        //System.out.println("alexx:newNumber="+qNumber);
+        ////System.out.println("alexx:newNumber="+qNumber);
         //set new quote date to current
         newQ.setQuoteDate(new Date());
+        newQ.setSubQuoteId(quoteId);
+        newQ.setSubquotes(quoteId);
         Integer newQId = QuoteService.getInstance().addNewQuote(newQ);
         newQ = QuoteService.getInstance().getSingleQuote(newQId);
-       // System.out.println("alexx:after addNewQuote newQId="+newQId);
+       // //System.out.println("alexx:after addNewQuote newQId="+newQId);
         //add all sets, such as source doc, target doc, and the four tasks, as new objects to the new q
         Set sourceDocs = q.getSourceDocs();
         Set targetDocs = null;
@@ -182,9 +186,15 @@ public final class QuoteViewGeneralModifyAction extends Action {
             }//end for(Iterator iter = sourceDocs.iterator(); iter.hasNext();) {
         }//end if(sourceDocs != null) {
         
-               
-        
-               
+                 Client_Quote cq = QuoteService.getInstance().get_SingleClientQuote(id);
+       if(null != cq){
+        Client_Quote newCQ = (Client_Quote) SerializationHelper.clone(cq);
+        newCQ.setQuote_ID(newQ.getQuote1Id());
+       
+        QuoteService.getInstance().updateClientQuote(newCQ);
+       }
+//        q.setSubQuoteId(quoteId);
+//        QuoteService.getInstance().updateQuote(q);
         //add this quote id to cookies; this will remember the last quote
         request.setAttribute("quoteViewId", String.valueOf(newQId));
         

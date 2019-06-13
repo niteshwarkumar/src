@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.project.Project" table="Project">
+   <class name="app.project.Project" table="project">
       <id name="projectId" type="int" column="ID_Project">
          <generator class="identity"/>
       </id>
@@ -97,9 +97,12 @@
       <property name="orderConfirmationMail" type="string"/>
       <property name="deliveryConfirmationMail" type="string"/>
       <property name="translationApprovalConfirmationMulti" type="string"/>
+      <property name="translationApprovalConfirmationWord" type="string"/>
+      <property name="translationApprovalConfirmationWordMulti" type="string"/>
+      <property name="orderReqNum" type="string"/>
       
       <many-to-one name="Company" class="app.client.Client" column="ID_Client"/>
-      
+     
       <set name="ClientInvoices" lazy="true" inverse="true" order-by="number">
       	<key column="ID_Project"/>
       	<one-to-many class="app.project.ClientInvoice"/>
@@ -131,7 +134,15 @@
       </set>
       
       <many-to-one name="Contact" class="app.client.ClientContact" column="ID_Client_Contact"/>
+      <many-to-one name="CareTaker" class="app.client.ClientContact" column="ID_Client_CareTaker"/>
       
+      <property name="srcLangCnt" type="int"/>
+      <property name="targetLangCnt" type="int"/>
+      <property name="srcLang" type="string"/>
+      <property name="targetLang" type="string"/>
+      <property name="task" type="string"/>
+      <property name="reqProjDelDate" type="date"/>
+      <property name="postProjectReview" type="boolean"/>
       
       
    </class>

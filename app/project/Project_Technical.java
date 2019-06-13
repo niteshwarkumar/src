@@ -33,21 +33,14 @@ public class Project_Technical {
 
     /** nullable persistent field */
     private Integer projectid;
+    
+    /** nullable persistent field */
+    private Double unitCount;
 
     public Project_Technical() {
     }
 
-    public Project_Technical(Integer id, String sourceos, String sourceapp, String sourcever, String targetos, String targetapp, String targetver, Integer projectid) {
-        this.id = id;
-        this.sourceos = sourceos;
-        this.sourceapp = sourceapp;
-        this.sourcever = sourcever;
-        this.targetos = targetos;
-        this.targetapp = targetapp;
-        this.targetver = targetver;
-        this.projectid = projectid;
-    }
-
+ 
     public Integer getId() {
         return id;
     }
@@ -112,6 +105,16 @@ public class Project_Technical {
     public void setTargetver(String targetver) {
         this.targetver = targetver;
     }
+
+    public Double getUnitCount() {
+        return unitCount;
+    }
+
+    public void setUnitCount(Double unitCount) {
+        this.unitCount = unitCount;
+    }
+    
+    
 
     
 

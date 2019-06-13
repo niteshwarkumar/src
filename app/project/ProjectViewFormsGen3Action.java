@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -155,7 +155,7 @@ public final class ProjectViewFormsGen3Action extends Action {
 //                //START add images
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 45, 0,0, 45, 300,100);

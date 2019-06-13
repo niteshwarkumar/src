@@ -1,16 +1,15 @@
 package app.resource;
 
+import app.standardCode.StandardCode;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
+ 
 
 /** @author Hibernate CodeGenerator */
 public class Resource implements Serializable {
 
-    
-    
     
    /** nullable persistent field */
     private String enteredById;
@@ -347,13 +346,19 @@ public class Resource implements Serializable {
     private String riskrating;
 
      private String prodOtherText;
+    private boolean postEditing;
     private String bsdOtherText;
     private String otherText;
     private String nativeLanguage;
     private String teamNotes;
-
+    
+    /////Login
+    private String username;
+    private String password;
+    private boolean isEnabled;
+    private boolean defaultRate;
  
-    public Resource(String enteredById, Date enteredByTS, String lastModifiedById, Date lastModifiedByTS, Integer resourceId, String firstName, String lastName, String companyName, boolean agency, String resume, String qualityProcess, String status, String url, boolean doNotUse, boolean translator, boolean editor, boolean proofreader, boolean evaluator, boolean localizer, boolean dtp, boolean icr, Date yearsInIndustry, String nativeCountry, Double projectScoreAverage, String Address_1, String Address_2, String City, String State_prov, String Zip_postal_code, String Country, String Main_telephone_numb1, String workPhoneEx1, String Main_telephone_numb2, String workPhoneEx2, String Fax_number, String cellPhone, String Email_address1, String Email_address2, String Email_address3, String Note, boolean confiAgreement, Date msaSent, Date msaReceived, boolean usesTrados, String tradosVersion, boolean usesDejavu, String dejavuVersion, boolean usesCatalyst, String catalystVersion, boolean usesSdlx, String sdlxVersion, boolean usesTransit, String transitVersion, boolean usesOther, String otherName, String otherVersion, Double medicalScore, Double technicalScore, Double softwareScore, Double legalFinancialScore, String currency, Double min, Double t, String tunit, Double e, String eunit, Double te, String teunit, Double p, String punit, String scaleRep, String scale100, String scale95, String scale85, String scale75, String scaleNew, String skypeId, boolean scaleDefault, boolean beingTested, String beingTestedBy, boolean informationTechnology, boolean humanResource, boolean office, boolean sales, boolean accounting, boolean bsdOther, boolean prodOther, Set LanguagePairs, Set Unavails, Set Industries, Set SpecificIndustries, Set ResourceTools, Set ResourceContacts, Set RateScoreDtps, boolean other, boolean tne, boolean consultant, boolean partner, boolean engineering, boolean businesssuport, boolean fqa, String singleCompanyName, boolean interpreting, boolean expert, boolean quality, String scalePerfect, String scaleContext, String scale8599, String scaleNew4, String riskrating, String prodOtherText, String bsdOtherText, String otherText,String teamNotes, String nativeLanguage) {
+    public Resource(String enteredById, Date enteredByTS, String lastModifiedById, Date lastModifiedByTS, Integer resourceId, String firstName, String lastName, String companyName, boolean agency, String resume, String qualityProcess, String status, String url, boolean doNotUse, boolean translator, boolean editor, boolean proofreader, boolean evaluator, boolean localizer, boolean dtp, boolean icr, Date yearsInIndustry, String nativeCountry, Double projectScoreAverage, String Address_1, String Address_2, String City, String State_prov, String Zip_postal_code, String Country, String Main_telephone_numb1, String workPhoneEx1, String Main_telephone_numb2, String workPhoneEx2, String Fax_number, String cellPhone, String Email_address1, String Email_address2, String Email_address3, String Note, boolean confiAgreement, Date msaSent, Date msaReceived, boolean usesTrados, String tradosVersion, boolean usesDejavu, String dejavuVersion, boolean usesCatalyst, String catalystVersion, boolean usesSdlx, String sdlxVersion, boolean usesTransit, String transitVersion, boolean usesOther, String otherName, String otherVersion, Double medicalScore, Double technicalScore, Double softwareScore, Double legalFinancialScore, String currency, Double min, Double t, String tunit, Double e, String eunit, Double te, String teunit, Double p, String punit, String scaleRep, String scale100, String scale95, String scale85, String scale75, String scaleNew, String skypeId, boolean scaleDefault, boolean beingTested, String beingTestedBy, boolean informationTechnology, boolean humanResource, boolean office, boolean sales, boolean accounting, boolean bsdOther, boolean prodOther, Set LanguagePairs, Set Unavails, Set Industries, Set SpecificIndustries, Set ResourceTools, Set ResourceContacts, Set RateScoreDtps, boolean other, boolean tne, boolean consultant, boolean partner, boolean engineering, boolean businesssuport, boolean postEditing, boolean fqa, String singleCompanyName, boolean interpreting, boolean expert, boolean quality, String scalePerfect, String scaleContext, String scale8599, String scaleNew4, String riskrating, String prodOtherText, String bsdOtherText, String otherText,String teamNotes, String nativeLanguage) {
         this.enteredById = enteredById;
         this.enteredByTS = enteredByTS;
         this.lastModifiedById = lastModifiedById;
@@ -441,6 +446,7 @@ public class Resource implements Serializable {
         this.accounting = accounting;
         this.bsdOther = bsdOther;
         this.prodOther = prodOther;
+        this.postEditing = postEditing;
         this.LanguagePairs = LanguagePairs;
         this.Unavails = Unavails;
         this.Industries = Industries;
@@ -630,11 +636,13 @@ public class Resource implements Serializable {
     }
 
     public void setResume(String resume) {
-        this.resume = resume;
+//        this.resume = resume;
+        this.resume = StandardCode.getInstance().convertTextToUTF(resume);
     }
 
     public String getStatus() {
         return this.status;
+       
     }
 
     public void setStatus(String status) {
@@ -863,7 +871,9 @@ public class Resource implements Serializable {
     }
 
     public void setNote(String Note) {
-        this.Note = Note;
+//        this.Note = Note;
+        this.Note = StandardCode.getInstance().convertTextToUTF(Note);
+
     }
 
     public boolean isConfiAgreement() {
@@ -1358,7 +1368,7 @@ public class Resource implements Serializable {
     }
 
     public void setLinRatesNotes(String linRatesNotes) {
-        this.linRatesNotes = linRatesNotes;
+         this.linRatesNotes = StandardCode.getInstance().convertTextToUTF(linRatesNotes);
     }
 
     public String getDtpRatesNotes() {
@@ -1697,5 +1707,44 @@ public class Resource implements Serializable {
         this.teamNotes = teamNotes;
     }
 
- 
+    public boolean isPostEditing() {
+        return postEditing;
+    }
+
+    public void setPostEditing(boolean postEditing) {
+        this.postEditing = postEditing;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public boolean isDefaultRate() {
+        return defaultRate;
+    }
+
+    public void setDefaultRate(boolean defaultRate) {
+        this.defaultRate = defaultRate;
+    }
+
 }

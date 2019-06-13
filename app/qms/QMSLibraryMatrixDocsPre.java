@@ -6,6 +6,9 @@ package app.qms;
 
 import app.security.SecurityService;
 import app.standardCode.StandardCode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -90,12 +93,40 @@ public class QMSLibraryMatrixDocsPre extends Action {
         String query = "";
         String query1 = "";
         String query2 = "";
+        List<String> isoKeyHeader = new ArrayList();
+        List<String> isoKey = new ArrayList();
+        String[] isoStandard = request.getParameterValues("isoStandard");
+        String[] isoKeyHeaderArr = request.getParameterValues("isoKeyHeader");
+        String[] isoKeyArr = request.getParameterValues("isoKey");
+        boolean isoFilter = true;
+        try{
+        isoFilter = (boolean)request.getAttribute("isoHeader");
+        }catch(Exception e){
+            isoFilter = true;
+        }
+        //request.getAttributeNames()
+        if(isoKeyHeaderArr!=null) isoKeyHeader =  Arrays.asList(isoKeyHeaderArr);
+        if(isoKeyArr!=null) isoKey =  Arrays.asList(isoKeyArr);
+        if(isoFilter){
+        request.setAttribute("isoKeyHeader", isoKeyHeader); 
+        request.setAttribute("isoKey", isoKey);
+      
+        if(isoStandard!=null){
+            String queryIso = "";
+        for(String iso : isoStandard){
+            queryIso+=iso+"@";
+        }
+            queryIso += "iso";
+            query+=queryIso;
+        }}
         if (allCheck.equalsIgnoreCase("on")) {
-            query = "";
+            //query = "";
             request.setAttribute("query", query);
             qvg.set("allCheck", "on");
             return (mapping.findForward("Success"));
         } else {
+            fullQuery = query;
+            query ="";
             qvg.set("allCheck", "");
         }
         if (pmCheck.equalsIgnoreCase("on")) {
@@ -383,6 +414,7 @@ public class QMSLibraryMatrixDocsPre extends Action {
             }
         }
 
+        
 
         request.setAttribute("query", fullQuery);
 

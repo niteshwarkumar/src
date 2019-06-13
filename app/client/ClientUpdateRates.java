@@ -18,7 +18,7 @@ import app.security.*;
 public final class ClientUpdateRates extends Action {
 
     public ClientUpdateRates() {
-        System.out.println("ClientUpdateRates constructor*****************************************");
+        //System.out.println("ClientUpdateRates constructor*****************************************");
     }
     // ----------------------------------------------------- Instance Variables
     /**
@@ -62,7 +62,7 @@ public final class ClientUpdateRates extends Action {
 
         //which client to update from hidden value in form
         String clientId = request.getParameter("clientViewId");
-        System.out.println("Client id of client updaterate***********************" + clientId);
+        //System.out.println("Client id of client updaterate***********************" + clientId);
 
         //get the client to be updated from db
         Client c = null;
@@ -73,7 +73,7 @@ public final class ClientUpdateRates extends Action {
             c.setClientId(0);
         }
         //Client c = ClientService.getInstance().getSingleClient(Integer.valueOf(clientId));
-        System.out.println("client id value of client update rate*********************************");
+        //System.out.println("client id value of client update rate*********************************");
 
 
 
@@ -91,10 +91,22 @@ public final class ClientUpdateRates extends Action {
         c.setScale100(request.getParameter("scale100"));
         c.setScale95(request.getParameter("scale95"));
         c.setScale85(request.getParameter("scale85"));
-        c.setScale8599(request.getParameter("scale8599"));
+        try{c.setScale8599(request.getParameter("scale8599"));}catch(Exception e){}
         c.setScale75(request.getParameter("scale75"));
         c.setScaleNew(request.getParameter("scaleNew"));
-        c.setScaleNew4(request.getParameter("scaleNew4"));
+        try{c.setScaleNew4(request.getParameter("scaleNew4"));}catch(Exception e){}
+        
+        c.setScaleRep_team(new Double(request.getParameter("scaleRepTeam")));
+        c.setScalePerfect_team(new Double(request.getParameter("scalePerfectTeam")));
+        c.setScaleContext_team(new Double(request.getParameter("scaleContextTeam")));
+        c.setScale100_team(new Double(request.getParameter("scale100Team")));
+        c.setScale95_team(new Double(request.getParameter("scale95Team")));
+        c.setScale85_team(new Double(request.getParameter("scale85Team")));
+        try{c.setScale8599_team(new Double(request.getParameter("scale8599Team")));}catch(Exception e){}
+        c.setScale75_team(new Double(request.getParameter("scale75Team")));
+        c.setScaleNew_team(new Double(request.getParameter("scaleNewTeam")));
+        try{c.setScaleNew4_team(new Double(request.getParameter("scaleNew4Team")));}catch(Exception e){}
+        
 //        c.setCcurrency(request.getParameter("currency"));
 //        if(request.getParameter("mainSource")!=null){
 //                          if(!request.getParameter("mainSource").equalsIgnoreCase("")){
@@ -103,11 +115,11 @@ public final class ClientUpdateRates extends Action {
 //              if(!request.getParameter("mainTarget").equalsIgnoreCase("")){
 //            c.setMainTarget(request.getParameter("mainTarget"));}}
 
-        if (request.getParameter("rowsSubmit").equals("4")) {
-            c.setScaleDefault(true);
-        } else {
-            c.setScaleDefault(false);
-        }
+//        if (request.getParameter("rowsSubmit").equals("4")) {
+//            c.setScaleDefault(true);
+//        } else {
+//            c.setScaleDefault(false);
+//        }
         ClientService.getInstance().updateClient(c);
 
         // Forward control to the specified success URI

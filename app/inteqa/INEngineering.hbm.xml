@@ -62,7 +62,7 @@
         <property name="lpr6" type="boolean"/>
 
         <property name="lprInfo" type="string"/>
-
+        <property name="lpr3Text" type="string"/>
         <property name="lpr5Text" type="string"/>
         <property name="lpr6Text" type="string"/>
 

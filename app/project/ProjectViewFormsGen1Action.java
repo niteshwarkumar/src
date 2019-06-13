@@ -102,10 +102,10 @@ public final class ProjectViewFormsGen1Action extends Action {
         
         //get resource to create form
         String linId = request.getParameter("linId");
-         System.out.println("linguitic id>>>>>>>>>>>>>>>>>>>>>>>>>"+linId);
+         //System.out.println("linguitic id>>>>>>>>>>>>>>>>>>>>>>>>>"+linId);
         //LinTask lt = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linId));
         //Resource r = ResourceService.getInstance().getSingleResource(Integer.valueOf(lt.getPersonName()));
-          System.out.println("linguitic id>>>>>>>>>>>>>>>>>>>>>>>>>"+linId);
+          //System.out.println("linguitic id>>>>>>>>>>>>>>>>>>>>>>>>>"+linId);
         Resource r=null;
         LinTask lt =null;
 
@@ -114,9 +114,9 @@ public final class ProjectViewFormsGen1Action extends Action {
         }
         else {
              lt = ProjectService.getInstance().getSingleLinTask(Integer.valueOf(linId));
-            System.out.println(" else stmt. lin task>>>>>>>>>>>>>"+lt);
+            //System.out.println(" else stmt. lin task>>>>>>>>>>>>>"+lt);
             r = ResourceService.getInstance().getSingleResource(Integer.valueOf(StandardCode.getInstance().noNull(lt.getPersonName())));
-            System.out.println("resources name>>>>>>>>>>>>>>>>>>>>>>>>>>>"+r);
+            //System.out.println("resources name>>>>>>>>>>>>>>>>>>>>>>>>>>>"+r);
         }
         
 
@@ -147,7 +147,7 @@ public final class ProjectViewFormsGen1Action extends Action {
 //                //START add images
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 45, 0,0, 45, 300,100);

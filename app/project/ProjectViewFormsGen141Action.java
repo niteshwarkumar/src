@@ -1,3 +1,4 @@
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -26,7 +27,7 @@ import java.util.zip.ZipOutputStream;
  *
  * @author abc
  */
-public class ProjectViewFormsGen141Action  extends Action {
+public class ProjectViewFormsGen141Action extends Action {
 
 
     // ----------------------------------------------------- Instance Variables
@@ -127,12 +128,12 @@ public class ProjectViewFormsGen141Action  extends Action {
                 if(p.getSourceDocs() != null) {
                     for(Iterator iterSource = p.getSourceDocs().iterator(); iterSource.hasNext();) {
                         SourceDoc sd = (SourceDoc) iterSource.next();
-                        sources.append(sd.getLanguage() + " ");
+                        sources.append(sd.getLanguage() + ", ");
                         if(sd.getTargetDocs() != null) {
                             for(Iterator iterTarget = sd.getTargetDocs().iterator(); iterTarget.hasNext();) {
                                 TargetDoc td = (TargetDoc) iterTarget.next();
                                 if(!td.getLanguage().equals("All")){
-                                  PdfReader reader = new PdfReader("C:/templates/ISO03_001.pdf");
+                                  PdfReader reader = new PdfReader("C:/templates/ISO03_002.pdf");
                                     pdfStream = new ByteArrayOutputStream();
                                    PdfStamper stamp = new PdfStamper(reader, new FileOutputStream("C:/TA-" + projectId + "/" + p.getNumber() + p.getCompany().getCompany_code() + "-" + td.getLanguage() + "-Translation-Approval.pdf")); 
                                      //set the field values in the pdf form
@@ -145,13 +146,13 @@ public class ProjectViewFormsGen141Action  extends Action {
                                         form1.setField("Text4", DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
                                         form1.setField("company", StandardCode.getInstance().noNull(p.getCompany().getCompany_name()));
                                         form1.setField("description", StandardCode.getInstance().noNull(p.getProductDescription()));
-                                        form1.setField("source", sources.toString());
+                                        form1.setField("source", sd.getLanguage());
                                         form1.setField("pm", StandardCode.getInstance().noNull(p.getPm()));
                                         form1.setField("date", DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
 
                                      stamp.close();
                                     
-                                    targets.append(td.getLanguage() + " ");
+                                    targets.append(td.getLanguage() + ", ");
                         
                             
                                 }
@@ -166,7 +167,9 @@ public class ProjectViewFormsGen141Action  extends Action {
                PdfStamper stamp = new PdfStamper(reader, pdfStream);
                AcroFields form1 = stamp.getAcroFields();
                 //set the field values in the pdf form
-                form1.setField("languages", targets.toString());
+                 form1.setField("source", sources.toString().substring(0, sources.length()-2));
+                form1.setField("languages", targets.toString().substring(0, targets.length()-2));
+//                form1.setField("languages", targets.toString());
                 form1.setField("projectnr", p.getNumber() + p.getCompany().getCompany_code());
                 form1.setField("Text3", StandardCode.getInstance().noNull(p.getPm()));
                 form1.setField("Text2", p.getCompany().getCompany_name());
@@ -174,7 +177,7 @@ public class ProjectViewFormsGen141Action  extends Action {
                 form1.setField("Text4", DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
                 form1.setField("company", StandardCode.getInstance().noNull(p.getCompany().getCompany_name()));
                 form1.setField("description", StandardCode.getInstance().noNull(p.getProductDescription()));
-                form1.setField("source", sources.toString());
+//                form1.setField("source", sources.toString());
                 form1.setField("pm", StandardCode.getInstance().noNull(p.getPm()));
                 form1.setField("date", DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
                 
@@ -186,7 +189,7 @@ public class ProjectViewFormsGen141Action  extends Action {
 
 //                if(u.getPicture() != null && u.getPicture().length() > 0) {
 //                    PdfContentByte over;
-//                    Image img = Image.getInstance("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
+//                    Image img = Image.getInstance("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/images/" + u.getPicture());
 //                    img.setAbsolutePosition(200, 200);
 //                    over = stamp.getOverContent(1);
 //                    over.addImage(img, 45, 0,0, 45, 300,100);
@@ -269,7 +272,8 @@ public class ProjectViewFormsGen141Action  extends Action {
 //                 inpt.delete();
               
         deleteFile("C:/TA-" + projectId);
-            
+            p.setTranslationApprovalConfirmationMulti("on");
+            ProjectService.getInstance().updateProject(p);
         
         // Forward control to the specified success URI
 	return (mapping.findForward("Success"));

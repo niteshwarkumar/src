@@ -9,6 +9,9 @@ import app.client.ClientService;
 import app.extjs.helpers.QuoteHelper;
 import app.extjs.vo.Product;
 import app.extjs.vo.Upload_Doc;
+import app.inteqa.INDelivery;
+import app.inteqa.INDeliveryReq;
+import app.inteqa.InteqaService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -105,7 +108,9 @@ public class QuoteViewGeneralNiproAction extends Action {
         //save the pdf in memory
         //byte[] template = getBytesFromFile(new java.io.File("C:/templates/template_short_proposal.htm"));
         //  byte[] template = getBytesFromFile(new java.io.File("C:/templates2/T5.002 - Quote template - short_non_medical.rtf"));
-        byte[] template = getBytesFromFile(new java.io.File("C:/templates2/T9 - Quote template - Nipro.rtf"));
+        byte[] template = getBytesFromFile(new java.io.File("C:/templates2/Trividia.rtf"));
+//        byte[] template = getBytesFromFile(new java.io.File("/Users/abhisheksingh/Project/templates/Trividia.rtf"));
+
 
         String content = new String(template);
         //START content
@@ -115,12 +120,12 @@ public class QuoteViewGeneralNiproAction extends Action {
         //Image imgg=Image.getInstance("c://companymage.jpg");
 
         content = content.replaceAll("INSERT_DATE_INSERT", DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
-        System.out.println("hereeeeee");
+        //System.out.println("hereeeeee");
         content = content.replaceAll("INSERT_COMPANYNAME_INSERT", q.getProject().getCompany().getCompany_name());
-        System.out.println("hereeeeee2");
+        //System.out.println("hereeeeee2");
         try {
             content = content.replaceAll("INSERT_CONTACTNAME_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getFirst_name()) + " " + StandardCode.getInstance().noNull(q.getProject().getContact().getLast_name()));
-            System.out.println("hereeeeee3");
+            //System.out.println("hereeeeee3");
             content = content.replaceAll("INSERT_CONTACTTITLE_INSERT", StandardCode.getInstance().noNull(q.getProject().getContact().getTitle()));
 String comma=", ";
 if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getContact().getDivision()))){comma="";}
@@ -160,6 +165,7 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
 
 
         }
+        content = content.replaceAll("INSERT_CONTACTEMAIL_INSERT", "");
         // List productList=QuoteService.getInstance().get
         String med = "";
         String detail = "";
@@ -179,17 +185,34 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
                 category += ",";
             }
         }
-        System.out.println("ddddddddddddddddddddd" + category + med);
+        //System.out.println("ddddddddddddddddddddd" + category + med);
         Upload_Doc ud1 = QuoteService.getInstance().getUploadDoc(id);
         List pname = QuoteService.getInstance().getUploadDocList(id);
         String uDoc = null;
         String txtt = " \\\\par { \\\\listtext \\\\pard \\\\plain \\\\s68  \\\\f3 \\\\fs22 \\\\cf2  \\\\loch \\\\af3 \\\\dbch \\\\af0 \\\\hich \\\\f3  \\\\'b7 \\\\tab}INSERT_TASKS_INSERT";
-        //      content = content.replaceAll("INSERT_FILELIST_INSERT", txtt);
+//        txtt = " {\\\\rtlch\\\\fcs1 \\\\af0 \\\\ltrch\\\\fcs0 \\\\f21\\\\insrsid6383104\\\\charrsid6383104 \\\\hich\\\\af21\\\\dbch\\\\af793\\\\loch\\\\f21 INSERT_LANGUAGES_INSERT}";
+String notesTxt="\\\\pard\\\\plain \\\\ltrpar\\\\s18\\\\ql \\\\fi-360\\\\li1080\\\\ri0\\\\widctlpar\\\\wrapdefault\\\\aspalpha\\\\aspnum\\\\faauto\\\\ls27\\\\adjustright\\\\rin0\\\\lin1080\\\\itap0\\\\pararsid7823747 \\\\rtlch\\\\fcs1 \\\\af0\\\\afs20\\\\alang1033 \\\\ltrch\\\\fcs0 \\\\fs20\\\\lang1033\\\\langfe1033\\\\loch\\\\af0\\\\hich\\\\af0\\\\dbch\\\\af821\\\\cgrid\\\\langnp1033\\\\langfenp1033 {\\\\rtlch\\\\fcs1 \\\\af0 \\\\ltrch\\\\fcs0 \\\\f21\\\\insrsid8195069 \\\\hich\\\\af21\\\\dbch\\\\af821\\\\loch\\\\f21 NOTE}{\\\\rtlch\\\\fcs1 \\\\af0 \\\\ltrch\\\\fcs0 \\\\f21\\\\insrsid6383104\\\\par }";
+
+String NOTES = "";
+                     
+        INDelivery indel=InteqaService.getInstance().getINDelivery(q.getProject().getProjectId());
+        if(indel!=null){
+            List inDel = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(),"R");
+            for (int i = 0; i < inDel.size(); i++) {
+                INDeliveryReq inDeliveryReq = (INDeliveryReq) inDel.get(i);
+                NOTES+= notesTxt.replaceAll("NOTE",inDeliveryReq.getClientReqText());
+                //NOTES.add(NOTE);
+                
+            }
+        } 
+        content = content.replaceAll("INSERT_REQUIREMENT_INSERT", NOTES);
+       // rtfTemplate.put("NOTES", NOTES);
+//      content = content.replaceAll("INSERT_FILELIST_INSERT", txtt);
         if (ud1 != null) {
             for (int i = 0; i < pname.size() - 1; i++) {
                 Upload_Doc ud = (Upload_Doc) pname.get(i);
                 uDoc += ud.getPathname();
-                content = content.replaceAll("INSERT_FILELIST_INSERT", ud.getPathname() + txtt);
+                content = content.replaceAll("INSERT_FILELIST_INSERT", ud.getPathname() );
                 if (i != pname.size() - 1) {
                     uDoc += ",";
 
@@ -212,10 +235,10 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
 //        if (!StandardCode.getInstance().noNull(category).equalsIgnoreCase("")) {
 //            content = content.replaceAll("INSERT_CATEGORY_HERE", replce+StandardCode.getInstance().noNull(category));
 //        } else{content =content.replaceAll("INSERT_CATEGORY_HERE", "");}
-//        if (!StandardCode.getInstance().noNull(med).equalsIgnoreCase("")) {
-//
-//            content = content.replaceAll("INSERT_TYPE_HERE", StandardCode.getInstance().noNull(med));
-//        }else{content =content.replaceAll("INSERT_TYPE_HERE", "");}
+        if (!StandardCode.getInstance().noNull(med).equalsIgnoreCase("")) {
+
+            content = content.replaceAll("INSERT_TYPE_HERE", StandardCode.getInstance().noNull(med));
+        }else{content =content.replaceAll("INSERT_TYPE_HERE", "");}
         if (!StandardCode.getInstance().noNull(detail).equalsIgnoreCase("")) {
 
             content = content.replaceAll("INSERT_DETAIL_HERE", StandardCode.getInstance().noNull(detail));
@@ -405,6 +428,7 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
             String display = (String) iterDisplay.next();
             tasks.append(StandardCode.getInstance().noNull(display) + ", ");
         }
+        
 
         //get sources and targets
         String curr = new String("");
@@ -440,27 +464,32 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
         if (languages != null && languages.toString().endsWith(", ")) {
             languages = new StringBuffer(languages.toString().substring(0, languages.toString().length() - 2));
         }
-        content = content.replaceAll("INSERT_SOURCE", StandardCode.getInstance().noNull(sources.toString()));
-        String[] taskList = tasks.toString().split(",");
+        content = content.replaceAll("INSERT_SOURCE", StandardCode.getInstance().noNull(sources.toString()).trim());
+        String[] taskList = (tasks.substring(0, tasks.length()-2)).split(",");
         String taskText = "\\\\par}{\\\\rtlch\\\\fcs1\\\\af0\\\\afs22\\\\ltrch\\\\fcs0\\\\fs22\\\\cf2\\\\insrsid15225780\\\\hich\\\\af0\\\\dbch\\\\af31505\\\\loch\\\\f0INSERT_TASKS_INSERT";
-        //String langText = "\\\\par {\\\\listtext\\\\pard\\\\plain\\\\ltrpar \\\\s68 \\\\rtlch\\\\fcs1 \\\\af3\\\\afs22 \\\\ltrch\\\\fcs0 \\\\f3\\\\fs22\\\\cf2\\\\lang1033\\\\langfe1033\\\\langnp1033\\\\langfenp1033 \\\\loch\\\\af3\\\\dbch\\\\af31505\\\\hich\\\\f3 \\\\'b7\\\\tab}}\\\\pard\\\\plain \\\\ltrpar \\\\s68\\\\ql \\\\fi-360\\\\li1080\\\\ri0\\\\widctlpar\\\\wrapdefault\\\\aspalpha\\\\aspnum\\\\faauto\\\\ls39\\\\adjustright\\\\rin0\\\\lin1080\\\\itap0 \\\\rtlch\\\\fcs1 \\\\af0\\\\afs20\\\\alang1025 \\\\ltrch\\\\fcs0 \\\\fs20\\\\lang1033\\\\langfe1033\\\\loch\\\\af0\\\\hich\\\\af0\\\\dbch\\\\af31505\\\\cgrid\\\\langnp1033\\\\langfenp1033 {\\\\rtlch\\\\fcs1 \\\\af0\\\\afs22 \\\\ltrch\\\\fcs0 \\\\fs22\\\\cf2\\\\insrsid15225780 \\\\hich\\\\af0\\\\dbch\\\\af31505\\\\loch\\\\f0 INSERT_LANGUAGES_INSERT";
+taskText = " \\\\par{\\\\rtlch\\\\fcs1 \\\\af0 \\\\ltrch\\\\fcs0 \\\\f21\\\\insrsid6383104\\\\charrsid6383104 \\\\hich\\\\af21\\\\dbch\\\\af793\\\\loch\\\\f21 INSERT_TASKS_INSERT} ";       
+//String langText = "\\\\par {\\\\listtext\\\\pard\\\\plain\\\\ltrpar \\\\s68 \\\\rtlch\\\\fcs1 \\\\af3\\\\afs22 \\\\ltrch\\\\fcs0 \\\\f3\\\\fs22\\\\cf2\\\\lang1033\\\\langfe1033\\\\langnp1033\\\\langfenp1033 \\\\loch\\\\af3\\\\dbch\\\\af31505\\\\hich\\\\f3 \\\\'b7\\\\tab}}\\\\pard\\\\plain \\\\ltrpar \\\\s68\\\\ql \\\\fi-360\\\\li1080\\\\ri0\\\\widctlpar\\\\wrapdefault\\\\aspalpha\\\\aspnum\\\\faauto\\\\ls39\\\\adjustright\\\\rin0\\\\lin1080\\\\itap0 \\\\rtlch\\\\fcs1 \\\\af0\\\\afs20\\\\alang1025 \\\\ltrch\\\\fcs0 \\\\fs20\\\\lang1033\\\\langfe1033\\\\loch\\\\af0\\\\hich\\\\af0\\\\dbch\\\\af31505\\\\cgrid\\\\langnp1033\\\\langfenp1033 {\\\\rtlch\\\\fcs1 \\\\af0\\\\afs22 \\\\ltrch\\\\fcs0 \\\\fs22\\\\cf2\\\\insrsid15225780 \\\\hich\\\\af0\\\\dbch\\\\af31505\\\\loch\\\\f0 INSERT_LANGUAGES_INSERT";
         String langText = "\\\\par}{\\\\rtlch\\\\fcs1\\\\af0\\\\afs22\\\\ltrch\\\\fcs0\\\\fs22\\\\cf2\\\\insrsid15225780\\\\hich\\\\af0\\\\dbch\\\\af31505\\\\loch\\\\f0INSERT_LANGUAGES_INSERT";
+langText = " \\\\par{\\\\rtlch\\\\fcs1 \\\\af0 \\\\ltrch\\\\fcs0 \\\\f21\\\\insrsid6383104\\\\charrsid6383104 \\\\hich\\\\af21\\\\dbch\\\\af793\\\\loch\\\\f21 INSERT_LANGUAGES_INSERT}";
 
-        for (int i = 0; i < taskList.length - 1; i++) {
-            content = content.replaceAll("INSERT_TASKS_INSERT", StandardCode.getInstance().noNull(taskList[i] + taskText));
+        for(int i = 0; i < taskList.length ; i++) {
+            //System.out.println(StandardCode.getInstance().noNull(taskList[i] + taskText));
+            content = content.replaceAll("INSERT_TASKS_INSERT", StandardCode.getInstance().noNull(taskList[i].trim() + taskText));
         }
-        content = content.replaceAll("INSERT_TASKS_INSERT", StandardCode.getInstance().noNull(taskList[taskList.length - 1]));
+        content = content.replaceAll("INSERT_TASKS_INSERT", StandardCode.getInstance().noNull("Project Management"));
+         
+//        content = content.replaceAll("INSERT_TASKS_INSERT", StandardCode.getInstance().noNull(taskList[taskList.length - 1]));
         String[] langList = languages.toString().split(",");
         //Integer count=0;
         for (int i = 0; i < (langList.length) - 1; i++) {
             try {
-                content = content.replaceAll("INSERT_LANGUAGES_INSERT", StandardCode.getInstance().noNull(langList[i]).trim() + langText);
+                content = content.replaceAll("INSERT_LANGUAGES_INSERT", StandardCode.getInstance().noNull(langList[i]) + langText);
             } catch (Exception e) {
                 content = content.replaceAll("INSERT_LANGUAGES_INSERT", "");
             }
-            System.out.println("---------------------------");
+            //System.out.println("---------------------------");
         }
-        content = content.replaceAll("INSERT_LANGUAGES_INSERT", StandardCode.getInstance().noNull(langList[langList.length - 1]).trim());
+        content = content.replaceAll("INSERT_LANGUAGES_INSERT", StandardCode.getInstance().noNull(langList[langList.length - 1]));
         // content = content.replaceAll("INSERT_LANGUAGES_INSERT", StandardCode.getInstance().noNull(langList[langList.length-1]));
 
         content = content.replaceAll("INSERT_DELIVER_INSERT", StandardCode.getInstance().noNull(q.getProject().getDeliverableTechNotes()));
@@ -612,14 +641,14 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
             String strPmSubTotal = q.getSubDollarTotal().replaceAll(",", "");
             pmTotal = q.getQuoteDollarTotal().doubleValue() - (new Double(strPmSubTotal)).doubleValue();
         }
-        System.out.println("hereeeeee4");
+        //System.out.println("hereeeeee4");
         content = content.replaceAll("INSERT_LINPRICE_INSERT", StandardCode.getInstance().formatDouble(new Double(linTaskTotal)));
         content = content.replaceAll("INSERT_DTPPRICE_INSERT", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)));
         if (engTaskTotal == 0) {
             content = content.replaceAll("INSERT_ENGPRICE_INSERT", "Included");
         } else {
             String engtotal1 = "\\$" + (String) StandardCode.getInstance().formatDouble(new Double(engTaskTotal));
-            System.out.println("Testtttttttttttttttttt" + engtotal1);
+            //System.out.println("Testtttttttttttttttttt" + engtotal1);
             content = content.replaceAll("INSERT_ENGPRICE_INSERT", engtotal1);
         }
 
@@ -631,7 +660,7 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
             content = content.replaceAll("INSERT_ICRPRICE_INSERT", "\\$" + StandardCode.getInstance().formatDouble(new Double(linTaskTotalIcr)));
         } else {
             content = content.replaceAll("INSERT_ICRTASK", "");
-            content = content.replaceAll("INSERT_ICRPRICE_INSERT", "");
+            content = content.replaceAll("INSERT_ICRPRICE_INSERT", "Included");
         }
 
 
@@ -658,14 +687,14 @@ if("".equalsIgnoreCase(StandardCode.getInstance().noNull(q.getProject().getConta
         }
         if(!curr.equalsIgnoreCase("USD")){content=content.replaceAll("\\$", "€");}
         try {
-            System.out.println("hereeeeee5");
+            //System.out.println("hereeeeee5");
 
-            content = content.replaceAll("INSERT_LEADTIME_INSERT", StandardCode.getInstance().noNull(q.getProject().getBeforeWorkTurn()));
+            content = content.replaceAll("INSERT_LEADTIME_INSERT", StandardCode.getInstance().noNull(q.getProject().getBeforeWorkTurn()).trim());
         } catch (Exception e) {
              content = content.replaceAll("INSERT_LEADTIME_INSERT","");
         }
         try {
-            content = content.replaceAll("INSERT_LEADTIMEUNITS_INSERT", StandardCode.getInstance().noNull(q.getProject().getBeforeWorkTurnUnits().toLowerCase()));
+            content = content.replaceAll("INSERT_LEADTIMEUNITS_INSERT", StandardCode.getInstance().noNull(q.getProject().getBeforeWorkTurnUnits().toLowerCase().trim()));
         } catch (Exception e) {
             content = content.replaceAll("INSERT_LEADTIMEUNITS_INSERT", "");
         }
@@ -684,25 +713,27 @@ try{
             }
                try {
             content = content.replaceAll("INSERT_PMNAME_INSERT", StandardCode.getInstance().noNull(enteredBy.getFirstName())+" " +StandardCode.getInstance().noNull(enteredBy.getLastName()));
-        } catch (Exception e) {
+       content = content.replaceAll("INSERT_PM_TITLE_INSERT", StandardCode.getInstance().noNull(enteredBy.getPosition().getPosition()));
+               } catch (Exception e) {
         }
-
+content = content.replaceAll("INSERT_PM_TITLE_INSERT", StandardCode.getInstance().noNull(enteredBy.getPosition().getPosition()));
             content = content.replaceAll("INSERT_EMAIL_PM_INSERT", StandardCode.getInstance().noNull(enteredBy.getWorkEmail1()));
             content = content.replaceAll("INSERT_PHONE_EXTENSION_PM_INSERT", StandardCode.getInstance().noNull(enteredBy.getWorkPhone()) + " ext " + StandardCode.getInstance().noNull(enteredBy.getWorkPhoneEx()));
 
         } catch (Exception e) {
-
+            content = content.replaceAll("INSERT_PM_TITLE_INSERT", "");
             content = content.replaceAll("INSERT_EMAIL_PM_INSERT", StandardCode.getInstance().noNull(""));
             content = content.replaceAll("INSERT_PHONE_EXTENSION_PM_INSERT", StandardCode.getInstance().noNull(""));
             //content = content.replaceAll("INSERT_FAX_PM_INSERT", StandardCode.getInstance().noNull(""));
 
         }
+
      content = content.replaceAll("INSERT_FAX_PM_INSERT", faxno);
 
-        String filename = q.getNumber() + "-" + q.getProject().getCompany().getCompany_name().replaceAll(" ", "_") + "_quote.doc";
+        String filename = q.getNumber() + "-" + q.getProject().getCompany().getCompany_name().replaceAll(" ", "_").replaceAll(",", "_") + "_quote.doc";
 
-        content = content.replaceAll("T5 - Quote template - short_non_medical.rtf", StandardCode.getInstance().noNull(filename));
-        System.out.println("hereeeeee6");
+        content = content.replaceAll("INSERT_QUOTENAME_INSERT", StandardCode.getInstance().noNull(filename));
+        //System.out.println("hereeeeee6");
         // User myPm = UserService.getInstance().getSingleUserRealName(StandardCode.getInstance().getFirstName(q.getProject().getPm()), StandardCode.getInstance().getLastName(q.getProject().getPm()));
         // content = content.replaceAll("INSERT_PHONE_EXTENSION_PM_INSERT", StandardCode.getInstance().noNull(myPm.getWorkPhone())+"  Extension: "+StandardCode.getInstance().noNull(myPm.getWorkPhoneEx()));
         // content = content.replaceAll("INSERT_FAX_PM_INSERT", StandardCode.getInstance().noNull(myPm.getLocation().getFax_number()));

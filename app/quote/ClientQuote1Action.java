@@ -87,7 +87,7 @@ Integer clientId=0;
 
 Product CQ=QuoteService.getInstance().getProductValues(clientId,data);
 
-            System.out.println("                  working                     ");
+            //System.out.println("                  working                     ");
             //String ty="lk";
 
 
@@ -101,7 +101,7 @@ Product CQ=QuoteService.getInstance().getProductValues(clientId,data);
 
 
 
-           // System.out.println("Type.............."+rs.getString("Type"));
+           // //System.out.println("Type.............."+rs.getString("Type"));
         results.add(jo);
 
           //  tx.commit();
@@ -141,7 +141,7 @@ Product CQ=QuoteService.getInstance().getProductValues(clientId,data);
 
      response.setContentType("text/json");
      response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

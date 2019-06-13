@@ -74,7 +74,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
             String quoteId = request.getParameter("quoteViewId");
 
 
-            System.out.println("quoteViewId" + quoteId + "         " + request.getParameter("quoteViewId"));
+            //System.out.println("quoteViewId" + quoteId + "         " + request.getParameter("quoteViewId"));
 
             //default client to first if not in request or cookie
             if (quoteId == null || "null".equals(quoteId)) {
@@ -91,18 +91,18 @@ public class ClientQuoteViewUnpublishAction extends Action{
             //  String quoteId = StandardCode.getInstance().getCookie("quoteAddId", request.getCookies());
             String quoteViewId = quoteId;//request.getParameter("quoteViewId");
 
-            System.out.println("quoteViewId" + quoteId + "         " + request.getParameter("quoteViewId") + "        " + quoteViewId);
+            //System.out.println("quoteViewId" + quoteId + "         " + request.getParameter("quoteViewId") + "        " + quoteViewId);
             Integer CQuote = Integer.parseInt(quoteViewId);
             // Integer CQuote=1410;
-            System.out.println("getNewClientQuoteNumber" + CQuote);
+            //System.out.println("getNewClientQuoteNumber" + CQuote);
 
             PreparedStatement pstmt = session.connection().prepareStatement("select * from client_quote where Quote_ID = " + CQuote);
             ResultSet rs = pstmt.executeQuery();
 //Client_Quote cq=QuoteService.getInstance().get_SingleClientQuote(CQuote);
 // ClientService.getInstance().getBlogList();
             //  Integer result = null;
-            // System.out.println("result+================"+rs+"================="+rs.getString("Type"));
-            System.out.println("                  working                     ");
+            // //System.out.println("result+================"+rs+"================="+rs.getString("Type"));
+            //System.out.println("                  working                     ");
             //String ty="lk";
             Quote1 q = QuoteService.getInstance().getSingleQuote(CQuote);
             String unit = "";
@@ -115,7 +115,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                 Product pr = app.client.ClientService.getInstance().getSingleProduct(cq.getProduct_ID());
                 List sourcelang = QuoteService.getInstance().getSourceLang(newQ, cq.getId());
 
-                System.out.println("pid&&&&&&&&&&&&&&id" + cq.getProduct_ID() + "        " + cq.getProduct_ID());
+                //System.out.println("pid&&&&&&&&&&&&&&id" + cq.getProduct_ID() + "        " + cq.getProduct_ID());
                 unit = rs.getString("volume") + " " + rs.getString("unit");
                 jo.put("product", pr.getProduct());
                 jo.put("category", pr.getCategory());
@@ -156,7 +156,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                     if (ii != sourcelang.size() - 1) {
                         sources += ", ";
                     }
-                    System.out.println("sources" + sources);
+                    //System.out.println("sources" + sources);
                     List targetlang = QuoteService.getInstance().getTargetLang(sd.getSourceDocId());
                     for (int jj = 0; jj < targetlang.size(); jj++) {
                         TargetDoc td = (TargetDoc) targetlang.get(jj);
@@ -183,7 +183,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                         idTask = td.getTargetDocId();
 
                         }
-                    System.out.println("targets" + targets);
+                    //System.out.println("targets" + targets);
                     if (targets.endsWith(", ")) {
                         targets = targets.substring(0, targets.length() - 2);
                     }
@@ -204,7 +204,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                     if (alreadyAdded.get(lt.getTaskName()) == null) {
                         task += lt.getTaskName();
                     }
-                    System.out.println("linTaskList" + task);
+                    //System.out.println("linTaskList" + task);
 
                     if (tt != tSize - 1) {
                         task += ", ";
@@ -215,7 +215,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                     if (alreadyAdded.get(lt.getTaskName()) == null) {
                         task += lt.getTaskName();
                     }
-                    System.out.println("linTaskList" + task);
+                    //System.out.println("linTaskList" + task);
 
                     if (tt != tSize - 1) {
                         task += ", ";
@@ -226,7 +226,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                     if (alreadyAdded.get(lt.getTaskName()) == null) {
                         task += lt.getTaskName();
                     }
-                    System.out.println("linTaskList" + task);
+                    //System.out.println("linTaskList" + task);
 
                     if (tt != tSize - 1) {
                         task += ", ";
@@ -237,7 +237,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
                     if (alreadyAdded.get(lt.getTaskName()) == null) {
                         task += lt.getTaskName();
                     }
-                    System.out.println("linTaskList" + task);
+                    //System.out.println("linTaskList" + task);
 
                     if (tt != tSize - 1) {
                         task += ", ";
@@ -257,7 +257,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
 
 
 
-                System.out.println("Type.............." + rs.getString("Type"));
+                //System.out.println("Type.............." + rs.getString("Type"));
                 results.add(jo);
             }
             tx.commit();
@@ -292,7 +292,7 @@ public class ClientQuoteViewUnpublishAction extends Action{
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

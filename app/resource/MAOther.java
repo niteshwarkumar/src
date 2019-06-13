@@ -10,6 +10,8 @@
 
 package app.resource;
 
+import java.util.Date;
+
 /**
  *
  * @author PP41387
@@ -55,6 +57,17 @@ public class MAOther {
     private double expertrateScore;
     private double expertdeductionReason2Score;
     private double experttotalScore;
+    
+    private String holdPayment;
+    private String holdYes;
+    private String holdNo;
+    private String other;
+    private String paypal;
+    private String otherText;
+    private String paypalText;
+    private String wireTransferText;
+    private String paymentRegisteredText;
+    private String expiryDate;
 
     public Integer getId_ma() {
         return id_ma;
@@ -303,5 +316,87 @@ public class MAOther {
     public void setExperttotalScore(double experttotalScore) {
         this.experttotalScore = experttotalScore;
     }
+
+    public String getHoldPayment() {
+        return holdPayment;
+    }
+
+    public void setHoldPayment(String holdPayment) {
+        this.holdPayment = holdPayment;
+    }
+
+    public String getHoldYes() {
+        return holdYes;
+    }
+
+    public void setHoldYes(String holdYes) {
+        this.holdYes = holdYes;
+    }
+
+    public String getHoldNo() {
+        return holdNo;
+    }
+
+    public void setHoldNo(String holdNo) {
+        this.holdNo = holdNo;
+    }
+
+    public String getOther() {
+        return other;
+    }
+
+    public void setOther(String other) {
+        this.other = other;
+    }
+
+    public String getPaypal() {
+        return paypal;
+    }
+
+    public void setPaypal(String paypal) {
+        this.paypal = paypal;
+    }
+
+    public String getOtherText() {
+        return otherText;
+    }
+
+    public void setOtherText(String otherText) {
+        this.otherText = otherText;
+    }
+
+    public String getPaypalText() {
+        return paypalText;
+    }
+
+    public void setPaypalText(String paypalText) {
+        this.paypalText = paypalText;
+    }
+
+    public String getWireTransferText() {
+        return wireTransferText;
+    }
+
+    public void setWireTransferText(String wireTransferText) {
+        this.wireTransferText = wireTransferText;
+    }
+
+    public String getPaymentRegisteredText() {
+        return paymentRegisteredText;
+    }
+
+    public void setPaymentRegisteredText(String paymentRegisteredText) {
+        this.paymentRegisteredText = paymentRegisteredText;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+    
+    
 
 }

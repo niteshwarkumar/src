@@ -20,13 +20,15 @@ import java.util.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
  * @author Niteshwar
  */
 public class InBasicsPreAction extends Action {
-
+ 
     // ----------------------------------------------------- Instance Variables
     /**
      * The <code>Log</code> instance for this application.
@@ -76,7 +78,7 @@ public class InBasicsPreAction extends Action {
             q = QuoteService.getInstance().getSingleQuote(Integer.parseInt(quoteViewId));
             projectId = q.getProject().getProjectId().toString();
             request.setAttribute("quote", q);
-        }
+        }   
         if (projectId == null) {
             projectId = request.getParameter("projectViewId");
         }
@@ -112,8 +114,10 @@ public class InBasicsPreAction extends Action {
 
         //get project to edit
         Project p = ProjectService.getInstance().getSingleProject(id);
-
-
+        
+        //JSONArray projArray = ProjectService.getInstance().getClientProjectSearch(p.getCompany().getClientId());
+       // QuoteService.getInstance().getClientQuoteSearch(p.getCompany().getClientId());
+        
 String dtpFlag="no";
 
 
@@ -226,6 +230,18 @@ String dtpFlag="no";
             uvg.set("dtpReq2", "");}
         }
         try {
+            uvg.set("dtpReq21", "" + INBasics.isDtpReq21());
+        } catch (Exception e) {
+       
+            uvg.set("dtpReq21", "");
+        }
+        try {
+            uvg.set("dtpReq22", "" + INBasics.isDtpReq22());
+        } catch (Exception e) {
+          
+            uvg.set("dtpReq22", "");
+        }
+        try {
             uvg.set("genGra1", "" + INBasics.isGenGra1());
         } catch (Exception e) {
             uvg.set("genGra1", "");
@@ -264,6 +280,31 @@ String dtpFlag="no";
             uvg.set("screen4", "" + INBasics.isScreen4());
         } catch (Exception e) {
             uvg.set("screen4", "");
+        }
+        try {
+            uvg.set("clientReview1", "" + INBasics.isClientReview1());
+        } catch (Exception e) {
+            uvg.set("clientReview1", "");
+        }
+        try {
+            uvg.set("clientReview2", "" + INBasics.isClientReview2());
+        } catch (Exception e) {
+            uvg.set("clientReview2", "");
+        }
+        try {
+            uvg.set("clientReview3", "" + INBasics.isClientReview3());
+        } catch (Exception e) {
+            uvg.set("clientReview3", "");
+        }
+        try {
+            uvg.set("clientReview4", "" + INBasics.isClientReview4());
+        } catch (Exception e) {
+            uvg.set("clientReview4", "");
+        }
+        try {
+            uvg.set("clientReview5", "" + INBasics.isClientReview4());
+        } catch (Exception e) {
+            uvg.set("clientReview5", "");
         }
         try {
             uvg.set("deliveryFormat1", "" + INBasics.isDeliveryFormat1());
@@ -343,6 +384,17 @@ String dtpFlag="no";
         } catch (Exception e) {
             uvg.set("textBox3", "");
         }
+        try {
+            uvg.set("textBox4", "" + INBasics.getTextBox4());
+        } catch (Exception e) {
+            uvg.set("textBox4", "");
+        }
+        try {
+            uvg.set("textBox5", "" + INBasics.getTextBox5());
+        } catch (Exception e) {
+            uvg.set("textBox5", "");
+        }
+        
         int quantitySum=0;
         try {
                   List sourceFileList=InteqaService.getInstance().getSourceFileList(p.getProjectId());
@@ -354,13 +406,35 @@ String dtpFlag="no";
         } catch (Exception e) {
         }
    
-
-
+        List inRefList = InteqaService.getInstance().getInReference(p.getProjectId());
+        JSONArray inRefArray = new JSONArray();
+        for(int i = 0; i< inRefList.size(); i++){
+        INReference ref = (INReference)inRefList.get(i);
+            JSONObject refObj = new JSONObject();
+            refObj.put("projectId", ref.getProjectId());
+            if(Integer.parseInt(ref.getProjectNumber().split("#")[0].replaceAll("[A-Za-z]", ""))>0)
+             refObj.put("projectNumber", ""+ref.getProjectNumber().split("#")[0]);
+            else
+             refObj.put("projectNumber", "");
+           // refObj.put("quoteId", ref.getQuoteId());
+           try{ refObj.put("quoteNumber", ref.getQuoteNumber().split("#")[0]);}catch(Exception e){refObj.put("quoteNumber","");}
+            refObj.put("product", ref.getProduct());
+            refObj.put("productDescription", ref.getDescription());
+            refObj.put("id", ref.getId());
+            inRefArray.put(refObj);
+            
+            
+        }
+        
 
         request.setAttribute("quantitySum", quantitySum);
         request.setAttribute("formValue", uvg);
         request.setAttribute("INBasics", INBasics);
         request.setAttribute("project", p);
+        request.setAttribute("relatedProj", inRefArray);
+        
+        request.setAttribute("companyCode", p.getCompany().getCompany_code());
+        //projArray
 //        request.setAttribute("preTransDtp",  dtpTaskTotal);
 //        request.setAttribute("postTransDtp", dtpTaskTotalTeam);
 //        request.setAttribute("preTransEng", engTaskTotal);

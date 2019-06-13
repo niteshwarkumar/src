@@ -42,9 +42,9 @@ public class ClientQuoteAdd2Action extends Action {
         String quoteId = request.getSession(false).getAttribute("quoteViewId").toString();
              String quoteViewId =quoteId ;//request.getParameter("quoteViewId");
 
-            System.out.println("quoteViewId"+quoteId+"         "+request.getParameter("quoteViewId")+"        "+quoteViewId);
+            //System.out.println("quoteViewId"+quoteId+"         "+request.getParameter("quoteViewId")+"        "+quoteViewId);
            Integer CQuote =Integer.parseInt(quoteViewId);
-            System.out.println("getNewClientQuoteNumber" + CQuote);
+            //System.out.println("getNewClientQuoteNumber" + CQuote);
 
 
         String jsonProducts = request.getParameter("clientQuoteJSON");
@@ -58,26 +58,26 @@ public class ClientQuoteAdd2Action extends Action {
        // Integer CQuote = QuoteService.getInstance().getNewClientQuoteNumber() - 1;
 
         List cqList=QuoteService.getInstance().getClient_Quote(CQuote);
-        System.out.println("Size of cqList"+cqList.size());
+        //System.out.println("Size of cqList"+cqList.size());
 
 
       //  Integer id = QuoteService.getInstance().getNewClientQuoteid() ;
 
-      //  System.out.println("idooooooooooooooooooooooooooooo"+id);
+      //  //System.out.println("idooooooooooooooooooooooooooooo"+id);
 
   if (jsonProducts != null && !"".equals(jsonProducts)) {
  
 
 
   }
-          System.out.println("Count--------------->"+count);
+          //System.out.println("Count--------------->"+count);
         if (jsonProducts != null && !"".equals(jsonProducts)) {
             JSONArray products = new JSONArray(jsonProducts);
            
             Client_Quote pr = new Client_Quote();
 
 
-            System.out.println("CQUOTE00000000000000000000000000000----->" + products.length());
+            //System.out.println("CQUOTE00000000000000000000000000000----->" + products.length());
 
             Integer id ;
            
@@ -86,19 +86,19 @@ public class ClientQuoteAdd2Action extends Action {
               //  rs.next();getSingleClient_Quote
                 id=q.getId();
                //--id;
-                System.out.println("Count================>"+count+"              "+id);
+                //System.out.println("Count================>"+count+"              "+id);
                // Client_Quote q=QuoteService.getInstance().getSingleClient_Quote(id);
                 JSONObject j = (JSONObject) products.get(n);
-                System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
+                //System.out.println("JSONObject>>>>>>>>>>>>>>>>>>>>>>>>>" + j);
                 // Client_Quote pr = new Client_Quote();
-                System.out.println("Product ...................." + (j.getString("detail")));
+                //System.out.println("Product ...................." + (j.getString("detail")));
 
                 q.setQuote_ID(CQuote);
                 q.setID_Client(q.getID_Client());
                 q.setProduct_ID(q.getProduct_ID());
                 q.setMedical(q.getMedical());
                 q.setComponent(q.getComponent());
-                //System.out.println("Client Id   ------------------->" + rs.getInt("ID_Client") + "vvvvvvvvvvv" + rs.getInt("Product_ID"));
+                ////System.out.println("Client Id   ------------------->" + rs.getInt("ID_Client") + "vvvvvvvvvvv" + rs.getInt("Product_ID"));
                 q.setType(j.getString("detail"));
                 q.getDeliverable();                //pr.
                 q.setApplication(j.getString("application"));
@@ -109,8 +109,8 @@ public class ClientQuoteAdd2Action extends Action {
                 q.setOs(j.getString("os"));
                 q.setVersion(j.getString("version"));
 
-                System.out.println("dataaaaaaaaa" + j.getString("detail") + "                " + j.getString("deliverable"));
-                System.out.println("idddddddd" + id);
+                //System.out.println("dataaaaaaaaa" + j.getString("detail") + "                " + j.getString("deliverable"));
+                //System.out.println("idddddddd" + id);
              //   rs.deleteRow();
                 QuoteService.getInstance().updateClientQuote(q);
                  HttpSession session = request.getSession(false);

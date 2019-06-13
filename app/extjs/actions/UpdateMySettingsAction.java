@@ -73,7 +73,7 @@ public final class UpdateMySettingsAction extends Action {
             
         }
         
-        //System.out.println("extjsTheme="+extjsTheme);
+        ////System.out.println("extjsTheme="+extjsTheme);
         
         u.setExtjsTheme(extjsTheme);
         u.setMyExcelRange(myExcelRange);
@@ -83,7 +83,7 @@ public final class UpdateMySettingsAction extends Action {
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         JSONObject jo = new JSONObject();
         jo.put("success","true");

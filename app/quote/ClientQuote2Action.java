@@ -86,9 +86,9 @@ public final class ClientQuote2Action extends Action {
              String quoteId=request.getSession(false).getAttribute("quoteViewId").toString();
              String quoteViewId =quoteId ;//request.getParameter("quoteViewId");
                 
-            System.out.println("quoteViewId"+quoteId+"         "+request.getParameter("quoteViewId")+"        "+quoteViewId);
+            //System.out.println("quoteViewId"+quoteId+"         "+request.getParameter("quoteViewId")+"        "+quoteViewId);
            Integer CQuote =Integer.parseInt(quoteViewId);
-            System.out.println("getNewClientQuoteNumber" + CQuote);
+            //System.out.println("getNewClientQuoteNumber" + CQuote);
 
             PreparedStatement pstmt = session.connection().prepareStatement("select Type,application,os,unit,volume,version,deliverable from client_quote where Quote_ID = " + CQuote);
             ResultSet rs = pstmt.executeQuery();
@@ -96,7 +96,7 @@ public final class ClientQuote2Action extends Action {
  // Product prod = app.client.ClientService.getInstance().getSingleProduct(rs.getInt(Product_ID));
  
 
-            System.out.println("                  working                     ");
+            //System.out.println("                  working                     ");
        
 
             while (rs.next()) {
@@ -113,7 +113,7 @@ public final class ClientQuote2Action extends Action {
 
 
 
-                System.out.println("Type.............." + rs.getString("Type"));
+                //System.out.println("Type.............." + rs.getString("Type"));
                 results.add(jo);
             }
             tx.commit();
@@ -148,7 +148,7 @@ public final class ClientQuote2Action extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

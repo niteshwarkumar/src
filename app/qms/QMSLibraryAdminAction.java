@@ -6,6 +6,9 @@ package app.qms;
 
 import app.security.SecurityService;
 import app.standardCode.StandardCode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -146,11 +149,29 @@ public class QMSLibraryAdminAction extends Action {
 
 
 
-Integer idi=QMSService.getInstance().addLibrary(qms);
+Integer idi=QMSServiceAddUpdate.getInstance().addLibrary(qms);
+        
 
-
-
-
+QMSServiceDelete.getInstance().deleteIsoDoc(Integer.parseInt(id));
+String[] isoStandard  = request.getParameterValues("isoStandard");
+if(isoStandard != null){
+    for(String iso : isoStandard){
+        IsoDoc isoDoc = new IsoDoc();
+        isoDoc.setDocId(Integer.parseInt(id));
+        isoDoc.setIsoStandard(Integer.parseInt(iso));
+        QMSServiceAddUpdate.getInstance().addIsoDoc(isoDoc);
+    }
+}
+        List<String> isoKeyHeader = new ArrayList();
+        List<String> isoKey = new ArrayList();
+        String[] isoKeyHeaderArr = request.getParameterValues("isoKeyHeader");
+        String[] isoKeyArr = request.getParameterValues("isoKey");
+        if(isoKeyHeaderArr!=null) isoKeyHeader =  Arrays.asList(isoKeyHeaderArr);
+        if(isoKeyArr!=null) isoKey =  Arrays.asList(isoKeyArr);
+        request.setAttribute("isoKeyHeader", isoKeyHeader); 
+        request.setAttribute("isoKey", isoKey);
+        request.setAttribute("isoHeader",false);
+        
         return (mapping.findForward(mainTab));
     }
 }

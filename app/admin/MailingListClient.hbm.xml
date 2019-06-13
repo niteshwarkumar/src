@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+    
+<hibernate-mapping>
+    <class name="app.admin.MailingListClient" table="mailinglistclient">
+        <id name="memberId" type="java.lang.Integer">
+            <column name="memberId" />
+            <generator class="identity" />
+        </id>
+        <property name="mailId" type="java.lang.Integer">
+            <column name="mailId" />
+        </property>
+        <property name="clientId" type="java.lang.Integer">
+            <column name="clientId" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -44,7 +44,7 @@ public class ClientQuoteSummaryAction extends Action{
 	ActionMessages errors = new ActionMessages();
          String quoteId = StandardCode.getInstance().getCookie("quoteAddId", request.getCookies());
              String quoteViewId =quoteId ;
-              System.out.println("quoteViewId"+quoteViewId);
+              //System.out.println("quoteViewId"+quoteViewId);
 
                return (mapping.findForward("Success"));
 

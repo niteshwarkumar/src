@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.client.Industry" table="Industry">
+   <class name="app.client.Industry" table="industry">
       <id name="industryId" type="int" column="Industry_ID">
          <generator class="identity"/>
       </id>
@@ -23,7 +23,7 @@
       	<one-to-many class="app.client.SpecificIndustry"/>
       </set>
       
-      <set name="Resources" lazy="true" table="Resource_Industry" inverse="true">
+      <set name="Resources" lazy="true" table="resource_industry" inverse="true">
         <key column="Industry_ID"/>
         <many-to-many class="app.resource.Resource" column="ID_Resource"/>
       </set>

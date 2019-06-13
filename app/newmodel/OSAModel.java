@@ -20,6 +20,9 @@ public class OSAModel implements Comparable<OSAModel>{
     String number,company_code,id_project;
     String taskType;
     String id;
+    String src;
+    String tgt;
+
 
     public String getTaskType() {
         return taskType;
@@ -107,5 +110,23 @@ public class OSAModel implements Comparable<OSAModel>{
     public void setId(String id) {
         this.id = id;
     }
+
+    public String getSrc() {
+        return src;
+    }
+
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
+    public String getTgt() {
+        return tgt;
+    }
+
+    public void setTgt(String tgt) {
+        this.tgt = tgt;
+    }
+    
+    
 
 }

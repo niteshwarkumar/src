@@ -39,19 +39,19 @@ public class QMSUploadFileAction extends Action {
         if (isDelete.equalsIgnoreCase("delete")) {
             try {
                 String id = request.getParameter("id");
-                QMSService.getInstance().deletetQMSReport(QMSService.getInstance().getSingleQMSReport(Integer.parseInt(id)));               
+                QMSServiceDelete.getInstance().deletetQMSReport(QMSService.getInstance().getSingleQMSReport(Integer.parseInt(id)));               
             } catch (Exception e) {                
             }
             return (mapping.findForward("Success"));
 
         }
 
-        File dBDir = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/QMSUpload");
+        File dBDir = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/QMSUpload");
         boolean exists = dBDir.exists();
         if (!exists) {
             // It returns false if File or directory does not exist
 
-            String strDirectoy = "C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/QMSUpload";
+            String strDirectoy = "C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/QMSUpload";
 
 
             // Create one directory
@@ -68,7 +68,7 @@ public class QMSUploadFileAction extends Action {
         DynaValidatorForm uvg = (DynaValidatorForm) form;
         FormFile Upload = (FormFile) uvg.get("Upload");
         QMSReportUpload newDoc = new QMSReportUpload();
-        System.out.println("Upload File Name" + Upload);
+        //System.out.println("Upload File Name" + Upload);
         String saveFileName = null;
         if (Upload.getFileName().length() > 0) {
             String fileName = Upload.getFileName();
@@ -76,7 +76,7 @@ public class QMSUploadFileAction extends Action {
             //random number in image name to prevent repeats
             Random gen = new Random(new Date().getSeconds());
             saveFileName = String.valueOf(gen.nextInt()) + fileName;
-            File saveFile = new File("C:/Program Files (x86)/Apache Software Foundation/Tomcat 7.0/webapps/logo/QMSUpload/" + saveFileName);
+            File saveFile = new File("C:/Program Files/Apache Software Foundation/Tomcat 7.0/webapps/logo/QMSUpload/" + saveFileName);
             FileOutputStream out = new FileOutputStream(saveFile);
             out.write(fileData);
             out.flush();
@@ -93,7 +93,7 @@ public class QMSUploadFileAction extends Action {
 
         }
 
-        QMSService.getInstance().addUpload_Doc(newDoc);
+        QMSServiceAddUpdate.getInstance().addUpload_Doc(newDoc);
 
         return (mapping.findForward("Success"));
     }

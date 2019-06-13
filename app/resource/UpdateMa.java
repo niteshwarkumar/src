@@ -69,7 +69,7 @@ public final class UpdateMa extends Action {
          try {
 
 
-        //System.out.println("jsonProducts="+jsonProducts);
+        ////System.out.println("jsonProducts="+jsonProducts);
 
         //First delete all products, and then re-insert it
         if(jsonMA!=null && !"".equals(jsonMA)){

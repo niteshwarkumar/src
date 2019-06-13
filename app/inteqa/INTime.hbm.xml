@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INTime" table="in_time">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="irtdate1" type="date"/>
+        <property name="irtdate2" type="date"/>
+        <property name="cstdate1" type="date"/>
+        <property name="cstdate2" type="date"/>
+        
+        <property name="irttime1" type="java.sql.Time"/>
+        <property name="irttime2" type="java.sql.Time"/>
+        <property name="csttime1" type="java.sql.Time"/>
+        <property name="csttime2" type="java.sql.Time"/>
+
+        <property name="projectId" type="int"/>
+     
+    </class>
+</hibernate-mapping>

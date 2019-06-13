@@ -5,6 +5,7 @@
 package app.admin;
 
 import app.extjs.helpers.HrHelper;
+import app.standardCode.StandardCode;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,7 @@ public class ViewExcelnetIssue extends Action {
             jo.put("status", v.getStatus());
             jo.put("itemNo", v.getId());
             jo.put("priority", v.getPriority());
+            jo.put("risk",StandardCode.getInstance().noNull(v.getRisk()));
             jo.put("item", v.getItem());
             jo.put("reference", v.getReference());
             jo.put("tested", v.getTested());
@@ -99,6 +101,7 @@ public class ViewExcelnetIssue extends Action {
             if (status.equalsIgnoreCase("1") && v.getStatus() == 1) {
                 jo.put("deleteIssue", "<a " + HrHelper.LINK_STYLE + " href=../adminExcelChangeStatus.do?status=0&id=" + v.getId() + ">Delete</a>");
             }
+            jo.put("action", "<a " + HrHelper.LINK_STYLE + " href=AdminExcelImprovementsAction.jsp?status=" + status + "&vid=" + v.getId() + ">Action</a>");
             
             
             

@@ -96,6 +96,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
         String lin11 = (String) (qvgatl1.get("lin11"));  
         String[] linTaskOptions = QuoteService.getInstance().getLinTaskOptions();
         
+        
         //for each target, add the new target to db and each target's new linguistic tasks selected from form
         for(int i = 0; i < targets.length; i++) {          
             Set linTasks = new HashSet(); //list of new linTasks
@@ -103,6 +104,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
             //need target doc and source doc to add tasks to it
             TargetDoc td = ProjectService.getInstance().getSingleTargetDoc(Integer.valueOf(targets[i]));
             SourceDoc sd = td.getSourceDoc();
+           String currency = sd.getQuote().getProject().getCompany().getCcurrency();
             
             if(lin1.equals("on")) { //if checked in form, then add this task to target Doc
                 LinTask lt = new LinTask();
@@ -111,6 +113,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[1-1]);
                 lt.setOrderNum(new Integer(1));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
                   
@@ -121,6 +124,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[2-1]);
                 lt.setOrderNum(new Integer(2));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -131,6 +135,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[3-1]);
                 lt.setOrderNum(new Integer(3));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -141,6 +146,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[4-1]);
                 lt.setOrderNum(new Integer(4));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
                         
@@ -151,6 +157,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[5-1]);
                 lt.setOrderNum(new Integer(5));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -161,6 +168,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[6-1]);
                 lt.setOrderNum(new Integer(6));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -171,6 +179,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[7-1]);
                 lt.setOrderNum(new Integer(7));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -181,6 +190,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[8-1]);
                 lt.setOrderNum(new Integer(8));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -191,6 +201,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[9-1]);
                 lt.setOrderNum(new Integer(9));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -201,6 +212,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[10-1]);
                 lt.setOrderNum(new Integer(10));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             
@@ -212,6 +224,7 @@ public final class QuoteViewGeneralAddTaskLin2Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[11-1]);
                 lt.setOrderNum(new Integer(11));
+                lt.setCurrency(currency);
                 linTasks.add(lt);
             }
             

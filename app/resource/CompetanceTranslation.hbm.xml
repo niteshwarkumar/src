@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.resource.CompetanceTranslation" table="resourcecomptrans">
+      <id name="id" type="int" column="id">
+         <generator class="identity"/>
+      </id>
+       <property name="resourceId" type="java.lang.Integer"/>
+        <property name="gq_institution" type="string"/>
+        <property name="gq_field" type="string"/>
+        <property name="gq_graduation_year" type="string"/>
+        <property name="gq_evidence_filename" type="string"/>
+        <property name="gq_evidence_filepath" type="string"/>
+        <property name="gq_note" type="string"/>
+
+        <property name="gqo_institution" type="string"/>
+        <property name="gqo_field" type="string"/>
+        <property name="gqo_graduation_year" type="string"/>
+        <property name="gqo_evidence_filename" type="string"/>
+        <property name="gqo_evidence_filepath" type="string"/>
+        <property name="gqo_note" type="string"/>
+
+        <property name="coc_institution" type="string"/>
+        <property name="coc_field" type="string"/>
+        <property name="coc_graduation_year" type="string"/>
+        <property name="coc_evidence_filename" type="string"/>
+        <property name="coc_evidence_filepath" type="string"/>
+
+        <property name="exp_translatorSince" type="string"/>
+        <property name="exp_note" type="string"/>
+
+        <property name="cc_standard" type="string"/>
+        <property name="cc_edition" type="string"/>
+        <property name="cc_certifiedIn" type="string"/>
+        <property name="cc_expiration" type="string"/>
+        <property name="cc_evidence_filename" type="string"/>
+        <property name="cc_evidence_filepath" type="string"/>
+        <property name="cultureNote" type="string"/>
+        <property name="cultureYesNo" type="boolean"/>
+        <property name="researchYesNo" type="boolean"/>
+        <property name="researchNote" type="string"/>
+
+
+   </class>
+</hibernate-mapping>

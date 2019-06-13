@@ -290,7 +290,7 @@ public final class QuoteViewGeneralTradosUploadAction extends Action {
       lt.setWord95(num95);
       lt.setWord85(num85);
       lt.setWord75(num75);
-      lt.setWordNew(new Integer(numNew));
+      lt.setWordNew(new Double(numNew));
       lt.setWord8599(new Integer(num8599));
       lt.setWordNew4(new Double(numNew4));
       lt.setWordTotal(numTotal);
@@ -361,13 +361,13 @@ String[] dataValue=new String[11];
                         {
                             dataValue[i++]=cell.toString();
 
-                            System.out.println("cel value---------->  "+cell.toString());
+                            //System.out.println("cel value---------->  "+cell.toString());
 
                             if(i>10){flag="false";}
 
                         }
-                   }catch(Exception e){System.out.println("Integer Value"+count++);}
-
+                   }catch(Exception e){//System.out.println("Integer Value"+count++);}
+                   }
                    }
                 }
 
@@ -393,7 +393,7 @@ String[] dataValue=new String[11];
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordContext(numContext);
@@ -404,6 +404,19 @@ String[] dataValue=new String[11];
                                         lt.setWordNew4(numTotal);
                                         lt.setWordTotal(numTotal);
 
+                                    }
+                                    if(Objects.equals(q.getProject().getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordContext(numContext);
+                                        lt.setWordPerfect(numPerfect);
+                                        lt.setWordTotal(numTotal);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
@@ -426,7 +439,7 @@ String[] dataValue=new String[11];
                                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                                     Document doc = dBuilder.parse(in);
                                     doc.getDocumentElement().normalize();
-                                    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+                                    //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
                                     Integer numRep = 0;
                                     Integer numRepCross = 0;
                                     Integer num100 = 0;
@@ -460,13 +473,14 @@ String[] dataValue=new String[11];
 
                                                         Node nNode = fuzzy.item(temp);
 
-                                                        System.out.println("\nCurrent Element :" + nNode.getNodeName());
+                                                        //System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
                                                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
                                                             Element eElement2 = (Element) nNode;
                                                             if (eElement2.getAttribute("min").equalsIgnoreCase("50") && eElement2.getAttribute("max").equalsIgnoreCase("74")) {
                                                                 num50 = Integer.parseInt(eElement2.getAttribute("words"));
+//                                                                eElement2.hasAttribute("words");
                                                             }
                                                             if (eElement2.getAttribute("min").equalsIgnoreCase("75") && eElement2.getAttribute("max").equalsIgnoreCase("84")) {
                                                                 num75 = Integer.parseInt(eElement2.getAttribute("words"));
@@ -571,23 +585,36 @@ String[] dataValue=new String[11];
                                         lt.setWord95(num95);
                                         lt.setWord85(num85);
                                         lt.setWord75(num75);
-                                        lt.setWordNew(new Integer(numNew));
+                                        lt.setWordNew(new Double(numNew));
                                         lt.setWord8599(new Integer(num8599));
                                         lt.setWordNew4(new Double(numNew4));
                                         lt.setWordTotal(new Double(numTotal));
                                         lt.setWordContext(numContext);
                                         lt.setWordPerfect(numPerfect);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-                                        lt.setWordNew(new Integer(numTotal));
+                                        lt.setWordNew(new Double(numTotal));
                                         lt.setWordNew4(new Double(numTotal));
                                         lt.setWordTotal(new Double(numTotal));
+                                    }
+                                    if(Objects.equals(q.getProject().getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRep(numRep+numRepCross);
+                                        lt.setWord100(num100);
+                                        lt.setWord95(num95);
+                                        lt.setWord85(num85);
+                                        lt.setWord75(num75);
+                                        lt.setWordNew(new Double(numNew));
+                                        lt.setWord8599(new Integer(num8599));
+                                        lt.setWordNew4(new Double(numNew4));
+                                        lt.setWordTotal(new Double(numTotal));
+                                        lt.setWordContext(numContext);
+                                        lt.setWordPerfect(numPerfect);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
                                 } 
-      else {System.out.println("myFile nameeeeeeeee"+myFile.getFileName());}
-      
+      else {//System.out.println("myFile nameeeeeeeee"+myFile.getFileName());}
+                                 }
       
      
       

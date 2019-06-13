@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -95,15 +95,13 @@ public final class ProjectAddAllFromExistingAction extends Action {
         //update new projects info
         Project newP = ProjectService.getInstance().getSingleProject(projectId);
              try{
-        String[] fname = pFrom.getPm().split(" ");
-         User pm = null;
-            if (fname.length == 2) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1]);
-            } else if (fname.length == 3) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
-            } else if (fname.length == 4) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
-            }
+        String fname = pFrom.getPm();
+         User pm = UserService.getInstance().getSingleUserRealName(fname);
+//            } else if (fname.length == 3) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
+//            } else if (fname.length == 4) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
+//            }
          p.setPm_id(pm.getUserId());
         }catch(Exception e){ p.setPm_id(0); }
         newP.setPm(pFrom.getPm());

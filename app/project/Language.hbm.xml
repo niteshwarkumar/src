@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.project.Language" table="Language">
+   <class name="app.project.Language" table="language">
       <id name="languageId" type="int" column="Language_ID">
          <generator class="identity"/>
       </id>
@@ -12,7 +12,7 @@
       <property name="language" type="string"/>
       <property name="abr" type="string"/>
       <property name="lang_group" type="string"/>
-      
+      <property name="dtp_lang_group" type="string"/>
    </class>
               
 </hibernate-mapping>

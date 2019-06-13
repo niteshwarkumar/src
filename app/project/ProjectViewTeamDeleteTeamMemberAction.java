@@ -73,6 +73,7 @@ public class ProjectViewTeamDeleteTeamMemberAction  extends Action {
         if(null != linTaskId){
           LinTask linTask = ProjectService.getInstance().getSingleLinTask(Integer.parseInt(linTaskId));
           linTask.setPersonName("");
+          linTask.setScale(null);
           ProjectService.getInstance().updateLinTask(linTask);
         }
         

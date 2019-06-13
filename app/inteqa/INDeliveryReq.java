@@ -17,7 +17,10 @@ public class INDeliveryReq {
     private String clientReqText;
     private boolean clientReqCheck;
     private String clientReqBy;
-            private String fromPorQ;
+    private String fromPorQ;
+    private String type;
+    private String notes;
+    private String instructionsFor;
 
     public String getClientReqBy() {
         return clientReqBy;
@@ -67,6 +70,31 @@ public class INDeliveryReq {
         this.fromPorQ = fromPorQ;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getInstructionsFor() {
+        return instructionsFor;
+    }
+
+    public void setInstructionsFor(String instructionsFor) {
+        this.instructionsFor = instructionsFor;
+    }
+
+    
     
 
     public INDeliveryReq() {
@@ -75,10 +103,5 @@ public class INDeliveryReq {
 
     
 
-    public INDeliveryReq(Integer inDeliveryId, String clientReqText, boolean clientReqCheck, String clientReqBy) {
-        this.inDeliveryId = inDeliveryId;
-        this.clientReqText = clientReqText;
-        this.clientReqCheck = clientReqCheck;
-        this.clientReqBy = clientReqBy;
-    }
+   
 }

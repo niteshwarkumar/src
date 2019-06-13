@@ -102,7 +102,7 @@ public final class BlogAction extends Action {
             jo.put("postedOn", rs.getDate("postedOn"));
 
 
-            System.out.println("author.............."+rs.getString("author"));
+            //System.out.println("author.............."+rs.getString("author"));
             results.add(jo);
             }
             tx.commit();
@@ -142,7 +142,7 @@ public final class BlogAction extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(results.toArray()));

@@ -1,12 +1,13 @@
 package app.quote;
 
 import app.project.Project;
+import app.standardCode.StandardCode;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 import org.apache.commons.lang.builder.ToStringBuilder;
-
+ 
 /** @author Hibernate CodeGenerator */
 public class Quote1 implements Serializable {
 
@@ -149,7 +150,7 @@ public class Quote1 implements Serializable {
         String productCode = "";
         try {
             productCode = this.getProject().getProduct();
-            System.out.println("product cose>>>>>>>>>>>>>" + productCode);
+            //System.out.println("product cose>>>>>>>>>>>>>" + productCode);
             //getCompany().getCompany_code();
         } catch (Exception e) {
             //don't do anything
@@ -203,7 +204,8 @@ public class Quote1 implements Serializable {
     }
 
     public void setNote(String note) {
-        this.note = note;
+//        this.note = note;
+        this.note = StandardCode.getInstance().convertTextToUTF(note);
     }
 
     public String getSubDollarTotal() {
@@ -323,7 +325,8 @@ public class Quote1 implements Serializable {
     }
 
     public java.sql.Timestamp getApprovedTS() {
-        return new java.sql.Timestamp(System.currentTimeMillis());
+//        return new java.sql.Timestamp(System.currentTimeMillis());
+        return approvedTS;
     }
 
     public void setApprovedTS(java.sql.Timestamp approvedTS) {

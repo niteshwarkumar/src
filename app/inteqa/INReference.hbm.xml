@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!--
+    Document   : INReference.hbm.xml
+    Created on : June 10, 2016, 1:04 PM
+    Author     : Niteshwar
+    Description:
+        Purpose of the document follows.
+-->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.inteqa.INReference" table="in_reference">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="projectId" type="int"/>
+        <property name="projectNumber" type="string"/>
+        <property name="quoteId" type="int"/>
+        <property name="quoteNumber" type="string"/>
+        <property name="product" type="string"/>
+        <property name="description" type="string"/>
+  
+    </class>
+</hibernate-mapping>
+  

@@ -60,11 +60,11 @@ public class ForexRates {
 
             // normalize text representation
             doc.getDocumentElement ().normalize ();
-           // System.out.println ("Root element of the doc is " +
+           // //System.out.println ("Root element of the doc is " +
             //     doc.getDocumentElement().getNodeName());
             NodeList listOfPersons = doc.getElementsByTagName("data");
             int totalPersons = listOfPersons.getLength();
-            //System.out.println("Total no of currencies : " + totalPersons);
+            ////System.out.println("Total no of currencies : " + totalPersons);
             for(int s=0; s<listOfPersons.getLength() ; s++){
                 Node firstPersonNode = listOfPersons.item(s);
                 if(firstPersonNode.getNodeType() == Node.ELEMENT_NODE){
@@ -79,7 +79,7 @@ public class ForexRates {
                         Element rateElement = (Element)rateList.item(0);
                         NodeList rateFNList = rateElement.getChildNodes();
                         String rate = ((Node)rateFNList.item(0)).getNodeValue().trim();
-                        //System.out.println("EUR/USD rate:"+rate);
+                        ////System.out.println("EUR/USD rate:"+rate);
                         result = Double.parseDouble(rate);
                     }
 
@@ -89,9 +89,9 @@ public class ForexRates {
             }//end of for loop with s var
 
         }catch (SAXParseException err) {
-        System.out.println ("** Parsing error" + ", line "
-             + err.getLineNumber () + ", uri " + err.getSystemId ());
-        System.out.println(" " + err.getMessage ());
+        //System.out.println ("** Parsing error" + ", line "
+         //    + err.getLineNumber () + ", uri " + err.getSystemId ());
+        //System.out.println(" " + err.getMessage ());
         }catch (SAXException e) {
         Exception x = e.getException ();
         ((x == null) ? e : x).printStackTrace ();

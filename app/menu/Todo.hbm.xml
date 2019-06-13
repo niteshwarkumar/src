@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.menu.Todo" table="Todo">
+   <class name="app.menu.Todo" table="todo">
       <id name="todoId" type="int" column="ID_Todo">
          <generator class="identity"/>
       </id>

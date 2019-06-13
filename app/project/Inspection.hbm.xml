@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.project.Inspection" table="Inspection">
+   <class name="app.project.Inspection" table="inspection">
       <id name="inspectionId" type="int" column="ID_Inspection">
          <generator class="identity"/>
       </id>

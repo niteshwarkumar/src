@@ -74,7 +74,7 @@ public final class ResourceUpdateIssuesAction extends Action {
                 
                 String taskType = key.substring(0, 3);
                 String taskId = key.substring(4);
-                System.out.println("value="+request.getParameter(key));
+                //System.out.println("value="+request.getParameter(key));
                 TeamHelper.updateScoreDescription(taskType,Integer.parseInt(taskId),request.getParameter(key));
             }
         }

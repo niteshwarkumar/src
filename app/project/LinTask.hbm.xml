@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 
 <hibernate-mapping>
-   <class name="app.project.LinTask" table="LinTask">
+   <class name="app.project.LinTask" table="lintask">
       <id name="linTaskId" type="int" column="ID_LinTask">
          <generator class="identity"/>
       </id>
@@ -36,7 +36,7 @@
       <property name="word95" type="java.lang.Integer"/>
       <property name="word85" type="java.lang.Integer"/>
       <property name="word75" type="java.lang.Integer"/>
-      <property name="wordNew" type="java.lang.Integer"/>
+      <property name="wordNew" type="java.lang.Double"/>
       <property name="word8599" type="java.lang.Integer"/>
       <property name="wordNew4" type="java.lang.Double"/>
       <property name="wordPerfect" type="java.lang.Integer"/>
@@ -54,7 +54,7 @@
       <property name="word95Fee" type="java.lang.Integer"/>
       <property name="word85Fee" type="java.lang.Integer"/>
       <property name="word75Fee" type="java.lang.Integer"/>
-      <property name="wordNewFee" type="java.lang.Integer"/>
+      <property name="wordNewFee" type="java.lang.Double"/>
       <property name="word8599Fee" type="java.lang.Integer"/>
       <property name="wordNew4Fee" type="java.lang.Double"/>
       <property name="wordTotalFee" type="java.lang.Double"/>
@@ -79,6 +79,8 @@
 
 
       <many-to-one name="TargetDoc" class="app.project.TargetDoc" column="ID_TargetDoc"/>
+      <many-to-one name="Scale" class="app.project.Scale" column="vendorScale"/>
+      
 
    </class>
 

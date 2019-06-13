@@ -15,6 +15,7 @@ import org.apache.struts.util.MessageResources;
 import org.apache.struts.validator.*;
 import java.util.*;
 import app.security.*;
+import app.standardCode.StandardCode;
 
 
 public final class ProjectSearchAction extends Action {
@@ -81,6 +82,10 @@ public final class ProjectSearchAction extends Action {
         String startDateTo = (String) ps.get("startDateTo");
         String srcLang = (String) ps.get("sourceProjectSearch");
         String tgtLang = (String) ps.get("targetProjectSearch");
+        String pm = (String) ps.get("projectManager");
+        String ae = (String) ps.get("accountManager");
+        String sales = (String) ps.get("sales");
+        String postProjectReview = (String) ps.get("postProjectReview");
         
         String cancelled = request.getParameter("projectSearchCancelled");
 
@@ -89,53 +94,16 @@ public final class ProjectSearchAction extends Action {
         Date deliveryTo = null;
         
         if(deliveryDateFrom!=null){
-            StringTokenizer st = new StringTokenizer(deliveryDateFrom,"/");
-            if(st.countTokens()==3){
-                //valid date
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                
-                String month = st.nextToken();
-                if(month.startsWith("0")){
-                    month = month.substring(1);                 
-                }
-                c.set(Calendar.MONTH, Integer.parseInt(month)-1);
-                String date = st.nextToken();
-                 if(date.startsWith("0")){
-                    date = date.substring(1);                   
-                }
-                c.set(Calendar.DATE, Integer.parseInt(date));
-                
-                String year = st.nextToken();
-                c.set(Calendar.YEAR, Integer.parseInt(year));
-                
-                deliveryFrom = c.getTime();
-            }
+            if(!deliveryDateFrom.equals("")){
+            deliveryFrom = StandardCode.getInstance().formatDate(deliveryDateFrom,"MM/dd/yyyy", "yyyy-MM-dd");
+        }
+
         }
         
         if(deliveryDateTo!=null){
-            StringTokenizer st = new StringTokenizer(deliveryDateTo,"/");
-            if(st.countTokens()==3){
-                
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                //valid date
-                String month = st.nextToken();
-                if(month.startsWith("0")){
-                    month = month.substring(1);
-                    
-                }
-                c.set(Calendar.MONTH, Integer.parseInt(month)-1);
-                String date = st.nextToken();
-                 if(date.startsWith("0")){
-                    date = date.substring(1);
-                   
-                }
-                 c.set(Calendar.DATE, Integer.parseInt(date));
-                
-                String year = st.nextToken();
-                c.set(Calendar.YEAR, Integer.parseInt(year));
-                deliveryTo = c.getTime();
+            if(!deliveryDateTo.equals("")){
+            deliveryTo = StandardCode.getInstance().formatDate(deliveryDateTo,"MM/dd/yyyy", "yyyy-MM-dd");
+
          
             }
         }
@@ -144,57 +112,18 @@ public final class ProjectSearchAction extends Action {
         Date startTo = null;
         
         if(startDateFrom!=null){
-            StringTokenizer st = new StringTokenizer(startDateFrom,"/");
-            if(st.countTokens()==3){
-                //valid date
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                
-                String month = st.nextToken();
-                if(month.startsWith("0")){
-                    month = month.substring(1);                 
-                }
-                c.set(Calendar.MONTH, Integer.parseInt(month)-1);
-                String date = st.nextToken();
-                 if(date.startsWith("0")){
-                    date = date.substring(1);                   
-                }
-                c.set(Calendar.DATE, Integer.parseInt(date));
-                
-                String year = st.nextToken();
-                c.set(Calendar.YEAR, Integer.parseInt(year));
-                
-                startFrom = c.getTime();
-            }
-        }
+            if(!startDateFrom.equals("")){
+            startFrom = StandardCode.getInstance().formatDate(startDateFrom,"MM/dd/yyyy", "yyyy-MM-dd");
+
+            }}
         
         if(startDateTo!=null){
-            StringTokenizer st = new StringTokenizer(startDateTo,"/");
-            if(st.countTokens()==3){
-                
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                //valid date
-                String month = st.nextToken();
-                if(month.startsWith("0")){
-                    month = month.substring(1);
-                    
-                }
-                c.set(Calendar.MONTH, Integer.parseInt(month)-1);
-                String date = st.nextToken();
-                 if(date.startsWith("0")){
-                    date = date.substring(1);
-                   
-                }
-                 c.set(Calendar.DATE, Integer.parseInt(date));
-                
-                String year = st.nextToken();
-                c.set(Calendar.YEAR, Integer.parseInt(year));
-                startTo = c.getTime();
-            }
-        }
+             if(!startDateTo.equals("")){
+            startTo = StandardCode.getInstance().formatDate(startDateTo,"MM/dd/yyyy", "yyyy-MM-dd");
+
+             }}
         //perform search and store results in a List
-        List results = ProjectService.getInstance().getProjectSearch(status, companyName, projectNumber, product, productDescription, notes, invoicing, deliveryFrom, deliveryTo, startFrom, startTo, cancelled,srcLang,tgtLang);
+        List results = ProjectService.getInstance().getProjectSearch(status, companyName, projectNumber, product, productDescription, notes, invoicing, deliveryFrom, deliveryTo, startFrom, startTo, cancelled,srcLang,tgtLang,pm,ae,sales,postProjectReview);
         List results1=null;
 
 

@@ -56,7 +56,7 @@ public class jasperReport extends Action {
 //check for login (security) values
 
 
-        System.out.println("I am here 1");
+        //System.out.println("I am here 1");
 
         User u = UserService.getInstance().getSingleUser((String) request.getSession(false).getAttribute("username"));
 
@@ -68,24 +68,24 @@ public class jasperReport extends Action {
         String jasperReport = "";
         Integer clientId = u.getId_client();
         reportId = request.getParameter("reportId");
-        System.out.println("I am here 2");
+        //System.out.println("I am here 2");
         try {
-            System.out.println("I am here 3");
+            //System.out.println("I am here 3");
             try {
                 clientName = Integer.parseInt(request.getParameter("clientName"));
             } catch (Exception e) {
             }
-            System.out.println("I am here 4");
+            //System.out.println("I am here 4");
             FromDate = request.getParameter("dateB");
-            System.out.println("I am here 5");
+            //System.out.println("I am here 5");
             ToDate = request.getParameter("dateC");
-            System.out.println("I am here 6");
-            System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" + reportId);
+            //System.out.println("I am here 6");
+            //System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" + reportId);
             FromDate = FromDate.replaceAll("/", "-");
             String flip[] = FromDate.split("-");
             FromDate = flip[2] + "-" + flip[0] + "-" + flip[1];
 
-            System.out.println("XXXXXXXXXXX" + FromDate);
+            //System.out.println("XXXXXXXXXXX" + FromDate);
             ToDate = ToDate.replaceAll("/", "-");
 
             flip = ToDate.split("-");
@@ -95,7 +95,7 @@ public class jasperReport extends Action {
         }
         DBConnection dBConnection = new DBConnection();
         Connection con = (Connection) dBConnection.getConnection();
-        System.out.println("I am here 4");
+        //System.out.println("I am here 4");
 
         Map parameters = new HashMap();
         try {
@@ -106,9 +106,9 @@ public class jasperReport extends Action {
         parameters.put("FromDate", FromDate);
         parameters.put("ToDate", ToDate);
         System.setProperty("jasper.reports.compile.class.path","D:/ExcelTransCode/test 3/test/WEB-INF/lib/jasperreports-0.6.1.jar" +System.getProperty("path.separator") +("D:/ExcelTransCode/test 3/test/WEB-INF/classes/"));
-	System.out.println("path1:== " +System.getProperty("jasper.reports.compile.class.path"));
+	//System.out.println("path1:== " +System.getProperty("jasper.reports.compile.class.path"));
         System.setProperty("jasper.reports.compile.temp","D:/ExcelTransCode/test 3/test/pages/Report/");
-        System.out.println("path2:== " +System.getProperty("jasper.reports.compile.temp"));
+        //System.out.println("path2:== " +System.getProperty("jasper.reports.compile.temp"));
 
        // JasperDesign jasperDesign = JRXmlLoader.load("D:/ExcelTransCode/test 3/test/pages/Report/report20.jrxml");
         JasperReport jReport = JasperCompileManager.compileReport("D:/ExcelTransCode/test 3/test/pages/Report/report20.jrxml");
@@ -117,7 +117,7 @@ public class jasperReport extends Action {
         reportId = "";
         try {
             reportId = request.getParameter("reportId");
-            System.out.println("report Name:" + reportId);
+            //System.out.println("report Name:" + reportId);
         } catch (Exception e) {
             reportId = "P18";
         }
@@ -161,13 +161,13 @@ public class jasperReport extends Action {
             exporter.exportReport();
         } catch (JRException e) {
             //throw new ServletException(e);
-            System.out.println(e);
+            //System.out.println(e);
         } finally {
             if (ouputStream != null) {
                 try {
                     ouputStream.close();
                 } catch (IOException ex) {
-                    System.out.println("workorder finally catch:" + ex);
+                    //System.out.println("workorder finally catch:" + ex);
                 }
             }
         }

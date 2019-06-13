@@ -66,7 +66,7 @@ public class QuoteWizard2Action extends Action{
         Project p = ProjectService.getInstance().getSingleProject(newQ.getProject().getProjectId());
 
           int qnum= Integer.parseInt(request.getSession(false).getAttribute("clientQuoteViewId").toString());
-         System.out.println(qnum);
+         //System.out.println(qnum);
 
          // getSingleClient_Quote(Integer id)
         Client_Quote newQA = QuoteService.getInstance().getSingleClient_Quote(qnum);
@@ -87,7 +87,7 @@ public class QuoteWizard2Action extends Action{
         if(mainSrc!=null) {
             for (int i = 0; i < mainSrc.length; i++) {
                 sd.setLanguage(mainSrc[i]);
-                System.out.println("   sd.setLanguage(mainSrc[i]);" + mainSrc[i]);
+                //System.out.println("   sd.setLanguage(mainSrc[i]);" + mainSrc[i]);
                 Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd, newQA, newQ);
                 if (targetLanguage != null) {
                     for (int j = 0; j < targetLanguage.length; j++) {
@@ -99,7 +99,7 @@ public class QuoteWizard2Action extends Action{
                 if (mainTarget != null) {
                     for (int j = 0; j < mainTarget.length; j++) {
                         if (!mainTarget[j].equalsIgnoreCase("t")) {
-                            System.out.println("main Targetttttttttt::::" + mainTarget[j]);
+                            //System.out.println("main Targetttttttttt::::" + mainTarget[j]);
                             TargetDoc td = new TargetDoc(new HashSet(), new HashSet(), new HashSet(), new HashSet());
                             td.setLanguage(mainTarget[j]);
                             Integer x = ProjectService.getInstance().linkSourceDocTargetDoc(sd, td);
@@ -112,7 +112,7 @@ public class QuoteWizard2Action extends Action{
     if(sourceLanguage!=null) {
             for (int i = 0; i < sourceLanguage.length; i++) {
                 sd.setLanguage(sourceLanguage[i]);
-                System.out.println("   sd.setLanguage(mainSrc[i]);" + sourceLanguage[i]);
+                //System.out.println("   sd.setLanguage(mainSrc[i]);" + sourceLanguage[i]);
                 Integer sdId = ProjectService.getInstance().addSourceWithProject(p, sd, newQA, newQ);
                 if (targetLanguage != null) {
                     for (int j = 0; j < targetLanguage.length; j++) {

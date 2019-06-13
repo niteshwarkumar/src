@@ -55,7 +55,7 @@ public class QuoteWizard1Action extends Action {
                 newQ.setPublish(false);
 
             }
-            QuoteService.getInstance().updateQuote(newQ);
+            QuoteService.getInstance().updateQuote(newQ,(String)request.getSession(false).getAttribute("username"));
 
 
         } else {

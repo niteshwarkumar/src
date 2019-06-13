@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.extjs.vo.Communication" table="Communication">
+   <class name="app.extjs.vo.Communication" table="communication">
       <id name="ID_Communication" type="int" column="ID_Communication">
          <generator class="identity"/>
       </id>

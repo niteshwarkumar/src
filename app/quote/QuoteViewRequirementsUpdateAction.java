@@ -5,6 +5,9 @@
 
 package app.quote;
 
+import app.client.ClientContact;
+import app.client.ClientService;
+import app.extjs.vo.Product;
 import app.project.Project;
 import app.project.ProjectService;
 import javax.servlet.http.HttpServletRequest;
@@ -98,18 +101,51 @@ public class QuoteViewRequirementsUpdateAction extends Action {
         String afterWorkTurn = (String) (qvpr.get("afterWorkTurn"));
         String afterWorkTurnUnits = (String) (qvpr.get("afterWorkTurnUnits"));
         String afterWorkTurnReason = (String) (qvpr.get("afterWorkTurnReason"));
+        String reqProjDelDate = (String) (qvpr.get("reqProjDelDate"));
         String newProduct="";
         String[] products=request.getParameterValues("product");
         String productDescription= (String) (qvpr.get("productDescription"));
+        String projectManager = (String) qvpr.get("projectManager");
+        String clientContact = (String) qvpr.get("clientContact");
         
-
+        String caretaker = (String) qvpr.get("caretaker");
+        String orderReqNum = (String) qvpr.get("orderReqNum");
+      
         //update the new values
         Project p = q.getProject();
         p.setBeforeWorkTurnUnits(beforeWorkTurnUnits);
         p.setAfterWorkTurn(afterWorkTurn);
         p.setAfterWorkTurnUnits(afterWorkTurnUnits);
         p.setAfterWorkTurnReason(afterWorkTurnReason);
+        p.setOrderReqNum(orderReqNum);
+        try{
+            p.setReqProjDelDate(DateService.getInstance().convertDate(reqProjDelDate).getTime());
+        }catch(Exception e){}
         p.setBeforeWorkTurn(beforeWorkTurn);
+        if(null == p.getPm()){
+          String[] pmEmail = projectManager.split(" ", 2);
+          User pmUser = UserService.getInstance().getSingleCurrentUserRealName(pmEmail[0], pmEmail[1]);
+          p.setPm(projectManager);
+          p.setPm_id(pmUser.getUserId());
+        }
+        else if(!p.getPm().equalsIgnoreCase(projectManager)){
+          String[] pmEmail = projectManager.split(" ", 2);
+          User pmUser = UserService.getInstance().getSingleCurrentUserRealName(pmEmail[0], pmEmail[1]);
+          p.setPm(projectManager);
+          p.setPm_id(pmUser.getUserId());
+        }
+        
+        if(!p.getContact().equals(clientContact)){
+            ClientContact cc =  ClientService.getInstance().getSingleClientContact(clientContact);
+         p.setContact(cc);
+        }
+        try{
+//        if(!StandardCode.getInstance().noNull(p.getCareTaker()).equals(caretaker)){
+            ClientContact cc =  ClientService.getInstance().getSingleClientContact(caretaker);
+            p.setCareTaker(cc);
+        }catch(Exception e){}
+        
+        
         if(products!=null){
             for(int i=0;i<products.length;i++){
             newProduct+=products[i];
@@ -119,11 +155,15 @@ public class QuoteViewRequirementsUpdateAction extends Action {
         p.setProduct(newProduct);
         }
         p.setProjectDescription(productDescription);
+        p.setProductDescription(productDescription);
 
         //update to db
         ProjectService.getInstance().updateProject(p);
-        QuoteService.getInstance().updateQuote(q);
-
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
+        Client_Quote cq = (Client_Quote) QuoteService.getInstance().getSingleClientQuote(q.getQuote1Id()).get(0);
+        Product prod= ClientService.getSingleProduct(p.getCompany().getClientId(), newProduct.split(",")[0]);
+        cq.setProduct_ID(prod.getID_Product());
+        QuoteService.getInstance().updateClientQuote(cq);
 
 
         //place quote into attribute for display

@@ -16,6 +16,8 @@ import org.apache.struts.util.MessageResources;
 import java.util.*;
 import app.security.*;
 import app.standardCode.StandardCode;
+import app.user.User;
+import app.user.UserService;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import org.apache.struts.validator.*;
@@ -48,6 +50,9 @@ public class CapaIdPreAction extends Action {
         List results = new ArrayList();
 
         String number = request.getParameter("number");
+        if(number == null){
+        number = request.getParameter("id");
+        }
         CapaId capaId = QMSService.getInstance().getSingleCapaId(number);
         Capa capa = QMSService.getInstance().getSingleCapa(number);
 
@@ -56,7 +61,7 @@ public class CapaIdPreAction extends Action {
 //        Date date = ...;  // wherever you get this
 //DateFormat df = new SimpleDateFormat("dd MMMM yyyy");
 //String text = df.format(date);
-//System.out.println(text);
+////System.out.println(text);
        
         DynaValidatorForm uvg = (DynaValidatorForm) form;
 
@@ -88,9 +93,51 @@ public class CapaIdPreAction extends Action {
         }
         try {
             uvg.set("reportedby", StandardCode.getInstance().noNull(capa.getReportedby()));
+//            request.setAttribute("reportedby", StandardCode.getInstance().noNull(capa.getReportedby()));
         } catch (Exception e) {
             uvg.set("reportedby", "");
+//            request.setAttribute("reportedby","");
         }
+        try {
+            uvg.set("reportedbydesc", StandardCode.getInstance().noNull(capa.getReportedbydesc()));
+        } catch (Exception e) {
+            uvg.set("reportedbydesc", "");
+        }
+        try {
+            if(null != capa.getIsLocked()){
+                uvg.set("admin_locked", ""+capa.getIsLocked());
+                request.setAttribute("isLocked", capa.getIsLocked());
+            }else{
+                uvg.set("admin_locked", "false");
+                request.setAttribute("isLocked", Boolean.FALSE);
+            }
+        } catch (Exception e) {
+            uvg.set("admin_locked", "false");
+            request.setAttribute("isLocked", Boolean.FALSE);
+        }
+        
+        try {
+            if (capa.getAdmin_lock_date() == null) {
+                uvg.set("admin_lock_date", "");
+            } else {
+                uvg.set("admin_lock_date", "" + df.format(capa.getAdmin_lock_date()));
+            }
+        } catch (Exception e) {
+            uvg.set("admin_lock_date", "");
+        }
+        
+        try {
+            if(capa.getIsLocked()){
+            User user = UserService.getInstance().getSingleUser(capa.getLockedby());
+           
+             request.setAttribute("lockedBy","The Capa "+capa.getNumber()+" is locked by " +user.getFirstName() +" "+user.getLastName() +" on "+
+                     df.format(capa.getAdmin_lock_date())+". You cannot edit it once locked.<br>"
+                     + "<img src=\"/logo/images/"+user.getSignature()+"\" width=\"148\" height=\"35\" alt=\"Sign\"/>");}
+        } catch (Exception e) {
+            e.printStackTrace();
+             request.setAttribute("lockedBy", "The Capa is locked.You cannot edit it once locked.");
+        }
+       
         try {
             uvg.set("fromc", StandardCode.getInstance().noNull(capa.getFromc()));
         } catch (Exception e) {
@@ -104,13 +151,17 @@ public class CapaIdPreAction extends Action {
         }
         try {
             uvg.set("source", StandardCode.getInstance().noNull(capa.getSource()));
+             request.setAttribute("source", StandardCode.getInstance().noNull(capa.getSource()));
         } catch (Exception e) {
             uvg.set("source", "");
+             request.setAttribute("source", "");
         }
         try {
             uvg.set("status", StandardCode.getInstance().noNull(capa.getStatus()));
+           
         } catch (Exception e) {
             uvg.set("status", "");
+           
         }
         try {
             uvg.set("ncr", StandardCode.getInstance().noNull(capa.getNcr()));
@@ -121,6 +172,29 @@ public class CapaIdPreAction extends Action {
             uvg.set("rca", StandardCode.getInstance().noNull(capaId.getRca()));
         } catch (Exception e) {
             uvg.set("rca", "");
+        }
+        try {
+            uvg.set("imact", StandardCode.getInstance().noNull(capaId.getImact()));
+        } catch (Exception e) {
+            uvg.set("imact", "");
+        }
+        try {
+            if (capaId.getImact_t_date() == null) {
+                uvg.set("imact_t_date", "");
+            } else {
+                uvg.set("imact_t_date", "" + df.format(capaId.getImact_t_date()));
+            }
+        } catch (Exception e) {
+            uvg.set("imact_t_date", "");
+        }
+        try {
+            if (capaId.getImact_a_date() == null) {
+                uvg.set("imact_a_date", "");
+            } else {
+                uvg.set("imact_a_date", "" + df.format(capaId.getImact_a_date()));
+            }
+        } catch (Exception e) {
+            uvg.set("imact_a_date", "");
         }
         try {
             if (capaId.getRca_t_date() == null) {
@@ -325,6 +399,7 @@ public class CapaIdPreAction extends Action {
 
         request.setAttribute("formValue", uvg);
         request.setAttribute("number", number);
+               
 
         return (mapping.findForward("Success"));
 

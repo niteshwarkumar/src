@@ -188,19 +188,21 @@ public class ClientQuoteAdd42Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[1-1]);
                 lt.setOrderNum(new Integer(1));
-                System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
+                //System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
 
                 //Auto set rate fee
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
-                                System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
+                                if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){
+                                 lt.setRateFee(clp[z].getRate());
+//                                //System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                                }
                             }
                         }
                       }
@@ -212,19 +214,21 @@ public class ClientQuoteAdd42Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[2-1]);
                 lt.setOrderNum(new Integer(2));
-                System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
+                //System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
 
                 //Auto set rate fee
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
-                                System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
+                               if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){
+                                 lt.setRateFee(clp[z].getRate());
+//                                //System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                               }
                             }
                         }
                       }
@@ -241,19 +245,21 @@ public class ClientQuoteAdd42Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[1-1]);
                 lt.setOrderNum(new Integer(1));
-                System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
+                //System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
 
                 //Auto set rate fee
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
-                                System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
+                                
+                                 if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){lt.setRateFee(clp[z].getRate());
+//                                //System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                                 }
                             }
                         }
                       }
@@ -270,19 +276,21 @@ public class ClientQuoteAdd42Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[3-1]);
                 lt.setOrderNum(new Integer(3));
-                System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
+                //System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
 
                 //Auto set rate fee
                     if(clp != null){
                          for(int z=0; z<clp.length; z++){
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
-                                lt.setRateFee(clp[z].getRate());
-                                System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
+                               if(clp[z].getTypeOfText().equals(pLazyLoad.getTypeOfText())){
+                                 lt.setRateFee(clp[z].getRate());
+//                                //System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
                                 break;
+                               }
                             }
                         }
                       }
@@ -321,7 +329,7 @@ public class ClientQuoteAdd42Action extends Action {
                 lt.setTargetDoc(td);
                 lt.setTaskName(linTaskOptions[4-1]);
                 lt.setOrderNum(new Integer(4));
-                System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
+                //System.out.println(lt.getTaskName()+lt.getTargetLanguage()+lt.getSourceLanguage());
 
                 //Auto set rate fee
                     if(clp != null){
@@ -329,7 +337,7 @@ public class ClientQuoteAdd42Action extends Action {
                              if(clp[z].getSource()!=null && clp[z].getSource().equals(lt.getSourceLanguage()) && clp[z].getTarget()!=null && clp[z].getTarget().equals(lt.getTargetLanguage())
                                 && clp[z].getTask()!=null && clp[z].getTask().equals("LIN - "+lt.getTaskName())){
                                 lt.setRateFee(clp[z].getRate());
-                                System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
+                                //System.out.println(lt.getTaskName()+"<------->"+clp[z].getRate()+"<------->"+clp[z].getUnits()+"<------->"+clp[z].getSource()+","+clp[z].getTarget());
                                 lt.setUnitsFee(clp[z].getUnits());
                                 lt.setRate(clp[z].getRate());
                                 lt.setUnits(clp[z].getUnits());
@@ -392,7 +400,7 @@ public class ClientQuoteAdd42Action extends Action {
 
   for(Iterator iter = linTasks.iterator(); iter.hasNext();) {
                 LinTask lt = (LinTask) iter.next();
-                //System.out.println("linking task id="+lt.getLinTaskId());
+                ////System.out.println("linking task id="+lt.getLinTaskId());
 
                 //link this linTask to the targetDoc; add new linTask to db
                 Integer y = ProjectService.getInstance().linkTargetDocLinTask(td, lt);

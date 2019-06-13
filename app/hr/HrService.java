@@ -889,7 +889,7 @@ public class HrService
 		 */
 		Session session = ConnectionFactory.getInstance().getSession();
                 Query query;
-                 System.out.println("dropdownType     " +dropdownType);
+                 //System.out.println("dropdownType     " +dropdownType);
 		try
 		{
 			/*
@@ -898,8 +898,8 @@ public class HrService
 			 */
                         //query =	session.createQuery("select client from app.client.Client client  where client.Backup_pm='"+pmName+"'");
 			query =	session.createQuery("select dropdown from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType='"+dropdownType+"' and dropdown.tab='' order by dropdown.priority desc");
-                        //System.out.println("Query List              "+ query.list());
-                        // System.out.println("Query              "+ query);
+                        ////System.out.println("Query List              "+ query.list());
+                        // //System.out.println("Query              "+ query);
                         return query.list();
 
 		}
@@ -942,7 +942,7 @@ public class HrService
 		 */
 		Session session = ConnectionFactory.getInstance().getSession();
                 Query query;
-   System.out.println("dropdownType     " +dropdownType);
+   //System.out.println("dropdownType     " +dropdownType);
 		try
 		{
 			/*
@@ -951,8 +951,8 @@ public class HrService
 			 */
                         //query =	session.createQuery("select client from app.client.Client client  where client.Backup_pm='"+pmName+"'");
 			query =	session.createQuery("select dropdownValue from app.extjs.vo.Dropdown dropdown where dropdown.dropdownType='"+dropdownType+"' and dropdown.tab=''");
-                        //System.out.println("Query List              "+ query.list());
-                        // System.out.println("Query              "+ query);
+                        ////System.out.println("Query List              "+ query.list());
+                        // //System.out.println("Query              "+ query);
                         return query.list();
 
 		}
@@ -1004,8 +1004,8 @@ public class HrService
 			 */
                         //query =	session.createQuery("select client from app.client.Client client  where client.Backup_pm='"+pmName+"'");
 			query =	session.createQuery("select DefaultValue from app.extjs.vo.DefaultValue DefaultValue ");
-                        //System.out.println("Query List              "+ query.list());
-                        // System.out.println("Query              "+ query);
+                        ////System.out.println("Query List              "+ query.list());
+                        // //System.out.println("Query              "+ query);
                         return query.list();
 
 		}

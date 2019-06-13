@@ -82,6 +82,12 @@ public class adminTickerUpdateAction extends Action {
         if (Integer.parseInt(boxNo) == 31) {
             datafromJsp = request.getParameterValues("email6");
         }
+        if (Integer.parseInt(boxNo) == 40) {
+            datafromJsp = request.getParameterValues("email7");
+        }
+        if (Integer.parseInt(boxNo) == 41) {
+            datafromJsp = request.getParameterValues("email8");
+        }
 
         Integer box = Integer.parseInt(boxNo) / 10;
         box = box * 10;

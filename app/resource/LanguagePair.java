@@ -25,9 +25,18 @@ public class LanguagePair implements Serializable {
 
     /** nullable persistent field */
     private boolean nativeLanguage;
+    
+    /** nullable persistent field */
+    private boolean prefferedVendor;
 
     /** nullable persistent field */
     private String country;
+    
+    /** nullable persistent field */
+    private Integer experienceSince;
+    
+    /** nullable persistent field */
+    private String level;
 
     /** nullable persistent field */
     private app.resource.Resource Resource;
@@ -46,6 +55,18 @@ public class LanguagePair implements Serializable {
         this.Resource = Resource;
         this.RateScoreLanguages = RateScoreLanguages;
     }
+      public LanguagePair( String source, Integer sourceId, String target, Integer targetId, boolean nativeLanguage, boolean prefferedVendor, String country, Resource Resource, Set RateScoreLanguages) {
+        this.source = source;
+        this.sourceId = sourceId;
+        this.target = target;
+        this.targetId = targetId;
+        this.nativeLanguage = nativeLanguage;
+        this.prefferedVendor = prefferedVendor;
+        this.country = country;
+        this.Resource = Resource;
+        this.RateScoreLanguages = RateScoreLanguages;
+    }
+
 
     /** default constructor */
     public LanguagePair() {
@@ -133,5 +154,31 @@ public class LanguagePair implements Serializable {
             .append("languagePairId", getLanguagePairId())
             .toString();
     }
+
+    public boolean isPrefferedVendor() {
+        return prefferedVendor;
+    }
+
+    public void setPrefferedVendor(boolean prefferedVendor) {
+        this.prefferedVendor = prefferedVendor;
+    }
+
+    public Integer getExperienceSince() {
+        return experienceSince;
+    }
+
+    public void setExperienceSince(Integer experienceSince) {
+        this.experienceSince = experienceSince;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+    
+    
 
 }

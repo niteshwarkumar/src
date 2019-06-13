@@ -6,6 +6,9 @@
 package app.qms;
 
 import app.extjs.helpers.HrHelper;
+import app.user.Training;
+import app.user.User;
+import app.user.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -17,6 +20,7 @@ import org.apache.struts.action.ActionMapping;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 /**
@@ -62,13 +66,21 @@ public class QMSLibraryHistoryStore extends Action {
         for (int i = 0; i < docList.size(); i++) {
             QMSLibraryHistory lu = (QMSLibraryHistory) docList.get(i);
             JSONObject jo = new JSONObject();
-
+            
             jo.put("id", lu.getId());
             jo.put("title", lu.getTitle());
             jo.put("docId", lu.getDocId());
             jo.put("version", lu.getVersion());
             jo.put("release", lu.getReleaseDate());
             jo.put("changes", lu.getChanges());
+            jo.put("trained", lu.getTrained());
+             jo.put("fileName", "<input type='button' value='Upload' class='x-btn' onclick=\"javascript:uploadTrainingDocument(" + lu.getId() + ")\">");
+            if(null!=lu.getFileName()){
+            if(!"".equalsIgnoreCase(lu.getFileName())){
+             jo.put("fileName", "<a href=\"http://excelnet.xltrans.com/logo/Library/History/" + lu.getFileName() + "\" target=\"_blank\">" + lu.getFileSaveName() + "</a>");
+            }
+            }
+
 
             results.add(jo);
         }

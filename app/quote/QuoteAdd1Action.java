@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionError;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -107,7 +107,7 @@ public final class QuoteAdd1Action extends Action {
          newQ.setEnteredById((String)request.getSession(false).getAttribute("username"));
          newQ.setEnteredByTS(new Date());
         }
-        QuoteService.getInstance().updateQuote(newQ);
+        QuoteService.getInstance().updateQuote(newQ,(String)request.getSession(false).getAttribute("username"));
         
         //START add Inspection list to this project
         Project p = QuoteService.getInstance().getSingleQuote(quoteId).getProject();

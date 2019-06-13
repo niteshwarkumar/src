@@ -45,7 +45,7 @@ public class VersionControlEditAction extends Action {
                 try {
                     java.sql.Date d2 = new java.sql.Date(df.parse(j.getString("releaseDate")).getTime());
                     vc.setReleaseDate(d2);
-                    // System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
+                    // //System.out.println("first Date is>>>>>>>>>>>>>>>>>"+  (df.parse(j.getString("firstDraft")).getTime()));
                 } catch (Exception ex) {
                 }
 

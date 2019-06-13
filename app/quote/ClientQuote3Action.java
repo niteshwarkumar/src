@@ -44,7 +44,7 @@ public class ClientQuote3Action extends Action{
         }
        // String quoteId = request.getParameter("quoteViewId");
         String quoteId = StandardCode.getInstance().getCookie("quoteAddId", request.getCookies());
-         System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"+quoteId);
+         //System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"+quoteId);
 
         //String quoteViewId=request.getSession(false).getAttribute("quoteViewId").toString();
      try{
@@ -58,14 +58,14 @@ public class ClientQuote3Action extends Action{
        Integer Cquote= Integer.parseInt(quoteId);
        List cq=QuoteService.getInstance().getClient_Quote(Cquote);
        Integer cqid=0;
-         System.out.println("cq sizeeeeeeeeeeeeeeeeeeee"+cq.size());
+         //System.out.println("cq sizeeeeeeeeeeeeeeeeeeee"+cq.size());
        for(int i=0;i<cq.size();i++)
        {
            Client_Quote Quote=(Client_Quote) cq.get(i);
        cqid=Quote.getId();
        
        }  
-         System.out.println("iddddddddddddddddddd" + cqid);
+         //System.out.println("iddddddddddddddddddd" + cqid);
 
          
          if(qid==0){
@@ -74,7 +74,7 @@ public class ClientQuote3Action extends Action{
          HttpSession session = request.getSession(false);
          session.setAttribute("clientQuoteId", String.valueOf(cqid));
          session.setAttribute("pid", String.valueOf(pid));
-          System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiii" + request.getSession(false).getAttribute("clientQuoteId").toString());
+          //System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiii" + request.getSession(false).getAttribute("clientQuoteId").toString());
            return (mapping.findForward("Iterate"));
            
             
@@ -84,7 +84,7 @@ public class ClientQuote3Action extends Action{
         HttpSession session = request.getSession(false);
         session.setAttribute("clientQuoteId", String.valueOf(qid+1));
         session.setAttribute("pid", String.valueOf(pid+1));
-         System.out.println("dddddddddddddddddddddddddddddddd" + request.getSession(false).getAttribute("clientQuoteId").toString());
+         //System.out.println("dddddddddddddddddddddddddddddddd" + request.getSession(false).getAttribute("clientQuoteId").toString());
          return (mapping.findForward("Iterate"));
          
          
@@ -98,7 +98,7 @@ public class ClientQuote3Action extends Action{
         Integer zero=0;
         session.setAttribute("clientQuoteId", String.valueOf(zero));
          session.setAttribute("pid", String.valueOf(zero));
-           System.out.println("zeroooooooooooooooo" +request.getSession(false).getAttribute("clientQuoteId").toString());
+           //System.out.println("zeroooooooooooooooo" +request.getSession(false).getAttribute("clientQuoteId").toString());
         return (mapping.findForward("Success"));}
     }
 

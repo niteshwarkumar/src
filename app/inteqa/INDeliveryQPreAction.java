@@ -20,6 +20,7 @@ import java.util.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
+import org.json.JSONObject;
 
 /**
  *
@@ -239,6 +240,60 @@ public class INDeliveryQPreAction extends Action {
 
         request.setAttribute("project", p);
         request.setAttribute("fromPorQ", "Q");
+        
+          List requirement = new ArrayList();
+         INDelivery indel=InteqaService.getInstance().getINDelivery(Integer.parseInt(projectId));
+        if(null!=indel){
+         List inDelR = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(),"R");
+        for (int i = 0; i < inDelR.size(); i++) {
+            INDeliveryReq inDeliveryReq = (INDeliveryReq) inDelR.get(i);
+            JSONObject jo = new JSONObject();
+            if (fromPorQ.equalsIgnoreCase("Q")) {
+                if (inDeliveryReq.getFromPorQ().equalsIgnoreCase("Q")) {
+                    jo.put("requirement", inDeliveryReq.getClientReqText());
+                    jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                    jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                    jo.put("id", inDeliveryReq.getId());
+                    requirement.add(jo);
+                }
+            } else {
+                jo.put("requirement", inDeliveryReq.getClientReqText());
+                jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                jo.put("id", inDeliveryReq.getId());
+                requirement.add(jo);
+            }
+            
+        }
+        List instruction = new ArrayList();
+        List inDelI = InteqaService.getInstance().getInDeliveryReqGrid(indel.getId(),"I");
+        for (int i = 0; i < inDelI.size(); i++) {
+            INDeliveryReq inDeliveryReq = (INDeliveryReq) inDelI.get(i);
+            JSONObject jo = new JSONObject();
+            if (fromPorQ.equalsIgnoreCase("Q")) {
+                if (inDeliveryReq.getFromPorQ().equalsIgnoreCase("Q")) {
+                    jo.put("requirement", inDeliveryReq.getClientReqText());
+                    jo.put("instructionsFor", inDeliveryReq.getInstructionsFor());
+                    jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                    jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                    jo.put("notes", inDeliveryReq.getNotes());
+                    jo.put("id", inDeliveryReq.getId());
+                    instruction.add(jo);
+                }
+            } else {
+                jo.put("requirement", inDeliveryReq.getClientReqText());
+                jo.put("instructionsFor", inDeliveryReq.getInstructionsFor());
+                jo.put("reqCheck", inDeliveryReq.isClientReqCheck());
+                jo.put("reqBy", inDeliveryReq.getClientReqBy());
+                jo.put("notes", inDeliveryReq.getNotes());
+                jo.put("id", inDeliveryReq.getId());
+                instruction.add(jo);
+            }
+            
+        }
+         request.setAttribute("requirement", requirement.toString());
+         request.setAttribute("instruction", instruction.toString());
+        }
         // Forward control to the specified success URI
         
              return (mapping.findForward("Success"));

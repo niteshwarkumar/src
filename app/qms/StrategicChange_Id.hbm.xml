@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+    <class name="app.qms.StrategicChange_Id" table="strategicchange_id">
+        <id name="sid" type="int" column="sid">
+            <generator class="identity"/>
+        </id>
+
+  <property name="number" type="string"/>
+  <property name="description" type="string"/>
+  <property name="target" type="string"/>
+  <property name="analysis_desired" type="string"/>
+  <property name="analysis_nondesired" type="string"/>
+  <property name="analysis_action" type="string"/>
+  <property name="prn_onetime" type="string"/>
+  <property name="prn_ongoing" type="string"/>
+  <property name="approval" type="string"/>
+  <property name="approvalby" type="string"/>
+  <property name="approval_date" type="date"/>
+  <property name="approval_note" type="string"/>
+  <property name="close_owner" type="string"/>
+  <property name="close_supervisor" type="string"/>
+  
+  <property name="close_comment" type="string"/>
+    <property name="actionp1" type="string"/>
+    <property name="actionp2" type="string"/>
+    <property name="actionp3" type="string"/>
+    <property name="actionp4" type="string"/>
+    <property name="responsiblep1" type="string"/>
+    <property name="responsiblep2" type="string"/>
+    <property name="responsiblep3" type="string"/>
+    <property name="responsiblep4" type="string"/>
+    <property name="effectivenessp1" type="string"/>
+    <property name="effectivenessp2" type="string"/>
+    <property name="effectivenessp3" type="string"/>
+    <property name="effectivenessp4" type="string"/>
+    <property name="approverp1" type="string"/>
+    <property name="approverp2" type="string"/>
+    <property name="approverp3" type="string"/>
+    <property name="approverp4" type="string"/>
+    <property name="approvalp1" type="string"/>
+    <property name="approvalp2" type="string"/>
+    <property name="approvalp3" type="string"/>
+    <property name="approvalp4" type="string"/>
+    <property name="duedatep1" type="date"/>
+    <property name="duedatep2" type="date"/>
+    <property name="duedatep3" type="date"/>
+    <property name="duedatep4" type="date"/>
+    <property name="doip1" type="date"/>
+    <property name="doip2" type="date"/>
+    <property name="doip3" type="date"/>
+    <property name="doip4" type="date"/>
+
+    </class>
+</hibernate-mapping>

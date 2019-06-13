@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+    
+<hibernate-mapping>
+    <class name="app.admin.MailingList" table="mailinglist">
+        <id name="mailid" type="java.lang.Integer">
+            <column name="mailid" />
+            <generator class="identity" />
+        </id>
+        <property name="mailName" type="string">
+            <column name="mailName" length="150" />
+        </property>
+        <property name="mailType" type="string">
+            <column name="mailType" length="100" />
+        </property>
+        <property name="mailCategory" type="string">
+            <column name="mailCategory" length="10" />
+        </property>
+        <property name="filter1" type="string">
+            <column name="filter1" length="45" />
+        </property>
+        <property name="filter2" type="string">
+            <column name="filter2" length="45" />
+        </property>
+        <property name="filter3" type="string">
+            <column name="filter3" length="45" />
+        </property>
+        <property name="filter4" type="string">
+            <column name="filter4" length="45" />
+        </property>
+        <property name="filter5" type="string">
+            <column name="filter5" length="45" />
+        </property>
+        <property name="filter6" type="string">
+            <column name="filter6" length="45" />
+        </property>
+        <property name="filter7" type="string">
+            <column name="filter7" length="45" />
+        </property>
+        <property name="filter8" type="string">
+            <column name="filter8" length="45" />
+        </property>
+        <property name="filter9" type="string">
+            <column name="filter9" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -80,6 +80,7 @@ public final class ResourceSearch2Action extends Action {
 
         String Status = (String) rs.get("resourceSearchStatus");
         String IncludeDoNot = request.getParameter("resourceSearchIncludeDoNot");
+         String isagency = request.getParameter("resourceSearchisAgency");
         String RiskRating = "";
         try {
             RiskRating = (String) rs.get("resourceSearchRiskRating");
@@ -94,7 +95,12 @@ public final class ResourceSearch2Action extends Action {
         String businesssuport = request.getParameter("resourceSearchBusinesssuport");
         String fqa = request.getParameter("resourceSearchFqa");
 
-
+        String medicalScore = request.getParameter("resourceSearchScoresLin[0]");
+        String technicalScore = request.getParameter("resourceSearchScoresLin[1]");
+        String softwareScore = request.getParameter("resourceSearchScoresLin[2]");
+        String legalScore = request.getParameter("resourceSearchScoresLin[3]");
+        String marketingScore = request.getParameter("resourceSearchScoresLin[4]");
+        
         String informationTechnology = request.getParameter("resourceSearchInformationTechnology");
         String humanResource = request.getParameter("resourceSearchHumanResource");
         String office = request.getParameter("resourceSearchOffice");
@@ -102,7 +108,7 @@ public final class ResourceSearch2Action extends Action {
         String accounting = request.getParameter("resourceSearchAccounting");
         String bsdOther = request.getParameter("resourceSearchBsdOther");
         String prodOther = request.getParameter("resourceSearchProdOther");
-
+        String postEditing = request.getParameter("resourceSearchPostEditing");
         if (informationTechnology == null) {
             rs.set("resourceSearchInformationTechnology", "off");
         }
@@ -122,10 +128,13 @@ public final class ResourceSearch2Action extends Action {
             rs.set("resourceSearchBsdOther", "off");
         }
         if (prodOther == null) {
-            rs.set("resourceSearchProdOther", "off");
+            rs.set("resourceSearchPostEditing", "off");
         }
-
-
+        
+        if (postEditing == null) {
+            rs.set("resourceSearchHumanResource", "off");
+        }
+        
         if (other == null) {
             rs.set("resourceSearchOther", "off");
         }
@@ -155,6 +164,10 @@ public final class ResourceSearch2Action extends Action {
 
         if (IncludeDoNot == null) {
             rs.set("resourceSearchIncludeDoNot", "off");
+        }
+        
+        if (isagency == null) {
+            rs.set("resourceSearchisAgency", "off");
         }
 
         String Translator = request.getParameter("resourceSearchTranslator");
@@ -235,6 +248,7 @@ public final class ResourceSearch2Action extends Action {
         String Country = (String) rs.get("resourceSearchCountry");
 
         String Resume = (String) rs.get("resourceSearchResume");
+        String Note = (String) rs.get("resourceSearchNote");
         String clientName = request.getParameter("clientName");
 
         String resourceSearchExpert = request.getParameter("resourceSearchExpert");
@@ -252,9 +266,30 @@ public final class ResourceSearch2Action extends Action {
         if (resourceSearchQuality == null) {
             rs.set("resourceSearchQuality", "off");
         }
+        String secondary= request.getParameter("resourceSearchSecondary");
+        String teamClient= request.getParameter("resourceSearchClientName");
+        String level= request.getParameter("resourceSearchLevel");
+        String primary= request.getParameter("resourceSearchPrimary");
+        HashMap<String, String> resourceMap  = new HashMap<String, String>();
+        resourceMap.put("secondary", secondary);
+        resourceMap.put("teamClient", teamClient);
+        resourceMap.put("level", level);
+        resourceMap.put("primary", primary);
 //perform search and store results in a List
 //perform main search
-        List results = ResourceService.getInstance().getResourceSearch(clientName, FirstName, LastName, SingleCompanyName, ContactFirstName, ContactLastName, Agency, OldId, SourceId, TargetId, source, target, Status, IncludeDoNot, Translator, Editor, Proofreader, Evaluator, Dtp, Icr, TRate, ERate, TERate, PRate, DtpRate, dtpSource, dtpTarget, RateOldDb, Specific, General, ScoresLin, ResourceService.getInstance().getRateScoreCategoryList(), ScoreOldDb, ProjectScoreGreater, UsesTrados, UsesSdlx, UsesDejavu, UsesCatalyst, UsesOtherTool1, UsesOtherTool2, UsesTransit, City, Country, Resume, other, tne, consultant, partner, engineering, businesssuport, fqa, resourceSearchQuality, resourceSearchInterpreting, resourceSearchExpert, RiskRating, informationTechnology, humanResource, office, sales, accounting, bsdOther, prodOther);
+         long startTime = System.currentTimeMillis();
+        List results = ResourceService.getInstance().getResourceSearch(clientName, FirstName, LastName, SingleCompanyName, ContactFirstName, 
+                ContactLastName, Agency, OldId, SourceId, TargetId, source, target, Status, IncludeDoNot, isagency, Translator, Editor, Proofreader, 
+                Evaluator, Dtp, Icr, TRate, ERate, TERate, PRate, DtpRate, dtpSource, dtpTarget, RateOldDb, Specific, General, ScoresLin, 
+                ResourceService.getInstance().getRateScoreCategoryList(), ScoreOldDb, ProjectScoreGreater, UsesTrados, UsesSdlx, UsesDejavu, 
+                UsesCatalyst, UsesOtherTool1, UsesOtherTool2, UsesTransit, City, Country, Resume, other, tne, consultant, partner, engineering, 
+                businesssuport, fqa, resourceSearchQuality, resourceSearchInterpreting, resourceSearchExpert, RiskRating, informationTechnology, 
+                humanResource, office, sales, accounting, bsdOther, prodOther,postEditing, Note,medicalScore,technicalScore,softwareScore,legalScore,
+                marketingScore, resourceMap);
+         long endTime = System.currentTimeMillis();
+
+//System.out.println("Total execution time fetching: " + (endTime - startTime) );
+startTime = System.currentTimeMillis();
         List results1 = null; //oldRate and oldScore from old db is required
         List results2 = null; //just oldRate from old db is required
         List results3 = null; //just oldScore from old db is required
@@ -377,7 +412,9 @@ public final class ResourceSearch2Action extends Action {
 //sort the list by id
             Collections.sort(finalResults, CompareResource.getInstance());
         }
+  endTime = System.currentTimeMillis();
 
+//System.out.println("Total execution time processing: " + (endTime - startTime) );
 //place results in attribute for displaying in jsp
         request.setAttribute("results", finalResults);
 

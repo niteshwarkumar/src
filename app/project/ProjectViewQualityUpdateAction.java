@@ -71,27 +71,27 @@ public final class ProjectViewQualityUpdateAction extends Action {
          User u = UserService.getInstance().getSingleUser((String)request.getSession(false).getAttribute("username"));
         //get qualities to update
         String userName=u.getFirstName()+" "+u.getLastName();
-        DynaValidatorForm qvg = (DynaValidatorForm) form;
-        Quality[] qualities = (Quality[]) qvg.get("qualities");    
+//        DynaValidatorForm qvg = (DynaValidatorForm) form;
+//        Quality[] qualities = (Quality[]) qvg.get("qualities");    
         Integer projectId = null;
         //process each updated quality to db
-        for(int i = 0; i < qualities.length; i++) {
-                Quality q = qualities[i];
-                projectId = q.getProject().getProjectId();
-                //START update quality dates
-                String qualityDateRaised = request.getParameter("qualityDateRaised" + String.valueOf(i));
-                if(qualityDateRaised.length() >= 1) {
-                    q.setDateRaised(DateService.getInstance().convertDate(qualityDateRaised).getTime());
-                }
-                String qualityDateClosed = request.getParameter("qualityDateClosed" + String.valueOf(i));
-                if(qualityDateClosed.length() >= 1) {
-                    q.setDateClosed(DateService.getInstance().convertDate(qualityDateClosed).getTime());
-                }
-                //END update quality dates
-            
-                //upload quality changes to db
-                ProjectService.getInstance().updateQuality(q);
-        }
+//        for(int i = 0; i < qualities.length; i++) {
+//                Quality q = qualities[i];
+//                projectId = q.getProject().getProjectId();
+//                //START update quality dates
+//                String qualityDateRaised = request.getParameter("qualityDateRaised" + String.valueOf(i));
+//                if(qualityDateRaised.length() >= 1) {
+//                    q.setDateRaised(DateService.getInstance().convertDate(qualityDateRaised).getTime());
+//                }
+//                String qualityDateClosed = request.getParameter("qualityDateClosed" + String.valueOf(i));
+//                if(qualityDateClosed.length() >= 1) {
+//                    q.setDateClosed(DateService.getInstance().convertDate(qualityDateClosed).getTime());
+//                }
+//                //END update quality dates
+//            
+//                //upload quality changes to db
+//                ProjectService.getInstance().updateQuality(q);
+//        }
         
         if(request.getParameter("projectInformalsJSON")!=null){
             

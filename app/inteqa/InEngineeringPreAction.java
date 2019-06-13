@@ -217,7 +217,7 @@ public class InEngineeringPreAction extends Action {
         } catch (Exception e) {
             uvg1.set("prepTime", "");
 
-            System.out.println("erooooooor" + e.getMessage());
+            //System.out.println("erooooooor" + e.getMessage());
         }
         try {
             uvg1.set("prepLang", "" + INEngg.getPrepLang());
@@ -408,7 +408,11 @@ public class InEngineeringPreAction extends Action {
         } catch (Exception e) {
             uvg1.set("lpr6", "");
         }
-
+    try {
+            uvg1.set("lpr3Text", "" + StandardCode.getInstance().noNull(INEngg.getLpr3Text()));
+        } catch (Exception e) {
+            uvg1.set("lpr3Text", "");
+        }
         try {
             uvg1.set("lpr5Text", "" + StandardCode.getInstance().noNull(INEngg.getLpr5Text()));
         } catch (Exception e) {

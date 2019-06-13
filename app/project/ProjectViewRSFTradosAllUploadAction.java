@@ -18,6 +18,7 @@ import app.quote.*;
 import app.standardCode.*;
 import app.security.*;
 import app.extjs.global.*;
+import static app.project.ProjectViewTeamTradosAllUploadAction.deleteFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -111,30 +112,43 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
             Quote1 first = (Quote1) results.get(0);
             projectId = String.valueOf(first.getQuote1Id());
         }
+        
 //projectId="6553";
         Integer id = Integer.valueOf(projectId);
+        
         String[] dataValue = new String[11];
         Project p = ProjectService.getInstance().getSingleProject(Integer.parseInt(projectId));
         //END get id of current quote from either request, attribute, or cookie
-
+        
+        String change ="";
+        change = request.getParameter("change");
+        //check attribute in request
+        if (change == null) {
+            change = (String) request.getAttribute("change");
+        }
+        if (change == null) {
+            change = "";
+        }
         //get quote to add files to
         // Quote1 q = QuoteService.getInstance().getSingleQuote(p.getQuotes());
         Set sources = p.getSourceDocs();
         //get the lin task to update
         //String linTaskId = StandardCode.getInstance().getCookie("quoteViewGeneralTradosUploadId", request.getCookies());
-        System.out.println(sources.size());
-
-        File folder = new File("C:/log");
+        //System.out.println(sources.size());
+        String filePath = "C:/log/";
+//        filePath="/Users/abhisheksingh/Project/log/";
+        File folder = new File(filePath);
+           try{
         File[] listOfFiles = folder.listFiles();
         for (int ij = 0; ij < listOfFiles.length; ij++) {
-            if (listOfFiles[ij].isFile() && (listOfFiles[ij].getName().endsWith(".log")) || listOfFiles[ij].getName().endsWith(".xls") || listOfFiles[ij].getName().endsWith(".xlsx") || listOfFiles[ij].getName().endsWith(".xml")) {
+            if (listOfFiles[ij].isFile() && (listOfFiles[ij].getName().toLowerCase().endsWith(".log")) || listOfFiles[ij].getName().toLowerCase().endsWith(".xls") || listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx") || listOfFiles[ij].getName().toLowerCase().endsWith(".xml")) {
                 String lang = "";
-                System.out.println("File " + listOfFiles[ij].getName());
+                //System.out.println("File " + listOfFiles[ij].getName());
                 String myFile = listOfFiles[ij].getName();
                 Integer leng = myFile.length();
-                if (listOfFiles[ij].getName().endsWith(".log")) {
+                if (listOfFiles[ij].getName().toLowerCase().endsWith(".log")) {
                     lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 6, leng - 4));
-                } else if (listOfFiles[ij].getName().endsWith(".xlsx")) {
+                } else if (listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx")) {
                     lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 7, leng - 5));
                 } else {
                     lang = (String) LanguageAbs.getInstance().getAbs().get(myFile.substring(leng - 6, leng - 4));
@@ -152,15 +166,15 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
 
                             List linTasklist = QuoteService.getInstance().getLinTask(td.getTargetDocId());
                             for (int k = 0; k < linTasklist.size(); k++) {
-
                                 LinTask lt = (LinTask) linTasklist.get(k);
-
+//System.out.println(td.getLanguage()+"|"+sd.getLanguage()+"|"+StandardCode.getInstance().noNull(lt.getChangeDesc())+"|"+td.getTargetDocId()+"|"+lt.getTaskName()+"|");    
+                                if(StandardCode.getInstance().noNull(lt.getChangeDesc()).equalsIgnoreCase(change)){
 
 
                                 //get input stream
                                 //InputStream in = listOfFiles[ij].getInputStream();
 
-                                if (listOfFiles[ij].getName().endsWith(".log")) {
+                                if (listOfFiles[ij].getName().toLowerCase().endsWith(".log")) {
 
                                     FileInputStream in = new FileInputStream(listOfFiles[ij]);
                                     //byte[] fileData = listOfFiles[ij].getFileData(); //byte array of entire file
@@ -339,7 +353,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                             lt.setWord95Fee(num95);
                                             lt.setWord85Fee(num85);
                                             lt.setWord75Fee(num75);
-                                            lt.setWordNewFee(new Integer(numNew));
+                                            lt.setWordNewFee(new Double(numNew));
                                             lt.setWord8599Fee(new Integer(num8599));
                                             lt.setWordNew4Fee(new Double(numNew4));
                                             lt.setWordTotalFee(numTotal);
@@ -348,7 +362,17 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                             lt.setWordNew4Fee(numTotal);
                                             lt.setWordTotalFee(numTotal);
 
-                                        }
+                                        }else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                       lt.setWordRepFee(numRep);
+                                            lt.setWord100Fee(num100);
+                                            lt.setWord95Fee(num95);
+                                            lt.setWord85Fee(num85);
+                                            lt.setWord75Fee(num75);
+                                            lt.setWordNewFee(new Double(numNew));
+                                            lt.setWord8599Fee(new Integer(num8599));
+                                            lt.setWordNew4Fee(new Double(numNew4));
+                                            lt.setWordTotalFee(numTotal);
+                                    }
                                         //upload the new trados values to db
                                         ProjectService.getInstance().updateLinTask(lt);
 
@@ -373,9 +397,9 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                     }
                                     in.close();
 
-                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xls")) {
+                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xls")) {
 
-                                    POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/" + listOfFiles[ij].getName()));
+                                    POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filePath+"/" + listOfFiles[ij].getName()));
 
                                     HSSFWorkbook wb = new HSSFWorkbook(fs);
                                     HSSFSheet sheet = wb.getSheetAt(0);
@@ -400,7 +424,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                                 if (count == 4 && flag.equalsIgnoreCase("true")) {
                                                     dataValue[i++] = cell.toString();
 
-                                                    System.out.println("cel value---------->  " + cell.toString());
+                                                    //System.out.println("cel value---------->  " + cell.toString());
 
                                                     if (i > 10) {
                                                         flag = "false";
@@ -408,7 +432,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
 
                                                 }
                                             } catch (Exception e) {
-                                                System.out.println("Integer Value" + count++);
+                                                //System.out.println("Integer Value" + count++);
                                             }
                                         }
                                     }
@@ -435,7 +459,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                         lt.setWord95Fee(num95);
                                         lt.setWord85Fee(num85);
                                         lt.setWord75Fee(num75);
-                                        lt.setWordNewFee(new Integer(numNew));
+                                        lt.setWordNewFee(new Double(numNew));
                                         lt.setWord8599Fee(new Integer(num8599));
                                         lt.setWordNew4Fee(new Double(numNew4));
                                         lt.setWordContextFee(numContext);
@@ -446,17 +470,29 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                         lt.setWordNew4Fee(numTotal);
                                         lt.setWordTotalFee(numTotal);
 
+                                    } else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRepFee(numRep);
+                                        lt.setWord100Fee(num100);
+                                        lt.setWord95Fee(num95);
+                                        lt.setWord85Fee(num85);
+                                        lt.setWord75Fee(num75);
+                                        lt.setWordNewFee(new Double(numNew));
+                                        lt.setWord8599Fee(new Integer(num8599));
+                                        lt.setWordNew4Fee(new Double(numNew4));
+                                        lt.setWordContextFee(numContext);
+                                        lt.setWordPerfectFee(numPerfect);
+                                        lt.setWordTotalFee(numTotal);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
 
-                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xlsx")) {
+                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xlsx")) {
 //                                      POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream("C:/log/" + listOfFiles[ij].getName()));
 //                                    File file = new File("C:/log/" + listOfFiles[ij].getName());
 //                                   OPCPackage pkg = OPCPackage.open(new FileInputStream(file.getAbsolutePath()));
 //                                    XSSFWorkbook wb = new XSSFWorkbook(pkg);
-                                    InputStream fs = new FileInputStream("C:/log/" + listOfFiles[ij].getName());
+                                    InputStream fs = new FileInputStream(filePath+"/" + listOfFiles[ij].getName());
                                     XSSFWorkbook wb = new XSSFWorkbook(fs);
 
 //                                    XSSFWorkbook wb = new XSSFWorkbook(fs);
@@ -482,7 +518,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                                 if (count == 4 && flag.equalsIgnoreCase("true")) {
                                                     dataValue[i++] = cell.toString();
 
-                                                    System.out.println("cel value---------->  " + cell.toString());
+                                                    //System.out.println("cel value---------->  " + cell.toString());
 
                                                     if (i > 10) {
                                                         flag = "false";
@@ -490,7 +526,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
 
                                                 }
                                             } catch (Exception e) {
-                                                System.out.println("Integer Value" + count++);
+                                                //System.out.println("Integer Value" + count++);
                                             }
                                         }
                                     }
@@ -515,7 +551,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                         lt.setWord95Fee(num95);
                                         lt.setWord85Fee(num85);
                                         lt.setWord75Fee(num75);
-                                        lt.setWordNewFee(new Integer(numNew));
+                                        lt.setWordNewFee(new Double(numNew));
                                         lt.setWord8599Fee(new Integer(num8599));
                                         lt.setWordNew4Fee(new Double(numNew4));
                                         lt.setWordTotalFee(numTotal);
@@ -524,19 +560,29 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                         lt.setWordNew4Fee(numTotal);
                                         lt.setWordTotalFee(numTotal);
 
+                                    }else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRepFee(numRep);
+                                        lt.setWord100Fee(num100);
+                                        lt.setWord95Fee(num95);
+                                        lt.setWord85Fee(num85);
+                                        lt.setWord75Fee(num75);
+                                        lt.setWordNewFee(new Double(numNew));
+                                        lt.setWord8599Fee(new Integer(num8599));
+                                        lt.setWordNew4Fee(new Double(numNew4));
+                                        lt.setWordTotalFee(numTotal);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
-                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().endsWith(".xml")) {
+                                } else if (listOfFiles[ij].isFile() && listOfFiles[ij].getName().toLowerCase().endsWith(".xml")) {
 
-                                    InputStream in = new FileInputStream("C:/log/" + listOfFiles[ij].getName());
+                                    InputStream in = new FileInputStream(filePath+"/" + listOfFiles[ij].getName());
                                     System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
                                     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                                     Document doc = dBuilder.parse(in);
                                     doc.getDocumentElement().normalize();
-                                    System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+                                    //System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
                                     Integer numRep = 0;
                                     Integer numRepCross = 0;
                                     Integer num100 = 0;
@@ -570,7 +616,7 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
 
                                                         Node nNode = fuzzy.item(temp);
 
-                                                        System.out.println("\nCurrent Element :" + nNode.getNodeName());
+                                                        //System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
                                                         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -681,24 +727,37 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                                         lt.setWord95Fee(num95);
                                         lt.setWord85Fee(num85);
                                         lt.setWord75Fee(num75);
-                                        lt.setWordNewFee(new Integer(numNew));
+                                        lt.setWordNewFee(new Double(numNew));
                                         lt.setWord8599Fee(new Integer(num8599));
                                         lt.setWordNew4Fee(new Double(numNew4));
                                         lt.setWordTotalFee(new Double(numTotal));
                                         lt.setWordContextFee(numContext);
                                         lt.setWordPerfectFee(numPerfect);
                                     } else if (lt.getTaskName().equalsIgnoreCase("editing")) {
-                                        lt.setWordNewFee(new Integer(numTotal));
+                                        lt.setWordNewFee(new Double(numTotal));
                                         lt.setWordNew4Fee(new Double(numTotal));
                                         lt.setWordTotalFee(new Double(numTotal));
+                                    }
+                                    else if(Objects.equals(p.getCompany().getClientId(), ExcelConstants.CLIENT_BBS) && lt.getTaskName().contains("Proofreading")){
+                                        lt.setWordRepFee(numRep+numRepCross);
+                                        lt.setWord100Fee(num100);
+                                        lt.setWord95Fee(num95);
+                                        lt.setWord85Fee(num85);
+                                        lt.setWord75Fee(num75);
+                                        lt.setWordNewFee(new Double(numNew));
+                                        lt.setWord8599Fee(new Integer(num8599));
+                                        lt.setWordNew4Fee(new Double(numNew4));
+                                        lt.setWordTotalFee(new Double(numTotal));
+                                        lt.setWordContextFee(numContext);
+                                        lt.setWordPerfectFee(numPerfect);
                                     }
                                     //upload the new trados values to db
                                     ProjectService.getInstance().updateLinTask(lt);
 
                                 } else {
-                                    System.out.println("no Match");
+                                    //System.out.println("no Match");
                                 }
-
+                              }
                             }
                         }
                     }
@@ -706,11 +765,13 @@ public class ProjectViewRSFTradosAllUploadAction  extends Action {
                 }
 
             } else if (listOfFiles[ij].isDirectory()) {
-                System.out.println("Directory " + listOfFiles[ij].getName());
+                //System.out.println("Directory " + listOfFiles[ij].getName());
             }
         }
 
-        deleteFile("C:/log");
+         }finally{
+            deleteFile(filePath);
+        }
         //END get file list
 
         // Forward control to the specified success URI

@@ -106,7 +106,7 @@ String date1=dateFormat.format(date);
         q.setPublishDate(date);
         q.setPublishBy(u.getFirstName()+" "+u.getLastName());
 
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
 
         QuotePriority qp=new QuotePriority();
         qp.setID_Quote1(q.getQuote1Id());

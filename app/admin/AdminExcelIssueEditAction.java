@@ -86,7 +86,8 @@ public class AdminExcelIssueEditAction extends Action {
                 ei.setStatus(1);
                 }           
                 if ("1".equals(issueStatus)) {
-                    ei.setPriority(j.getString("priority"));                   
+                    ei.setPriority(j.getString("priority")); 
+                    ei.setRisk(j.getString("risk")); 
                     
                     ei.setItem(j.getString("item"));
                     ei.setIssue(j.getString("issue"));

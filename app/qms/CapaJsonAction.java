@@ -32,14 +32,23 @@ public class CapaJsonAction extends Action{
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
             List results = new ArrayList();
-            List capa=QMSService.getInstance().getCapa();
-
+            List capa = null;
+            String client = request.getParameter("client");
+            if(client == null)
+             capa=QMSService.getInstance().getCapa();
+            else 
+              capa=QMSService.getInstance().getCapa(client);
 
              for (int i = 0; i < capa.size(); i++) {
             JSONObject jo = new JSONObject();
+            String locked ="";
             Capa v = (Capa) capa.get(i);
+            try{ 
+                if(v.getIsLocked())
+                locked ="<br/>(<font color='red'>Locked</font>)";
+            }catch(Exception e){}
             jo.put("id", v.getCapa_id());
-            jo.put("number","<a "+HrHelper.LINK_STYLE+" href=\"javascript:openSingleCapaWindow('"+ v.getNumber()+"')\">"+v.getNumber()+"</a>");
+            jo.put("number","<a "+HrHelper.LINK_STYLE+" href=\"javascript:openSingleCapaWindow('"+ v.getNumber()+"')\">"+v.getNumber()+locked+"</a>");
             jo.put("cdate", v.getCdate());
             try{
                 jo.put("vofe", v.getVofe());
@@ -55,6 +64,7 @@ public class CapaJsonAction extends Action{
             jo.put("issueId", v.getIssueId());
             jo.put("source", v.getSource());
             jo.put("status", v.getStatus());
+            jo.put("isLocked", v.getIsLocked());
                  try {
                      CapaId capaid=QMSService.getInstance().getSingleCapaId(v.getNumber());
                      if(capaid.getNcyesno().equalsIgnoreCase("Yes")&&capaid.getNcminormajor()!=null)
@@ -64,7 +74,7 @@ public class CapaJsonAction extends Action{
                           jo.put("ncr", "No");
                      }
                      try{
-                jo.put("vofe", capaid.getVerify_a_date());
+                jo.put("vofe", capaid.getVerify_t_date());
             }catch(Exception e){
                 jo.put("vofe", "");
             }

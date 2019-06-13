@@ -302,7 +302,7 @@ public final class ProjectViewAccountingAction extends Action {
         double linTaskTotalBudgetUsd = 0;
         
         for(int i = 0; i < linTasksArray.length; i++) {
-            //System.out.println("fee="+linTasksArray[i].getDollarTotalFee());
+            ////System.out.println("fee="+linTasksArray[i].getDollarTotalFee());
             if(linTasksArray[i].getDollarTotalFee() != null) {
                 //remove comma's
                 String linTotal = linTasksArray[i].getDollarTotalFee();
@@ -422,31 +422,31 @@ public final class ProjectViewAccountingAction extends Action {
        // }
     
       double discountBudget = 0;
-      double pmBudget = 0;
-      double rushBudget = 0;
+      double pmBudget = ProjectService1.getInstance().getTotalPMFee(p);
+      double rushBudget = ProjectService1.getInstance().getTotalRushFee(p);
       teamTotalBudget = linTaskTotalBudget + engTaskTotalBudget + dtpTaskTotalBudget+othTaskTotalBudget;
     
      
 
-
- if(p.getPmPercent()!=null && !p.getPmPercent().equals("") ){   
-        double discountRate = Double.valueOf(p.getPmPercent().replaceAll(",","")).doubleValue();
-        pmBudget =  (discountRate / 100) * teamTotalBudget;
-    }else if(p.getPmPercentDollarTotal()!=null && !p.getPmPercentDollarTotal().equals("")){
-   
-    pmBudget = Double.parseDouble(p.getPmPercentDollarTotal());
-   
-    }
+//
+// if(p.getPmPercent()!=null && !p.getPmPercent().equals("") ){   
+//        double discountRate = Double.valueOf(p.getPmPercent().replaceAll(",","")).doubleValue();
+//        pmBudget =  (discountRate / 100) * teamTotalBudget;
+//    }else if(p.getPmPercentDollarTotal()!=null && !p.getPmPercentDollarTotal().equals("")){
+//   
+//    pmBudget = Double.parseDouble(p.getPmPercentDollarTotal());
+//   
+//    }
  teamTotalBudget +=pmBudget;
  
- if(p.getRushPercent()!=null && !p.getRushPercent().equals("") ){   
-        double discountRate = Double.valueOf(p.getRushPercent().replaceAll(",","")).doubleValue();
-        rushBudget =  (discountRate / 100) * teamTotalBudget;
-    }else if(p.getRushPercentDollarTotal()!=null && !p.getRushPercentDollarTotal().equals("")){
-   
-    rushBudget = Double.parseDouble(p.getRushPercentDollarTotal());
-   
-    }
+// if(p.getRushPercent()!=null && !p.getRushPercent().equals("") ){   
+//        double discountRate = Double.valueOf(p.getRushPercent().replaceAll(",","")).doubleValue();
+//        rushBudget =  (discountRate / 100) * teamTotalBudget;
+//    }else if(p.getRushPercentDollarTotal()!=null && !p.getRushPercentDollarTotal().equals("")){
+//   
+//    rushBudget = Double.parseDouble(p.getRushPercentDollarTotal());
+//   
+//    }
    teamTotalBudget +=rushBudget;   
    
    
@@ -456,6 +456,7 @@ public final class ProjectViewAccountingAction extends Action {
     }else if(p.getDiscountDollarTotal()!=null && !p.getDiscountDollarTotal().equals("")){
    
     discountBudget = Double.parseDouble(p.getDiscountDollarTotal());
+   
    
     }
 teamTotalBudget -= discountBudget;
@@ -523,6 +524,8 @@ teamTotalBudget -= discountBudget;
         //START prepare changes for display
         //get this project's changes
         Set changes = p.getChange1s();
+        //System.out.println("=================================================================="+p.getProjectId());
+        
         
         //array for display in jsp
         Change1[] change1sArray = (Change1[]) changes.toArray(new Change1[0]);        

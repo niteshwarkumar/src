@@ -76,7 +76,7 @@ public final class HrAdminClientViewAction extends Action {
 
         //if from current city display
         if((u.getuserType()==null||u.getuserType().equalsIgnoreCase("admin"))){
-        System.out.println("here");
+        //System.out.println("here");
         } else if(u.getuserType().equalsIgnoreCase("client")){
         Client client=ClientService.getInstance().getClient(u.getId_client());
         String lastName = u.getLastName();
@@ -95,7 +95,7 @@ public final class HrAdminClientViewAction extends Action {
 
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
 
         out.println(new JSONArray(result.toArray()));

@@ -103,7 +103,7 @@ public final class QuoteDeleteAction extends Action {
              q.setLastModifiedByTS(new Date());
         }
 
-        QuoteService.getInstance().updateQuote(q);
+        QuoteService.getInstance().updateQuote(q,(String)request.getSession(false).getAttribute("username"));
         request.setAttribute("quote", q);
 	// Forward control to the specified success URI
 	return (mapping.findForward("Success"));

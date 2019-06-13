@@ -68,6 +68,7 @@ public class ClientContactEditForm extends ActionForm
     /** nullable persistent field */
     private String Note;
     private boolean key_personnel;
+    private boolean isFormer;
 
     public String getFirst_name() {
         return this.First_name;
@@ -330,5 +331,15 @@ public class ClientContactEditForm extends ActionForm
     public void setKey_personnel(boolean key_personnel) {
         this.key_personnel = key_personnel;
     }
+
+    public boolean isIsFormer() {
+        return isFormer;
+    }
+
+    public void setIsFormer(boolean isFormer) {
+        this.isFormer = isFormer;
+    }
+    
+    
 
 }

@@ -4,6 +4,7 @@
  */
 package app.qms;
 
+import app.standardCode.StandardCode;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,7 +17,10 @@ public class CapaId implements Serializable {
     private Integer capaid_id;
     private String capa_number;
     private String rca;
-    private Date rca_t_date;
+    private String imact;
+    private Date imact_t_date;
+    private Date imact_a_date;
+     private Date rca_t_date;
     private Date rca_a_date;
     private String nc;
     private String ncyesno;
@@ -101,7 +105,7 @@ public class CapaId implements Serializable {
     }
 
     public void setActionimp(String actionimp) {
-        this.actionimp = actionimp;
+        this.actionimp = StandardCode.getInstance().convertTextToUTF(actionimp);
     }
 
     public Date getActionimp_a_date() {
@@ -125,7 +129,7 @@ public class CapaId implements Serializable {
     }
 
     public void setActionplan(String actionplan) {
-        this.actionplan = actionplan;
+        this.actionplan = StandardCode.getInstance().convertTextToUTF(actionplan);
     }
 
     public String getActionplan_approve() {
@@ -189,7 +193,7 @@ public class CapaId implements Serializable {
     }
 
     public void setComments(String comments) {
-        this.comments = comments;
+        this.comments = StandardCode.getInstance().convertTextToUTF(comments);
     }
 
     public String getEffectiveplan() {
@@ -197,7 +201,7 @@ public class CapaId implements Serializable {
     }
 
     public void setEffectiveplan(String effectiveplan) {
-        this.effectiveplan = effectiveplan;
+        this.effectiveplan = StandardCode.getInstance().convertTextToUTF(effectiveplan);
     }
 
     public String getNc() {
@@ -205,7 +209,7 @@ public class CapaId implements Serializable {
     }
 
     public void setNc(String nc) {
-        this.nc = nc;
+        this.nc = StandardCode.getInstance().convertTextToUTF(nc);
     }
 
     public String getNcyesno() {
@@ -253,7 +257,7 @@ public class CapaId implements Serializable {
     }
 
     public void setVerify(String verify) {
-        this.verify = verify;
+        this.verify = StandardCode.getInstance().convertTextToUTF(verify);
     }
 
     public Date getVerify_a_date() {
@@ -349,8 +353,34 @@ public class CapaId implements Serializable {
     }
 
     public void setCapaid_description(String capaid_description) {
-        this.capaid_description = capaid_description;
+        this.capaid_description = StandardCode.getInstance().convertTextToUTF(capaid_description);
     }
+
+    public String getImact() {
+        return imact;
+    }
+
+    public void setImact(String imact) {
+        this.imact = imact;
+    }
+
+    public Date getImact_t_date() {
+        return imact_t_date;
+    }
+
+    public void setImact_t_date(Date imact_t_date) {
+        this.imact_t_date = imact_t_date;
+    }
+
+    public Date getImact_a_date() {
+        return imact_a_date;
+    }
+
+    public void setImact_a_date(Date imact_a_date) {
+        this.imact_a_date = imact_a_date;
+    }
+    
+    
 
 
 

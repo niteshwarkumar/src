@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping>
+   <class name="app.resource.ResourceCompDomain" table="resourceCompDomain">
+      <id name="ID_comp" type="int" >
+         <generator class="identity"/>
+      </id>
+      <property name="ID_LanguagePair" type="java.lang.Integer"/>
+      <property name="domain" type="string"/>
+      <property name="level" type="string"/>
+      <property name="experienceSince" type="java.lang.Integer"/>
+      <property name="notes" type="string"/>
+   </class>
+</hibernate-mapping>

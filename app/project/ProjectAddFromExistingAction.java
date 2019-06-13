@@ -85,15 +85,13 @@ public final class ProjectAddFromExistingAction extends Action {
         //update new projects info
         Project newP = ProjectService.getInstance().getSingleProject(projectId); 
               try{
-        String[] fname = pFrom.getPm().split(" ");
-         User pm = null;
-            if (fname.length == 2) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1]);
-            } else if (fname.length == 3) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
-            } else if (fname.length == 4) {
-                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
-            }
+        String fname = pFrom.getPm();
+         User pm = UserService.getInstance().getSingleUserRealName(fname);
+//            } else if (fname.length == 3) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2]);
+//            } else if (fname.length == 4) {
+//                pm = UserService.getInstance().getSingleUserRealName(fname[0], fname[1] + " " + fname[2] + " " + fname[3]);
+//            }
          p.setPm_id(pm.getUserId());
         }catch(Exception e){ p.setPm_id(0); }
         newP.setPm(pFrom.getPm());
@@ -170,13 +168,13 @@ public final class ProjectAddFromExistingAction extends Action {
                                 lt.setWord95(new Integer(0));
                                 lt.setWord85(new Integer(0));
                                 lt.setWord75(new Integer(0));
-                                lt.setWordNew(new Integer(0));
+                                lt.setWordNew(new Double(0));
                                 lt.setWord8599(new Integer(0));
                                 lt.setWordNew4(new Double(0));
                                 lt.setWordTotal(new Double(0.0));
-                                lt.setRate("0.000");
+//                                lt.setRate("0.000");
                                 lt.setDollarTotal("0.000");
-                                lt.setInternalRate("0.000");
+//                                lt.setInternalRate("0.000");
                                 lt.setInternalDollarTotal("0.000");
                                 lt.setRate("0.000");   
                                 
@@ -185,13 +183,13 @@ public final class ProjectAddFromExistingAction extends Action {
                                 lt.setWord95Fee(new Integer(0));
                                 lt.setWord85Fee(new Integer(0));
                                 lt.setWord75Fee(new Integer(0));
-                                lt.setWordNewFee(new Integer(0));
+                                lt.setWordNewFee(new Double(0));
                                 lt.setWord8599Fee(new Integer(0));
                                 lt.setWordNew4Fee(new Double(0));
                                 lt.setWordTotalFee(new Double(0.0));
-                                lt.setRateFee("0.000");
+//                                lt.setRateFee("0.000");
                                 lt.setDollarTotalFee("0.000");
-                                lt.setRateFee("0.000");   
+//                                lt.setRateFee("0.000");   
                                 lt.setMinFee(new Double(0));
                                 
                                 Integer newLtId = ProjectService.getInstance().linkTargetDocLinTask(td, lt);
@@ -219,9 +217,9 @@ public final class ProjectAddFromExistingAction extends Action {
                                 et.setInvoiceDateDate(null);
                                 et.setQuantity(null);
                                 et.setTotal(new Double(0.0));
-                                et.setRate("0.000");
+//                                et.setRate("0.000");
                                 et.setDollarTotal("0.000");
-                                et.setInternalRate("0.000");
+//                                et.setInternalRate("0.000");
                                 et.setInternalDollarTotal("0.000");
                                 
                                 Integer newEtId = ProjectService.getInstance().linkTargetDocEngTask(td, et);
@@ -249,9 +247,9 @@ public final class ProjectAddFromExistingAction extends Action {
                                 dt.setInvoiceDateDate(null);
                                 dt.setQuantity(null);
                                 dt.setTotal(new Double(0.0));
-                                dt.setRate("0.000");
+//                                dt.setRate("0.000");
                                 dt.setDollarTotal("0.000");
-                                dt.setInternalRate("0.000");
+//                                dt.setInternalRate("0.000");
                                 dt.setInternalDollarTotal("0.000");
                                 
                                 Integer newDtId = ProjectService.getInstance().linkTargetDocDtpTask(td, dt);
@@ -279,9 +277,9 @@ public final class ProjectAddFromExistingAction extends Action {
                                 ot.setInvoiceDateDate(null);
                                 ot.setQuantity(null);
                                 ot.setTotal(new Double(0.0));
-                                ot.setRate("0.000");
+//                                ot.setRate("0.000");
                                 ot.setDollarTotal("0.000");
-                                ot.setInternalRate("0.000");
+//                                ot.setInternalRate("0.000");
                                 ot.setInternalDollarTotal("0.000");
                                 
                                 Integer newOtId = ProjectService.getInstance().linkTargetDocOthTask(td, ot);

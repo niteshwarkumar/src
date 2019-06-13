@@ -16,7 +16,7 @@ import java.util.*;
 import app.security.*;
 import app.standardCode.StandardCode;
 import org.apache.struts.validator.*;
-
+ 
 
 public final class ResourceSearchEdit1Action extends Action {
 
@@ -80,7 +80,7 @@ public final class ResourceSearchEdit1Action extends Action {
         DynaValidatorForm rs = (DynaValidatorForm) form;
 
                
-        //START prepare the rateScoreLanguage Array with the number of categories from the db
+        //START prepare the ratescorelanguage Array with the number of categories from the db
         List rscs = ResourceService.getInstance().getRateScoreCategoryList();
         
         String[] fromFormRsc = (String[]) rs.get("resourceSearchScoresLin");
@@ -91,16 +91,16 @@ public final class ResourceSearchEdit1Action extends Action {
             }
         }
         if(reset) {
-            String[] rateScoreLanguagesArray = new String[rscs.size()];
+            String[] ratescorelanguagesArray = new String[rscs.size()];
             ListIterator iter = rscs.listIterator();
-            for(int i = 0; i < rateScoreLanguagesArray.length; i++) {
+            for(int i = 0; i < ratescorelanguagesArray.length; i++) {
                 RateScoreCategory rsc = (RateScoreCategory) iter.next(); 
-                rateScoreLanguagesArray[i] = new String("");
+                ratescorelanguagesArray[i] = new String("");
 
 
-                rs.set("resourceSearchScoresLin", rateScoreLanguagesArray);
+                rs.set("resourceSearchScoresLin", ratescorelanguagesArray);
             }
-        }//END prepare the rateScoreLanguage Array with the number of categories from the db
+        }//END prepare the ratescorelanguage Array with the number of categories from the db
         
                
 	// Forward control to the specified success URI

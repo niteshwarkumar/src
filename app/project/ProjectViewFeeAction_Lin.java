@@ -17,8 +17,9 @@ import java.text.*;
 import app.security.*;
 import app.standardCode.*;
 import org.apache.struts.validator.*;
+import org.json.JSONObject;
 
-
+ 
 public final class ProjectViewFeeAction_Lin extends Action {
 
 
@@ -106,12 +107,62 @@ public final class ProjectViewFeeAction_Lin extends Action {
 
         //get this project's sources
         Set sources = p.getSourceDocs();
+        Set changesLst = p.getChange1s();
+        JSONObject changeObj = new JSONObject();
+        String verifymsg ="<font color=\"red\">Verification was not performed yet. Please check and try again.</font>";
+        for(Iterator chg = changesLst.iterator(); chg.hasNext();) {
+            try{
+            Change1 change1 = (Change1) chg.next();
+            
+            JSONObject jo = new JSONObject();
+            jo.put("name", change1.getName());
+            jo.put("desc", change1.getDescription());
+            
+            if(change1.isFinalVerification()){
+                jo.put("finalVerify",  "Final verification done by ");
+                jo.put("finalVerifyMsg",  change1.getFinalVerificationBy()+ " on "+StandardCode.getInstance().noNull(change1.getFinalVerificationDate(), ""));
+            }
+            else{
+                jo.put("finalVerify", verifymsg);
+            }
+            if(change1.isEngVerification()){
+                jo.put("engVerify",  "Eng verification done by ");
+                 jo.put("engVerifyMsg",  change1.getEngVerificationBy()+ " on "+StandardCode.getInstance().noNull(change1.getEngVerificationDate(), ""));
+            }
+            else{
+                jo.put("engVerify", "");
+            }
+            if(change1.isDtpVerification()){
+                jo.put("dtpVerify",  "Dtp verification done by ");
+                jo.put("dtpVerifyMsg",  change1.getDtpVerificationBy()+ " on "+StandardCode.getInstance().noNull(change1.getDtpVerificationDate(), ""));
+            }
+            else{
+                jo.put("dtpVerify", "");
+            }
+            if(change1.isClientApproval()){
+                jo.put("CvOn",  "Client approval received on: ");
+                jo.put("CvOnMsg",  StandardCode.getInstance().noNull(change1.getClientApprovalDate(), ""));
+                jo.put("CvBy",  "Client approval received by: ");
+                jo.put("CvByMsg",  StandardCode.getInstance().noNull(change1.getClientApprovalSrc(), ""));
+                jo.put("CvNote",  "Note: ");
+                jo.put("CvNoteMsg",  StandardCode.getInstance().noNull(change1.getClientApprovalDesc(), ""));
+           
+            }
+            jo.put("number", change1.getNumber());
+            jo.put("changeId", change1.getChange1Id());
+            changeObj.put(change1.getNumber(), jo);
+            }catch(Exception e){
+               e.printStackTrace();
+            }
+        }
+
+
 
         //for each source add each sources' Tasks
         List totalLinTasks = new ArrayList();
-        List totalEngTasks = new ArrayList();
-        List totalDtpTasks = new ArrayList();
-        List totalOthTasks = new ArrayList();
+        TreeSet<String> changes = new TreeSet();
+//        List totalDtpTasks = new ArrayList();
+//        List totalOthTasks = new ArrayList();
 
         //for each source
         for(Iterator sourceIter = sources.iterator(); sourceIter.hasNext();) {
@@ -125,210 +176,87 @@ public final class ProjectViewFeeAction_Lin extends Action {
                 for(Iterator linTaskIter = td.getLinTasks().iterator(); linTaskIter.hasNext();) {
                     LinTask lt = (LinTask) linTaskIter.next();
                     totalLinTasks.add(lt);
-                }
-
-                //for each eng Task of this target
-                for(Iterator engTaskIter = td.getEngTasks().iterator(); engTaskIter.hasNext();) {
-                    EngTask et = (EngTask) engTaskIter.next();
-                    totalEngTasks.add(et);
-                }
-
-                //for each dtp Task of this target
-                for(Iterator dtpTaskIter = td.getDtpTasks().iterator(); dtpTaskIter.hasNext();) {
-                    DtpTask dt = (DtpTask) dtpTaskIter.next();
-                    totalDtpTasks.add(dt);
-                }
-
-                //for each oth Task of this target
-                for(Iterator othTaskIter = td.getOthTasks().iterator(); othTaskIter.hasNext();) {
-                    OthTask ot = (OthTask) othTaskIter.next();
-                    totalOthTasks.add(ot);
+                   
+                    String change = StandardCode.getInstance().noNull(lt.getChangeDesc());
+                    if(!changes.contains(change)){
+                        changes.add(change);
+                    }
                 }
             }
         }
 
-        //Sort by task (orderNum), then source (language), then target (language)
-//        Collections.sort(totalLinTasks, CompareTaskLin.getInstance());
-//        Collections.sort(totalLinTasks, CompareTaskLanguages.getInstance());
-//
-//
-//        Collections.sort(totalEngTasks, CompareTaskEng.getInstance());
-//        Collections.sort(totalDtpTasks, CompareTaskDtp.getInstance());
-//        Collections.sort(totalOthTasks, CompareTaskOth.getInstance());
-
         //array for display in jsp
         LinTask[] linTasksArray = (LinTask[]) totalLinTasks.toArray(new LinTask[0]);
-        EngTask[] engTasksArray = (EngTask[]) totalEngTasks.toArray(new EngTask[0]);
-        DtpTask[] dtpTasksArray = (DtpTask[]) totalDtpTasks.toArray(new DtpTask[0]);
-        OthTask[] othTasksArray = (OthTask[]) totalOthTasks.toArray(new OthTask[0]);
 
         //START set up lin dates
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getSentDateDate() != null) {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
+                request.setAttribute("linTasksProjectSentArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getSentDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectSentArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectSentArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getIcrSentDate() != null) {
-                request.setAttribute("linTasksProjectICRSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrSentDate()));
+                request.setAttribute("linTasksProjectICRSentArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrSentDate()));
             }
             else {
-                request.setAttribute("linTasksProjectICRSentArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectICRSentArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
 
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getDueDateDate() != null) {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
+                request.setAttribute("linTasksProjectDueArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getDueDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectDueArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectDueArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getReceivedDateDate() != null) {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
+                request.setAttribute("linTasksProjectReceivedArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getReceivedDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectReceivedArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getIcrRecievedDate() != null) {
-                request.setAttribute("linTasksProjectICRReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrRecievedDate()));
+                request.setAttribute("linTasksProjectICRReceivedArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getIcrRecievedDate()));
             }
             else {
-                request.setAttribute("linTasksProjectICRReceivedArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectICRReceivedArray" + linTasksArray[i].getLinTaskId(), "");
             }
         }
         for(int i = 0; i < totalLinTasks.size(); i++) {
             if(linTasksArray[i].getInvoiceDateDate() != null) {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
+                request.setAttribute("linTasksProjectInvoiceArray" + linTasksArray[i].getLinTaskId(), DateFormat.getDateInstance(DateFormat.SHORT).format(linTasksArray[i].getInvoiceDateDate()));
             }
             else {
-                request.setAttribute("linTasksProjectInvoiceArray" + String.valueOf(i), "");
+                request.setAttribute("linTasksProjectInvoiceArray" + linTasksArray[i].getLinTaskId(), "");
             }
 
-           // System.out.println("    Lintask ICRRRRRRRRRRRRRRRRRR"+linTasksArray[i].getIcrRecievedDate());
+           // //System.out.println("    Lintask ICRRRRRRRRRRRRRRRRRR"+linTasksArray[i].getIcrRecievedDate());
         }
 
 
-        //END set up lin dates
-
-        //START set up eng dates
-//        for(int i = 0; i < totalEngTasks.size(); i++) {
-//            if(engTasksArray[i].getSentDateDate() != null) {
-//                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getSentDateDate()));
-//            }
-//            else {
-//                request.setAttribute("engTasksProjectSentArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalEngTasks.size(); i++) {
-//            if(engTasksArray[i].getDueDateDate() != null) {
-//                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getDueDateDate()));
-//            }
-//            else {
-//                request.setAttribute("engTasksProjectDueArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalEngTasks.size(); i++) {
-//            if(engTasksArray[i].getReceivedDateDate() != null) {
-//                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getReceivedDateDate()));
-//            }
-//            else {
-//                request.setAttribute("engTasksProjectReceivedArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalEngTasks.size(); i++) {
-//            if(engTasksArray[i].getInvoiceDateDate() != null) {
-//                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(engTasksArray[i].getInvoiceDateDate()));
-//            }
-//            else {
-//                request.setAttribute("engTasksProjectInvoiceArray" + String.valueOf(i), "");
-//            }
-//        }
-//        //END set up eng dates
-//
-//        //START set up dtp dates
-//        for(int i = 0; i < totalDtpTasks.size(); i++) {
-//            if(dtpTasksArray[i].getSentDateDate() != null) {
-//                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getSentDateDate()));
-//            }
-//            else {
-//                request.setAttribute("dtpTasksProjectSentArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalDtpTasks.size(); i++) {
-//            if(dtpTasksArray[i].getDueDateDate() != null) {
-//                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getDueDateDate()));
-//            }
-//            else {
-//                request.setAttribute("dtpTasksProjectDueArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalDtpTasks.size(); i++) {
-//            if(dtpTasksArray[i].getReceivedDateDate() != null) {
-//                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getReceivedDateDate()));
-//            }
-//            else {
-//                request.setAttribute("dtpTasksProjectReceivedArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalDtpTasks.size(); i++) {
-//            if(dtpTasksArray[i].getInvoiceDateDate() != null) {
-//                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(dtpTasksArray[i].getInvoiceDateDate()));
-//            }
-//            else {
-//                request.setAttribute("dtpTasksProjectInvoiceArray" + String.valueOf(i), "");
-//            }
-//        }
-//        //END set up dtp dates
-//
-//        //START set up oth dates
-//        for(int i = 0; i < totalOthTasks.size(); i++) {
-//            if(othTasksArray[i].getSentDateDate() != null) {
-//                request.setAttribute("othTasksProjectSentArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getSentDateDate()));
-//            }
-//            else {
-//                request.setAttribute("othTasksProjectSentArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalOthTasks.size(); i++) {
-//            if(othTasksArray[i].getDueDateDate() != null) {
-//                request.setAttribute("othTasksProjectDueArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getDueDateDate()));
-//            }
-//            else {
-//                request.setAttribute("othTasksProjectDueArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalOthTasks.size(); i++) {
-//            if(othTasksArray[i].getReceivedDateDate() != null) {
-//                request.setAttribute("othTasksProjectReceivedArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getReceivedDateDate()));
-//            }
-//            else {
-//                request.setAttribute("othTasksProjectReceivedArray" + String.valueOf(i), "");
-//            }
-//        }
-//        for(int i = 0; i < totalOthTasks.size(); i++) {
-//            if(othTasksArray[i].getInvoiceDateDate() != null) {
-//                request.setAttribute("othTasksProjectInvoiceArray" + String.valueOf(i), DateFormat.getDateInstance(DateFormat.SHORT).format(othTasksArray[i].getInvoiceDateDate()));
-//            }
-//            else {
-//                request.setAttribute("othTasksProjectInvoiceArray" + String.valueOf(i), "");
-//            }
-//        }
-        //END set up oth dates
         DynaValidatorForm qvg = (DynaValidatorForm) form;
         //find total of LinTasks
         double linTaskTotal = 0;
         double linMinFeeTotal = 0;
         String ICRCheck="";
+//        JSONArray changesFeeArray = new JSONArray();
+//        JSONObject changeObj = new JSONObject();
+        for(String change : changes){
+            
+          double changeTotal = 0;  
         for(int i = 0; i < linTasksArray.length; i++) {
+            if(StandardCode.getInstance().noNull(linTasksArray[i].getChangeDesc()).equalsIgnoreCase(change)){
+                
             if(linTasksArray[i].getDollarTotalFee() != null) {
+               
                 //remove comma's
                 String linTotal = linTasksArray[i].getDollarTotalFee();
                 linTotal = linTotal.replaceAll(",","");
@@ -346,111 +274,35 @@ public final class ProjectViewFeeAction_Lin extends Action {
                    // qvg.set("TotalFee",Double.parseDouble(p.getSubDollarTotal())*StandardCode.getInstance().getEuro());
                 }
 
-                linTaskTotal += total.doubleValue();
+                linTaskTotal += total;
+                changeTotal += total;
             }
             
             if(ICRCheck.equalsIgnoreCase(linTasksArray[i].getTargetLanguage())){
             //qvg.set("ICR","1");
-            request.setAttribute("ICR" + String.valueOf(i), "0");
+            request.setAttribute("ICR" + linTasksArray[i].getLinTaskId(), "0");
             }else{
 
             ICRCheck=linTasksArray[i].getTargetLanguage();
             //qvg.set("ICR","0");
-            request.setAttribute("ICR" + String.valueOf(i), "1");           
+            request.setAttribute("ICR" + linTasksArray[i].getLinTaskId(), "1");           
             }         
              
-
+            }
+        }
+        
+        
+        JSONObject jo = new JSONObject();
+        if(!change.equalsIgnoreCase("")){
+            if(changeObj.has(change))
+             jo = changeObj.getJSONObject(change);
+        } 
+        jo.put("usd", StandardCode.getInstance().formatDouble(changeTotal));
+        jo.put("euro", StandardCode.getInstance().formatDouble(changeTotal/p.getEuroToUsdExchangeRate().doubleValue()));
+        changeObj.put(change, jo);
         }
 Double linTotal =0.0;
-//        for(int i = 0; i < linTasksArray.length; i++) {
-//            if(linTasksArray[i].getDollarTotalFee() != null) {
-//
-//                if(linTasksArray[i].getMinFeeRsf()!=null){
-//                //remove comma's
-//                 linTotal = linTasksArray[i].getMinFeeRsf();}
-//                //linTotal = linTotal.replaceAll(",","");
-//                if("".equals(linTotal)){
-//                    linTotal = 0.0;
-//                }
-//                Double total = Double.valueOf(linTotal);
-//
-//                 if("EURO".equals(linTasksArray[i].getCurrencyFee())){
-//                   // total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-//                    if(p.getEuroToUsdExchangeRate()==null)
-//                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-//                    else
-//                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-//                   // qvg.set("TotalFee",Double.parseDouble(p.getSubDollarTotal())*StandardCode.getInstance().getEuro());
-//                }
-//
-//                linTaskTotal += total.doubleValue();
-//            }
-//
-//        }
 
-
-        //find total of EngTasks
-//            double engTaskTotal = 0;
-//        for(int i = 0; i < engTasksArray.length; i++) {
-//            if(engTasksArray[i].getDollarTotal() != null) {
-//                //remove comma's
-//                String engTotal = engTasksArray[i].getDollarTotal();
-//                engTotal = engTotal.replaceAll(",","");
-//                if("".equals(engTotal)){
-//                    engTotal = "0";
-//                }
-//                Double total = Double.valueOf(engTotal);
-//
-//                 if("EURO".equals(engTasksArray[i].getCurrency())){
-//                    //total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-//if(p.getEuroToUsdExchangeRate()==null)
-//                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-//                    else
-//                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue()); }
-//                engTaskTotal += total.doubleValue();
-//            }
-//        }
-        //find total of DtpTasks
-//        double dtpTaskTotal = 0;
-//        for(int i = 0; i < dtpTasksArray.length; i++) {
-//            if(dtpTasksArray[i].getDollarTotal() != null) {
-//                //remove comma's
-//                String dtpTotal = dtpTasksArray[i].getDollarTotal();
-//                dtpTotal = dtpTotal.replaceAll(",","");
-//                if("".equals(dtpTotal)){
-//                    dtpTotal = "0";
-//                }
-//                Double total = Double.valueOf(dtpTotal);
-//                 if("EURO".equals(dtpTasksArray[i].getCurrency())){
-//                   // total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-//if(p.getEuroToUsdExchangeRate()==null)
-//                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-//                    else
-//                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());                }
-//                dtpTaskTotal += total.doubleValue();
-//            }
-//        }
-        //find total of OthTasks
-//        double othTaskTotal = 0;
-//        for(int i = 0; i < othTasksArray.length; i++) {
-//            if(othTasksArray[i].getDollarTotal() != null) {
-//                //remove comma's
-//                String othTotal = othTasksArray[i].getDollarTotal();
-//                othTotal = othTotal.replaceAll(",","");
-//                if("".equals(othTotal)){
-//                    othTotal = "0";
-//                }
-//                Double total = Double.valueOf(othTotal);
-//                if("EURO".equals(othTasksArray[i].getCurrency())){
-//                    //total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-//                    if(p.getEuroToUsdExchangeRate()==null)
-//                        total=new Double(total.doubleValue()*StandardCode.getInstance().getEuro());
-//                    else
-//                        total = new Double(total.doubleValue()*p.getEuroToUsdExchangeRate().doubleValue());
-//                }
-//                othTaskTotal += total.doubleValue();
-//            }
-//        }
         //team (fee) TOTAL
         double teamTotal = 0;
         if(p.getProjectAmount() != null) {
@@ -461,16 +313,13 @@ Double linTotal =0.0;
         //place TaskTotals in request as formated string
         request.setAttribute("linTaskTotal", StandardCode.getInstance().formatDouble(new Double(linTaskTotal)));
         request.setAttribute("linTaskTotalEuro", StandardCode.getInstance().formatDouble(new Double(linTaskTotalEuro)));
-//        request.setAttribute("engTaskTotal", StandardCode.getInstance().formatDouble(new Double(engTaskTotal)));
-//        request.setAttribute("dtpTaskTotal", StandardCode.getInstance().formatDouble(new Double(dtpTaskTotal)));
-//        request.setAttribute("othTaskTotal", StandardCode.getInstance().formatDouble(new Double(othTaskTotal)));
         request.setAttribute("teamTotal", StandardCode.getInstance().formatDouble(new Double(teamTotal)));
-        //place all Tasks for this project into the form for display
+        request.setAttribute("changes", changes);
+        //System.out.println(changeObj);
+        request.setAttribute("changesFee", changeObj);
+
         qvg.set("linTasksProject", linTasksArray);
-//        qvg.set("engTasksProject", engTasksArray);
-//        qvg.set("dtpTasksProject", dtpTasksArray);
-//        qvg.set("othTasksProject", othTasksArray);
-        //place pm and rush block into form for display
+
         qvg.set("pmPercent", p.getPmPercent());
         qvg.set("pmPercentDollarTotal", p.getPmPercentDollarTotal());
         qvg.set("rushPercent", p.getRushPercent());

@@ -11,6 +11,7 @@ import app.extjs.vo.Upload_Doc;
 import app.project.DtpTask;
 import app.project.EngTask;
 import app.project.LinTask;
+import app.project.OthTask;
 import app.project.Project;
 import app.project.SourceDoc;
 import app.project.TargetDoc;
@@ -109,7 +110,8 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
         List quoteList = QuoteService.getInstance().getSingleClientQuote(id);
 
         String filein = "C:/templates/lectra_excel_template.xls";
-        //String fileout = "D:/lectra_excel.xls";
+//        filein = "/Users/abhisheksingh/Project/templates/lectra_excel_template.xls";
+        //String fileout = "/Users/abhisheksingh/Project/template/lectra_excel.xls";
 
         POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filein));
 
@@ -141,7 +143,7 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
         printExcel(wb, 1, 2, 3, p.getProductDescription());
         printExcel(wb, 1, 3, 3, q.getEnteredByTS());
         if(q.getPmPercent()!=null)
-        printExcel(wb, 1, 34, 2, Double.parseDouble(q.getPmPercent()));
+        printExcel(wb, 1, 35, 2, Double.parseDouble(q.getPmPercent()));
 
         printExcel(wb, 2, 7, 1, q.getNumber()+" - "+StandardCode.getInstance().noNull(cq.getProductText()));
         printExcel(wb, 2, 8, 1, cq.getComponent());
@@ -188,7 +190,7 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
                         page3langCol++;
                         TargetDoc td = (TargetDoc) iterTarget.next();
                         count++;
-                        System.out.println("Count---------------------------->>>>>>"+count);
+                        //System.out.println("Count---------------------------->>>>>>"+count);
 
                         if (page3langRow < 18) {
                             if (page3langCol < 18) {
@@ -213,7 +215,7 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
                             printExcel(wb, 1, 7, 3, td.getLanguage());
                         } else {
                             try {
-                                for (int i = 7; i <= 40; i++) {
+                                for (int i = 7; i <= 41; i++) {
                                     copyExcelStyle(wb, i, 3, i, (count * 3) + 3);
                                     copyExcelStyle(wb, i, 4, i, (count * 3) + 4);
                                     copyExcelStyle(wb, i, 5, i, (count * 3) + 5);
@@ -239,13 +241,16 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
 
                                 excelSheet.getRow(12).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "11:" + getCellName((count * 3) + 5) + "12)"));
                                 excelSheet.getRow(13).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "11:" + getCellName((count * 3) + 5) + "12)"));
-                                excelSheet.getRow(23).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "16:" + getCellName((count * 3) + 5) + "23)"));
-                                excelSheet.getRow(27).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "26," + getCellName((count * 3) + 5) + "27)"));
-                                excelSheet.getRow(29).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "28," + getCellName((count * 3) + 5) + "24)"));
-                                excelSheet.getRow(33).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "14," + getCellName((count * 3) + 5) + "30)"));
-                                excelSheet.getRow(39).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "34:" + getCellName((count * 3) + 5) + "38)"));
-                                excelSheet.getRow(34).getCell((count * 3) + 5).setCellFormula(("PRODUCT(C35," + getCellName((count * 3) + 5) + "34,0.01)"));
-//PRODUCT(C35,F34)
+                                excelSheet.getRow(24).getCell((count * 3) + 3).setCellFormula(("SUM(" + getCellName((count * 3) + 3) + "16:" + getCellName((count * 3) + 3) + "24)"));
+                                excelSheet.getRow(24).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "16:" + getCellName((count * 3) + 5) + "24)"));
+                                excelSheet.getRow(28).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "27," + getCellName((count * 3) + 5) + "28)"));
+                                excelSheet.getRow(30).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "29," + getCellName((count * 3) + 5) + "25)"));
+                                excelSheet.getRow(34).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "14," + getCellName((count * 3) + 5) + "31)"));
+                                excelSheet.getRow(40).getCell((count * 3) + 5).setCellFormula(("SUM(" + getCellName((count * 3) + 5) + "35:" + getCellName((count * 3) + 5) + "39)"));
+//                                excelSheet.getRow(35).getCell((count * 3) + 5).setCellFormula(("PRODUCT(C36," + getCellName((count * 3) + 5) + "35,0.01)"));
+                                excelSheet.getRow(35).getCell((count * 3) + 5).setCellFormula(("PRODUCT(C36,SUM(" + getCellName((count * 3) + 5)+"39,"+ getCellName((count * 3) + 5) + "35),0.01)"));
+
+//PRODUCT(C36,F35)
                                 // f = new Formula(1, 10, buf.toString());
 
 
@@ -271,181 +276,257 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
 
 
                             ////////////////////////////////////////////////////Lin Task
-
+int wdNew=0,wd100=0,wdRep=0,wd95=0,wd85=0,wd75=0,wdPerfect=0,wdContext=0;
+double csNew=0.00,cs100=0.00,csRep=0.00,cs95=0.00,cs85=0.00,cs75=0.00,csPerfect=0.00,csContext=0.00;
                             for (int ll = 0; ll < linTaskList.size(); ll++) {
                                 LinTask t = (LinTask) linTaskList.get(ll);
                                 if (t.getTaskName().equalsIgnoreCase("Translation")) {
                                     totalLinTasks.add(t);
                                     if (count == 0) {
+                                        
                                         try {
-                                            printExcel(wb, 1, 16, 3, t.getWordNew());
+                                            wdNew +=t.getWordNew();
+                                            printExcel(wb, 1, 16, 3, wdNew);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 17, 3, (t.getWord100() + t.getWordRep()));
+                                            wd100+=t.getWord100();
+                                            printExcel(wb, 1, 17, 3, wd100);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 18, 3, t.getWord95());
+                                            wdRep+=t.getWordRep();
+                                            printExcel(wb, 1, 18, 3, wdRep);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 19, 3, t.getWord85());
+                                            wd95+=t.getWord95();
+                                            printExcel(wb, 1, 19, 3, wd95);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 20, 3, t.getWord75());
+                                            wd85+=t.getWord85();
+                                            printExcel(wb, 1, 20, 3, wd85);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 21, 3, t.getWordPerfect());
+                                            wd75+=t.getWord75();
+                                            printExcel(wb, 1, 21, 3, wd75);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 22, 3, t.getWordContext());
+                                            wdPerfect+=t.getWordPerfect();
+                                            printExcel(wb, 1, 22, 3, wdPerfect);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 16, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew()));
+                                            wdContext+=t.getWordContext();
+                                            printExcel(wb, 1, 23, 3, wdContext);
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 17, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100()));
+                                            printExcel(wb, 1, 16, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew(q.getProject().getProjectId(),c.getClientId())));
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 17, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         } 
                                         try {
-                                            printExcel(wb, 1, 18, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95()));
+                                            printExcel(wb, 1, 18, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleRep(q.getProject().getProjectId(),c.getClientId())));
+                                        } catch (Exception e) {
+                                        } 
+                                        try {
+                                            printExcel(wb, 1, 19, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 19, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85()));
+                                            printExcel(wb, 1, 20, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 20, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75()));
+                                            printExcel(wb, 1, 21, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 21, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect()));
+                                            printExcel(wb, 1, 22, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 22, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext()));
+                                            printExcel(wb, 1, 23, 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext(q.getProject().getProjectId(),c.getClientId())));
+                                        } catch (Exception e) {
+                                        }
+                                        ////////////////////////////
+                                        try {
+                                            csNew += Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew(q.getProject().getProjectId(),c.getClientId())) * t.getWordNew();
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 16, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew()) * t.getWordNew());
+                                            cs100+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100(q.getProject().getProjectId(),c.getClientId())) * (t.getWord100());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 17, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100()) * (t.getWord100() + t.getWordRep()));
+                                            csRep+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleRep(q.getProject().getProjectId(),c.getClientId())) * (t.getWordRep());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 18, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95()) * t.getWord95());
+                                            cs95+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95(q.getProject().getProjectId(),c.getClientId())) * t.getWord95();
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 19, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85()) * t.getWord85());
+                                            cs85+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85(q.getProject().getProjectId(),c.getClientId())) * t.getWord85();
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 20, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75()) * t.getWord75());
+                                            cs75+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75(q.getProject().getProjectId(),c.getClientId())) * t.getWord75();
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 21, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect()) * t.getWordPerfect());
+                                            csPerfect+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect(q.getProject().getProjectId(),c.getClientId())) * t.getWordPerfect();
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            printExcel(wb, 1, 22, 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext()) * t.getWordContext());
+                                            csContext+= Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext(q.getProject().getProjectId(),c.getClientId())) * t.getWordContext();
+                                        } catch (Exception e) {
+                                        }
+                                        ///////////////////////////
+                                        if(t.getMinFee()>0){
+                                            printExcel(wb, 1, 38, 5, t.getMinFee());
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 16, 5, csNew);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 17, 5, cs100);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 18, 5, csRep);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 19, 5, cs95);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 20, 5, cs85);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 21, 5, cs75);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 22, 5, csPerfect);
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            printExcel(wb, 1, 23, 5, csContext);
                                         } catch (Exception e) {
                                         }
                                     } else {
+                                        if(t.getMinFee()>0){
+                                            copyExcelStyle(wb, 38, 5, 38, (count * 3) + 5, t.getMinFee());
+                                        }
+                                        
                                         try {
                                             copyExcelStyle(wb, 16, 3, 16, (count * 3) + 3, t.getWordNew());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 17, 3, 17, (count * 3) + 3, (t.getWord100() + t.getWordRep()));
+                                            copyExcelStyle(wb, 17, 3, 17, (count * 3) + 3, (t.getWord100()));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 18, 3, 18, (count * 3) + 3, t.getWord95());
+                                            copyExcelStyle(wb, 18, 3, 18, (count * 3) + 3, (t.getWordRep()));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 19, 3, 19, (count * 3) + 3, t.getWord85());
+                                            copyExcelStyle(wb, 19, 3, 19, (count * 3) + 3, t.getWord95());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 20, 3, 20, (count * 3) + 3, t.getWord75());
+                                            copyExcelStyle(wb, 20, 3, 20, (count * 3) + 3, t.getWord85());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 21, 3, 21, (count * 3) + 3, t.getWordPerfect());
+                                            copyExcelStyle(wb, 21, 3, 21, (count * 3) + 3, t.getWord75());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 22, 3, 22, (count * 3) + 3, t.getWordContext());
+                                            copyExcelStyle(wb, 22, 3, 22, (count * 3) + 3, t.getWordPerfect());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 16, 4, 16, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew()));
+                                            copyExcelStyle(wb, 23, 3, 23, (count * 3) + 3, t.getWordContext());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 17, 4, 17, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100()));
-                                        } catch (Exception e) {
-                                            System.out.println(e.getMessage());
-                                        }
-                                        try {
-                                            copyExcelStyle(wb, 18, 4, 18, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95()));
+                                            copyExcelStyle(wb, 16, 4, 16, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 19, 4, 19, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85()));
+                                            copyExcelStyle(wb, 17, 4, 17, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100(q.getProject().getProjectId(),c.getClientId())));
+                                        } catch (Exception e) {
+                                            //System.out.println(e.getMessage());
+                                        }
+                                        try {
+                                            copyExcelStyle(wb, 18, 4, 18, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleRep(q.getProject().getProjectId(),c.getClientId())));
+                                        } catch (Exception e) {
+                                            //System.out.println(e.getMessage());
+                                        }
+                                        try {
+                                            copyExcelStyle(wb, 19, 4, 19, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 20, 4, 20, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75()));
-                                        } catch (Exception e) {
-                                            System.out.println(e.getMessage());
-                                        }
-                                        try {
-                                            copyExcelStyle(wb, 21, 4, 21, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect()));
+                                            copyExcelStyle(wb, 20, 4, 20, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 22, 4, 22, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext()));
+                                            copyExcelStyle(wb, 21, 4, 21, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75(q.getProject().getProjectId(),c.getClientId())));
+                                        } catch (Exception e) {
+                                            //System.out.println(e.getMessage());
+                                        }
+                                        try {
+                                            copyExcelStyle(wb, 22, 4, 22, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 16, 5, 16, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew()) * t.getWordNew());
+                                            copyExcelStyle(wb, 23, 4, 23, (count * 3) + 4, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext(q.getProject().getProjectId(),c.getClientId())));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 17, 5, 17, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100()) * (t.getWord100() + t.getWordRep()));
+                                            copyExcelStyle(wb, 16, 5, 16, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleNew(q.getProject().getProjectId(),c.getClientId())) * t.getWordNew());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 18, 5, 18, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95()) * t.getWord95());
+                                            copyExcelStyle(wb, 17, 5, 17, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale100(q.getProject().getProjectId(),c.getClientId())) * (t.getWord100()));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 19, 5, 19, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85()) * t.getWord85());
+                                            copyExcelStyle(wb, 18, 5, 18, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleRep(q.getProject().getProjectId(),c.getClientId())) * (t.getWordRep()));
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 20, 5, 20, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75()) * t.getWord75());
+                                            copyExcelStyle(wb, 19, 5, 19, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale95(q.getProject().getProjectId(),c.getClientId())) * t.getWord95());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 21, 5, 21, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect()) * t.getWordPerfect());
+                                            copyExcelStyle(wb, 20, 5, 20, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale85(q.getProject().getProjectId(),c.getClientId())) * t.getWord85());
                                         } catch (Exception e) {
                                         }
                                         try {
-                                            copyExcelStyle(wb, 22, 5, 22, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext()) * t.getWordContext());
+                                            copyExcelStyle(wb, 21, 5, 21, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScale75(q.getProject().getProjectId(),c.getClientId())) * t.getWord75());
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            copyExcelStyle(wb, 22, 5, 22, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScalePerfect(q.getProject().getProjectId(),c.getClientId())) * t.getWordPerfect());
+                                        } catch (Exception e) {
+                                        }
+                                        try {
+                                            copyExcelStyle(wb, 23, 5, 23, (count * 3) + 5, Double.parseDouble(t.getRate()) * Double.parseDouble(c.getScaleContext(q.getProject().getProjectId(),c.getClientId())) * t.getWordContext());
                                         } catch (Exception e) {
                                         }
                                     }
@@ -517,21 +598,7 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
                             }
                             if (lt.getUnits().equalsIgnoreCase("hours")){
 //                            if (lt.getTaskName().equalsIgnoreCase("Desktop Publishing") || lt.getTaskName().contains("DTP")) {
-                                try {
-                                    printExcel(wb, 1, 25, (count * 3) + 3, lt.getTotalTeam());
-                                } catch (Exception e) {
-                                }
-                                try {
-                                    printExcel(wb, 1, 25, (count * 3) + 4, lt.getRate());
-                                } catch (Exception e) {
-                                }
-                                try {
-                                    printExcel(wb, 1, 25, (count * 3) + 5, Double.parseDouble(lt.getDollarTotal()));
-                                } catch (Exception e) {
-                                }
-
-//                            } else if (lt.getTaskName().contains("Graphics")) {
-                            } else if (lt.getUnits().equalsIgnoreCase("pages")){
+                              if(lt.getTotalTeam()>0){
                                 try {
                                     printExcel(wb, 1, 26, (count * 3) + 3, lt.getTotalTeam());
                                 } catch (Exception e) {
@@ -544,8 +611,66 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
                                     printExcel(wb, 1, 26, (count * 3) + 5, Double.parseDouble(lt.getDollarTotal()));
                                 } catch (Exception e) {
                                 }
-                            }
+                              }
+//                            } else if (lt.getTaskName().contains("Graphics")) {
+                            } else if (lt.getUnits().equalsIgnoreCase("pages")){
+                                if(lt.getTotalTeam()>0){
+                                try {
+                                    printExcel(wb, 1, 27, (count * 3) + 3, lt.getTotalTeam());
+                                } catch (Exception e) {
+                                }
+                                try {
+                                    printExcel(wb, 1, 27, (count * 3) + 4, lt.getRate());
+                                } catch (Exception e) {
+                                }
+                                try {
+                                    printExcel(wb, 1, 27, (count * 3) + 5, Double.parseDouble(lt.getDollarTotal()));
+                                } catch (Exception e) {
+                                }
+                            }}
                         }
+                        if(forTaskList.isEmpty()){
+                        for (int ll = 0; ll < otherTaskList.size(); ll++) {
+
+
+
+                            OthTask lt = (OthTask) otherTaskList.get(ll);
+                            if (dLang == 0) {
+                                printExcel(wb, 0, (25 + dFlag++), 2, lt.getTaskName());
+                            }
+                            if (lt.getUnits().equalsIgnoreCase("hours")){
+//                            if (lt.getTaskName().equalsIgnoreCase("Desktop Publishing") || lt.getTaskName().contains("DTP")) {
+                              if(lt.getTotalTeam()>0){
+                                try {
+                                    printExcel(wb, 1, 26, (count * 3) + 3, lt.getTotalTeam());
+                                } catch (Exception e) {
+                                }
+                                try {
+                                    printExcel(wb, 1, 26, (count * 3) + 4, lt.getRate());
+                                } catch (Exception e) {
+                                }
+                                try {
+                                    printExcel(wb, 1, 26, (count * 3) + 5, Double.parseDouble(lt.getDollarTotal()));
+                                } catch (Exception e) {
+                                }
+                              }
+//                            } else if (lt.getTaskName().contains("Graphics")) {
+                            } else if (lt.getUnits().equalsIgnoreCase("pages")){
+                                if(lt.getTotalTeam()>0){
+                                try {
+                                    printExcel(wb, 1, 27, (count * 3) + 3, lt.getTotalTeam());
+                                } catch (Exception e) {
+                                }
+                                try {
+                                    printExcel(wb, 1, 27, (count * 3) + 4, lt.getRate());
+                                } catch (Exception e) {
+                                }
+                                try {
+                                    printExcel(wb, 1, 27, (count * 3) + 5, Double.parseDouble(lt.getDollarTotal()));
+                                } catch (Exception e) {
+                                }
+                            }}
+                        }}
                         eLang++;
                         dLang++;
                     }
@@ -566,7 +691,7 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
             printExcel(wb, 0, 30, 2, "Yes");
         }
 
-        try{excelSheet.getRow(41).getCell(2).setCellFormula(("SUM(F40:CZ40)"));}catch(Exception e){}
+        try{excelSheet.getRow(42).getCell(2).setCellFormula(("SUM(F41:CZ41)"));}catch(Exception e){}
         String med = "";
         String detail = "";
         String category = "";
@@ -720,23 +845,23 @@ public class QuoteViewGeneralGenerateLectraAction extends Action {
             }
         } else {
             iRemain = ((index / 26));
-            System.out.println("iremain--------------------------->"+index);
+            //System.out.println("iremain--------------------------->"+index);
             if ((index % 26) == 0) {
                 sCol = "" + (char) (A+iRemain-1) + "" + (char) (A+(index % 26));
-                System.out.println("sColbbbbb--------------"+sCol);
-                System.out.println("sColbbbbb--------------"+sCol);
+                //System.out.println("sColbbbbb--------------"+sCol);
+                //System.out.println("sColbbbbb--------------"+sCol);
             } else {
                 sCol = "" + (char) (A + iRemain-1) + (char) (A+(index % 26));
-                System.out.println("sColccccc--------------"+sCol);
-                 System.out.println("sColccccc--------------"+sCol);
+                //System.out.println("sColccccc--------------"+sCol);
+                 //System.out.println("sColccccc--------------"+sCol);
             }
         }
         if (sCol.equalsIgnoreCase(" ")) {
 
-//            System.out.println("getCellName(index + 1)----"+index+"----------"+getCellName(index + 1));
+//            //System.out.println("getCellName(index + 1)----"+index+"----------"+getCellName(index + 1));
             return (getCellName(index + 1));
         }
-//        System.out.println("sCol----"+index+"----------"+sCol);
+//        //System.out.println("sCol----"+index+"----------"+sCol);
             return sCol;
        
 

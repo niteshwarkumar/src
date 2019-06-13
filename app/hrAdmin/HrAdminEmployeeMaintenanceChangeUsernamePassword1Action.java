@@ -117,7 +117,7 @@ public final class HrAdminEmployeeMaintenanceChangeUsernamePassword1Action exten
         //set updated values to db
         UserService.getInstance().updateUser(u);
         String firstName=u.getFirstName();
-          String msg="<font size='2'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>Dear <span style='color: rgb(255, 0, 0);'>"+firstName+"</span>,<br><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'></span><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>We have created an account for you on ExcelNet, Excel Translations' proprietary intra/extranet system. <br><br> Below you will find the information you need to enter our system, please keep this only to yourself in a secure place.  </span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'><br>User Name: "+username+"</span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>Password&nbsp;&nbsp;: "+password+"</span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>You can log in into your Account on by clicking </span><a style='font-family: Verdana,Arial,Helvetica,sans-serif;' href='http://excelnet.xltrans.com'>here</a><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>.<br><br><br>Best Regards,</span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif; Best regards,<br style='font-family: Verdana,Arial,Helvetica,sans-serif;'></font><font style='font-family: Verdana,Arial,Helvetica,sans-serif;' size='2'><span class='Apple-style-span' style='border-collapse: separate; color: rgb(0, 0, 0); font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-size: medium;'><span class='Apple-style-span' style='color: rgb(59, 105, 119); font-size: 11px; text-align: left;'><br> ExcelNet Administrator<br>Excel Translations, Inc.<br><br><img src=http://excelnet.xltrans.com/logo/images/-1168566039logoExcel.gif></span></span></font><br> ";
+          String msg="<font size='2'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>Dear <span style='color: rgb(255, 0, 0);'>"+firstName+"</span>,<br><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'></span><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>We have created an account for you on ExcelNet, Excel Translations' proprietary intra/extranet system. <br><br> Below you will find the information you need to enter our system, please keep this only to yourself in a secure place.  </span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'><br>User Name: "+username+"</span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>Password&nbsp;&nbsp;: "+password+"</span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>You can log in into your Account on by clicking </span><a style='font-family: Verdana,Arial,Helvetica,sans-serif;' href='http://excelnet.xltrans.com'>here</a><span style='font-family: Verdana,Arial,Helvetica,sans-serif;'>.<br><br><br>Best Regards,</span><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><br style='font-family: Verdana,Arial,Helvetica,sans-serif;'><span style='font-family: Verdana,Arial,Helvetica,sans-serif; Best regards,<br style='font-family: Verdana,Arial,Helvetica,sans-serif;'></font><font style='font-family: Verdana,Arial,Helvetica,sans-serif;' size='2'><span class='Apple-style-span' style='border-collapse: separate; color: rgb(0, 0, 0); font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-size: medium;'><span class='Apple-style-span' style='color: rgb(59, 105, 119); font-size: 11px; text-align: left;'><br> ExcelNet Administrator<br>Excel Translations, Inc.<br><br><img src=https://excelnet.xltrans.com/logo/images/excel-logo-blue.jpg></span></span></font><br> ";
         String emailMsgTxt=msg;
         String emailSubjectTxt  = "New User Account";
       String adminEmail;
@@ -142,7 +142,7 @@ adminEmail="excelnet@xltrans.com";
 try{
     String[] emailList = {userEmailId,adminEmail};
         SendEmail smtpMailSender = new SendEmail();
-    smtpMailSender.postMail( emailList, emailSubjectTxt, emailMsgTxt, emailFromAddress);
+    smtpMailSender.postMail( emailList, emailSubjectTxt, emailMsgTxt, StandardCode.emailFromAddress);
 }catch(Exception e){
 
 // String[] emailList = {"niteshwar.kumarpatialideas.com"};
@@ -159,11 +159,6 @@ try{
 
 
 
-    private static final String SMTP_HOST_NAME = "xltrans.com";
- private static final String SMTP_AUTH_USER = "excelnet@xltrans.com";
- private static final String SMTP_AUTH_PWD  = "3vB@zMsp";
- //private static final String emailSubjectTxt  = "Request for Quote Analysis :"+newQ1.;
- private static final String emailFromAddress = "excelnet@xltrans.com";
 
   // Add List of Email address to who email needs to be sent to
  // private static final String[] emailList = {"niteshwar.kumar@spatialideas.com"};
@@ -172,25 +167,13 @@ try{
      public void postMail( String recipients[ ], String subject,
                             String message , String from) throws MessagingException
   {
-    boolean debug = false;
-
-     //Set the host smtp address
-     Properties props = new Properties();
-     props.put("mail.smtp.host", SMTP_HOST_NAME);
-     props.put("mail.smtp.auth", "true");
-     props.put("mail.smtp.timeout", 60000);
-
-    Authenticator auth = new SMTPAuthenticator();
-    Session session = Session.getDefaultInstance(props, auth);
-
-    session.setDebug(debug);
-
+    
     // create a message
-    Message msg = new MimeMessage(session);
+    Message msg = StandardCode.getInstance().getMimeMessage();
 
     // set the from and to address
-    InternetAddress addressFrom = new InternetAddress(from);
-    msg.setFrom(addressFrom);
+    //InternetAddress addressFrom = new InternetAddress(from);
+    //msg.setFrom(addressFrom);
 
     InternetAddress[] addressTo = new InternetAddress[recipients.length];
     for (int i = 0; i < recipients.length; i++)
@@ -208,17 +191,6 @@ try{
 
 
 
-
-    private class SMTPAuthenticator extends javax.mail.Authenticator
-{
-
-    public PasswordAuthentication getPasswordAuthentication()
-    {
-        String username = SMTP_AUTH_USER;
-        String password = SMTP_AUTH_PWD;
-        return new PasswordAuthentication(username, password);
-    }
-}
 
 
 }

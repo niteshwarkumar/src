@@ -47,7 +47,7 @@ public class InventoryUpdate extends Action {
 
         if (jsonHW != null && !"".equals(jsonHW)) {
             JSONArray hwl = new JSONArray(jsonHW);
-            //    System.out.println("json"+hwl.length()+"         Hardware   "+jsonHW.length());
+            //    //System.out.println("json"+hwl.length()+"         Hardware   "+jsonHW.length());
             for (int i = 0; i < hwl.length(); i++) {
                 flag = 1;
                 if (i < HWList.size()) {
@@ -64,7 +64,7 @@ public class InventoryUpdate extends Action {
                 if (flag == 1) {
 
                     JSONObject j = (JSONObject) hwl.get(i);
-                    System.out.println("setEquipmentsetEquipmentsetEquipment" + j.getString("Equipment"));
+                    //System.out.println("setEquipmentsetEquipmentsetEquipment" + j.getString("Equipment"));
                     hw.setDescription(j.getString("Description"));
                     hw.setEquipment(j.getString("Equipment"));
                     hw.setDetail(j.getString("Detail"));
@@ -100,7 +100,7 @@ public class InventoryUpdate extends Action {
                 }
                 if (flag == 1) {
                     JSONObject j = (JSONObject) hwl1.get(i);
-                    System.out.println("setEquipmentsetEquipmentsetEquipmentsdfvsdfvsdfvsd" + j.getString("Equipment"));
+                    //System.out.println("setEquipmentsetEquipmentsetEquipmentsdfvsdfvsdfvsd" + j.getString("Equipment"));
                     hwWish.setDescription(j.getString("Description"));
                     hwWish.setEquipment(j.getString("Equipment"));
                     hwWish.setDetail(j.getString("Detail"));
@@ -122,7 +122,7 @@ public class InventoryUpdate extends Action {
 
         if (jsonSW != null && !"".equals(jsonSW)) {
             JSONArray Swl = new JSONArray(jsonSW);
-            //    System.out.println("json"+hwl.length()+"         Hardware   "+jsonHW.length());
+            //    //System.out.println("json"+hwl.length()+"         Hardware   "+jsonHW.length());
             for (int i = 0; i < Swl.length(); i++) {
                 flag = 1;
                 if (i < SWList.size()) {

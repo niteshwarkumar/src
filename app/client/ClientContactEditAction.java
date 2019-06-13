@@ -72,7 +72,9 @@ public final class ClientContactEditAction extends Action {
         //id of client contact from request
 	String clientContactId = null;
 	clientContactId = request.getParameter("clientContactId");
-        System.out.println("clientContactId="+clientContactId);
+        String isformer = request.getParameter("isformer");
+        request.setAttribute("isformer", isformer);
+        //System.out.println("clientContactId="+clientContactId);
         
         if(clientContactId == null) {
             //id of client contact from cookie

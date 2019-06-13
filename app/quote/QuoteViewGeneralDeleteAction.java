@@ -67,8 +67,8 @@ public final class QuoteViewGeneralDeleteAction extends Action {
         //id of quote from request
 	String quoteId = null;
 	quoteId = request.getParameter("id");
-        System.out.println("VVVVVVVVVVVVVVVVVV "+ quoteId);
-     //   System.out.println("IDIDIDIDDIDIDI "+  request.getParameter("id"));
+        //System.out.println("VVVVVVVVVVVVVVVVVV "+ quoteId);
+     //   //System.out.println("IDIDIDIDDIDIDI "+  request.getParameter("id"));
        // String rejectReason = request.getParameter("rejectReason");
 
         //check attribute in request
@@ -81,7 +81,7 @@ public final class QuoteViewGeneralDeleteAction extends Action {
             quoteId = StandardCode.getInstance().getCookie("quoteViewId", request.getCookies());
         }
 
-        System.out.println(" FFFFFFFFFFFF "+ quoteId);
+        //System.out.println(" FFFFFFFFFFFF "+ quoteId);
         Integer id = Integer.valueOf(quoteId);
       //  request.getSession(true).setAttribute("RejectedQuote", quoteId);
         //END get id of current quote from either request, attribute, or cookie
@@ -101,7 +101,7 @@ public final class QuoteViewGeneralDeleteAction extends Action {
 
         //update quote as rejected
        // q.setStatus("rejected");
-       // System.out.println("q.setStatus(rejected)."+q.getNumber()+"       "+q.getQuote1Id()+"         " +q.getStatus());
+       // //System.out.println("q.setStatus(rejected)."+q.getNumber()+"       "+q.getQuote1Id()+"         " +q.getStatus());
         //q.setApprovalDate(new Date());
         //q.setRejectReason(rejectReason);
 

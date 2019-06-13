@@ -20,7 +20,8 @@ import app.resource.*;
 import app.standardCode.*;
 import net.sf.hibernate.Criteria;
 import net.sf.hibernate.expression.*;
-import org.apache.xmlbeans.impl.xb.xsdschema.RestrictionDocument;
+import org.json.JSONArray;
+import org.json.JSONObject;
                        
 public class ReportsService
 {
@@ -448,7 +449,7 @@ public class ReportsService
                 return lp;
         }
         
-        //update an existing rateScoreLanguage in database
+        //update an existing ratescorelanguage in database
 	public RateScoreLanguage updateRateScoreLanguage(RateScoreLanguage rsl)
 	{
 		Session session = ConnectionFactory.getInstance().getSession();
@@ -845,10 +846,10 @@ public class ReportsService
                         Criteria subCriteriaRateScoreLanguages = null;  
                         boolean sourceSet = false;
                         boolean targetSet = false;
-                        boolean rateScoreLanguagesCon = false;
+                        boolean ratescorelanguagesCon = false;
                         if(TRate.length() >= 1 || ERate.length() >= 1 || TERate.length() >= 1 || PRate.length() >= 1) {
                             subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-                            rateScoreLanguagesCon = true;
+                            ratescorelanguagesCon = true;
                             if(source != null) {
                                 subCriteriaRateScoreLanguages.add(Expression.eq("source", source));
                                 sourceSet = true;
@@ -950,9 +951,9 @@ public class ReportsService
                         
                         boolean rateScoreScore = false;
                         for(int i = 0; i < ScoresLin.length; i++) {
-                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && rateScoreLanguagesCon == false) {
+                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && ratescorelanguagesCon == false) {
                                 subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-                                rateScoreLanguagesCon = true;
+                                ratescorelanguagesCon = true;
                                 rateScoreScore = true;
                             }                                
                         }                          
@@ -1160,7 +1161,7 @@ public class ReportsService
                         Criteria subCriteriaRateScoreLanguages = null;  
                         boolean sourceSet = false;
                         boolean targetSet = false;
-                        boolean rateScoreLanguagesCon = false;
+                        boolean ratescorelanguagesCon = false;
                     
                         if(RateOldDb != null) {
                             Disjunction any = Expression.disjunction();
@@ -1211,9 +1212,9 @@ public class ReportsService
                         
 //                        boolean rateScoreScore = false;
 //                        for(int i = 0; i < ScoresLin.length; i++) {
-//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && rateScoreLanguagesCon == false) {
+//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && ratescorelanguagesCon == false) {
 //                                subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-//                                rateScoreLanguagesCon = true;
+//                                ratescorelanguagesCon = true;
 //                                rateScoreScore = true;
 //                            }                                
 //                        }                          
@@ -1404,10 +1405,10 @@ public class ReportsService
 //                        Criteria subCriteriaRateScoreLanguages = null;  
 //                        boolean sourceSet = false;
 //                        boolean targetSet = false;
-//                        boolean rateScoreLanguagesCon = false;
+//                        boolean ratescorelanguagesCon = false;
 //                        if(TRate.length() >= 1 || ERate.length() >= 1 || TERate.length() >= 1 || PRate.length() >= 1) {
 //                            subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-//                            rateScoreLanguagesCon = true;
+//                            ratescorelanguagesCon = true;
 //                            if(source != null) {
 //                                subCriteriaRateScoreLanguages.add(Expression.eq("source", source));
 //                                sourceSet = true;
@@ -1679,7 +1680,7 @@ public class ReportsService
                         Criteria subCriteriaRateScoreLanguages = null;  
                         boolean sourceSet = false;
                         boolean targetSet = false;
-                        boolean rateScoreLanguagesCon = false;
+                        boolean ratescorelanguagesCon = false;
                     
                         if(RateOldDb != null) {
                             Disjunction any = Expression.disjunction();
@@ -1730,9 +1731,9 @@ public class ReportsService
                         
 //                        boolean rateScoreScore = false;
 //                        for(int i = 0; i < ScoresLin.length; i++) {
-//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && rateScoreLanguagesCon == false) {
+//                            if(ScoresLin[i] != null && ScoresLin[i].length() >= 1 && ratescorelanguagesCon == false) {
 //                                subCriteriaRateScoreLanguages = subCriteriaLanguagePairs.createCriteria("RateScoreLanguages");  
-//                                rateScoreLanguagesCon = true;
+//                                ratescorelanguagesCon = true;
 //                                rateScoreScore = true;
 //                            }                                
 //                        }                          
@@ -3785,7 +3786,7 @@ public class ReportsService
         }
     }
         
-    //build the link between languagePair and rateScoreLanguage
+    //build the link between languagePair and ratescorelanguage
     public Integer linkLanguagePairRateScoreLanguage(LanguagePair lp, RateScoreLanguage rsl) {
         Session session = ConnectionFactory.getInstance().getSession();
         Integer id = null;
@@ -3795,7 +3796,7 @@ public class ReportsService
             
             tx = session.beginTransaction();
             
-            //link languagePair and rateScoreLanguage
+            //link languagePair and ratescorelanguage
             lp.getRateScoreLanguages().add(rsl);
             rsl.setLanguagePair(lp);
             
@@ -4125,17 +4126,17 @@ public class ReportsService
          */
         Session session = ConnectionFactory.getInstance().getSession();
         Query query;
-String queryString="SELECT COUNT(resource.ID_Resource) AS cnt,"
-    +" resource.firstName , resource.lastName"
-    +", resource.companyName    , SUM(REPLACE(COALESCE (lintask.dollarTotal,0),',','')) AS fee"
-    +", AVG(lintask.score) AS score    , SUM(lintask.wordTotal) AS word"
-    +", resource.ID_Resource "
-                + "FROM"
-     +"app.project.Lintask lintask INNER JOIN app.resource.Resource resource ON lintask.personName = resource.ID_Resource"
-    +" INNER JOIN app.project.Targetdoc targetdoc ON lintask.ID_TargetDoc = targetdoc.ID_TargetDoc"
-     +" INNER JOIN app.project.Sourcedoc sourcedoc ON targetdoc.ID_SourceDoc = sourcedoc.ID_SourceDoc"
-    +" INNER JOIN app.project.Project project ON sourcedoc.ID_Project = project.ID_Project"
-+" GROUP BY resource.ID_Resource  ORDER BY word DESC LIMIT 0,50";
+        String queryString="SELECT COUNT(resource.ID_Resource) AS cnt,"
+            +" resource.firstName , resource.lastName"
+            +", resource.companyName    , SUM(REPLACE(COALESCE (lintask.dollarTotal,0),',','')) AS fee"
+            +", AVG(lintask.score) AS score    , SUM(lintask.wordTotal) AS word"
+            +", resource.ID_Resource "
+                        + "FROM"
+             +"app.project.Lintask lintask INNER JOIN app.resource.Resource resource ON lintask.personName = resource.ID_Resource"
+            +" INNER JOIN app.project.Targetdoc targetdoc ON lintask.ID_TargetDoc = targetdoc.ID_TargetDoc"
+             +" INNER JOIN app.project.Sourcedoc sourcedoc ON targetdoc.ID_SourceDoc = sourcedoc.ID_SourceDoc"
+            +" INNER JOIN app.project.Project project ON sourcedoc.ID_Project = project.ID_Project"
+        +" GROUP BY resource.ID_Resource  ORDER BY word DESC LIMIT 0,50";
         try {
             /*
              * Build HQL (Hibernate Query Language) query to retrieve a list
@@ -4169,5 +4170,182 @@ String queryString="SELECT COUNT(resource.ID_Resource) AS cnt,"
 
     }
 
+    List<Kpi> getKpi(String type) {
+         /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        Query query;
+
+        try {
+            /*
+             * Build HQL (Hibernate Query Language) query to retrieve a list
+             * of all the items currently stored by Hibernate.
+             */
+            query = session.createQuery("select kpi from app.reports.Kpi kpi where type='" + type + "'" );
+            return query.list();
+        } catch (HibernateException e) {
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+
+    }
+    
+    public Kpi getSingleKpi(String year,String type) {
+
+        /*
+         * Use the ConnectionFactory to retrieve an open
+         * Hibernate Session.
+         *
+         */
+        Session session = ConnectionFactory.getInstance().getSession();
+        List results = null;
+        try {
+
+            results = session.find("from Kpi as kpi where kpi.year = ? and type =?",
+                    new Object[]{year,type},
+                    new Type[]{Hibernate.STRING,Hibernate.STRING});
+
+            if (results.isEmpty()) {
+                Kpi q = new Kpi();
+                return q;
+            } else {
+                Kpi q = (Kpi) results.get(0);
+                // Hibernate.initialize(q.getSourceDocs());
+                // Hibernate.initialize(q.getFiles());
+
+                return q;
+            }
+
+        } catch (ObjectNotFoundException onfe) {
+            return null;
+        } catch (HibernateException e) {
+            /*
+             * All Hibernate Exceptions are transformed into an unchecked
+             * RuntimeException.  This will have the effect of causing the
+             * user's request to return an error.
+             *
+             */
+            System.err.println("Hibernate Exception" + e.getMessage());
+            throw new RuntimeException(e);
+        } /*
+         * Regardless of whether the above processing resulted in an Exception
+         * or proceeded normally, we want to close the Hibernate session.  When
+         * closing the session, we must allow for the possibility of a Hibernate
+         * Exception.
+         *
+         */ finally {
+            if (session != null) {
+                try {
+                    session.close();
+                } catch (HibernateException e) {
+                    System.err.println("Hibernate Exception" + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+  }
+
+    void updateKpi(Kpi kpi) {
+         Session session = ConnectionFactory.getInstance().getSession();                
+                Transaction tx = null;
+                
+		try
+		{
+                        tx = session.beginTransaction();
+                        
+                        session.saveOrUpdate(kpi);
+			tx.commit();
+		}
+		catch (HibernateException e)
+		{
+                    try {
+                        tx.rollback(); //error
+                    }
+                    catch (HibernateException he) {
+                        System.err.println("Hibernate Exception" + e.getMessage());
+			throw new RuntimeException(e);
+                    }
+			System.err.println("Hibernate Exception" + e.getMessage());
+			throw new RuntimeException(e);
+		}
+		/*
+		 * Regardless of whether the above processing resulted in an Exception
+		 * or proceeded normally, we want to close the Hibernate session.  When
+		 * closing the session, we must allow for the possibility of a Hibernate
+		 * Exception.
+		 * 
+		 */
+		finally
+		{
+			if (session != null)
+			{
+				try
+				{
+
+					session.close();
+				}
+				catch (HibernateException e)
+				{
+					System.err.println("Hibernate Exception" + e.getMessage());
+					throw new RuntimeException(e);
+				}
+
+			}
+		}
+                
+    }
+    
+    public JSONArray kpiRevenue(){
+        JSONArray result = new JSONArray();
+
+        Calendar cal= new GregorianCalendar();
+         
+         List<Kpi> kpiList = ReportsService.getInstance().getKpi("Revenue");
+         Map<String, String> revenue = ProjectService.getInstance().getRevenuePerQuater();
+         
+        JSONObject kpiObj = new JSONObject();
+           
+            for (int cnt = 0; cnt < kpiList.size(); cnt++){
+            Kpi kpi = kpiList.get(cnt);
+            for (int ii = 2005; ii <= cal.get(Calendar.YEAR); ii++){
+                if(kpi.getYear()==ii){
+                    String yearlyReferance = "";
+                    double referance = 0.00;
+                    if(!StandardCode.getInstance().noNull(kpi.getReferancevalue()).equalsIgnoreCase("")){
+                        //System.out.println(kpi.getReferancevalue());
+                      
+                        referance = Double.parseDouble((kpi.getReferancevalue()).replaceAll("\\$", "").replaceAll(",", "").trim());
+                       
+                         
+                    }
+                    
+                }
+            }
+            }
+
+        return result;
+    }
+    
+     
 }
 

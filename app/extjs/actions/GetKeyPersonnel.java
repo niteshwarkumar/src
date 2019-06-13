@@ -73,7 +73,7 @@ public final class GetKeyPersonnel extends Action {
         ArrayList myQuotes = new ArrayList();
         //get a user's Backup projects
         long startProjects = System.currentTimeMillis();
-        System.out.println("GetKeyPersonnel entered:");
+        //System.out.println("GetKeyPersonnel entered:");
         
         
 //look for pm or ae that matches active projects for this user
@@ -92,7 +92,7 @@ public final class GetKeyPersonnel extends Action {
         
         response.setContentType("text/html");
         response.setHeader("Cache-Control", "no-cache");
-        // System.out.println(actResponse.toXML());
+        // //System.out.println(actResponse.toXML());
         PrintWriter out = response.getWriter();
         out.println(new JSONArray(keyPersonnel.toArray()));
         out.flush();

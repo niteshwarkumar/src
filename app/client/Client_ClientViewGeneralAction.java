@@ -80,7 +80,7 @@ public class Client_ClientViewGeneralAction extends Action{
         //id of client from request
 	String clientId = null;
 	clientId =""+ u.getId_client();
-        System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
+        //System.out.println("Client id>>>>>>>>>>>>>>>>>>>..............................."+clientId);
         //check attribute in request
         if(clientId == null) {
             clientId = (String) request.getAttribute("clientViewId");
@@ -110,7 +110,7 @@ public class Client_ClientViewGeneralAction extends Action{
         if (clientId!=null && clientId.trim() != "")
         {
         c = ClientService.getInstance().getSingleClient(Integer.parseInt(clientId));
-         System.out.println("clientid>....................................."+c);
+         //System.out.println("clientid>....................................."+c);
         }
         else
         {

@@ -79,6 +79,9 @@ public class ClientEditForm extends ActionForm
     /** nullable persistent field */
     private String Sales_rep;
     
+    /** nullable persistent field */
+    private String Sales;
+    
      /** nullable persistent field */
     private String business_desc;
 
@@ -134,6 +137,8 @@ public class ClientEditForm extends ActionForm
     private String termsNames;
     
     private String auto_alert;
+    
+    private String specialNotes;
  
     /** nullable persistent field */
     private FormFile logo;
@@ -238,6 +243,9 @@ public class ClientEditForm extends ActionForm
                 this.Sales_rep = null;
                 
                 /** nullable persistent field */
+                this.Sales = null;
+                
+                /** nullable persistent field */
                 this.Satisfaction_score = null;
                 
                 /** nullable persistent field */
@@ -256,6 +264,8 @@ public class ClientEditForm extends ActionForm
                 this.Ftp_password_client = null;
                 
                 this.logo = null;
+                
+                this.specialNotes = null;
 
 	}
         
@@ -610,6 +620,22 @@ public class ClientEditForm extends ActionForm
   public void setAuto_alert(String auto_alert) {
     this.auto_alert = auto_alert;
   }
+
+    public String getSales() {
+        return Sales;
+    }
+
+    public void setSales(String Sales) {
+        this.Sales = Sales;
+    }
+
+    public String getSpecialNotes() {
+        return specialNotes;
+    }
+
+    public void setSpecialNotes(String specialNotes) {
+        this.specialNotes = specialNotes;
+    }
 
     
 

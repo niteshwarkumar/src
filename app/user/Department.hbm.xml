@@ -4,7 +4,7 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 	
 <hibernate-mapping>
-   <class name="app.user.Department" table="Department">
+   <class name="app.user.Department" table="department">
       <id name="departmentId" type="int" column="ID_Department">
          <generator class="identity"/>
       </id>
